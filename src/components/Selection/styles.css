@@ -1,0 +1,91 @@
+.select__trigger {
+    @apply text-sm bg-[#333742] text-[hsl(240_10%_86%)] border border-[hsl(240_4%_46%)] rounded-md inline-flex items-center justify-between w-52 h-10 outline-none p-[0_10px_0_16px] transition cursor-pointer duration-300 ease-in-out;
+}
+
+.select__trigger:hover {
+    @apply border-[hsl(240_5%_65%)];
+}
+
+.select__trigger:focus-visible {
+    @apply outline outline-2 outline-[hsl(200_98%_39%)] outline-offset-2;
+}
+
+.select__trigger[data-invalid] {
+    @apply border-[hsl(0_72%_51%)] outline-[hsl(0_72%_51%)] outline-offset-2 text-[hsl(0_72%_51%)];
+}
+
+.select__value {
+    @apply text-ellipsis flex-1 overflow-hidden whitespace-nowrap;
+}
+
+.select__value[data-placeholder-shown] {
+    @apply text-[hsl(240_5%_65%)];
+}
+
+.select__icon {
+    @apply inline-flex items-center justify-center w-4 h-4;
+}
+
+.select__description {
+    @apply text-[hsl(240_10%_86%)] text-sm select-none mt-2;
+}
+
+.select__error-message {
+    @apply text-[hsl(0_72%_51%)] text-sm select-none mt-2;
+}
+
+.select__content {
+    @apply fixed bg-[#333742] rounded-md shadow-sm transform origin-[var(--kb-select-content-transform-origin)] duration-300 ease-in-out animate-[contentHide_250ms_ease-in_forwards] z-[999];
+}
+
+.select__content[data-expanded] {
+    @apply animate-[contentShow_250ms_ease-out_forwards];
+}
+
+.select__listbox {
+    @apply overflow-x-auto max-h-92 p-2;
+}
+
+.select__item {
+    @apply text-sm text-[hsl(240_10%_86%)] rounded-md h-8 p-[0_8px] relative select-none outline-none flex justify-between items-center;
+}
+
+.select__item[data-disabled] {
+    @apply opacity-50 text-[hsl(240_5%_65%)] pointer-events-none;
+}
+
+.select__item[data-highlighted] {
+    @apply bg-[hsl(200_98%_39%)] text-white font-semibold outline-none;
+}
+
+.select__section {
+    @apply p-[8px_0_0_8px] text-[hsl(240_10%_86%)] leading-8 text-[14px] font-semibold;
+}
+
+.select__item-indicator {
+    @apply w-4 h-4 rounded-full bg-green-800 flex justify-center items-center p-2;
+}
+
+@keyframes contentShow {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes contentHide {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+}

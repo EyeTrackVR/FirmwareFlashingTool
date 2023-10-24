@@ -1,0 +1,8 @@
+[package]
+name = "linux"
+version = "0.1.0"
+license = "MIT"
+#default-run = "linux"
+edition = "2021"
+rust-version = "1.69"
+include = ["/src", "/README.md", "/LICENCE"]

@@ -1,0 +1,8 @@
+[package]
+name = "windows"
+version = "0.1.0"
+license = "MIT"
+#default-run = "windows"
+edition = "2021"
+rust-version = "1.69"
+include = ["/src", "/README.md", "/LICENCE"]

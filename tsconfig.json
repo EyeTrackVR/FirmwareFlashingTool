@@ -30,7 +30,8 @@
             "@assets/*": ["./assets/*"],
             "@hooks/*": ["src/utils/hooks/*"],
             "@static/*": ["src/static/*"],
-            "@utils/*": ["src/utils/*"]
+            "@utils/*": ["src/utils/*"],
+            "@routes/*": ["src/routes/*"]
         }
     },
     "include": ["src", "**/*.ts", "**/*.tsx", "index.js"],

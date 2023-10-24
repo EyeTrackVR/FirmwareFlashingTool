@@ -1,0 +1,25 @@
+:root {
+    --text-close-color: hsl(240 5% 34%);
+    --text-title-color: hsl(240 6% 10%);
+    --text-description-color: hsl(240 6% 10%);
+}
+.popover__content {
+    @apply z-50 rounded-md p-3 bg-[#0071fe];
+    max-width: min(calc(100vw - 16px), 380px);
+    border: 1px solid rgb(54, 54, 55);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.popover__header {
+    @apply flex justify-between items-baseline mb-2;
+}
+/* .popover__close-button {
+    @apply h-4 w-4 text-[var(--text-close-color)] hover:text-[var(--text-close-color)] focus:text-[var(--text-close-color)] focus;
+} */
+.popover__title {
+    @apply text-[var(--text-title-color)] font-bold text-sm;
+}
+.popover__description {
+    @apply text-white text-sm;
+}
+.popover__arrow {
+}
