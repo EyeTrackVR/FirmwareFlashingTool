@@ -52,8 +52,8 @@ const EraseButton = () => {
             isButtonActive={isButtonActive()}
             tooltip="Erase Firmware Assets"
             icon={<FaSolidTrashCan size={45} fill="#FFFFFFe3" />}
-            onClick={() => {
-                setIsButtonActive(!isButtonActive())
+            onClick={(isActive) => {
+                setIsButtonActive(isActive)
                 handleOnClick()
             }}
         />

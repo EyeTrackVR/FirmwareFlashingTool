@@ -45,8 +45,8 @@ const WebSerial = () => {
                         isButtonActive={isButtonActive()}
                         tooltip="Flash Mode"
                         icon={<FaSolidPlug size={45} fill="#FFFFFFe3" />}
-                        onClick={() => {
-                            setIsButtonActive(!isButtonActive())
+                        onClick={(isActive) => {
+                            setIsButtonActive(isActive)
                         }}
                     />
                 </div>

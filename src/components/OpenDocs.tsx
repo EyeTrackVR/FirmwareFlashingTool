@@ -34,8 +34,8 @@ const OpenDocs = () => {
             isButtonActive={isButtonActive()}
             tooltip="Open ETVR Docs"
             icon={<FaSolidGraduationCap size={45} fill="#FFFFFFe3" />}
-            onClick={() => {
-                setIsButtonActive(!isButtonActive())
+            onClick={(isActive) => {
+                setIsButtonActive(isActive)
                 openDocs()
             }}
         />

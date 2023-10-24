@@ -3,21 +3,23 @@ import CustomPopover from './CustomPopOver'
 
 export interface IProps {
     onClick: (isButtonActive: boolean) => void
+    isButtonActive: boolean
     name?: string
     tooltip?: string
     path?: string
     icon?: JSXElement
-    enableActiveMode?: boolean
-    isButtonActive?: boolean
 }
 
 const CustomButton = (props: IProps) => {
     const [isActive, setIsActive] = createSignal(false)
 
+    const handleOnClick = () => {
+        setIsActive(props.isButtonActive)
+        props.onClick(isActive())
+    }
+
     createEffect(() => {
-        if (typeof props.isButtonActive !== 'undefined') {
-            setIsActive(props.isButtonActive)
-        }
+        setIsActive(props.isButtonActive)
     })
 
     return (
@@ -27,12 +29,7 @@ const CustomButton = (props: IProps) => {
             }   ${
                 isActive() ? 'hover:bg-[#0065E2]' : 'hover:bg-[#0071FE]'
             } rounded-lg p-2 cursor-pointer m-2`}
-            onClick={() => {
-                if (props.enableActiveMode) {
-                    setIsActive(!isActive())
-                }
-                props.onClick(isActive())
-            }}>
+            onClick={handleOnClick}>
             <div class="flex justify-center items-center h-full w-full">
                 <Show
                     when={props.icon}

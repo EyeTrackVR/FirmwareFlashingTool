@@ -18,8 +18,8 @@ export const ConfigButton = () => {
             isButtonActive={isButtonActive()}
             tooltip="Erase Firmware Assets"
             icon={<FaSolidScrollTorah size={45} fill="#FFFFFFe3" />}
-            onClick={() => {
-                setIsButtonActive(!isButtonActive())
+            onClick={(isActive) => {
+                setIsButtonActive(isActive)
                 handleConfigDir()
             }}
         />
