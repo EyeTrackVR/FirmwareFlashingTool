@@ -1,6 +1,7 @@
 {
     "folders": [
         {
+            "name": "Repo Root",
             "path": "."
         }
     ],
@@ -41,7 +42,16 @@
         },
         "liveServer.settings.multiRootWorkspaceName": "Example",
         "cSpell.words": [
-            "typecheck"
-        ]
+            "codegen",
+            "kobalte",
+            "solidjs",
+            "specta",
+            "typecheck",
+            "Unlisten",
+            "webserial"
+        ],
+        "[json]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
     }
 }

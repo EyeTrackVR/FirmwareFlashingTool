@@ -1,0 +1,50 @@
+/** Import all project related CSS files here */
+/*! Do not put raw CSS code in this file  */
+
+/* TailWindCSS Files */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:500');
+
+/* Custom Imports */
+@import 'titlebar.css';
+@import 'scrollbar.css';
+
+
+body {
+    margin: 0;
+    font-family: Ubuntu, 'times new roman', times, roman, serif;
+    cursor: default;
+    background-color: transparent !important;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 14px;
+}
+
+html {
+    overflow: auto;
+}
+
+html,
+body,
+div,
+iframe {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    border: none;
+}
+
+.main-div {
+    height: 100vh;
+    overflow: hidden;
+    border-radius: 0.4rem;
+    /* Clothoid Gradient */
+    background: linear-gradient(247.32deg, #282830 0%, #181c28 100%);
+}

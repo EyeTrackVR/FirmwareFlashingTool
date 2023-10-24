@@ -1,0 +1,20 @@
+{
+    "name": "tauri-plugin-request-client",
+    "private": true,
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2"
+    },
+    "scripts": {
+        "specta:post-install": "pnpm specta:build",
+        "specta:build": "pnpm tsc",
+        "specta:gen": "cargo test && pnpm specta:build"
+    }
+}
