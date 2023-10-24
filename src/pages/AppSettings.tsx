@@ -14,7 +14,7 @@ const AppSettingsPage = () => {
 
     return (
         <div class="flex justify-center items-center content-center flex-col pt-[100px] text-white">
-            <AppSettings 
+            <AppSettings
                 onChange={(format, value) => {
                     debug(`[AppSettings]: ${format} ${value}`)
                 }}

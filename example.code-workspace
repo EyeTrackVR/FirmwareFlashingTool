@@ -43,8 +43,10 @@
         "liveServer.settings.multiRootWorkspaceName": "Example",
         "cSpell.words": [
             "codegen",
+            "Iprops",
             "kobalte",
             "nanos",
+            "ratelimit",
             "solidjs",
             "specta",
             "typecheck",

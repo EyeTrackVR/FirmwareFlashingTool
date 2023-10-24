@@ -8,17 +8,10 @@ import { createContext, useContext, createMemo, type Component, Accessor } from 
 import { createStore, produce } from 'solid-js/store'
 import { debug, error, warn } from 'tauri-plugin-log-api'
 import { download, upload } from 'tauri-plugin-upload-api'
-import { useAppCameraContext } from '../camera'
 import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
 import { O } from '@static/types'
-import {
-    ENotificationType,
-    RESTStatus,
-    RESTType,
-    ESPEndpoints,
-    BackendEndpoints,
-} from '@static/types/enums'
+import { ENotificationType, RESTStatus, RESTType, ESPEndpoints } from '@static/types/enums'
 import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease } from '@static/types/interfaces'
 import { makeRequest } from 'tauri-plugin-request-client'
 
@@ -51,7 +44,6 @@ interface AppAPIContext {
 const AppAPIContext = createContext<AppAPIContext>()
 export const AppAPIProvider: Component<Context> = (props) => {
     const { addNotification } = useAppNotificationsContext()
-    const { getCameras } = useAppCameraContext()
 
     const ghEndpoint = 'https://api.github.com/repos/EyeTrackVR/OpenIris/releases/latest'
 
@@ -69,24 +61,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
         ['wifiStrength', { url: `:81${ESPEndpoints.WIFI_STRENGTH}`, type: RESTType.POST }],
         ['restartCamera', { url: `:81${ESPEndpoints.RESTART_CAMERA}`, type: RESTType.GET }],
         ['getStoredConfig', { url: `:81${ESPEndpoints.GET_STORED_CONFIG}`, type: RESTType.GET }],
-        //* Backend Specific Endpoints */
-        //Note: The port may change, so we should make this dynamic using UPnP or something similar
-        //? Default
-        ['stop', { url: `:8000${BackendEndpoints.STOP}`, type: RESTType.GET }],
-        ['start', { url: `:8000${BackendEndpoints.START}`, type: RESTType.GET }],
-        ['status', { url: `:8000${BackendEndpoints.STATUS}`, type: RESTType.GET }],
-        ['restart', { url: `:8000${BackendEndpoints.RESTART}`, type: RESTType.GET }],
-        //? Config
-        ['config', { url: `:8000${BackendEndpoints.CONFIG}`, type: RESTType.GET }],
-        ['configEdit', { url: `:8000${BackendEndpoints.CONFIG}`, type: RESTType.POST }],
-        ['configSave', { url: `:8000${BackendEndpoints.SAVE_CONFIG}`, type: RESTType.GET }],
-        ['configLoad', { url: `:8000${BackendEndpoints.LOAD_CONFIG}`, type: RESTType.GET }],
-        //? Trackers
-        ['tracker', { url: `:8000${BackendEndpoints.TRACKER}`, type: RESTType.GET }],
-        ['trackers', { url: `:8000${BackendEndpoints.TRACKERS}`, type: RESTType.GET }],
-        ['trackerEdit', { url: `:8000${BackendEndpoints.TRACKER}`, type: RESTType.POST }],
-        ['trackerCreate', { url: `:8000${BackendEndpoints.TRACKER}`, type: RESTType.PUT }],
-        ['trackerRemove', { url: `:8000${BackendEndpoints.TRACKER}`, type: RESTType.DELETE }],
     ])
 
     const defaultState: AppStoreAPI = {
@@ -479,15 +453,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         const method: RESTType = getEndpoint(endpointName).type
 
         if (typeof deviceName != 'undefined') {
-            const camera = getCameras().find(
-                (camera: { address: string }) => camera.address === deviceName,
-            )
-            if (!camera) {
-                setRESTStatus(RESTStatus.NO_CAMERA)
-                debug('No camera found at that address')
-                return O.none
-            }
-            deviceName = camera.address
+            deviceName = 'http://' + deviceName
         } else {
             deviceName = 'http://localhost'
         }
@@ -538,7 +504,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
      *
      */
     const useOTA = async (firmwareName: string, device: string) => {
-        const endpoints: Map<string, IEndpoint> = getEndpoints()
+        /*  const endpoints: Map<string, IEndpoint> = getEndpoints()
         const ota: string = endpoints.get('ota')?.url ?? ''
         const camera = getCameras().find((camera) => camera.address === device)
         if (!camera) {
@@ -547,7 +513,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         }
         const server = camera.address + ota
         const path = await join(await appConfigDir(), firmwareName + '.bin')
-        await upload(server, path)
+        await upload(server, path) */
     }
     //#endregion
 

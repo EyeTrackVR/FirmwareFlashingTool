@@ -5,7 +5,7 @@ import { UiStore } from '@src/static/types/interfaces'
 
 interface AppUIContext {
     openModalStatus: Accessor<boolean | undefined>
-    showNotifications: Accessor<boolean | undefined>   
+    showNotifications: Accessor<boolean | undefined>
     setOpenModal: (openModal: boolean) => void
 }
 

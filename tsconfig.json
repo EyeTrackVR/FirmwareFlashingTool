@@ -27,7 +27,7 @@
             "@styles/*": ["src/styles/*"],
             "@config/*": ["src/config/*"],
             "@src/*": ["src/*"],
-            "@assets/*": ["./assets/*"],
+            "@assets/*": ["src/assets/*"],
             "@hooks/*": ["src/utils/hooks/*"],
             "@static/*": ["src/static/*"],
             "@utils/*": ["src/utils/*"],

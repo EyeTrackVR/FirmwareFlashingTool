@@ -1,3 +1,4 @@
+export * as O from 'fp-ts/Option'
 import type { ENotificationAction } from './enums'
 import type { JSXElement } from 'solid-js'
 

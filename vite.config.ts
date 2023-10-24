@@ -15,7 +15,7 @@ export default defineConfig({
             '@styles': resolve(__dirname, './src/styles'),
             '@config': resolve(__dirname, './src/config'),
             '@src': resolve(__dirname, './src'),
-            '@assets': resolve(__dirname, './assets'),
+            '@assets': resolve(__dirname, './src/assets'),
             '@hooks': resolve(__dirname, './src/utils/hooks'),
             '@store': resolve(__dirname, './src/store'),
             '@static': resolve(__dirname, './src/static'),
