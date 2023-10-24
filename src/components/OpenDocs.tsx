@@ -1,8 +1,12 @@
 import { WebviewWindow, getCurrent } from '@tauri-apps/api/window'
+import { FaSolidGraduationCap } from 'solid-icons/fa'
+import { createSignal } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
-import Button from '..'
+import CustomButton from '@components/CustomButton'
 
-export const OpenDocs = () => {
+const OpenDocs = () => {
+    const [isButtonActive, setIsButtonActive] = createSignal(false)
+
     const openDocs = () => {
         const currentMainWindow = getCurrent()
         currentMainWindow.innerPosition().then((position) => {
@@ -26,11 +30,16 @@ export const OpenDocs = () => {
         })
     }
     return (
-        <Button
-            color="#800080"
-            shadow="0 0 10px #800080"
-            text="Open Documentation"
-            onClick={openDocs}
+        <CustomButton
+            isButtonActive={isButtonActive()}
+            tooltip="Open ETVR Docs"
+            icon={<FaSolidGraduationCap size={45} fill="#FFFFFFe3" />}
+            onClick={() => {
+                setIsButtonActive(!isButtonActive())
+                openDocs()
+            }}
         />
     )
 }
+
+export default OpenDocs

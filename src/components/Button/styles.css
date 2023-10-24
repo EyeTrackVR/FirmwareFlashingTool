@@ -1,19 +1,26 @@
-/* ./index.module.css */
-
-.primary_btn {
-    margin: 20px 10px;
-    cursor: pointer;
-    font-weight: 500;
-    padding: 13px 25px;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    border: none;
-    color: white;
-    /* background: #185adb; */
-    transition: all 0.25s ease;
+.button {
+  appearance: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: auto;
+  outline: none;
+  border-radius: 6px;
+  padding: 0 16px;
+  background-color: hsl(200 98% 39%);
+  color: white;
+  font-size: 16px;
+  line-height: 0;
+  transition: 250ms background-color;
 }
-
-.primary_btn:hover {
-    transform: translateY(-5px);
-    /* box-shadow: 0 10px 20px -10px rgba(24, 90, 219, 0.6); */
+.button:hover {
+  background-color: hsl(201 96% 32%);
+}
+.button:focus-visible {
+  outline: 2px solid hsl(200 98% 39%);
+  outline-offset: 2px;
+}
+.button:active {
+  background-color: hsl(201 90% 27%);
 }

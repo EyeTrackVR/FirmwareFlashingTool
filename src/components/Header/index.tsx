@@ -1,7 +1,6 @@
 import { Image } from '@kobalte/core'
 import { Link } from '@solidjs/router'
-import icon from '../../../public/images/logo.png'
-import CustomPopover from './CustomPopover'
+import CustomPopover from '@components/CustomPopOver'
 import CustomSlideAnimation from '@components/CustomSlideAnimation'
 import './styles.css'
 
@@ -19,7 +18,7 @@ const Header = (props: Iprops) => {
                     <div>
                         <Link href="/" class="no-underline" onClick={() => props.onClick()}>
                             <Image.Root>
-                                <Image.Img src={icon} alt="logo" width="51px" />
+                                <Image.Img src="images/logo.png" alt="logo" width="51px" />
                             </Image.Root>
                         </Link>
                     </div>
@@ -31,6 +30,7 @@ const Header = (props: Iprops) => {
                                         <CustomPopover
                                             styles="h-full"
                                             popoverContent="Tracker manager"
+                                            class="pl-[1.5rem] pr-[1.5rem]"
                                             icon=""
                                         />
                                     </Link>
@@ -40,6 +40,7 @@ const Header = (props: Iprops) => {
                                         <CustomPopover
                                             styles="h-full"
                                             popoverContent="App settings"
+                                            class="pl-[1.5rem] pr-[1.5rem]"
                                             icon=""
                                         />
                                     </Link>

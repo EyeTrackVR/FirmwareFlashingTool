@@ -95,11 +95,7 @@ const AppRoutes: Component = () => {
     return (
         <main class="pb-[5rem] w-[100%] px-8 max-w-[1920px]">
             <div class="header-wrapper">
-                <Header
-                    hideButtons={userIsInSettings()}
-                    name="Welcome!"
-                    onClick={() => navigate('/')}
-                />
+                <Header hideButtons={true} name="Welcome!" onClick={() => navigate('/')} />
             </div>
             <div class="pt-[70px]">
                 <Path />

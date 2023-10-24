@@ -5,12 +5,8 @@ import AppSettings from '@src/views/AppSettings'
 
 const AppSettingsPage = () => {
     let download: (firmware: string) => Promise<void> = () => Promise.resolve()
-
     const { downloadAsset } = useAppAPIContext()
-
     if (downloadAsset) download = downloadAsset
-
-    const { handleSound } = useAppNotificationsContext()
 
     return (
         <div class="flex justify-center items-center content-center flex-col pt-[100px] text-white">
@@ -24,10 +20,6 @@ const AppSettingsPage = () => {
                 onClickDownload={() => {
                     download('esp32AIThinker')
                     debug('[Download Asset]: Downloading...')
-                }}
-                onClickPlaySound={() => {
-                    handleSound('EyeTrackApp_Audio_start.wav')
-                    debug('[Audio Handler]: Sound Played')
                 }}
             />
         </div>

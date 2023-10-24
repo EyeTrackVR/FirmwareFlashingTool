@@ -1,11 +1,12 @@
 import { Image, Popover } from '@kobalte/core'
-import { createSignal, Show } from 'solid-js'
+import { JSXElement, createSignal, Show } from 'solid-js'
 
 export interface ICustomPopover {
-    icon: string
+    icon: string | JSXElement
     popoverContent?: string
     disablePopover?: boolean
     styles?: string
+    class?: string
 }
 
 const CustomPopover = (props: ICustomPopover) => {
@@ -24,15 +25,21 @@ const CustomPopover = (props: ICustomPopover) => {
             onMouseLeave={handlePopOver}
             class="group relative inline-flex">
             <Popover.Root open={open()}>
-                <Popover.Trigger class="rounded-[8px] pl-[1.5rem] pr-[1.5rem] ">
+                <Popover.Trigger class={`rounded-[8px] ${props.class}`}>
                     <Image.Root>
-                        <Image.Img
-                            src={props.icon}
-                            alt="logo"
-                            width="20px"
-                            height="35px"
-                            class="pt-1 pb-1"
-                        />
+                        <Show
+                            when={typeof props.icon !== 'string'}
+                            fallback={
+                                <Image.Img
+                                    src={props.icon as string}
+                                    alt="logo"
+                                    width="20px"
+                                    height="35px"
+                                    class="pt-1 pb-1"
+                                />
+                            }>
+                            {props.icon}
+                        </Show>
                     </Image.Root>
                 </Popover.Trigger>
                 <Show when={!props.disablePopover}>

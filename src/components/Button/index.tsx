@@ -1,21 +1,33 @@
+import { Button } from '@kobalte/core'
+import { Component, JSX, Show } from 'solid-js'
 import './styles.css'
 
 export interface Iprops {
     color: string
-    onClick: () => void
-    text: string
+    onClick?: () => void
+    text?: string
     shadow?: string
+    children?: JSX.Element
 }
 
-const Button = (props: Iprops) => {
+const WebSerialButton: Component<Iprops> = (props) => {
+    const handleOnClick = (e: Event) => {
+        e.preventDefault()
+        if (props.onClick) {
+            props.onClick()
+        }
+    }
+
     return (
-        <button
-            class="primary_btn"
+        <Button.Root
+            class="button"
             style={{ background: props.color, 'box-shadow': props.shadow }}
-            onClick={() => props.onClick()}>
-            {props.text}
-        </button>
+            onClick={handleOnClick}>
+            <Show fallback={props.text} when={props.children}>
+                {props.children}
+            </Show>
+        </Button.Root>
     )
 }
 
-export default Button
+export default WebSerialButton

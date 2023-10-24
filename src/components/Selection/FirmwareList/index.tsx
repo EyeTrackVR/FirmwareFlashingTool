@@ -1,32 +1,47 @@
-import { type Component, createSignal } from 'solid-js'
+import { type Component, createSignal, createEffect, onMount } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import Selection from '@components/Selection'
 import { useAppAPIContext } from '@src/store/context/api'
 
 const FirmwareList: Component = () => {
     const [firmwareVersion, setFirmwareVersion] = createSignal('')
+    const [boardNames, setBoardNames] = createSignal<string[]>([])
+    const [defaultValue, setDefaultValue] = createSignal('')
+    const [firmware, setFirmware] = createSignal('')
 
     const { getFirmwareAssets, getFirmwareVersion } = useAppAPIContext()
 
-    let defaultValue = ''
-    let boardNames: string[] = []
+    onMount(() => {
+        setDefaultValue(
+            getFirmwareAssets().find((item) => item.name === 'esp32AIThinker')?.name || '',
+        )
+        if (getFirmwareVersion()) setFirmwareVersion(getFirmwareVersion())
+    })
 
-    if (getFirmwareAssets) {
-        defaultValue =
-            getFirmwareAssets().find((item) => item.name === 'esp32AIThinker')?.name || ''
-        boardNames = getFirmwareAssets().map((item) => item.name)
-        debug(`${getFirmwareAssets()}`)
+    createEffect(() => {
+        setBoardNames(
+            getFirmwareAssets().map((item) => {
+                debug(`${item.name}`)
+                return item.name
+            }),
+        )
+    })
+
+    const handleFirmwareChange = (value: string) => {
+        const temp = getFirmwareAssets().find((item) => item.name === value)?.name
+        const msg = temp ? temp : 'Not Selected'
+        debug(`[Firmware]: ${msg}`)
+        setFirmware(msg)
     }
-
-    if (getFirmwareVersion) setFirmwareVersion(getFirmwareVersion())
 
     return (
         <Selection
             name="firmware"
-            options={boardNames}
+            options={boardNames()}
             placeholder="Select a board"
-            defaultValue={defaultValue}
+            defaultValue={defaultValue()}
             description={`Firmware version: ${firmwareVersion()}`}
+            onValueChange={handleFirmwareChange}
         />
     )
 }
