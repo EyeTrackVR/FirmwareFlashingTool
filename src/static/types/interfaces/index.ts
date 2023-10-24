@@ -129,6 +129,7 @@ export interface AppStoreNotifications {
 export interface AppStoreAPI {
     restAPI: IRest
     ghAPI: IGHRest
+    firmwareType: string
 }
 
 export interface UiStore {

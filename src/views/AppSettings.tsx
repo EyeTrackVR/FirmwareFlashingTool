@@ -5,7 +5,6 @@ import NetworkSettings from '@components/AppSettings/NetworkSettings'
 export interface IProps {
     onChange: (format: string, value: number) => void
     onNetworkSettingsChange: (value: string) => void
-    onClickDownload: () => void
 }
 
 const AppSettings = (props: IProps) => {

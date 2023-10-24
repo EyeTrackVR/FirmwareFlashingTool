@@ -21,9 +21,11 @@ interface AppAPIContext {
     getFirmwareAssets: Accessor<IGHAsset[]>
     getFirmwareVersion: Accessor<string>
     getGHEndpoint: Accessor<string>
+    getFirmwareType: Accessor<string>
     setGHRestStatus: (status: RESTStatus) => void
     setFirmwareAssets: (assets: IGHAsset) => void
     setFirmwareVersion: (version: string) => void
+    setFirmwareType: (type: string) => void
     //********************************* rest *************************************/
     getRESTStatus: Accessor<RESTStatus>
     getRESTDevice: Accessor<string>
@@ -74,6 +76,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
             assets: [],
             version: '',
         },
+        firmwareType: '',
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -103,9 +106,19 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+
+    const setFirmwareType = (type: string) => {
+        setState(
+            produce((s) => {
+                s.firmwareType = type
+            }),
+        )
+    }
+
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
+    const getFirmwareType = createMemo(() => apiState().firmwareType)
     const getGHEndpoint = createMemo(() => ghEndpoint)
     //#endregion
     //********************************* rest *************************************/
@@ -525,17 +538,19 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 getFirmwareAssets,
                 getFirmwareVersion,
                 getGHEndpoint,
-                setGHRestStatus,
-                setFirmwareAssets,
-                setFirmwareVersion,
+                getFirmwareType,
                 getRESTStatus,
                 getRESTDevice,
                 getRESTResponse,
+                getEndpoints,
+                getEndpoint,
+                setGHRestStatus,
+                setFirmwareAssets,
+                setFirmwareVersion,
+                setFirmwareType,
                 setRESTStatus,
                 setRESTDevice,
                 setRESTResponse,
-                getEndpoints,
-                getEndpoint,
                 downloadAsset,
                 doGHRequest,
                 useRequestHook,

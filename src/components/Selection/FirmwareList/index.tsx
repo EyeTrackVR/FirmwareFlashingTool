@@ -7,9 +7,8 @@ const FirmwareList: Component = () => {
     const [firmwareVersion, setFirmwareVersion] = createSignal('')
     const [boardNames, setBoardNames] = createSignal<string[]>([])
     const [defaultValue, setDefaultValue] = createSignal('')
-    const [firmware, setFirmware] = createSignal('')
 
-    const { getFirmwareAssets, getFirmwareVersion } = useAppAPIContext()
+    const { getFirmwareAssets, getFirmwareVersion, setFirmwareType } = useAppAPIContext()
 
     onMount(() => {
         setDefaultValue(
@@ -31,7 +30,7 @@ const FirmwareList: Component = () => {
         const temp = getFirmwareAssets().find((item) => item.name === value)?.name
         const msg = temp ? temp : 'Not Selected'
         debug(`[Firmware]: ${msg}`)
-        setFirmware(msg)
+        setFirmwareType(msg)
     }
 
     return (

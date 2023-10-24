@@ -1,12 +1,9 @@
 import { debug } from 'tauri-plugin-log-api'
-import { useAppAPIContext } from '@src/store/context/api'
-import { useAppNotificationsContext } from '@src/store/context/notifications'
+
 import AppSettings from '@src/views/AppSettings'
 
 const AppSettingsPage = () => {
-    let download: (firmware: string) => Promise<void> = () => Promise.resolve()
-    const { downloadAsset } = useAppAPIContext()
-    if (downloadAsset) download = downloadAsset
+    
 
     return (
         <div class="flex justify-center items-center content-center flex-col pt-[100px] text-white">
@@ -16,10 +13,6 @@ const AppSettingsPage = () => {
                 }}
                 onNetworkSettingsChange={(format) => {
                     debug(`[AppSettings]: ${format}`)
-                }}
-                onClickDownload={() => {
-                    download('esp32AIThinker')
-                    debug('[Download Asset]: Downloading...')
                 }}
             />
         </div>
