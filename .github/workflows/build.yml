@@ -73,7 +73,7 @@ jobs:
           npm install -g pnpm
 
       - name: Install dependencies (PNPM)
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - uses: JonasKruckenberg/tauri-build@v1.2.3
         id: tauri_build
