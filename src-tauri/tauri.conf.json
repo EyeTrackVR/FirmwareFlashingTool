@@ -7,7 +7,7 @@
         "distDir": "../dist"
     },
     "package": {
-        "productName": "EyeTrackVR",
+        "productName": "EyeTrackVR Firmware Flashing Tool",
         "version": "1.0.0"
     },
     "tauri": {
@@ -112,7 +112,7 @@
         },
         "bundle": {
             "active": true,
-            "category": "AppDevelopment",
+            "category": "Developer Tool",
             "copyright": "EyeTrackVR Firmware Flashing Tool",
             "deb": {
                 "depends": []
