@@ -3,6 +3,43 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## 1.0.0 (2023-10-25)
+
+
+### 🍕 Features
+
+* fully working ([6fe5813](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/6fe5813dfe7564cfb60e88fffc878fc1d6f546f3))
+* fully working ([a95758c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/a95758ce710c1d7641b08d24878f5515ad36d6eb))
+* get it working ([f758ad5](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/f758ad5489bd63bc7944c2cd2fef9c6f3a1c4afb))
+* implement the meat and potatoes ([7567bfd](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/7567bfd73e316e24d2e1c13830a66b2ea0b328c9))
+
+
+### 🐛 Bug Fixes
+
+* docs window not working in production ([aad9cb1](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/aad9cb173e8e81374fb8c533f96f8fbc4f128419))
+* docs window not working in production ([4d59288](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/4d59288e600f298b9281b017c3bd1c93dfde1818))
+* some minor bugs related to the main buttons ([f5aaa4c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/f5aaa4ca51970b1c6fd567f23e16f93afd13e7ea))
+
+
+### 🧑‍💻 Code Refactoring
+
+* initial commit ([2eec4fa](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/2eec4fa7916bdefda114d9fa1d8adf9cc5c12e1c))
+
+
+### 🤖 Build System
+
+* change executable name ([3480ed6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/3480ed6b9b8f6a7d3cb416a96404643c8e085979))
+* fix ci build ([90ad202](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/90ad2029794a372c64188035d2b44c58ed16aa5b))
+* fix ci build ([21bf3a8](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/21bf3a8fa1367f394cc52af8f26156860f230bd7))
+* fix ci build ([20be83b](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/20be83bd170e0f278208fb1cbb52bedaf68f76be))
+* fix ci build ([ceaa981](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/ceaa981b0b2ac7be3e879c845d56db5428c1ce32))
+
+
+### 🔁 Continuous Integration
+
+* setup github release ([df67f3c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/df67f3cce524438d433c1eef0fc92b65324649fc))
+* Update build.yml ([b0b3be5](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/b0b3be52204aa9cbc46272a80c612eafd0d3d6e6))
+
 ## [1.0.0-SolidJSGUI.65](https://github.com/EyeTrackVR/EyeTrackVR/compare/v1.0.0-SolidJSGUI.64...v1.0.0-SolidJSGUI.65) (2023-08-24)
 
 

@@ -9,23 +9,30 @@ default-run = "firmware_flashing_tool"
 edition = "2021"
 rust-version = "1.69"
 
-
-## /bin/sh RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
-#[package.metadata."docs.rs"]
-#all-features = true
-#rustdoc-args = ["--cfg", "docsrs"]
-
 [dependencies]
-reqwest = { workspace = true }
-serde = { workspace = true }
-tauri = { workspace = true }
-log = { workspace = true }
-specta = { workspace = true }
-dialoguer = { workspace = true }
-tauri-specta = { workspace = true }
 serde_json = "1.0"
 zip-extract = "0.1.2"
 command-group = "2.1.0"
+[dependencies.reqwest]
+workspace = true
+
+[dependencies.serde]
+workspace = true
+
+[dependencies.tauri]
+workspace = true
+
+[dependencies.log]
+workspace = true
+
+[dependencies.specta]
+workspace = true
+
+[dependencies.dialoguer]
+workspace = true
+
+[dependencies.tauri-specta]
+workspace = true
 
 [dependencies.tauri-plugin-request-client]
 path = "src/lib/api"
@@ -54,52 +61,31 @@ branch = "dev"
 version = "1"
 features = ["full"]
 
+[workspace]
+members = ["src/lib/api", "src/lib/util"]
 [workspace.dependencies]
 dialoguer = "0.11.0"
 log = "0.4.20"
-reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
-serde = { version = "1.0.188", features = ["derive"] }
-specta = { version = "2.0.0-rc.5", features = ["functions", "tauri"] }
-tauri-specta = { version = "2.0.0-rc.2", features = [
-    "javascript",
-    "typescript",
-] }
-tauri = { version = "1.4.1", features = [
-    "process-exit",
-    "protocol-asset",
-    "fs-all",
-    "dialog-all",
-    "http-all",
-    "icon-ico",
-    "notification-all",
-    "os-all",
-    "path-all",
-    "process-relaunch",
-    "shell-open",
-    "system-tray",
-    "window-center",
-    "window-close",
-    "window-create",
-    "window-hide",
-    "window-maximize",
-    "window-minimize",
-    "window-request-user-attention",
-    "window-set-decorations",
-    "window-set-focus",
-    "window-set-fullscreen",
-    "window-set-position",
-    "window-set-resizable",
-    "window-set-size",
-    "window-set-title",
-    "window-show",
-    "window-start-dragging",
-    "window-unmaximize",
-    "window-unminimize",
-] }
 
+[workspace.dependencies.reqwest]
+version = "0.11"
+features = ["json", "rustls-tls"]
 
-[workspace]
-members = ["src/lib/api", "src/lib/util"]
+[workspace.dependencies.serde]
+version = "1.0.188"
+features = ["derive"]
+
+[workspace.dependencies.specta]
+version = "2.0.0-rc.5"
+features = ["functions", "tauri"]
+
+[workspace.dependencies.tauri-specta]
+version = "2.0.0-rc.2"
+features = ["javascript", "typescript"]
+
+[workspace.dependencies.tauri]
+version = "1.4.1"
+features = ["process-exit", "protocol-asset", "fs-all", "dialog-all", "http-all", "icon-ico", "notification-all", "os-all", "path-all", "process-relaunch", "shell-open", "system-tray", "window-center", "window-close", "window-create", "window-hide", "window-maximize", "window-minimize", "window-request-user-attention", "window-set-decorations", "window-set-focus", "window-set-fullscreen", "window-set-position", "window-set-resizable", "window-set-size", "window-set-title", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"]
 
 [features]
 default = ["custom-protocol"]
@@ -109,16 +95,6 @@ updater = ["tauri/updater"]
 [build-dependencies.tauri-build]
 version = "1.4.1"
 features = []
-
-# //* If we need to implement OS specific commands, we can use these
-#[target.'cfg(target_os = "linux")'.dependencies]
-#sd-desktop-linux = { path = "./crates/linux" }
-#
-#[target.'cfg(target_os = "macos")'.dependencies]
-#sd-desktop-macos = { path = "./crates/macos" }
-#
-#[target.'cfg(target_os = "windows")'.dependencies]
-#sd-desktop-windows = { path = "./crates/windows" }
 
 [profile]
 [profile.dev]
