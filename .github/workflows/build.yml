@@ -75,6 +75,9 @@ jobs:
       - name: Install dependencies (PNPM)
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Local Plugins  (PNPM)
+        run: pnpm run specta:gen
+
       - uses: JonasKruckenberg/tauri-build@v1.2.3
         id: tauri_build
         with:
