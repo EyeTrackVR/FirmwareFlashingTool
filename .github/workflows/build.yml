@@ -56,6 +56,7 @@ jobs:
           profile: minimal
           toolchain: stable
           target: ${{ matrix.platform.rust_target }}
+
       - uses: Swatinem/rust-cache@v2
 
       - name: Install dependencies (ubuntu only)
@@ -120,7 +121,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sudo apt-get install -y jq
-          chmod +x ./github/scripts/prepareCMD.sh 
+          chmod +x ./.github/scripts/prepareCMD.sh 
           semantic-release
 
   cleanup:
