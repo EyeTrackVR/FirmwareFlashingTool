@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.0.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.0.0...v1.0.1) (2023-10-27)
+
+
+### 🐛 Bug Fixes
+
+* bundle identifier ([5b17b69](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/5b17b696836b5a9deda41f6f8a589dd9cbc308d3))
+
 ## 1.0.0 (2023-10-25)
 
 

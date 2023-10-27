@@ -1,6 +1,6 @@
 [package]
 name = "firmware_flashing_tool"
-version = "1.0.0"
+version = "1.0.1"
 description = "A tool to flash the firmware of the EyeTrackVR device."
 authors = ["DaOfficialWizard"]
 license = "MIT"
@@ -13,6 +13,7 @@ rust-version = "1.69"
 serde_json = "1.0"
 zip-extract = "0.1.2"
 command-group = "2.1.0"
+
 [dependencies.reqwest]
 workspace = true
 
@@ -63,6 +64,7 @@ features = ["full"]
 
 [workspace]
 members = ["src/lib/api", "src/lib/util"]
+
 [workspace.dependencies]
 dialoguer = "0.11.0"
 log = "0.4.20"
