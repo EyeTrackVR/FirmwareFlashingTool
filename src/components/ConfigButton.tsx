@@ -1,7 +1,8 @@
 import { appLogDir } from '@tauri-apps/api/path'
 import { open } from '@tauri-apps/api/shell'
-import { FaSolidScrollTorah } from 'solid-icons/fa'
+import { FaSolidScroll } from 'solid-icons/fa'
 import { createSignal } from 'solid-js'
+import { debug } from 'tauri-plugin-log-api'
 import CustomButton from '@components/CustomButton'
 
 export const ConfigButton = () => {
@@ -9,15 +10,16 @@ export const ConfigButton = () => {
 
     const handleConfigDir = () => {
         appLogDir().then((dir) => {
-            console.log(dir)
+            debug(`[Config Button]: ${dir}`)
             open(dir).then(() => console.log('opened'))
         })
     }
+
     return (
         <CustomButton
             isButtonActive={isButtonActive()}
-            tooltip="Erase Firmware Assets"
-            icon={<FaSolidScrollTorah size={45} fill="#FFFFFFe3" />}
+            tooltip="Open Config Dir"
+            icon={<FaSolidScroll size={45} fill="#FFFFFFe3" />}
             onClick={(isActive) => {
                 setIsButtonActive(isActive)
                 handleConfigDir()

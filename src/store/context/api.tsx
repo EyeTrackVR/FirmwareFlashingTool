@@ -11,8 +11,8 @@ import { download, upload } from 'tauri-plugin-upload-api'
 import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
 import { O } from '@static/types'
-import { ENotificationType, RESTStatus, RESTType, ESPEndpoints } from '@static/types/enums'
-import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease } from '@static/types/interfaces'
+import { ENotificationType, RESTStatus, RESTType, ESPEndpoints } from '@src/static/types/enums'
+import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease } from '@src/static/types/interfaces'
 import { makeRequest } from 'tauri-plugin-request-client'
 
 interface AppAPIContext {

@@ -11,8 +11,8 @@ import type {
     Notifications,
     NotificationAction,
     AppStoreNotifications,
-} from '@static/types/interfaces'
-import { ENotificationAction } from '@static/types/enums'
+} from '@src/static/types/interfaces'
+import { ENotificationAction } from '@src/static/types/enums'
 
 interface AppNotificationsContext {
     getEnableNotificationsSounds: Accessor<boolean>

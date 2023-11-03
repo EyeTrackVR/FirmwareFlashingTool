@@ -7,7 +7,7 @@ import { attachConsole } from 'tauri-plugin-log-api'
 import type { Context } from '@static/types'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { usePersistentStore } from '@src/store/tauriStore'
-import { ExitCodes } from '@static/types/enums'
+import { ExitCodes } from '@src/static/types/enums'
 
 interface AppContextMain {
     getDetachConsole: Accessor<Promise<UnlistenFn>>

@@ -3,7 +3,7 @@ import { createEffect, createSignal, For, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import CustomToast from './CustomToast'
 import { useAppNotificationsContext } from '@src/store/context/notifications'
-import { Notifications } from '@static/types/interfaces'
+import { Notifications } from '@src/static/types/interfaces'
 
 const ToastNotificationWindow = () => {
     const { getNotifications, getEnableNotifications } = useAppNotificationsContext()

@@ -1,6 +1,6 @@
 {
-  "name": "etvr-firmware-flashtool",
-  "version": "1.0.1",
+  "name": "etvr-firmware-flasher-tool",
+  "version": "1.0.0",
   "private": true,
   "description": "A SolidJS project for EyeTrackVR",
   "author": "EyeTrackVR",
@@ -61,6 +61,7 @@
     "@optimize-lodash/rollup-plugin": "^4.0.4",
     "@solid-primitives/i18n": "^1.4.1",
     "@solid-primitives/map": "^0.4.8",
+    "@solid-primitives/refs": "^1.0.5",
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
     "@stitches/core": "^1.2.8",
@@ -77,8 +78,8 @@
     "solid-transition-group": "^0.2.3",
     "solidjs-icons": "^1.0.12",
     "solidjs-use": "^2.3.0",
-    "tauri-plugin-request-client": "workspace:*",
     "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log",
+    "tauri-plugin-request-client": "workspace:*",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store",
     "tauri-plugin-upload-api": "github:tauri-apps/tauri-plugin-upload"
   }

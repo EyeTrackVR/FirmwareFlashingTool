@@ -1,22 +1,25 @@
-import { useLocation, useNavigate, useRoutes } from '@solidjs/router'
+import { /* useLocation, */ useNavigate, useRoutes } from '@solidjs/router'
 import { isEqual } from 'lodash'
-import { createEffect, onMount, type Component, createSignal } from 'solid-js'
+import { createEffect, onMount, type Component, lazy } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
 import type { PersistentSettings } from '@static/types'
 import Header from '@components/Header'
-import { ENotificationAction } from '@static/types/enums'
+import { ENotificationAction } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppContext } from '@store/context/app'
 import { useAppNotificationsContext } from '@store/context/notifications'
+import { useAppUIContext } from '@store/context/ui'
 import { usePersistentStore } from '@store/tauriStore'
 
-const AppRoutes: Component = () => {
-    const [userIsInSettings, setUserIsInSettings] = createSignal(false)
-    const params = useLocation()
+const ContextMenu = lazy(() => import('@components/ContextMenu'))
+const DebugMenu = lazy(() => import('@components/ContextMenu/DevTools'))
 
+const AppRoutes: Component = () => {
+    //const params = useLocation()
     const Path = useRoutes(routes)
+
     const { get, set } = usePersistentStore()
     const { doGHRequest, useRequestHook, getEndpoint } = useAppAPIContext()
     const navigate = useNavigate()
@@ -33,7 +36,11 @@ const AppRoutes: Component = () => {
         addNotification,
     } = useAppNotificationsContext()
 
+    const { setContextMenuAnchor, getContextAnchor } = useAppUIContext()
+
     onMount(() => {
+        setContextMenuAnchor('custom-context-menu')
+        console.log('context anchor', getContextAnchor())
         //* load the app settings from the persistent store and assign to the global state
         get('settings').then((settings) => {
             if (settings) {
@@ -88,9 +95,9 @@ const AppRoutes: Component = () => {
         })
     })
 
-    createEffect(() => {
+    /*   createEffect(() => {
         setUserIsInSettings(params.pathname.match('settings') !== null)
-    })
+    }) */
 
     return (
         <main class="pb-[5rem] w-[100%] px-8 max-w-[1920px]">
@@ -100,6 +107,9 @@ const AppRoutes: Component = () => {
             <div class="pt-[70px]">
                 <Path />
             </div>
+            <ContextMenu id="dev-tools">
+                <DebugMenu />
+            </ContextMenu>
         </main>
     )
 }

@@ -1,7 +1,6 @@
 import DownloadAssetsButton from '@components/DownloadAssetsButton'
 import EraseButton from '@components/EraseButton'
 import OpenDocs from '@components/OpenDocs'
-import FirmwareList from '@components/Selection/FirmwareList'
 import WebSerial from '@components/WebSerial'
 
 const FlashSettings = () => {

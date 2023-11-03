@@ -3,10 +3,10 @@ import { AiOutlineCheckCircle } from 'solid-icons/ai'
 import { FiAlertTriangle, FiAlertOctagon } from 'solid-icons/fi'
 import { IoAlertCircleSharp } from 'solid-icons/io'
 import { createSignal, Component, Show } from 'solid-js'
-import type { Notifications } from '@static/types/interfaces'
+import type { Notifications } from '@src/static/types/interfaces'
 import CloseIcon from '@components/CloseIcon'
 import { useAppNotificationsContext } from '@src/store/context/notifications'
-import { ENotificationType } from '@static/types/enums'
+import { ENotificationType } from '@src/static/types/enums'
 
 interface ToastProps {
     id: string

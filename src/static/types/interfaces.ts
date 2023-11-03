@@ -1,6 +1,6 @@
-import { ENotificationAction, ENotificationType } from '../enums'
+import { ENotificationAction, ENotificationType } from './enums'
+import type { RESTStatus, RESTType } from '@src/static/types/enums'
 import type { DebugMode } from '@static/types'
-import type { RESTStatus, RESTType } from '@static/types/enums'
 import type { WebviewWindow } from '@tauri-apps/api/window'
 import type { ToasterStore } from 'solid-headless'
 import type { JSXElement } from 'solid-js'
@@ -103,8 +103,7 @@ export interface MenuOpen {
 
 export interface NewMenu {
     children: JSXElement
-    ref: HTMLElement | null
-    name: string
+    id: string
 }
 
 export interface ModalMenu {
@@ -135,4 +134,6 @@ export interface AppStoreAPI {
 export interface UiStore {
     openModal?: boolean
     showNotifications?: boolean
+    menuOpen?: MenuOpen | null
+    contextAnchor?: HTMLElement | null
 }

@@ -1,0 +1,15 @@
+.context-menu {
+    @apply text-white fixed flex flex-col p-3 gap-3 w-fit rounded-lg ;
+    background: linear-gradient(247.32deg, #282830 0%, #181c28 100%);
+}
+
+.context-menu-labels {
+    margin-bottom: -10px;
+    font-size: 14px;
+}
+
+.divider {
+    width: 100%;
+    border-color: #515151;
+    border-style: solid;
+}

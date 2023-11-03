@@ -23,6 +23,9 @@ importers:
       '@solid-primitives/map':
         specifier: ^0.4.8
         version: 0.4.8(solid-js@1.8.3)
+      '@solid-primitives/refs':
+        specifier: ^1.0.5
+        version: 1.0.5(solid-js@1.8.3)
       '@solidjs/meta':
         specifier: ^0.28.6
         version: 0.28.6(solid-js@1.8.3)
