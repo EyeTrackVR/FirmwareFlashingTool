@@ -22,7 +22,6 @@ export const AppContextMainProvider: Component<Context> = (props) => {
     const getDetachConsole = createMemo(() => detachConsole)
     //#region Global Hooks
     const handleAppExit = async (main = false) => {
-        // TODO: call these before the app exits to shutdown gracefully
 
         await invoke('handle_save_window_state')
         console.log('[App Close]: saved window state')
@@ -30,53 +29,25 @@ export const AppContextMainProvider: Component<Context> = (props) => {
         if (main) {
             const { save } = usePersistentStore()
             await save()
+
             // stopMDNS()
-            // stopWebsocketClients()
-            // saveSettings()
-            // stopPythonBackend()
             await exit(ExitCodes.USER_EXIT)
         }
-        // TODO: call REST api to stop the backend
-        console.log('[App Exit]: Starting Python Backend')
         await appWindow.close()
     }
 
     const handleAppBoot = () => {
-        const { set, get } = usePersistentStore()
+        //const { set, get } = usePersistentStore()
 
         console.log('[App Boot]: Frontend Initialization Starting')
         useEventListener(document, 'DOMContentLoaded', () => {
-            invoke('get_user')
-                .then((config) => {
-                    const userName = config as string
-                    console.log('[App Boot]: Welcome ', userName)
-                    get('settings').then((settings) => {
-                        if (userName) {
-                            set('settings', { user: userName, ...settings })
-                        }
-                    })
-                })
-                .catch((e) => console.error(e))
             // check if the window state is saved and restore it if it is
             invoke('handle_save_window_state').then(() => {
                 console.log('[App Boot]: saved window state')
             })
-
-            /* setTimeout(() => {
-                setFrontendReady()
-                    .then(() => {
-                        debug('[App Boot]: Frontend Initialized')
-                        console.log('[App Boot]: Frontend Initialized')
-                    })
-                    .catch((e) => console.error(e))
-            }, 9000) */
-
-            //setTimeout(() => invoke('close_splashscreen'), 15000)
         })
 
-        //TODO: Start mdns and websocket clients only after the backend is ready
-        // TODO: call REST api to start the backend
-        console.log('[App Boot]: Starting Python Backend')
+        //TODO: Start mdns client
     }
 
     const handleTitlebar = (main = false) => {

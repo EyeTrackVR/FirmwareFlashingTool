@@ -40,7 +40,6 @@ export enum RANGE_INPUT_FORMAT_APP_SETTINGS {
 
 //********************************* Network and App *************************************/
 
-// TODO = add more exit codes related to potential areas of failure in the app
 export enum ExitCodes {
     USER_EXIT = 0,
     ERROR = 1,
