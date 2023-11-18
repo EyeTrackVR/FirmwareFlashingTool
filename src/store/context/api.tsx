@@ -6,13 +6,13 @@ import { invoke, convertFileSrc } from '@tauri-apps/api/tauri'
 import { identity, pipe } from 'fp-ts/lib/function'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
-import { debug, error, warn } from 'tauri-plugin-log-api'
+import { debug, error, warn, trace } from 'tauri-plugin-log-api'
 import { download, upload } from 'tauri-plugin-upload-api'
 import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
-import { O } from '@static/types'
 import { ENotificationType, RESTStatus, RESTType, ESPEndpoints } from '@src/static/types/enums'
 import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease } from '@src/static/types/interfaces'
+import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
 
 interface AppAPIContext {
@@ -177,12 +177,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
             return
         }
 
-        debug(`[Github Release]: App Config Dir: ${appConfigDirPath}`)
+        trace(`[Github Release]: App Config Dir: ${appConfigDirPath}`)
 
         // check if the firmware chosen matches the one names in the firmwareAssets array of objects
         const firmwareAsset = getFirmwareAssets().find((asset) => asset.name === firmware)
 
-        debug(`[Github Release]: Firmware Asset: ${firmwareAsset}`)
+        trace(`[Github Release]: Firmware Asset: ${firmwareAsset}`)
 
         if (firmwareAsset) {
             debug(`[Github Release]: Downloading firmware: ${firmware}`)
@@ -196,7 +196,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
             //debug('[Github Release]: File Name: ', fileName)
             // ${appConfigDirPath}${fileName}
             const path = await join(appConfigDirPath, fileName)
-            debug(`[Github Release]: Path: ${path}`)
+            trace(`[Github Release]: Path: ${path}`)
             // get the latest release
             const response = await download(
                 firmwareAsset.browser_download_url,
@@ -283,7 +283,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         } else {
             setFirmwareVersion(data['name'])
         }
-        debug(JSON.stringify(data))
+        trace(`[Github Response Data]: ${JSON.stringify(data)}`)
         const assets: Array<{
             browser_download_url: string
             name: string
@@ -361,29 +361,20 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     responseType: ResponseType.JSON,
                 })
 
-                /* const response = await fetch<IGHRelease>(getGHEndpoint(), {
-                    method: 'GET',
-                    timeout: 30,
-                    headers: {
-                        'User-Agent': 'Other',
-                    },
-                    responseType: ResponseType.JSON,
-                }) */
-
-                debug(JSON.stringify(response))
+                trace(`[Github Response]: ${JSON.stringify(response)}`)
 
                 if (!response.ok) {
                     debug('[Github Release Error]: Cannot Access Github API Endpoint')
                     return
                 }
-                debug('[OpenIris Version]: ', response.data['name'])
+                debug(`[OpenIris Version]: ${response.data['name']}`)
 
                 try {
                     const config = await readTextFile('config.json', {
                         dir: BaseDirectory.AppConfig,
                     })
                     const config_json = JSON.parse(config)
-                    debug(JSON.stringify(config_json))
+                    trace(`[Config]: ${JSON.stringify(config_json)}`)
                     if (response instanceof Object && response.ok) {
                         if (config !== '') {
                             if (response.data['name'] !== config_json.version) {
@@ -422,8 +413,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     error(`[Config Read Error]: Config does not exist ${err}`)
                 }
                 const config_json = JSON.parse(config)
-                debug('[OpenIris Version]: ', config_json.version)
-                debug(config_json)
+                debug(`[OpenIris Version]: ${config_json.version}`)
+                trace(`[Config.JSON Contents]:${config_json}`)
                 if (config !== '') {
                     debug('[Config Exists]: Config Exists and is up to date')
                     setGHData(config_json, false)

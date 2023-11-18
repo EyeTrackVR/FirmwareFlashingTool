@@ -1,5 +1,5 @@
 import { type Component, createSignal, createEffect, onMount } from 'solid-js'
-import { debug } from 'tauri-plugin-log-api'
+import { debug, trace } from 'tauri-plugin-log-api'
 import Selection from '@components/Selection'
 import { useAppAPIContext } from '@src/store/context/api'
 
@@ -20,7 +20,7 @@ const FirmwareList: Component = () => {
     createEffect(() => {
         setBoardNames(
             getFirmwareAssets().map((item) => {
-                debug(`${item.name}`)
+                trace(`${item.name}`)
                 return item.name
             }),
         )
