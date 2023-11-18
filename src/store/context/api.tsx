@@ -1,9 +1,8 @@
-import { listen } from '@tauri-apps/api/event'
 import { removeFile, readTextFile, BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { getClient, ResponseType } from '@tauri-apps/api/http'
 import { appConfigDir, join } from '@tauri-apps/api/path'
 import { invoke, convertFileSrc } from '@tauri-apps/api/tauri'
-import { identity, pipe } from 'fp-ts/lib/function'
+import { pipe } from 'fp-ts/lib/function'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import { debug, error, warn, trace } from 'tauri-plugin-log-api'
@@ -39,7 +38,7 @@ interface AppAPIContext {
     //********************************* hooks *************************************/
     downloadAsset: (firmware: string) => Promise<void>
     doGHRequest: () => Promise<void>
-    useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<object>
+    useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<void>
     useOTA: (firmwareName: string, device: string) => Promise<void>
 }
 
@@ -193,10 +192,10 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 firmwareAsset.browser_download_url.split('/')[
                     firmwareAsset.browser_download_url.split('/').length - 1
                 ]
-            //debug('[Github Release]: File Name: ', fileName)
-            // ${appConfigDirPath}${fileName}
+
             const path = await join(appConfigDirPath, fileName)
             trace(`[Github Release]: Path: ${path}`)
+
             // get the latest release
             const response = await download(
                 firmwareAsset.browser_download_url,
@@ -452,7 +451,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         endpointName: string,
         deviceName?: string,
         args?: string,
-    ): Promise<O.Option<object>> => {
+    ): Promise<void> => {
         let endpoint: string = getEndpoint(endpointName).url
         const method: RESTType = getEndpoint(endpointName).type
 
@@ -468,37 +467,28 @@ export const AppAPIProvider: Component<Context> = (props) => {
         setRESTStatus(RESTStatus.LOADING)
 
         try {
+            console.log('[RequestHook]: Making request')
             setRESTStatus(RESTStatus.ACTIVE)
-            let parsedResponse: object = {}
             const response = await makeRequest(endpoint, deviceName, method)
-            const unlisten = await listen<string>('request-response', (event) => {
-                parsedResponse = JSON.parse(event.payload)
-            })
             if (response.status === 'error') {
                 setRESTStatus(RESTStatus.FAILED)
                 error(`[REST Request]: ${response.error}`)
-                return O.none
+                addNotification({
+                    title: 'Error',
+                    message: response.error,
+                    type: ENotificationType.ERROR,
+                })
+                return
             }
-            unlisten()
-            setRESTResponse(parsedResponse)
-            setRESTStatus(RESTStatus.COMPLETE)
-            return O.some(parsedResponse)
         } catch (err) {
             setRESTStatus(RESTStatus.FAILED)
             error(`[REST Request]: ${err}`)
-            return O.none
+            return
         }
     }
 
     const useRequestHook = async (endpointName: string, deviceName?: string, args?: string) => {
-        const res = await RequestHook(endpointName, deviceName, args)
-        return pipe(
-            res,
-            O.match(() => {
-                error('[REST Request]: No response')
-                return {}
-            }, identity),
-        )
+        await RequestHook(endpointName, deviceName, args)
     }
 
     /**
@@ -508,16 +498,9 @@ export const AppAPIProvider: Component<Context> = (props) => {
      *
      */
     const useOTA = async (firmwareName: string, device: string) => {
-        /*  const endpoints: Map<string, IEndpoint> = getEndpoints()
-        const ota: string = endpoints.get('ota')?.url ?? ''
-        const camera = getCameras().find((camera) => camera.address === device)
-        if (!camera) {
-            debug('No camera found at that address')
-            return
-        }
-        const server = camera.address + ota
+        useRequestHook('ota', device)
         const path = await join(await appConfigDir(), firmwareName + '.bin')
-        await upload(server, path) */
+        await upload(device, path)
     }
     //#endregion
 

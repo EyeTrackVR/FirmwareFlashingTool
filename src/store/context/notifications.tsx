@@ -6,12 +6,12 @@ import {
 import { ToasterStore } from 'solid-headless'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
-import type { Context } from '@static/types'
 import type {
     Notifications,
     NotificationAction,
     AppStoreNotifications,
 } from '@src/static/types/interfaces'
+import type { Context } from '@static/types'
 import { ENotificationAction } from '@src/static/types/enums'
 
 interface AppNotificationsContext {

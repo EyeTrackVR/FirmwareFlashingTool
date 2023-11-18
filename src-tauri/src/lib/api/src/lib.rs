@@ -24,8 +24,8 @@ impl RESTClient {
   pub fn new(base_url: Option<String>, method: Option<String>) -> Self {
     Self {
       http_client: Arc::new(tauri::async_runtime::Mutex::new(Client::new())),
-      base_url: Arc::new(Mutex::new(base_url.unwrap_or(String::new()))),
-      method: Arc::new(Mutex::new(method.unwrap_or(String::new()))),
+      base_url: Arc::new(Mutex::new(base_url.unwrap_or_default())),
+      method: Arc::new(Mutex::new(method.unwrap_or_default())),
     }
   }
 }
@@ -63,7 +63,7 @@ impl<R: Runtime> APIPlugin<R> {
     self.rest_client.method.lock().unwrap().clone()
   }
 
-  async fn request(&self) -> ETVResult<()> {
+  async fn request(&self) -> ETVResult<String> {
     info!("Making REST request");
 
     let base_url = self.get_base_url();
@@ -112,8 +112,8 @@ impl<R: Runtime> APIPlugin<R> {
     };
     self
       .app_handle
-      .trigger_global("request-response", Some(response));
-    Ok(())
+      .trigger_global("request-response", Some(response.clone()));
+    Ok(response)
     // send a global event when the API is closed
   }
 
@@ -135,8 +135,12 @@ impl<R: Runtime> APIPlugin<R> {
 
     let request_result = self.request().await;
     match request_result {
-      Ok(()) => {
-        println!("[APIPlugin]: Request response: Ok");
+      Ok(response) => {
+        self
+          .app_handle
+          .emit_all("request-response", Some(response.clone()))
+          .expect("Failed to emit event");
+        println!("[APIPlugin]: Request response: {}", response);
       }
       Err(e) => println!("[APIPlugin]: Request failed: {}", e),
     }
@@ -175,8 +179,7 @@ macro_rules! specta_builder {
     ts::builder()
       .commands(collect_commands![make_request::<$e>])
       .path(generate_plugin_path(PLUGIN_NAME))
-      .config(specta::ts::ExportConfig::default()
-      .formatter(specta::ts::prettier))
+      .config(specta::ts::ExportConfig::default().formatter(specta::ts::prettier))
     //.events(collect_events![RandomNumber])
   };
 }
