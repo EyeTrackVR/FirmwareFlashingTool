@@ -63,6 +63,10 @@
         ],
         "[json]": {
             "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "editor.formatOnSave": true,
+        "files.exclude": {
+            "**/.git": false
         }
     }
 }
