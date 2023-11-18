@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.2.0](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.1.2...v1.2.0) (2023-11-18)
+
+
+### 🍕 Features
+
+* implement configuring network settings ([#1](https://github.com/EyeTrackVR/FirmwareFlashingTool/issues/1)) ([84d603e](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/84d603ef4dcde1457c2ea99358e08de83b84219c))
+
 ## [1.1.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.1.1...v1.1.2) (2023-11-18)
 
 
