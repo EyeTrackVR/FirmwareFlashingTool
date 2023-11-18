@@ -4,8 +4,8 @@ import { attachConsole } from 'tauri-plugin-log-api'
 import { AppAPIProvider } from './api'
 import { AppNotificationProvider } from './notifications'
 import { AppUIProvider } from './ui'
-import type { Context, DebugMode } from '@static/types'
 import type { AppStore } from '@src/static/types/interfaces'
+import type { Context, DebugMode } from '@static/types'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 
 interface AppContext {

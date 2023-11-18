@@ -65,16 +65,16 @@ export enum RESTType {
 
 export enum ESPEndpoints {
     //? Default
-    PING = '/control/command/ping',
-    SAVE = '/control/command/save',
-    RESET_CONFIG = '/control/command/resetConfig',
-    REBOOT_DEVICE = '/control/command/rebootDevice',
-    RESTART_CAMERA = '/control/command/restartCamera',
-    GET_STORED_CONFIG = '/control/command/getStoredConfig',
-    SET_TX_POWER = '/control/command/setTxPower',
-    SET_DEVICE = '/control/command/setDevice',
+    PING = '/control/builtin/command/ping',
+    SAVE = '/control/builtin/command/save',
+    RESET_CONFIG = '/control/builtin/command/resetConfig',
+    REBOOT_DEVICE = '/control/builtin/command/rebootDevice',
+    RESTART_CAMERA = '/control/builtin/command/restartCamera',
+    GET_STORED_CONFIG = '/control/builtin/command/getStoredConfig',
+    SET_TX_POWER = '/control/builtin/command/setTxPower',
+    SET_DEVICE = '/control/builtin/command/setDevice',
     //? Network
-    WIFI = '/control/command/wifi',
-    WIFI_STRENGTH = '/control/command/wifiStrength',
+    WIFI = '/control/builtin/command/wifi',
+    WIFI_STRENGTH = '/control/builtin/command/wifiStrength',
     OTA = '/update',
 }

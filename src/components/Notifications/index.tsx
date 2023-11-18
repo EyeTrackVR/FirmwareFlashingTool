@@ -2,8 +2,8 @@ import { Toaster, ToasterStore, Transition, useToaster } from 'solid-headless'
 import { createEffect, createSignal, For, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import CustomToast from './CustomToast'
-import { useAppNotificationsContext } from '@src/store/context/notifications'
 import { Notifications } from '@src/static/types/interfaces'
+import { useAppNotificationsContext } from '@src/store/context/notifications'
 
 const ToastNotificationWindow = () => {
     const { getNotifications, getEnableNotifications } = useAppNotificationsContext()
