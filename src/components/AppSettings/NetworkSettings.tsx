@@ -68,18 +68,7 @@ const NetworkSettings = () => {
 
     return (
         <div>
-            <form action="#" class="flex grow rounded-xl flex-col pl-4 pr-4 pb-4 pt-4 bg-[#333742]">
-                {/* <div>
-                    <div class="pb-6 pl-3 pr-3">
-                        <p class="text-start text-2xl">Network settings</p>
-                        <div class="text-white flex flex-col items-center justify-center h-full w-full p-2">
-                            <div class="card rounded-md bg-slate-700">
-                                <h1 class="text-2xl font-bold">Coming Soon</h1>
-                                <p class="mt-4 text-gray-400 text-lg">😞</p>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
+            <form class="flex grow rounded-xl flex-col pl-4 pr-4 pb-4 pt-4 bg-[#333742]">
                 <div>
                     <Input
                         onChange={setSsid}
