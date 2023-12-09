@@ -21,13 +21,19 @@ This project uses `pnpm` by default, and utilizes `pnpm workspaces`. If you do n
 
 You _can_ use `yarn` or `npm`, however, _you_ will need to modify the project to remove the `pnpm` specific commands and workspace.
 
+## Setup
+
+This project uses custom `Tauri Plugins` to communicate with the hardware. These plugins are located in the [`src-tauri/src/lib`](/src-tauri/src/lib) folder.
+
+You **must** run the following command to install the project deps and build the plugins before running the app:
+
 ```bash
-pnpm install # or yarn install or npm install
+pnpm setup
 ```
 
 ## Available Scripts
 
-In the project directory, you can run:
+See the [`package.json`](/package.json) for all available scripts.
 
 ### `pnpm tauri dev`
 

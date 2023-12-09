@@ -10,7 +10,7 @@
     "build": "vite build",
     "start": "vite start",
     "serve": "vite preview",
-    "tauri": "tauri",
+    "setup": "pnpm install && pnpm run specta:post-install",
     "tauri:dev": "tauri dev",
     "tauri:dev:release": "tauri dev --release",
     "tauri:build": "tauri build",
