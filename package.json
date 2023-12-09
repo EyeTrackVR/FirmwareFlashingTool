@@ -17,7 +17,7 @@
     "tauri:build:dev": "tauri build --debug",
     "tauri:update": "cd src-tauri && cargo update && cargo upgrade",
     "tauri:clean": "cd src-tauri && cargo clean",
-    "specta:post-install": "pnpm run specta:codegen && pnpm run specta:build",
+    "specta:post-install": "pnpm run specta:gen && pnpm run specta:build",
     "specta:build": "pnpm --stream -r specta:build",
     "specta:gen": "pnpm --stream -r specta:gen",
     "docs": "jsdoc -c jsdoc.conf.json",

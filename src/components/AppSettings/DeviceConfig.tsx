@@ -30,8 +30,7 @@ const DeviceConfig = () => {
         onCleanup(unlisten)
     })
 
-    const handleGetConfig = async (e: Event) => {
-        e.preventDefault()
+    const handleGetConfig = async () => {
 
         debug(`Response: ${response()}`)
 
@@ -61,6 +60,10 @@ const DeviceConfig = () => {
         }
         setConfig(JSON.stringify(response()!['data']))
     }
+
+    setTimeout(() => {
+        handleGetConfig()
+    })
 
     return (
         <div class="flex grow rounded-xl flex-col pl-4 pr-4 pb-4 pt-4 bg-[#333742]">

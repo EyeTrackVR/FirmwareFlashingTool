@@ -96,6 +96,7 @@ impl<R: Runtime> APIPlugin<R> {
           .lock()
           .await
           .post(&base_url)
+          .header("User-Agent", "EyeTrackVR")
           .send()
           .await?
           .text()
