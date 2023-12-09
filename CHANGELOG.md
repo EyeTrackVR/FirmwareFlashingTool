@@ -3,6 +3,20 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.2.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.0...v1.2.1) (2023-12-09)
+
+
+### 📝 Documentation
+
+* update documentation ([7635a5d](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/7635a5d5ce881e902e3f76277c7ae0103bf9ecac))
+* update documentation ([eac7c12](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/eac7c1262ba1a791ded25e10bd96e4bf3791c6de))
+
+
+### 🧑‍💻 Code Refactoring
+
+* begin implementing logic to view device config ([251ca70](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/251ca7007e62b48e4dbcd063462b0cf8ea67b794))
+* cleaning up the project ([249dfd6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/249dfd61b52d89bf5e5d35994af787e1fd1230fa))
+
 ## [1.2.0](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.1.2...v1.2.0) (2023-11-18)
 
 
