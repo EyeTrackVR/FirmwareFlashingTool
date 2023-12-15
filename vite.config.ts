@@ -10,6 +10,7 @@ export default defineConfig({
         alias: {
             '@interfaces': resolve(__dirname, './src/interfaces'),
             '@components': resolve(__dirname, './src/components'),
+            '@containers': resolve(__dirname, './src/containers'),
             '@routes': resolve(__dirname, './src/routes'),
             '@pages': resolve(__dirname, './src/pages'),
             '@styles': resolve(__dirname, './src/styles'),
