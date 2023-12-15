@@ -25,10 +25,13 @@ interface AppAPIContext {
     setFirmwareAssets: (assets: IGHAsset) => void
     setFirmwareVersion: (version: string) => void
     setFirmwareType: (type: string) => void
+    activeBoard: Accessor<string>
     //********************************* rest *************************************/
     getRESTStatus: Accessor<RESTStatus>
     getRESTDevice: Accessor<string>
     getRESTResponse: Accessor<object>
+    ssid: Accessor<string>
+    password: Accessor<string>
     setRESTStatus: (status: RESTStatus) => void
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
@@ -40,6 +43,8 @@ interface AppAPIContext {
     doGHRequest: () => Promise<void>
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<void>
     useOTA: (firmwareName: string, device: string) => Promise<void>
+    setActiveBoard: (board: string) => void
+    setNetwork: (ssid: string, password: string) => void
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
@@ -65,6 +70,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     ])
 
     const defaultState: AppStoreAPI = {
+        activeBoard: '',
         restAPI: {
             status: RESTStatus.COMPLETE,
             device: '',
@@ -75,6 +81,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
             assets: [],
             version: '',
         },
+        ssid: '',
+        password: '',
         firmwareType: '',
     }
 
@@ -113,6 +121,21 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+    const setActiveBoard = (activeBoard: string) => {
+        setState(
+            produce((s) => {
+                s.activeBoard = activeBoard
+            }),
+        )
+    }
+    const setNetwork = (ssid: string, password: string) => {
+        setState(
+            produce((s) => {
+                s.ssid = ssid
+                s.password = password
+            }),
+        )
+    }
 
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
@@ -143,9 +166,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+    const activeBoard = createMemo(() => apiState().activeBoard)
     const getRESTStatus = createMemo(() => apiState().restAPI.status)
     const getRESTDevice = createMemo(() => apiState().restAPI.device)
     const getRESTResponse = createMemo(() => apiState().restAPI.response)
+    const ssid = createMemo(() => apiState().ssid)
+    const password = createMemo(() => apiState().password)
     const getEndpoints = createMemo(() => endpointsMap)
     const getEndpoint = (key: string) =>
         pipe(
@@ -508,6 +534,11 @@ export const AppAPIProvider: Component<Context> = (props) => {
     return (
         <AppAPIContext.Provider
             value={{
+                ssid,
+                password,
+                setNetwork,
+                setActiveBoard,
+                activeBoard,
                 getGHRestStatus,
                 getFirmwareAssets,
                 getFirmwareVersion,
