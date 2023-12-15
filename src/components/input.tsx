@@ -1,40 +1,28 @@
 import type { Component } from 'solid-js'
 
-interface Props {
+interface IProps {
     onChange: (value: string) => void
     placeholder: string
-    header: string
     type?: string
     id?: string
     required?: boolean
+    value: string
+    autoFocus?: boolean
 }
 
-const Input: Component<Props> = (props) => {
+const Input: Component<IProps> = (props) => {
     return (
-        <div class="flex grow rounded-xl flex-col pl-3 pr-3 pb-3 pt-3 bg-[#333742] text-white">
-            <div>
-                <div class="flex justify-between pb-3">
-                    <div>
-                        <div>
-                            <p class="font-[700] text-lg">{props.header}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="flex justify-between pb-3">
-                    <input
-                        class="text-lg w-full text-md bg-[#20202D] rounded-xl pt-3 pb-3 pl-3 pr-3 font-[700] "
-                        onChange={(e) => props.onChange((e.target as HTMLInputElement).value)}
-                        placeholder={props.placeholder}
-                        type={props.type}
-                        name={props.id}
-                        id={props.id}
-                        required={props.required}
-                    />
-                </div>
-            </div>
-        </div>
+        <input
+            autofocus={props.autoFocus}
+            class="h-[39px] bg-[#192736] w-full rounded-[6px] border-solid border-1 border-[#192736] placeholder-[#A6AAD3] text-[12px] text-white focus:border-817DF7  focus:border-[#192736] focus:ring-[#817DF7]"
+            onInput={(e) => props.onChange((e.target as HTMLInputElement).value)}
+            placeholder={props.placeholder}
+            type={props.type}
+            name={props.id}
+            value={props.value}
+            id={props.id}
+            required={props.required}
+        />
     )
 }
 
