@@ -129,6 +129,9 @@ export interface AppStoreAPI {
     restAPI: IRest
     ghAPI: IGHRest
     firmwareType: string
+    activeBoard: string
+    ssid: string
+    password: string
 }
 
 export interface UiStore {
