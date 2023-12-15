@@ -1,11 +1,11 @@
-import { /* useLocation, */ useNavigate, useRoutes } from '@solidjs/router'
+import { useRoutes } from '@solidjs/router'
 import { isEqual } from 'lodash'
-import { createEffect, onMount, type Component, lazy } from 'solid-js'
+import { createEffect, lazy, onMount, type Component } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
 import type { PersistentSettings } from '@static/types'
-import Header from '@components/Header'
+import { Header } from '@containers/Header/Header'
 import { ENotificationAction } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppContext } from '@store/context/app'
@@ -17,12 +17,10 @@ const ContextMenu = lazy(() => import('@components/ContextMenu'))
 const DebugMenu = lazy(() => import('@components/ContextMenu/DevTools'))
 
 const AppRoutes: Component = () => {
-    //const params = useLocation()
     const Path = useRoutes(routes)
 
     const { get, set } = usePersistentStore()
-    const { doGHRequest, useRequestHook, getEndpoint } = useAppAPIContext()
-    const navigate = useNavigate()
+    const { doGHRequest } = useAppAPIContext()
 
     const { setDebugMode, getDebugMode } = useAppContext()
     const {
@@ -33,7 +31,6 @@ const AppRoutes: Component = () => {
         getEnableNotifications,
         getGlobalNotificationsType,
         checkPermission,
-        addNotification,
     } = useAppNotificationsContext()
 
     const { setContextMenuAnchor, getContextAnchor } = useAppUIContext()
@@ -95,18 +92,10 @@ const AppRoutes: Component = () => {
         })
     })
 
-    /*   createEffect(() => {
-        setUserIsInSettings(params.pathname.match('settings') !== null)
-    }) */
-
     return (
-        <main class="pb-[5rem] w-[100%] px-8 max-w-[1920px]">
-            <div class="header-wrapper">
-                <Header hideButtons={true} name="Welcome!" onClick={() => navigate('/')} />
-            </div>
-            <div class="pt-[70px]">
-                <Path />
-            </div>
+        <main class="flex flex-col h-full">
+            <Header />
+            <Path />
             <ContextMenu id="dev-tools">
                 <DebugMenu />
             </ContextMenu>
