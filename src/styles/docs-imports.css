@@ -15,7 +15,6 @@
 @import 'titlebar.css';
 @import 'scrollbar.css';
 
-
 body {
     margin: 0;
     font-family: Ubuntu, 'times new roman', times, roman, serif;
@@ -39,12 +38,4 @@ iframe {
     padding: 0px;
     height: 100%;
     border: none;
-}
-
-.main-div {
-    height: 100vh;
-    overflow: hidden;
-    border-radius: 0.4rem;
-    /* Clothoid Gradient */
-    background: linear-gradient(247.32deg, #282830 0%, #181c28 100%);
 }
