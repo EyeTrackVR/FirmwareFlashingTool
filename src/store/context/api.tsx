@@ -374,25 +374,26 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     })
                     const config_json = JSON.parse(config)
                     trace(`[Config]: ${JSON.stringify(config_json)}`)
-                    if (response instanceof Object && response.ok) {
-                        if (config !== '') {
-                            if (response.data['name'] !== config_json.version) {
-                                // update config
-                                setGHData(response.data, true)
-                                debug(
-                                    '[Config Exists]: Config Exists and is out of date - Updating',
-                                )
-                                setGHRestStatus(RESTStatus.COMPLETE)
-                                return
-                            }
-                        }
+                    if (
+                        (!response.ok || !(response instanceof Object)) &&
+                        config === ''
+                    ) {
+                        warn('[Config Exists]: Most likely rate limited')
+                        setGHData(config_json, false)
+                        setGHRestStatus(RESTStatus.COMPLETE)
+                        return
+                    }
+                    if (response.data['name'] === config_json.version) {
                         debug('[Config Exists]: Config Exists and is up to date')
                         setGHData(response.data, false)
                         return
                     }
-                    warn('[Config Exists]: Most likely rate limited')
-                    setGHData(config_json, false)
+
+                    // update config
+                    setGHData(response.data, true)
+                    debug('[Config Exists]: Config Exists and is out of date - Updating')
                     setGHRestStatus(RESTStatus.COMPLETE)
+                    return
                 } catch (err) {
                     setGHRestStatus(RESTStatus.NO_CONFIG)
                     if (response.ok) {
@@ -447,7 +448,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         }
     }
 
-    const RequestHook = async (
+    const useRequestHook = async (
         endpointName: string,
         deviceName?: string,
         args?: string,
@@ -485,10 +486,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
             error(`[REST Request]: ${err}`)
             return
         }
-    }
-
-    const useRequestHook = async (endpointName: string, deviceName?: string, args?: string) => {
-        await RequestHook(endpointName, deviceName, args)
     }
 
     /**
