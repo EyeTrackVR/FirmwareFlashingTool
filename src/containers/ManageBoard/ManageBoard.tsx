@@ -45,6 +45,9 @@ export const ManageBoard = () => {
                 navigate('/')
             }}
             onClickConfirm={() => {
+                if (!activeBoard()) {
+                    return
+                }
                 navigate('/flashFirmware')
             }}
             onSubmit={(value) => {

@@ -32,24 +32,33 @@ export const SelectBoard: Component<IProps> = (props) => {
                         }}
                     />
                     <div class="pt-[10px] text-left text-[12px] text-white font-[500] leading-[14px] not-italic">
-                        Firmware version: {props.firmwareVersion}.
+                        <p>
+                            Firmware version:{' '}
+                            {!props.firmwareVersion ? '--' : props.firmwareVersion}
+                        </p>
                     </div>
                 </div>
             </div>
             <Show when={props.show}>
                 <div class="absolute right-0 mt-[34px] w-full p-[12px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26]">
                     <div class="overflow-y-scroll max-h-[250px] flex flex-col gap-[10px]">
-                        <For each={props.boards}>
-                            {(data) => (
-                                <Board
-                                    isActive={props.selectedBoard === data.board}
-                                    {...data}
-                                    onClick={() => {
-                                        props.onSubmit(data.board)
-                                    }}
-                                />
-                            )}
-                        </For>
+                        {!props.boards.length ? (
+                            <div class="text-left text-[12px] text-white font-[500] leading-[14px] not-italic">
+                                <p>No boards to show</p>
+                            </div>
+                        ) : (
+                            <For each={props.boards}>
+                                {(data) => (
+                                    <Board
+                                        isActive={props.selectedBoard === data.board}
+                                        {...data}
+                                        onClick={() => {
+                                            props.onSubmit(data.board)
+                                        }}
+                                    />
+                                )}
+                            </For>
+                        )}
                     </div>
                 </div>
             </Show>
