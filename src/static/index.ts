@@ -1,21 +1,35 @@
 import { BOARD_TYPE, STEP_STATUS_ENUM } from './types/enums'
 
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
+export const radius = 25
+
+const circleSize = Math.PI * (radius * 2)
 
 export const stepStatus: {
-    [key in STEP_STATUS_ENUM]: { step: string; description: string }
+    [key in STEP_STATUS_ENUM]: {
+        step: string
+        description: string
+        dashoffset: string
+        index: string
+    }
 } = {
     [STEP_STATUS_ENUM.CONFIGURE_WIFI]: {
+        index: '1',
         step: 'Step 1',
         description: 'Configure wifi network',
+        dashoffset: (((100 - 0) / 100) * circleSize).toString(),
     },
     [STEP_STATUS_ENUM.SELECT_BOARD]: {
+        index: '2',
         step: 'Step 2',
         description: 'Select board',
+        dashoffset: (((100 - 50) / 100) * circleSize).toString(),
     },
     [STEP_STATUS_ENUM.FLASH_FIRMWARE]: {
+        index: '3',
         step: 'Step 3',
         description: 'Flash firmware assets',
+        dashoffset: (((100 - 100) / 100) * circleSize).toString(),
     },
 }
 

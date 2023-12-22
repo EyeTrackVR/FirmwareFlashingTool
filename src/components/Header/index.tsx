@@ -1,10 +1,12 @@
 import { Image } from '@kobalte/core'
-import './styles.css'
 import { Component } from 'solid-js'
+import { ProgressBar } from '@components/ProgressBar/ProgressBar'
+import './styles.css'
 
 interface Iprops {
     onClick: () => void
-    step: { step: string; description: string }
+    step: { step: string; description: string; dashoffset: string; index: string }
+    currentStep: string
     name: string
 }
 
@@ -28,12 +30,18 @@ const MainHeader: Component<Iprops> = (props) => {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col  items-start justify-end">
-                    <div class="text-white text-[14px] font-bold leading-normal">
-                        <p>{props.step.step}</p>
-                    </div>
-                    <div class="text-white font-inter text-[12px] font-normal leading-normal">
-                        <p>{props.step.description}</p>
+                <div class="flex flex-row justify-center items-center gap-[6px] min-w-[210px]">
+                    <ProgressBar
+                        currentStep={props.currentStep}
+                        dashoffset={props.step.dashoffset}
+                    />
+                    <div class="flex flex-col  items-start justify-end w-full">
+                        <div class="text-white text-[14px] font-bold leading-normal">
+                            <p>{props.step.step}</p>
+                        </div>
+                        <div class="text-white font-inter text-[12px] font-normal leading-normal">
+                            <p>{props.step.description}</p>
+                        </div>
                     </div>
                 </div>
             </div>

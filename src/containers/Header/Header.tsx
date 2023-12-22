@@ -13,6 +13,9 @@ export const Header = () => {
             onClick={() => {
                 navigate('/')
             }}
+            currentStep={`${stepStatus[DIRECTION[location.pathname]].index}/${
+                Object.values(stepStatus).length
+            } `}
         />
     )
 }
