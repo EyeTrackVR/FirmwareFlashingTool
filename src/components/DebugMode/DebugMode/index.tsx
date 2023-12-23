@@ -16,8 +16,8 @@ export interface IProps {
 export const DebugMode: Component<IProps> = (props) => {
     return (
         <div ref={props.ref}>
-            <div
-                class=" ml-auto flex items-center justify-center leadu w-[35px] h-[35px] rounded-full border border-solid border-[#192736] bg-[#0D1B26] cursor-pointer"
+            <button
+                class=" ml-auto flex items-center justify-center leadu w-[35px] h-[35px] rounded-full border border-solid border-[#192736] bg-[#0D1B26] focus-visible:border-[#9793FD] cursor-pointer"
                 onClick={(e) => {
                     e.preventDefault()
                     props.onClick()
@@ -25,7 +25,7 @@ export const DebugMode: Component<IProps> = (props) => {
                 <p class="text-white leading-[12px]">
                     <FaSolidGear size={12} fill="#FFFFFFe3" />
                 </p>
-            </div>
+            </button>
             <Show when={props.isOpen}>
                 <DebugModeMenu
                     onClickOpen={props.onClickOpen}

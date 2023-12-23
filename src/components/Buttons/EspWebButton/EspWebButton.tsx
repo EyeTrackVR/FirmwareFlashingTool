@@ -27,7 +27,7 @@ export const EspWebButton: Component<IProps> = (props) => {
                 onClick={() => {
                     props.onClick()
                 }}
-                class="bg-[#192736] flex flex-col justify-between p-[14px] border-solid border-1 border-[#192736] rounded-[24px] hover:border-[#817DF7] min-h-[210px] h-full max-w-[197px]  w-full ">
+                class="bg-[#192736] flex flex-col justify-between p-[14px] border-solid border-1 focus-visible:border-[#817DF7] border-[#192736] rounded-[24px] hover:border-[#817DF7] min-h-[210px] h-full max-w-[197px]  w-full ">
                 <div class="flex flex-row justify-between w-full">
                     <div>{props.img}</div>
                     <Show when={props.step}>

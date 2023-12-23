@@ -31,8 +31,8 @@ const DebugModeMenu: Component<IProps> = (props) => {
                                 Dev tools
                             </p>
                         </div>
-                        <div
-                            class="cursor-pointer"
+                        <button
+                            class="cursor-pointer p-[4px]  rounded-full border border-solid border-[#0D1B26] focus-visible:border-[#9793FD]"
                             onClick={(e) => {
                                 e.preventDefault()
                                 props.onClick()
@@ -40,7 +40,7 @@ const DebugModeMenu: Component<IProps> = (props) => {
                             <p class="text-white text-left">
                                 <FaSolidXmark size={20} fill="#FFFFFF" />
                             </p>
-                        </div>
+                        </button>
                     </div>
                     <div class="flex flex-col gap-[4px]">
                         <SelectButton

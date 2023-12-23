@@ -16,7 +16,7 @@ const Input: Component<IProps> = (props) => {
         <input
             autocomplete={props.autoComplete}
             autofocus={props.autoFocus}
-            class="h-[39px] bg-[#192736] w-full rounded-[6px] border-solid border-1 border-[#192736] placeholder-white text-[12px] text-white focus:border-817DF7  focus:border-[#192736] focus:ring-[#817DF7]"
+            class="h-[39px] bg-[#192736] w-full rounded-[6px] border-solid border-1 border-[#192736] placeholder-white text-[12px] text-white focus:border-[#192736] focus:ring-[#817DF7]"
             onInput={(e) => props.onChange((e.target as HTMLInputElement).value)}
             placeholder={props.placeholder}
             type={props.type}

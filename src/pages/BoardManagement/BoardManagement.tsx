@@ -53,6 +53,7 @@ export const BoardManagement: Component<IProps> = (props) => {
                             <QuestionMark
                                 onClick={() => {
                                     setOpenQuestionMark(!openQuestionMark())
+                                    setDebugMode(false)
                                 }}
                                 isOpen={openQuestionMark()}
                             />
@@ -66,9 +67,11 @@ export const BoardManagement: Component<IProps> = (props) => {
                                 onClick={() => {
                                     setDebugMode(!debugMode())
                                     setOpenDebugModeBoards(false)
+                                    setOpenQuestionMark(false)
                                 }}
                                 onClickOpen={() => {
                                     setOpenDebugModeBoards(!openDebugModeBoards())
+                                    setOpenQuestionMark(false)
                                 }}
                             />
                         </div>
