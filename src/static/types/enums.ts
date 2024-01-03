@@ -85,8 +85,8 @@ export enum STEP_STATUS_ENUM {
 }
 
 export enum DIRECTION {
-    '/' = STEP_STATUS_ENUM.CONFIGURE_WIFI,
-    '/selectBoard' = STEP_STATUS_ENUM.SELECT_BOARD,
+    '/' = STEP_STATUS_ENUM.SELECT_BOARD,
+    '/network' = STEP_STATUS_ENUM.CONFIGURE_WIFI,
     '/flashFirmware' = STEP_STATUS_ENUM.FLASH_FIRMWARE,
 }
 

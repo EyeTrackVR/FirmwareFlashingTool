@@ -4,9 +4,10 @@ import { removeFile } from '@tauri-apps/api/fs'
 import { appConfigDir, appDataDir, join } from '@tauri-apps/api/path'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { WebviewWindow, getCurrent } from '@tauri-apps/api/window'
-import { createEffect, createSignal } from 'solid-js'
+import { createEffect, createMemo, createSignal } from 'solid-js'
 import { debug, error } from 'tauri-plugin-log-api'
 import FlashFirmware from '@pages/FlashFirmware/FlashFirmware'
+import { usb } from '@src/static'
 import { ENotificationType } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -14,7 +15,7 @@ import { useAppNotificationsContext } from '@store/context/notifications'
 export const ManageFlashFirmware = () => {
     const navigate = useNavigate()
 
-    const { downloadAsset, getFirmwareType } = useAppAPIContext()
+    const { downloadAsset, getFirmwareType, activeBoard } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
     const [manifest, setManifest] = createSignal<string>('')
 
@@ -46,10 +47,13 @@ export const ManageFlashFirmware = () => {
             })
     })
 
-    // todo: add loader for fetching manifest
+    const isUSBBoard = createMemo(() => {
+        return activeBoard().includes(usb)
+    })
 
     return (
         <FlashFirmware
+            isUSBBoard={isUSBBoard()}
             manifest={manifest()}
             checkSameFirmware={(manifest, improvInfo) => {
                 const manifestFirmware = manifest.name.toLowerCase()
@@ -57,7 +61,7 @@ export const ManageFlashFirmware = () => {
                 return manifestFirmware.includes(deviceFirmware)
             }}
             onClickBack={() => {
-                navigate('/selectBoard')
+                navigate(isUSBBoard() ? '/' : '/network')
             }}
             onClickDownloadFirmware={() => {
                 downloadAsset(getFirmwareType()).catch(() => {

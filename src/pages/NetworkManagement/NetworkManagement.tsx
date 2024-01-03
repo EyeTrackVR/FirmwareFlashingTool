@@ -44,7 +44,7 @@ export const NetworkManagement: Component<IProps> = (props) => {
                     isPrimaryActive={isNotActive()}
                     isSecondActive={false}
                     primaryLabel="Confirm"
-                    secondLabel="Skip wifi configuration"
+                    secondLabel="Select board"
                 />
             </div>
         </div>

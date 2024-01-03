@@ -2,7 +2,7 @@ import { useNavigate } from '@solidjs/router'
 import { createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
 import { BoardManagement } from '@pages/BoardManagement/BoardManagement'
-import { BoardDescription, debugModes } from '@src/static'
+import { BoardDescription, debugModes, usb } from '@src/static'
 import { DebugMode } from '@src/static/types'
 import { useAppAPIContext } from '@src/store/context/api'
 import { useAppContext } from '@store/context/app'
@@ -31,6 +31,10 @@ export const ManageBoard = () => {
         return getDebugMode() || ''
     })
 
+    const isUSBBoard = createMemo(() => {
+        return activeBoard().includes(usb)
+    })
+
     return (
         <BoardManagement
             debugMode={debugMode()}
@@ -41,14 +45,11 @@ export const ManageBoard = () => {
             }}
             activeBoard={activeBoard()}
             firmwareVersion={firmwareVersion()}
-            onClickSkip={() => {
-                navigate('/')
-            }}
             onClickConfirm={() => {
                 if (!activeBoard()) {
                     return
                 }
-                navigate('/flashFirmware')
+                navigate(isUSBBoard() ? '/flashFirmware' : '/network')
             }}
             onSubmit={(value) => {
                 setActiveBoard(value)

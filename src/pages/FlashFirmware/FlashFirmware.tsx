@@ -12,6 +12,7 @@ export interface IProps {
     onClickEraseSoft: () => void
     manifest: string
     checkSameFirmware: (manifest: { name: string }, improvInfo: { firmware: string }) => void
+    isUSBBoard: boolean
 }
 
 const AppSettingsPage: Component<IProps> = (props) => {
@@ -52,7 +53,10 @@ const AppSettingsPage: Component<IProps> = (props) => {
                     </div>
                 </div>
             </div>
-            <Footer onClickSecond={props.onClickBack} secondLabel="Back" />
+            <Footer
+                onClickSecond={props.onClickBack}
+                secondLabel={props.isUSBBoard ? 'Select board' : 'Configure network'}
+            />
         </div>
     )
 }

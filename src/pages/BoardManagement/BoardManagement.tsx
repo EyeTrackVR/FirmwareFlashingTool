@@ -7,7 +7,6 @@ import { QuestionMark } from '@components/QuestionMark/QuestionMark'
 export interface IProps {
     activeBoard: string
     firmwareVersion: string
-    onClickSkip: () => void
     onSubmit: (board: string) => void
     onClickConfirm: () => void
     boards: Array<{ board: string; description: string; debugMode?: boolean }>
@@ -94,12 +93,10 @@ export const BoardManagement: Component<IProps> = (props) => {
                     </div>
                 </div>
                 <Footer
-                    onClickSecond={props.onClickSkip}
                     onClickPrimary={props.onClickConfirm}
                     isPrimaryActive={isBoard()}
                     isSecondActive={false}
                     primaryLabel="Confirm"
-                    secondLabel="Back"
                 />
             </div>
         </div>

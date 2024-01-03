@@ -59,10 +59,10 @@ export const ManageNetwork = () => {
             ssid={ssid()}
             password={password()}
             onClickSkip={() => {
-                navigate('/selectBoard')
+                navigate('/')
             }}
             onSubmit={(ssid, password, areEqual) => {
-                navigate('/selectBoard')
+                navigate('/flashFirmware')
                 if (areEqual) return
                 setNetwork(ssid, password)
                 // submitNetwork(ssid, password).catch((err) => {

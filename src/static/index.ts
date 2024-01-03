@@ -2,6 +2,7 @@ import { BOARD_TYPE, STEP_STATUS_ENUM } from './types/enums'
 
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
 export const radius = 25
+export const usb = 'USB'
 
 const circleSize = Math.PI * (radius * 2)
 
@@ -13,16 +14,16 @@ export const stepStatus: {
         index: string
     }
 } = {
-    [STEP_STATUS_ENUM.CONFIGURE_WIFI]: {
+    [STEP_STATUS_ENUM.SELECT_BOARD]: {
         index: '1',
         step: 'Step 1',
-        description: 'Configure wifi network',
+        description: 'Select board',
         dashoffset: (((100 - 0) / 100) * circleSize).toString(),
     },
-    [STEP_STATUS_ENUM.SELECT_BOARD]: {
+    [STEP_STATUS_ENUM.CONFIGURE_WIFI]: {
         index: '2',
         step: 'Step 2',
-        description: 'Select board',
+        description: 'Configure wifi network',
         dashoffset: (((100 - 50) / 100) * circleSize).toString(),
     },
     [STEP_STATUS_ENUM.FLASH_FIRMWARE]: {
