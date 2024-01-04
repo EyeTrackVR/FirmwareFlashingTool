@@ -10,8 +10,14 @@ import { useAppContext } from '@store/context/app'
 export const ManageBoard = () => {
     const navigate = useNavigate()
     const { getDebugMode, setDebugMode } = useAppContext()
-    const { getFirmwareAssets, getFirmwareVersion, setFirmwareType, activeBoard, setActiveBoard } =
-        useAppAPIContext()
+    const {
+        getFirmwareAssets,
+        getFirmwareVersion,
+        setFirmwareType,
+        activeBoard,
+        setActiveBoard,
+        isNetworkConfigured,
+    } = useAppAPIContext()
 
     const boards = createMemo(() => {
         return getFirmwareAssets().map((item) => {
@@ -37,6 +43,15 @@ export const ManageBoard = () => {
 
     return (
         <BoardManagement
+            onClickSkipNetwork={
+                // prettier-ignore
+                isNetworkConfigured()
+                    ? () => {
+                        navigate('/flashFirmware')
+                    }
+                    : undefined
+            }
+            isNetworkConfigured={isNetworkConfigured()}
             debugMode={debugMode()}
             debugModes={debugModes}
             setDebugMode={(debugMode) => {

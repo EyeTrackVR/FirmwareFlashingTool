@@ -126,6 +126,8 @@ export interface AppStoreNotifications {
 }
 
 export interface AppStoreAPI {
+    loader: boolean
+    isNetworkConfigured: boolean
     restAPI: IRest
     ghAPI: IGHRest
     firmwareType: string

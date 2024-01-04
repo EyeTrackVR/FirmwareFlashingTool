@@ -22,14 +22,18 @@ interface AppAPIContext {
     getGHEndpoint: Accessor<string>
     getFirmwareType: Accessor<string>
     setGHRestStatus: (status: RESTStatus) => void
+    setIsNetworkConfigured: (isNetwokConfigured: boolean) => void
     setFirmwareAssets: (assets: IGHAsset) => void
     setFirmwareVersion: (version: string) => void
     setFirmwareType: (type: string) => void
+    setLoader: (loader: boolean) => void
     activeBoard: Accessor<string>
     //********************************* rest *************************************/
     getRESTStatus: Accessor<RESTStatus>
     getRESTDevice: Accessor<string>
     getRESTResponse: Accessor<object>
+    isNetworkConfigured: Accessor<boolean>
+    loader: Accessor<boolean>
     ssid: Accessor<string>
     password: Accessor<string>
     setRESTStatus: (status: RESTStatus) => void
@@ -70,6 +74,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     ])
 
     const defaultState: AppStoreAPI = {
+        isNetworkConfigured: false,
         activeBoard: '',
         restAPI: {
             status: RESTStatus.COMPLETE,
@@ -84,6 +89,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         ssid: '',
         password: '',
         firmwareType: '',
+        loader: false,
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -92,6 +98,21 @@ export const AppAPIProvider: Component<Context> = (props) => {
     // TODO:  Migrate all github related functions to the rust backend
     //********************************* gh rest *************************************/
     //#region gh rest
+
+    const setLoader = (loader: boolean) => {
+        setState(
+            produce((s) => {
+                s.loader = loader
+            }),
+        )
+    }
+    const setIsNetworkConfigured = (isNetworkConfigured: boolean) => {
+        setState(
+            produce((s) => {
+                s.isNetworkConfigured = isNetworkConfigured
+            }),
+        )
+    }
     const setGHRestStatus = (status: RESTStatus) => {
         setState(
             produce((s) => {
@@ -138,10 +159,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
     }
 
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
+    const isNetworkConfigured = createMemo(() => apiState().isNetworkConfigured)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
     const getGHEndpoint = createMemo(() => ghEndpoint)
+    const loader = createMemo(() => apiState().loader)
     //#endregion
     //********************************* rest *************************************/
     //#region rest
@@ -550,6 +573,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 getEndpoints,
                 getEndpoint,
                 setGHRestStatus,
+                isNetworkConfigured,
+                setIsNetworkConfigured,
                 setFirmwareAssets,
                 setFirmwareVersion,
                 setFirmwareType,
@@ -560,6 +585,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 doGHRequest,
                 useRequestHook,
                 useOTA,
+                loader,
+                setLoader,
             }}>
             {props.children}
         </AppAPIContext.Provider>

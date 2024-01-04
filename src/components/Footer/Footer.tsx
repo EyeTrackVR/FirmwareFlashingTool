@@ -8,6 +8,7 @@ export interface IProps {
     isSecondActive?: boolean
     primaryLabel?: string
     secondLabel?: string
+    isLoadingPrimaryButton?: boolean
     primaryType?: 'submit' | 'reset' | 'button' | undefined
     secondType?: 'submit' | 'reset' | 'button' | undefined
 }
@@ -25,6 +26,7 @@ export const Footer: Component<IProps> = (props) => {
             </Show>
             <Show when={props.onClickPrimary}>
                 <Button
+                    isLoadingPrimaryButton={props.isLoadingPrimaryButton}
                     isActive={!props.isPrimaryActive}
                     type={props.primaryType}
                     label={props.primaryLabel ?? ''}

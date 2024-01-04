@@ -5,6 +5,7 @@ import { SelectNetwork } from '@components/SelectNetwork/SelectNetwork'
 export interface IProps {
     onClickSkip: () => void
     onSubmit: (ssid: string, password: string, areEqual: boolean) => void
+    isLoading: boolean
     ssid: string
     password: string
 }
@@ -32,6 +33,7 @@ export const NetworkManagement: Component<IProps> = (props) => {
                     />
                 </div>
                 <Footer
+                    isLoadingPrimaryButton={props.isLoading}
                     onClickSecond={props.onClickSkip}
                     onClickPrimary={() => {
                         if (isNotActive()) return
