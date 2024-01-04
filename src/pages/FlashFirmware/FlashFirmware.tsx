@@ -7,7 +7,6 @@ import { Footer } from '@components/Footer/Footer'
 export interface IProps {
     onClickBack: () => void
     onClickDownloadFirmware: () => void
-    onClickFlashFirmware: () => void
     onClickOpenDocs: () => void
     onClickEraseSoft: () => void
     manifest: string
@@ -35,7 +34,6 @@ const AppSettingsPage: Component<IProps> = (props) => {
                         <EspWebButton
                             step="2/2"
                             label="Flash mode"
-                            onClick={props.onClickFlashFirmware}
                             img={<FaSolidPlug size={48} fill="#FFFFFFe3" />}
                             manifest={props.manifest}
                             checkSameFirmware={props.checkSameFirmware}

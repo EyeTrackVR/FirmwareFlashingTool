@@ -12,7 +12,6 @@ declare module 'solid-js' {
 
 export interface IProps {
     label: string
-    onClick: () => void
     img: JSXElement
     step?: string
     manifest: string
@@ -24,9 +23,6 @@ export const EspWebButton: Component<IProps> = (props) => {
         <esp-web-install-button overrides={props.checkSameFirmware} manifest={props.manifest}>
             <button
                 slot="activate"
-                onClick={() => {
-                    props.onClick()
-                }}
                 class="bg-[#192736] flex flex-col justify-between p-[14px] border-solid border-1 focus-visible:border-[#817DF7] border-[#192736] rounded-[24px] hover:border-[#817DF7] min-h-[210px] h-full max-w-[197px]  w-full ">
                 <div class="flex flex-row justify-between w-full">
                     <div>{props.img}</div>

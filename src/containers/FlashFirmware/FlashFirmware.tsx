@@ -72,7 +72,6 @@ export const ManageFlashFirmware = () => {
                     })
                 })
             }}
-            onClickFlashFirmware={() => {}}
             onClickEraseSoft={() => {
                 ask('This action cannot be reverted. Are you sure?', {
                     title: 'EyeTrackVR Erase Firmware Assets',
