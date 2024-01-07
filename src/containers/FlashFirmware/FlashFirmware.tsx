@@ -7,17 +7,20 @@ import { WebviewWindow, getCurrent } from '@tauri-apps/api/window'
 import { createEffect, createMemo, createSignal } from 'solid-js'
 import { debug, error } from 'tauri-plugin-log-api'
 import FlashFirmware from '@pages/FlashFirmware/FlashFirmware'
-import { usb } from '@src/static'
+import { installModalClassName, installModalTarget, installationSuccess, usb } from '@src/static'
 import { ENotificationType } from '@src/static/types/enums'
+import { CustomHTMLElement } from '@src/static/types/interfaces'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 
 export const ManageFlashFirmware = () => {
     const navigate = useNavigate()
 
-    const { downloadAsset, getFirmwareType, activeBoard } = useAppAPIContext()
+    const { downloadAsset, getFirmwareType, activeBoard, ssid, password } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
     const [manifest, setManifest] = createSignal<string>('')
+    const [port, setPort] = createSignal<Navigator | null>(null)
+    const [installationConfirmed, setInstallationConfirmed] = createSignal<boolean>(false)
 
     const erase = async () => {
         const appConfigPath = await appConfigDir()
@@ -26,6 +29,10 @@ export const ManageFlashFirmware = () => {
         await removeFile(firmwarePath)
         await removeFile(manifestPath)
     }
+
+    const isUSBBoard = createMemo(() => {
+        return activeBoard().includes(usb)
+    })
 
     createEffect(() => {
         appDataDir()
@@ -47,8 +54,71 @@ export const ManageFlashFirmware = () => {
             })
     })
 
-    const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+    const configureWifiConnection = async () => {
+        // wifi config
+        const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
+
+        const writableStream = (
+            port() as unknown as { writable: WritableStream }
+        ).writable.getWriter()
+
+        const wifiConfigJSON = JSON.stringify(wifiConfig)
+        await writableStream.write(new TextEncoder().encode(wifiConfigJSON))
+        writableStream.close()
+        setInstallationConfirmed(false)
+        setPort(null)
+        addNotification({
+            title: 'WIFI configured',
+            message: 'WIFI has been configured',
+            type: ENotificationType.SUCCESS,
+        })
+    }
+
+    createEffect(() => {
+        if (isUSBBoard()) return
+        document.addEventListener('click', (e) => {
+            const targetElement = e.target as HTMLElement
+            const targetValue = targetElement.innerText
+            const className = targetElement.className
+            if (className === installModalClassName && targetValue === installModalTarget) {
+                const el: CustomHTMLElement | null = document.querySelector('[state="INSTALL"]')
+                if (el?.port) setPort(el.port)
+                return
+            }
+            if (targetValue === 'Back') {
+                setInstallationConfirmed(false)
+                setPort(null)
+            }
+        })
+    })
+
+    createEffect(() => {
+        const playInterval = port() !== null
+        const intervalId = setInterval(() => {
+            if (!playInterval) return
+            const el: HTMLElement | null = document.querySelector('[state="INSTALL"]')
+            const ewtDialog = el?.shadowRoot?.querySelector('ewt-page-message')
+            const label = ewtDialog?.getAttribute('label')
+            if (label === installationSuccess) {
+                setInstallationConfirmed(true)
+            }
+        }, 200)
+        return () => clearInterval(intervalId)
+    })
+
+    createEffect(() => {
+        const handleWifiConfigurationError = () => {
+            setInstallationConfirmed(false)
+            setPort(null)
+            addNotification({
+                title: 'WIFI configuration failed',
+                message: 'Failed to configure WIFI',
+                type: ENotificationType.ERROR,
+            })
+        }
+        if (installationConfirmed() && port() !== null) {
+            configureWifiConnection().catch(handleWifiConfigurationError)
+        }
     })
 
     return (

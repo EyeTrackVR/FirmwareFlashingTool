@@ -3,6 +3,9 @@ import { BOARD_TYPE, STEP_STATUS_ENUM } from './types/enums'
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
 export const radius = 25
 export const usb = 'USB'
+export const installModalClassName = 'mdc-button__label'
+export const installModalTarget = 'Install'
+export const installationSuccess = 'Installation complete!'
 
 const circleSize = Math.PI * (radius * 2)
 
