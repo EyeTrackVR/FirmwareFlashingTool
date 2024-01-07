@@ -4,7 +4,7 @@ import { SelectNetwork } from '@components/SelectNetwork/SelectNetwork'
 
 export interface IProps {
     onClickSkip: () => void
-    onSubmit: (ssid: string, password: string, areEqual: boolean) => void
+    onSubmit: (ssid: string, password: string) => void
     isLoading: boolean
     ssid: string
     password: string
@@ -37,11 +37,7 @@ export const NetworkManagement: Component<IProps> = (props) => {
                     onClickSecond={props.onClickSkip}
                     onClickPrimary={() => {
                         if (isNotActive()) return
-                        props.onSubmit(
-                            ssid(),
-                            password(),
-                            props.ssid === ssid() && props.password === password(),
-                        )
+                        props.onSubmit(ssid(), password())
                     }}
                     isPrimaryActive={isNotActive()}
                     isSecondActive={false}

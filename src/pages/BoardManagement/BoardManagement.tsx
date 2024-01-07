@@ -9,12 +9,10 @@ export interface IProps {
     firmwareVersion: string
     onSubmit: (board: string) => void
     onClickConfirm: () => void
-    onClickSkipNetwork?: () => void
     boards: Array<{ board: string; description: string; debugMode?: boolean }>
     debugMode: string
     debugModes: string[]
     setDebugMode: (debugMode: string) => void
-    isNetworkConfigured: boolean
 }
 
 export const BoardManagement: Component<IProps> = (props) => {
@@ -96,11 +94,9 @@ export const BoardManagement: Component<IProps> = (props) => {
                 </div>
                 <Footer
                     onClickPrimary={props.onClickConfirm}
-                    onClickSecond={props.onClickSkipNetwork}
                     isPrimaryActive={isBoard()}
                     isSecondActive={false}
                     primaryLabel="Confirm"
-                    secondLabel="Skip network settings"
                 />
             </div>
         </div>

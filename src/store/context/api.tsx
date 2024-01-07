@@ -22,7 +22,6 @@ interface AppAPIContext {
     getGHEndpoint: Accessor<string>
     getFirmwareType: Accessor<string>
     setGHRestStatus: (status: RESTStatus) => void
-    setIsNetworkConfigured: (isNetwokConfigured: boolean) => void
     setFirmwareAssets: (assets: IGHAsset) => void
     setFirmwareVersion: (version: string) => void
     setFirmwareType: (type: string) => void
@@ -32,7 +31,6 @@ interface AppAPIContext {
     getRESTStatus: Accessor<RESTStatus>
     getRESTDevice: Accessor<string>
     getRESTResponse: Accessor<object>
-    isNetworkConfigured: Accessor<boolean>
     loader: Accessor<boolean>
     ssid: Accessor<string>
     password: Accessor<string>
@@ -74,7 +72,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
     ])
 
     const defaultState: AppStoreAPI = {
-        isNetworkConfigured: false,
         activeBoard: '',
         restAPI: {
             status: RESTStatus.COMPLETE,
@@ -103,13 +100,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
         setState(
             produce((s) => {
                 s.loader = loader
-            }),
-        )
-    }
-    const setIsNetworkConfigured = (isNetworkConfigured: boolean) => {
-        setState(
-            produce((s) => {
-                s.isNetworkConfigured = isNetworkConfigured
             }),
         )
     }
@@ -159,7 +149,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
     }
 
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
-    const isNetworkConfigured = createMemo(() => apiState().isNetworkConfigured)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
@@ -573,8 +562,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 getEndpoints,
                 getEndpoint,
                 setGHRestStatus,
-                isNetworkConfigured,
-                setIsNetworkConfigured,
                 setFirmwareAssets,
                 setFirmwareVersion,
                 setFirmwareType,
