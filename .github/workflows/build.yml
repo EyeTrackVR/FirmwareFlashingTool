@@ -74,7 +74,7 @@ jobs:
           npm install -g pnpm
 
       - name: Install dependencies (PNPM)
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Generate Local Plugins  (PNPM)
         run: pnpm run specta:gen
