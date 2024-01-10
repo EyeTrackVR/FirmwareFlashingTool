@@ -1,5 +1,4 @@
 import { ConfigButton } from '@components/ConfigButton'
-import DebugMode from '@components/Selection/Debug'
 
 const DevTools = () => {
     return (
@@ -7,7 +6,7 @@ const DevTools = () => {
             <h1 class="text-lg">Tools</h1>
             <hr class="divider" />
             <br />
-            <DebugMode />
+            {/* <DebugMode /> */}
             <br />
             <hr class="divider" />
             <br />

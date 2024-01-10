@@ -14,14 +14,12 @@ const App = () => {
     })
 
     return (
-        <div class="App overflow-y-auto items-center">
-            <Suspense>
-                <AppProvider>
-                    <AppRoutes />
-                    <ToastNotificationWindow />
-                </AppProvider>
-            </Suspense>
-        </div>
+        <Suspense>
+            <AppProvider>
+                <AppRoutes />
+                <ToastNotificationWindow />
+            </AppProvider>
+        </Suspense>
     )
 }
 

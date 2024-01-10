@@ -77,3 +77,29 @@ export enum ESPEndpoints {
     WIFI_STRENGTH = '/control/builtin/command/wifiStrength',
     OTA = '/update',
 }
+
+export enum STEP_STATUS_ENUM {
+    CONFIGURE_WIFI = 'CONFIGURE_WIFI',
+    SELECT_BOARD = 'SELECT_BOARD',
+    FLASH_FIRMWARE = 'FLASH_FIRMWARE',
+}
+
+export enum DIRECTION {
+    '/' = STEP_STATUS_ENUM.SELECT_BOARD,
+    '/network' = STEP_STATUS_ENUM.CONFIGURE_WIFI,
+    '/flashFirmware' = STEP_STATUS_ENUM.FLASH_FIRMWARE,
+}
+
+export enum BOARD_TYPE {
+    ESP_32_AI_THINKER = 'esp32AIThinker',
+    ESP_32 = 'esp32Cam',
+    ESP_32_M_5_STACK = 'esp32M5Stack',
+    ESP_32_W_ROVER = 'esp32WRover',
+    ESP_EYE = 'esp_eye',
+    WROOMS_3 = 'wrooms3',
+    WROOMS_3_QIO = 'wrooms3QIO',
+    WROOMS_3_USB = 'wrooms3USB',
+    WROOMS_3QIOUSB = 'wrooms3QIOUSB',
+    XIAOSENSES_3 = 'xiaosenses3',
+    XIAOSENSES_3_USB = 'xiaosenses3_USB',
+}

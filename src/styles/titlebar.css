@@ -1,10 +1,13 @@
 .titlebar {
+    z-index: 999;
     height: 30px;
     background: #329ea3; /* #9a6998- alternative really nice pink*/
     user-select: none;
     display: flex;
     justify-content: flex-end;
     position: fixed;
+    border-top-right-radius: 0.4rem;
+    border-top-left-radius: 0.4rem;
     top: 0;
     left: 0;
     right: 0;

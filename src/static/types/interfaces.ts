@@ -5,6 +5,10 @@ import type { WebviewWindow } from '@tauri-apps/api/window'
 import type { ToasterStore } from 'solid-headless'
 import type { JSXElement } from 'solid-js'
 
+export interface CustomHTMLElement extends HTMLElement {
+    port: Navigator
+}
+
 //* Utility Interfaces
 
 export interface ETVRError {
@@ -126,9 +130,13 @@ export interface AppStoreNotifications {
 }
 
 export interface AppStoreAPI {
+    loader: boolean
     restAPI: IRest
     ghAPI: IGHRest
     firmwareType: string
+    activeBoard: string
+    ssid: string
+    password: string
 }
 
 export interface UiStore {
