@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.2.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.2...v1.2.3) (2024-01-10)
+
+
+### 🐛 Bug Fixes
+
+* frozen lockfile issue on ci build ([4059679](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/4059679271d7770a1f53b71f8ed78d8de51e2a16))
+
 ## [1.2.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.1...v1.2.2) (2023-12-18)
 
 
