@@ -55,5 +55,6 @@ module.exports = {
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@kobalte/tailwindcss')({ prefix: 'kb' }),
+        require('daisyui'),
     ],
 }
