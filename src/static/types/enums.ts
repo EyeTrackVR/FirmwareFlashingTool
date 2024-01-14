@@ -13,6 +13,12 @@ export enum ANIMATION_MODE {
     NONE = 'NONE',
 }
 
+export enum TITLEBAR_ACTION {
+    MINIMIZE = 'minimize',
+    MAXIMIZE = 'maximize',
+    CLOSE = 'close',
+}
+
 export enum ENotificationType {
     ERROR = 'ERROR',
     SUCCESS = 'SUCCESS',
