@@ -23,8 +23,8 @@ export const EspWebButton: Component<IProps> = (props) => {
         <esp-web-install-button overrides={props.checkSameFirmware} manifest={props.manifest}>
             <button
                 slot="activate"
-                class="bg-[#192736] flex flex-col justify-between p-[14px] border-solid border-1 focus-visible:border-[#817DF7] border-[#192736] rounded-[24px] hover:border-[#817DF7] min-h-[210px] h-full max-w-[197px]  w-full ">
-                <div class="flex flex-row justify-between w-full">
+                class="card card-actions !outline-none mt-0 shadow-none bg-[#192736] flex flex-col justify-between p-[14px] border-solid border-1 focus-visible:border-[#817DF7] border-[#192736] rounded-[24px] hover:border-[#817DF7] min-h-[210px] h-full max-w-[197px]  w-full ">
+                <div class="card-body p-0 flex flex-row justify-between w-full">
                     <div>{props.img}</div>
                     <Show when={props.step}>
                         <div>
@@ -45,8 +45,8 @@ export const EspWebButton: Component<IProps> = (props) => {
             <button
                 slot="unsupported"
                 disabled
-                class="bg-[#000F1A] flex flex-col justify-between p-[14px] border-solid border-2 border-[#192736] rounded-[24px] cursor-not-allowed  min-h-[210px] h-full max-w-[197px]  w-full ">
-                <div class="flex flex-row justify-between w-full">
+                class="card card-actions !outline-none mt-0 shadow-none bg-[#000F1A] flex flex-col justify-between p-[14px] border-solid border-2 border-[#192736] rounded-[24px] cursor-not-allowed  min-h-[210px] h-full max-w-[197px]  w-full ">
+                <div class="card-body p-0 flex flex-row justify-between w-full">
                     <div>{props.img}</div>
                 </div>
                 <div>
@@ -58,8 +58,8 @@ export const EspWebButton: Component<IProps> = (props) => {
             <button
                 slot="not-allowed"
                 disabled
-                class="bg-[#000F1A] flex flex-col justify-between p-[14px] border-solid border-2 border-[#192736] rounded-[24px] cursor-not-allowed  min-h-[210px] h-full max-w-[197px]  w-full ">
-                <div class="flex flex-row justify-between w-full">
+                class="card card-actions !outline-none mt-0 shadow-none bg-[#000F1A] flex flex-col justify-between p-[14px] border-solid border-2 border-[#192736] rounded-[24px] cursor-not-allowed  min-h-[210px] h-full max-w-[197px]  w-full ">
+                <div class="card-body p-0 flex flex-row justify-between w-full">
                     <div>{props.img}</div>
                 </div>
                 <div>
