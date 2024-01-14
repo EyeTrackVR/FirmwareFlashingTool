@@ -16,7 +16,7 @@ export interface IProps {
 
 const AppSettingsPage: Component<IProps> = (props) => {
     return (
-        <div class="flex flex-col justify-between h-full">
+        <div class="flex flex-col justify-between h-full mr-[24px] ml-[24px]">
             <div class="flex h-full justify-center items-center">
                 <div class="bg-[#0D1B26] w-auto p-[24px] flex flex-col gap-[22px] rounded-[24px] border-solid border-1 border-[#192736]">
                     <div>
