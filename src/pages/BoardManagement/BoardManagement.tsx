@@ -1,46 +1,24 @@
-import { Component, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import { Component, createMemo } from 'solid-js'
 import { SelectBoard } from '@components/Board/SelectBoard/SelectBoard'
 import { DebugMode } from '@components/DebugMode/DebugMode'
 import { Footer } from '@components/Footer/Footer'
 import { QuestionMark } from '@components/QuestionMark/QuestionMark'
+import { TITLEBAR_ACTION } from '@src/static/types/enums'
 
 export interface IProps {
     activeBoard: string
     firmwareVersion: string
+    setDebugMode: (debugMode: string) => void
+    onClickHeader: (action: TITLEBAR_ACTION) => void
+    onClickOpenModal: (id: string) => void
     onSubmit: (board: string) => void
     onClickConfirm: () => void
     boards: Array<{ board: string; description: string; debugMode?: boolean }>
     debugMode: string
     debugModes: string[]
-    setDebugMode: (debugMode: string) => void
 }
 
 export const BoardManagement: Component<IProps> = (props) => {
-    const [openDebugModeBoards, setOpenDebugModeBoards] = createSignal(false)
-    const [openQuestionMark, setOpenQuestionMark] = createSignal(false)
-    const [debugMode, setDebugMode] = createSignal(false)
-    const [open, setOpen] = createSignal(false)
-
-    let ref: HTMLDivElement
-    let questionRef: HTMLDivElement
-
-    onMount(() => {
-        setOpen(false)
-    })
-
-    const handleClick = (event: MouseEvent) => {
-        if (!ref.contains(event.target as Node)) {
-            setOpen(false)
-        }
-    }
-
-    onMount(() => {
-        document.addEventListener('click', handleClick)
-    })
-    onCleanup(() => {
-        document.removeEventListener('click', handleClick)
-    })
-
     const isBoard = createMemo(() => !props.activeBoard)
 
     return (
@@ -50,33 +28,18 @@ export const BoardManagement: Component<IProps> = (props) => {
                     <div class="flex flex-col gap-[10px] justify-start">
                         <div class="flex justify-end gap-[12px]">
                             <QuestionMark
-                                onClick={() => {
-                                    setOpenQuestionMark(!openQuestionMark())
-                                    setDebugMode(false)
-                                }}
-                                isOpen={openQuestionMark()}
+                                onClickHeader={props.onClickHeader}
+                                onClickOpenModal={props.onClickOpenModal}
                             />
                             <DebugMode
-                                open={openDebugModeBoards()}
                                 debugMode={props.debugMode}
                                 debugModes={props.debugModes}
                                 setDebugMode={props.setDebugMode}
-                                ref={questionRef!}
-                                isOpen={debugMode()}
-                                onClick={() => {
-                                    setDebugMode(!debugMode())
-                                    setOpenDebugModeBoards(false)
-                                    setOpenQuestionMark(false)
-                                }}
-                                onClickOpen={() => {
-                                    setOpenDebugModeBoards(!openDebugModeBoards())
-                                    setOpenQuestionMark(false)
-                                }}
+                                onClickHeader={props.onClickHeader}
+                                onClickOpenModal={props.onClickOpenModal}
                             />
                         </div>
                         <SelectBoard
-                            ref={ref!}
-                            show={open()}
                             firmwareVersion={props.firmwareVersion}
                             selectedBoard={props.activeBoard}
                             boards={props.boards}
@@ -84,10 +47,6 @@ export const BoardManagement: Component<IProps> = (props) => {
                                 if (props.activeBoard !== data) {
                                     props.onSubmit(data)
                                 }
-                                setOpen(false)
-                            }}
-                            onClick={() => {
-                                setOpen(!open())
                             }}
                         />
                     </div>

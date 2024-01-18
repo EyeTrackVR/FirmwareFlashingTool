@@ -15,7 +15,7 @@ export interface IProps {
 
 export const Footer: Component<IProps> = (props) => {
     return (
-        <div class="flex w-full pb-[24px] pr-[40px] pl-[40px] justify-end gap-[10px]">
+        <footer class=" flex w-full pb-[24px] pr-[40px] pl-[40px] justify-end gap-[10px]">
             <Show when={props.onClickSecond}>
                 <Button
                     isActive={false}
@@ -33,6 +33,6 @@ export const Footer: Component<IProps> = (props) => {
                     onClick={props.onClickPrimary}
                 />
             </Show>
-        </div>
+        </footer>
     )
 }
