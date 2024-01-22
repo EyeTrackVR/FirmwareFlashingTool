@@ -1051,7 +1051,7 @@ dependencies = [
 
 [[package]]
 name = "firmware_flashing_tool"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "command-group",
  "dialoguer",
