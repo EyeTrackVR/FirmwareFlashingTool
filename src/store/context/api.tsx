@@ -33,6 +33,7 @@ interface AppAPIContext {
     getRESTResponse: Accessor<object>
     loader: Accessor<boolean>
     ssid: Accessor<string>
+    apModeStatus: Accessor<boolean>
     password: Accessor<string>
     setRESTStatus: (status: RESTStatus) => void
     setRESTDevice: (device: string) => void
@@ -47,6 +48,7 @@ interface AppAPIContext {
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
     setNetwork: (ssid: string, password: string) => void
+    setAPModeStatus: (status: boolean) => void
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
@@ -87,6 +89,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         password: '',
         firmwareType: '',
         loader: false,
+        apModeStatus: false,
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -148,12 +151,22 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
 
+    const setAPModeStatus = (status: boolean) => {
+        setState(
+            produce((s) => {
+                s.apModeStatus = status
+            }),
+        )
+    }
+
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
     const getGHEndpoint = createMemo(() => ghEndpoint)
     const loader = createMemo(() => apiState().loader)
+    const apModeStatus = createMemo(() => apiState().apModeStatus)
+
     //#endregion
     //********************************* rest *************************************/
     //#region rest
@@ -412,10 +425,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     })
                     const config_json = JSON.parse(config)
                     trace(`[Config]: ${JSON.stringify(config_json)}`)
-                    if (
-                        (!response.ok || !(response instanceof Object)) &&
-                        config === ''
-                    ) {
+                    if ((!response.ok || !(response instanceof Object)) && config === '') {
                         warn('[Config Exists]: Most likely rate limited')
                         setGHData(config_json, false)
                         setGHRestStatus(RESTStatus.COMPLETE)
@@ -571,6 +581,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 useOTA,
                 loader,
                 setLoader,
+                apModeStatus,
+                setAPModeStatus,
             }}>
             {props.children}
         </AppAPIContext.Provider>
