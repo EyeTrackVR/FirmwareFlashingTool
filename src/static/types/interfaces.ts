@@ -137,6 +137,7 @@ export interface AppStoreAPI {
     activeBoard: string
     ssid: string
     password: string
+    apModeStatus: boolean
 }
 
 export interface UiStore {

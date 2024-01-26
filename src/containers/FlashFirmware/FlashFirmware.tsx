@@ -1,26 +1,37 @@
 import { useNavigate } from '@solidjs/router'
 import { ask } from '@tauri-apps/api/dialog'
+import { listen } from '@tauri-apps/api/event'
 import { removeFile } from '@tauri-apps/api/fs'
 import { appConfigDir, appDataDir, join } from '@tauri-apps/api/path'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
-import { WebviewWindow, getCurrent } from '@tauri-apps/api/window'
-import { createEffect, createMemo, createSignal } from 'solid-js'
+import { WebviewWindow, appWindow, getCurrent } from '@tauri-apps/api/window'
+import { createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { debug, error } from 'tauri-plugin-log-api'
 import FlashFirmware from '@pages/FlashFirmware/FlashFirmware'
 import { installModalClassName, installModalTarget, installationSuccess, usb } from '@src/static'
-import { ENotificationType } from '@src/static/types/enums'
+import { ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { CustomHTMLElement } from '@src/static/types/interfaces'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 
 export const ManageFlashFirmware = () => {
     const navigate = useNavigate()
-
-    const { downloadAsset, getFirmwareType, activeBoard, ssid, password } = useAppAPIContext()
+    const {
+        downloadAsset,
+        getFirmwareType,
+        activeBoard,
+        ssid,
+        password,
+        apModeStatus,
+        setAPModeStatus,
+        useRequestHook,
+    } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
+
     const [manifest, setManifest] = createSignal<string>('')
     const [port, setPort] = createSignal<Navigator | null>(null)
     const [installationConfirmed, setInstallationConfirmed] = createSignal<boolean>(false)
+    const [response, setResponse] = createSignal<object>()
 
     const erase = async () => {
         const appConfigPath = await appConfigDir()
@@ -30,8 +41,65 @@ export const ManageFlashFirmware = () => {
         await removeFile(manifestPath)
     }
 
-    const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+    const isUSBBoard = createMemo(() => activeBoard().includes(usb))
+
+    const _listen = async () => {
+        const unlisten = await listen<string>('request-response', (event) => {
+            const parsedResponse = JSON.parse(event.payload)
+            setResponse(parsedResponse)
+            debug(`[NetworkSettings]: ${JSON.stringify(parsedResponse)}`)
+        })
+        return unlisten
+    }
+
+    const listenToResponse = async () => {
+        const unlisten = await _listen()
+        onCleanup(unlisten)
+    }
+
+    const configureAPConnection = async () => {
+        addNotification({
+            title: 'Making request',
+            message: 'Making request',
+            type: ENotificationType.INFO,
+        })
+        debug(`ssid: ${ssid()}`)
+        debug(`pass: ${password()}`)
+        debug(`confirmPass: ${password()}`)
+
+        //* Check if there is a response from the device
+        await useRequestHook('ping', '192.168.4.1')
+
+        if (response()!['msg'] !== 'ok') {
+            addNotification({
+                title: 'Error',
+                message:
+                    'Could not connect to device, please connect your PC to the EyeTrackVR Access Point and try again.',
+                type: ENotificationType.ERROR,
+            })
+            return
+        }
+
+        //* Make Request to set network settings
+        await useRequestHook(
+            'wifi',
+            '192.168.4.1',
+            `?ssid=${ssid()}&password=${password()}&networkName=${ssid()}&channel=1&power=52&adhoc=0`,
+        )
+
+        //* Trigger save of network settings
+        addNotification({
+            title: 'Success',
+            message: response()!['msg'],
+            type: ENotificationType.SUCCESS,
+        })
+        await useRequestHook('save', '192.168.4.1')
+    }
+
+    createEffect(() => {
+        if (apModeStatus()) {
+            listenToResponse().catch(console.error)
+        }
     })
 
     createEffect(() => {
@@ -117,14 +185,49 @@ export const ManageFlashFirmware = () => {
             })
         }
         if (installationConfirmed() && port() !== null) {
-            configureWifiConnection().catch(handleWifiConfigurationError)
+            if (!apModeStatus()) {
+                configureWifiConnection().catch(handleWifiConfigurationError)
+            }
         }
     })
 
     return (
         <FlashFirmware
+            isAPModeActive={apModeStatus()}
             isUSBBoard={isUSBBoard()}
             manifest={manifest()}
+            onClickEnableAPMode={() => setAPModeStatus(!apModeStatus())}
+            onClickHeader={(action: TITLEBAR_ACTION) => {
+                switch (action) {
+                    case TITLEBAR_ACTION.MINIMIZE:
+                        appWindow.minimize()
+                        break
+                    case TITLEBAR_ACTION.MAXIMIZE:
+                        appWindow.toggleMaximize()
+                        break
+                    case TITLEBAR_ACTION.CLOSE:
+                        appWindow.close()
+                        break
+                    default:
+                        return
+                }
+            }}
+            onClickConfigurAPMode={() => {
+                if (!apModeStatus()) return
+                configureAPConnection().catch(() => {
+                    addNotification({
+                        title: 'AP Mode configuration failed',
+                        message: 'Failed to configure AP Mode',
+                        type: ENotificationType.ERROR,
+                    })
+                })
+            }}
+            onClickOpenModal={(id) => {
+                const el = document.getElementById(id)
+                if (el instanceof HTMLDialogElement) {
+                    el.showModal()
+                }
+            }}
             checkSameFirmware={(manifest, improvInfo) => {
                 const manifestFirmware = manifest.name.toLowerCase()
                 const deviceFirmware = improvInfo.firmware.toLowerCase()
