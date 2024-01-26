@@ -7,6 +7,7 @@ export const installModalClassName = 'mdc-button__label'
 export const installModalTarget = 'Install'
 export const installationSuccess = 'Installation complete!'
 export const questionModalId = 'questionModal'
+export const apModalID = 'apMode'
 export const debugModalId = 'debugModal'
 
 const circleSize = Math.PI * (radius * 2)
