@@ -28,6 +28,10 @@ export default defineConfig({
         port: 3000,
         host: true,
         strictPort: true,
+        watch: {
+            // 3. tell vite to ignore watching `src-tauri`
+            ignored: ['**/src-tauri/**'],
+        },
     },
     build: {
         rollupOptions: {
