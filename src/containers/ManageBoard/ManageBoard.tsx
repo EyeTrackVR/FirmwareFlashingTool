@@ -3,7 +3,7 @@ import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
 import { BoardManagement } from '@pages/BoardManagement/BoardManagement'
-import { BoardDescription, debugModes, usb } from '@src/static'
+import { BoardDescription, debugModes, supportedBoards, usb } from '@src/static'
 import { DebugMode } from '@src/static/types'
 import { TITLEBAR_ACTION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@src/store/context/api'
@@ -16,13 +16,19 @@ export const ManageBoard = () => {
         useAppAPIContext()
 
     const boards = createMemo(() => {
-        return getFirmwareAssets().map((item) => {
-            trace(`${item.name}`)
-            return {
-                board: item.name,
-                description: BoardDescription[item.name.replace('_release', '')] ?? '--',
-            }
-        })
+        return getFirmwareAssets()
+            .map((item) => {
+                trace(`${item.name}`)
+                return {
+                    board: item.name,
+                    description: BoardDescription[item.name.replace('_release', '')] ?? '--',
+                }
+            })
+            .sort((boardA, boardB) => {
+                if (supportedBoards.includes(boardA.board.replace('_release', ''))) return -1
+                if (supportedBoards.includes(boardB.board.replace('_release', ''))) return 1
+                return 0
+            })
     })
 
     const firmwareVersion = createMemo(() => {
