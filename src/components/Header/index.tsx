@@ -12,7 +12,7 @@ interface Iprops {
 
 const MainHeader: Component<Iprops> = (props) => {
     return (
-        <header class="w-full pt-[46px] pr-[40px] pl-[40px] ">
+        <header class="w-full pt-[37px] pr-[40px] pl-[40px] ">
             <div class="flex justify-between">
                 <div
                     class="flex cursor-pointer"
