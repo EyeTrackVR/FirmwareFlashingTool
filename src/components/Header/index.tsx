@@ -22,7 +22,12 @@ const MainHeader: Component<Iprops> = (props) => {
                     <div class="flex items-end">
                         <div>
                             <Image.Root>
-                                <Image.Img src="images/logo.png" alt="logo" width="64px" />
+                                <Image.Img
+                                    src="images/logo.png"
+                                    alt="logo"
+                                    width="64px"
+                                    class="min-w-[64px]"
+                                />
                             </Image.Root>
                         </div>
                         <div class="pb-2 text-[20px] leading-20 text-white">
