@@ -68,6 +68,7 @@
     "@stitches/core": "^1.2.8",
     "@tailwindcss/typography": "^0.5.10",
     "babel-preset-solid": "^1.7.12",
+    "clsx": "^2.1.0",
     "fp-ts": "^2.16.1",
     "highlight.js": "11.9.0",
     "lodash": "^4.17.21",
