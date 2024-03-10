@@ -7,6 +7,7 @@ use std::time::Duration;
 
 use log::error;
 use serde::{Deserialize, Serialize};
+use tauri::PhysicalSize;
 use tokio::time::sleep;
 
 use tauri::{self, ipc::RemoteDomainAccessScope, Manager, RunEvent, WindowEvent};
@@ -91,6 +92,12 @@ async fn main() -> tauri::Result<()> {
         });
 
         window.set_decorations(false).unwrap();
+        window
+          .set_min_size(Some(PhysicalSize {
+            width: 810,
+            height: 810,
+          }))
+          .unwrap();
       });
 
       // Configure IPC for custom protocol
