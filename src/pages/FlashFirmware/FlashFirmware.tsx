@@ -37,7 +37,7 @@ const AppSettingsPage: Component<IProps> = (props) => {
                     </div>
                     <div class="bg-[#0D1B26] w-auto p-[24px] flex flex-col gap-[22px] rounded-[24px] border-solid border-1 border-[#192736]">
                         <div>
-                            <p class="text-white font-[500] leading-[20px] text-[20px] not-italic text-left">
+                            <p class="text-white font-normal leading-[20px] text-[20px] not-italic text-left">
                                 Flash settings
                             </p>
                         </div>

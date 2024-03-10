@@ -51,7 +51,7 @@ const CustomToast: Component<ToastProps> = (props) => {
                             <IoAlertCircleSharp size={25} color="#90CDF4" />
                         </Show>
                     </div>
-                    <span class="flex-1 text-sm font-semibold pl-1 pr-1 text-gray-50">
+                    <span class="flex-1 text-sm pl-1 pr-1 font-normal text-gray-50">
                         {props.notif.message}
                     </span>
                     <button
