@@ -35,6 +35,7 @@ interface AppAPIContext {
     ssid: Accessor<string>
     apModeStatus: Accessor<boolean>
     password: Accessor<string>
+    mdns: Accessor<string>
     setRESTStatus: (status: RESTStatus) => void
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
@@ -47,7 +48,7 @@ interface AppAPIContext {
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<void>
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
-    setNetwork: (ssid: string, password: string) => void
+    setNetwork: (ssid: string, password: string, mdns: string) => void
     setAPModeStatus: (status: boolean) => void
 }
 
@@ -90,6 +91,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         firmwareType: '',
         loader: false,
         apModeStatus: false,
+        mdns: '',
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -142,11 +144,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
-    const setNetwork = (ssid: string, password: string) => {
+    const setNetwork = (ssid: string, password: string, mdns: string) => {
         setState(
             produce((s) => {
                 s.ssid = ssid
                 s.password = password
+                s.mdns = mdns
             }),
         )
     }
@@ -165,6 +168,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getFirmwareType = createMemo(() => apiState().firmwareType)
     const getGHEndpoint = createMemo(() => ghEndpoint)
     const loader = createMemo(() => apiState().loader)
+    const mdns = createMemo(() => apiState().mdns)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
 
     //#endregion
@@ -583,6 +587,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 setLoader,
                 apModeStatus,
                 setAPModeStatus,
+                mdns,
             }}>
             {props.children}
         </AppAPIContext.Provider>
