@@ -1,5 +1,5 @@
 import { clsx } from 'clsx'
-import { createEffect, createMemo, createSignal, type Component } from 'solid-js'
+import { createMemo, createSignal, type Component } from 'solid-js'
 
 interface IProps {
     onChange: (value: string) => void
@@ -17,10 +17,6 @@ const NetworkInput: Component<IProps> = (props) => {
         return active()
             ? 'border-solid border-1 border-[#817DF7]'
             : 'border-solid border-1 border-[#192736]'
-    })
-
-    createEffect(() => {
-        console.log(props.value)
     })
 
     return (
