@@ -1,14 +1,16 @@
 import { removeFile, readTextFile, BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { getClient, ResponseType } from '@tauri-apps/api/http'
 import { appConfigDir, join } from '@tauri-apps/api/path'
-import { invoke, convertFileSrc } from '@tauri-apps/api/tauri'
+import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { pipe } from 'fp-ts/lib/function'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import { debug, error, warn, trace } from 'tauri-plugin-log-api'
+import { unarchive } from 'tauri-plugin-unarchive-api'
 import { download, upload } from 'tauri-plugin-upload-api'
 import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
+
 import { ENotificationType, RESTStatus, RESTType, ESPEndpoints } from '@src/static/types/enums'
 import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease } from '@src/static/types/interfaces'
 import { O } from '@static/types'
@@ -263,10 +265,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 type: ENotificationType.INFO,
             })
 
-            const res = await invoke('unzip_archive', {
-                archivePath: path,
-                targetDir: appConfigDirPath,
-            })
+            const res = await unarchive(path, appConfigDirPath)
             await removeFile(path)
 
             debug(`[Github Release]: Unzip Response: ${res}`)

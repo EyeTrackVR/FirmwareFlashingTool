@@ -83,6 +83,7 @@
     "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log",
     "tauri-plugin-request-client": "workspace:*",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store",
+    "tauri-plugin-unarchive-api": "github:ZanzyTHEbar/tauri-plugin-unarchiver",
     "tauri-plugin-upload-api": "github:tauri-apps/tauri-plugin-upload"
   }
 }

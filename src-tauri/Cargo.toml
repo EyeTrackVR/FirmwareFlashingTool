@@ -11,8 +11,12 @@ rust-version = "1.69"
 
 [dependencies]
 serde_json = "1.0"
-zip-extract = "0.1.2"
-command-group = "2.1.0"
+command-group = "5.0.1"
+sysinfo = "0.30.5"
+sprintf = "0.2.1"
+lazy_static = "1.4.0"
+futures-util = "0.3.28"
+mdns-sd = "0.10.4"
 
 [dependencies.reqwest]
 workspace = true
@@ -37,6 +41,10 @@ workspace = true
 
 [dependencies.tauri-plugin-request-client]
 path = "src/lib/api"
+
+[dependencies.tauri-plugin-unarchiver]
+git = "https://github.com/ZanzyTHEbar/tauri-plugin-unarchiver"
+branch = "main"
 
 [dependencies.tauri-plugin-window-state]
 git = "https://github.com/tauri-apps/plugins-workspace"

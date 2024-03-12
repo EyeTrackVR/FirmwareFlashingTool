@@ -86,6 +86,9 @@ importers:
       tauri-plugin-store-api:
         specifier: github:tauri-apps/tauri-plugin-store
         version: github.com/tauri-apps/tauri-plugin-store/7d2632996f290b0f18cc5f8a2b2791046400690e
+      tauri-plugin-unarchive-api:
+        specifier: github:ZanzyTHEbar/tauri-plugin-unarchiver
+        version: github.com/ZanzyTHEbar/tauri-plugin-unarchiver/81e7b4a9395474a186eae803d22364f48e66030d
       tauri-plugin-upload-api:
         specifier: github:tauri-apps/tauri-plugin-upload
         version: github.com/tauri-apps/tauri-plugin-upload/7b97b5c04838922a8b69892b3e39219d5b42835e
@@ -6558,6 +6561,15 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+  github.com/ZanzyTHEbar/tauri-plugin-unarchiver/81e7b4a9395474a186eae803d22364f48e66030d:
+    resolution: {tarball: https://codeload.github.com/ZanzyTHEbar/tauri-plugin-unarchiver/tar.gz/81e7b4a9395474a186eae803d22364f48e66030d}
+    name: tauri-plugin-unarchive-api
+    version: 0.0.0
+    engines: {pnpm: '>=7.24.2'}
+    dependencies:
+      '@tauri-apps/api': 1.5.3
+    dev: false
 
   github.com/tauri-apps/tauri-plugin-log/19f5dcc0425e9127d2c591780e5047b83e77a7c2:
     resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-log/tar.gz/19f5dcc0425e9127d2c591780e5047b83e77a7c2}

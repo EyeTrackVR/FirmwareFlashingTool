@@ -47,7 +47,7 @@ async fn main() -> tauri::Result<()> {
 
   let app = app
     .invoke_handler(tauri::generate_handler![
-      tauri_commands::unzip_archive,
+      tauri_commands::run_mdns_query,
       tauri_commands::handle_save_window_state,
       tauri_commands::handle_load_window_state,
     ])
@@ -61,6 +61,7 @@ async fn main() -> tauri::Result<()> {
     }))
     // persistent storage with file system
     .plugin(tauri_plugin_store::Builder::default().build())
+    .plugin(tauri_plugin_unarchiver::init())
     .plugin(tauri_plugin_upload::init())
     // splashscreen support
     // LocalHost REST Client
