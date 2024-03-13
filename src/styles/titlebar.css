@@ -1,17 +1,21 @@
-.titlebar  {
+.titlebar, .customTitlebar {
+    background: #000f1a;
     z-index: 999;
     height: 30px;
     user-select: none;
     display: flex;
-    background: #000f1a;
     justify-content: flex-end;
     position: fixed;
-    padding:5px;
+    padding: 5px;
     border-top-right-radius: 0.4rem;
     border-top-left-radius: 0.4rem;
     top: 0;
     left: 0;
     right: 0;
+}
+
+.customTitlebar {
+    background: #000910;
 }
 
 #app {
