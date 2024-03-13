@@ -1,4 +1,3 @@
-import { clsx } from 'clsx'
 import { FaSolidXmark } from 'solid-icons/fa'
 import { Component, createMemo } from 'solid-js'
 import { Button } from '@components/Buttons/DefaultButton'
@@ -15,13 +14,6 @@ export interface IProps {
 }
 
 export const APMode: Component<IProps> = (props) => {
-    const styles = createMemo(() => {
-        if (props.isAPModeActive) {
-            return 'border-[#192736] bg-[#9793FD] cursor-pointer focus-visible:border-[#fff]'
-        }
-        return 'border-[#192736] bg-[#0D1B26]  focus-visible:border-[#9793FD]'
-    })
-
     const buttonLabel = createMemo(() =>
         props.isAPModeActive ? 'Disable AP mode' : 'Enable AP mode',
     )
@@ -29,10 +21,15 @@ export const APMode: Component<IProps> = (props) => {
     return (
         <div>
             <button
-                class={clsx(
-                    'ml-auto flex items-center justify-center lead pt-[10.5px] pb-[10.5px] pl-[10.5px] pr-[10.5px] rounded-full border border-solid cursor-pointer',
-                    styles(),
-                )}
+                classList={{
+                    'border-[#192736] bg-[#9793FD] cursor-pointer focus-visible:border-[#fff]':
+                        props.isAPModeActive,
+                    'border-[#192736] bg-[#0D1B26]  focus-visible:border-[#9793FD]':
+                        !props.isAPModeActive,
+                }}
+                class={
+                    'ml-auto flex items-center justify-center lead pt-[10.5px] pb-[10.5px] pl-[10.5px] pr-[10.5px] rounded-full border border-solid cursor-pointer'
+                }
                 onClick={(e) => {
                     e.preventDefault()
                     props.onClickOpenModal(apModalID)
