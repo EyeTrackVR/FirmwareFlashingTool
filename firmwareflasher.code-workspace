@@ -42,10 +42,13 @@
         },
         "liveServer.settings.multiRootWorkspaceName": "Example",
         "cSpell.words": [
+            "autodetection",
             "codegen",
+            "daisyui",
             "eyetrack",
             "eyetrackvrfft",
             "flashtool",
+            "Goebel",
             "highlightjs",
             "hljs",
             "improv",

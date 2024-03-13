@@ -3,6 +3,14 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.2.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.3...v1.2.4) (2024-02-15)
+
+
+### 🧑‍💻 Code Refactoring
+
+* remove highlight.js ([e89a8de](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e89a8de78df9ec18768eae9c13eff2799c842621))
+* update vite config ([ad8de54](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/ad8de5405d5b510a15ec5da7c0d0192ff52e8c6f))
+
 ## [1.2.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.2...v1.2.3) (2024-01-10)
 
 
