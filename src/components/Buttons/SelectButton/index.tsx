@@ -17,7 +17,7 @@ export const SelectButton: Component<IProps> = (props) => {
                 e.preventDefault()
                 props.onClick?.()
             }}>
-            <p class="text-left text-white text-[12px] font-[700] leading-[20px] not-italic">
+            <p class="text-left text-white text-[12px] font-normal leading-[20px] not-italic">
                 {props.label}
             </p>
         </button>

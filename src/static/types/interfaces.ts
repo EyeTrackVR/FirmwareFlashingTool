@@ -138,6 +138,7 @@ export interface AppStoreAPI {
     ssid: string
     password: string
     apModeStatus: boolean
+    mdns: string
 }
 
 export interface UiStore {

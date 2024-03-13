@@ -1,4 +1,44 @@
-.titlebar {
+.titlebar, .customTitlebar {
+    background: #000f1a;
+    z-index: 999;
+    height: 30px;
+    user-select: none;
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    padding: 5px;
+    border-top-right-radius: 0.4rem;
+    border-top-left-radius: 0.4rem;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.customTitlebar {
+    background: #000910;
+}
+
+#app {
+    border-radius: 50px;
+    height: 100vh;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+}
+
+.titlebar-button {
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+}
+
+.titlebar-button:hover{
+    background: #03233a;
+}
+
+.titlebar-docs {
     z-index: 999;
     height: 30px;
     background: #329ea3; /* #9a6998- alternative really nice pink*/
@@ -13,7 +53,7 @@
     right: 0;
 }
 
-.titlebar-button {
+.titlebar-button-docs {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -21,6 +61,6 @@
     height: 30px;
 }
 
-.titlebar-button:hover {
+.titlebar-button-docs:hover {
     background: #5bbec3;
 }

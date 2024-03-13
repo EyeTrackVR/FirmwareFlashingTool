@@ -10,7 +10,7 @@ export const ProgressBar: Component<IProps> = (props) => {
     return (
         <div class="relative">
             <div class="step">
-                <p class="text-white text-[16px] font-[700] ">{props.currentStep}</p>
+                <p class="text-white text-[16px] font-medium">{props.currentStep}</p>
             </div>
             <svg id="svg" width="60" height="60" version="1.1">
                 <circle

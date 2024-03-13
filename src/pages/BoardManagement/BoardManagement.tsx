@@ -54,7 +54,6 @@ export const BoardManagement: Component<IProps> = (props) => {
                 <Footer
                     onClickPrimary={props.onClickConfirm}
                     isPrimaryActive={isBoard()}
-                    isSecondActive={false}
                     primaryLabel="Confirm"
                 />
             </div>

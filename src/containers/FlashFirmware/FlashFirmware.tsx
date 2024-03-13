@@ -21,6 +21,7 @@ export const ManageFlashFirmware = () => {
         getFirmwareType,
         activeBoard,
         ssid,
+        mdns,
         password,
         apModeStatus,
         setAPModeStatus,
@@ -126,20 +127,31 @@ export const ManageFlashFirmware = () => {
         // wifi config
         const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
 
+        //mdns config
+        const mdnsConfig = { command: 'set_mdns', data: { hostname: mdns() } }
+
         const writableStream = (
             port() as unknown as { writable: WritableStream }
         ).writable.getWriter()
 
         const wifiConfigJSON = JSON.stringify(wifiConfig)
+        const mdnsConfigJSON = JSON.stringify(mdnsConfig)
+        await writableStream.write(new TextEncoder().encode(mdnsConfigJSON))
+        addNotification({
+            title: 'mdns configured',
+            message: 'mdns has been configured',
+            type: ENotificationType.SUCCESS,
+        })
+
         await writableStream.write(new TextEncoder().encode(wifiConfigJSON))
-        writableStream.close()
-        setInstallationConfirmed(false)
-        setPort(null)
         addNotification({
             title: 'WIFI configured',
             message: 'WIFI has been configured',
             type: ENotificationType.SUCCESS,
         })
+        await writableStream.close()
+        setInstallationConfirmed(false)
+        setPort(null)
     }
 
     createEffect(() => {

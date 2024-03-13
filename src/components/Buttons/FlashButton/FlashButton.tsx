@@ -19,7 +19,7 @@ export const FlashButton: Component<IProps> = (props) => {
                 <Show when={props.step}>
                     <div>
                         <p
-                            class="not-italic font-[500] text-white leading-[20px] text-[24px] text-left"
+                            class="not-italic font-normal text-white leading-[20px] text-[24px] text-left"
                             style={{ color: 'rgba(166, 170, 211, 0.50)' }}>
                             {props.step}
                         </p>
@@ -27,7 +27,7 @@ export const FlashButton: Component<IProps> = (props) => {
                 </Show>
             </div>
             <div>
-                <p class="not-italic font-[500] text-white leading-[20px]min-[800px] min-[800px]:text-[16px] text-[14px] text-left">
+                <p class="not-italic font-normal text-white leading-[20px]min-[800px] min-[800px]:text-[16px] text-[14px] text-left">
                     {props.label}
                 </p>
             </div>

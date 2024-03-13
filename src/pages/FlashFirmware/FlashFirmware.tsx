@@ -37,11 +37,11 @@ const AppSettingsPage: Component<IProps> = (props) => {
                     </div>
                     <div class="bg-[#0D1B26] w-auto p-[24px] flex flex-col gap-[22px] rounded-[24px] border-solid border-1 border-[#192736]">
                         <div>
-                            <p class="text-white font-[500] leading-[20px] text-[20px] not-italic text-left">
+                            <p class="text-white font-normal leading-[20px] text-[20px] not-italic text-left">
                                 Flash settings
                             </p>
                         </div>
-                        <div class="grid grid-cols-2 grid-rows-2 min-[800px]:grid-rows-1 min-[800px]:grid-cols-4 grid-flow-col gap-[16px]">
+                        <div class="grid grid-cols-2 grid-rows-2 min-[920px]:grid-rows-1 min-[920px]:grid-cols-4 grid-flow-col gap-[16px]">
                             <FlashButton
                                 step="1/2"
                                 label="Download firmware assets"
