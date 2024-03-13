@@ -1,6 +1,5 @@
-import { clsx } from 'clsx'
 import { FaRegularEye, FaRegularEyeSlash } from 'solid-icons/fa'
-import { createMemo, createSignal, type Component } from 'solid-js'
+import { createSignal, type Component } from 'solid-js'
 
 interface IProps {
     onChange: (value: string) => void
@@ -14,18 +13,15 @@ const PasswordInput: Component<IProps> = (props) => {
     const [active, setActive] = createSignal<boolean>(false)
     const [showPassword, setShowPassword] = createSignal<boolean>(false)
 
-    const border = createMemo(() => {
-        return active()
-            ? 'border-solid border-1 border-[#817DF7]'
-            : 'border-solid border-1 border-[#192736]'
-    })
-
     return (
         <div
-            class={clsx(
-                'flex justify-center items-center p-[6px] h-[39px] bg-[#192736] w-full rounded-[6px] placeholder-white text-[12px] text-white',
-                border(),
-            )}>
+            classList={{
+                'border-solid border-1 border-[#817DF7]': active(),
+                'border-solid border-1 border-[#192736]': !active(),
+            }}
+            class={
+                'flex justify-center items-center p-[6px] h-[39px] bg-[#192736] w-full rounded-[6px] placeholder-white text-[12px] text-white'
+            }>
             <input
                 required={props.required}
                 autofocus={props.autoFocus}
@@ -41,7 +37,8 @@ const PasswordInput: Component<IProps> = (props) => {
                 type={showPassword() ? 'text' : 'password'}
             />
             <div
-                class={clsx('cursor-pointer text-[#7288a1] ', !showPassword() ? 'pr-[1px]' : '')}
+                classList={{ 'pr-[1px]': !showPassword() }}
+                class={'cursor-pointer text-[#7288a1]'}
                 onClick={() => setShowPassword(!showPassword())}>
                 {showPassword() ? <FaRegularEyeSlash size={18} /> : <FaRegularEye size={16} />}
             </div>

@@ -1,7 +1,7 @@
 import { Component } from 'solid-js'
 import Input from '@components/Inputs/Input/Input'
-import NetworkInput from '@components/Inputs/NetworkInput/NetworkInput'
-import PasswordInput from '@components/Inputs/PasswordInput/PasswordInput'
+import NetworkInput from '@components/Inputs/NetworkInput'
+import PasswordInput from '@components/Inputs/PasswordInput'
 import { shortMdnsAddress } from '@src/utils'
 
 export interface IProps {

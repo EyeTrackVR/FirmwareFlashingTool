@@ -1,5 +1,4 @@
-import { clsx } from 'clsx'
-import { createMemo, createSignal, type Component } from 'solid-js'
+import { createSignal, type Component } from 'solid-js'
 
 interface IProps {
     onChange: (value: string) => void
@@ -13,18 +12,15 @@ interface IProps {
 const NetworkInput: Component<IProps> = (props) => {
     const [active, setActive] = createSignal<boolean>(false)
 
-    const border = createMemo(() => {
-        return active()
-            ? 'border-solid border-1 border-[#817DF7]'
-            : 'border-solid border-1 border-[#192736]'
-    })
-
     return (
         <div
-            class={clsx(
-                'flex justify-center items-center p-[6px] h-[39px] bg-[#192736] w-full rounded-[6px] placeholder-white text-[12px] text-white',
-                border(),
-            )}>
+            classList={{
+                'border-solid border-1 border-[#817DF7]': active(),
+                'border-solid border-1 border-[#192736]': !active(),
+            }}
+            class={
+                'flex justify-center items-center p-[6px] h-[39px] bg-[#192736] w-full rounded-[6px] placeholder-white text-[12px] text-white'
+            }>
             <div>
                 <p class="select-none text-left text-[12px] leading-[14px] not-italic text-[#7288a1] font-medium">
                     http://
