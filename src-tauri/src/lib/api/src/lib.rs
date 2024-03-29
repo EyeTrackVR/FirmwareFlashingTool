@@ -181,7 +181,7 @@ macro_rules! specta_builder {
     ts::builder()
       .commands(collect_commands![make_request::<$e>])
       .path(generate_plugin_path(PLUGIN_NAME))
-      .config(specta::ts::ExportConfig::default().formatter(specta::ts::prettier))
+      .config(specta::ts::ExportConfig::default().formatter(specta::js_doc::formatter::prettier))
     //.events(collect_events![RandomNumber])
   };
 }
