@@ -175,6 +175,7 @@ async fn make_request<R: Runtime>(
   }
 }
 
+#[allow(unused_macros)]
 macro_rules! specta_builder {
   ($e:expr, Runtime) => {
     ts::builder()
