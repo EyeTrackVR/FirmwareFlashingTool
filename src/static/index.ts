@@ -3,6 +3,7 @@ import { BOARD_TYPE, STEP_STATUS_ENUM } from './types/enums'
 export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
 export const defaultMdnsLength = 24
+export const portBaudRate = 115200
 export const mdnsLength = 12
 export const radius = 24
 export const usb = 'USB'

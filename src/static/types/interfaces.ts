@@ -147,3 +147,14 @@ export interface UiStore {
     menuOpen?: MenuOpen | null
     contextAnchor?: HTMLElement | null
 }
+
+export interface INavigatorPort extends Navigator {
+    open: ({ baudRate }: { baudRate: number }) => Promise<void>
+    close: () => void
+}
+
+export interface INavigator extends Navigator {
+    serial: {
+        requestPort: () => INavigatorPort
+    }
+}
