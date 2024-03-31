@@ -16,11 +16,14 @@ export interface IProps {
     step?: string
     manifest: string
     checkSameFirmware: (manifest: { name: string }, improvInfo: { firmware: string }) => void
+    onClickESPButton:()=>void
 }
 
 export const EspWebButton: Component<IProps> = (props) => {
     return (
-        <esp-web-install-button overrides={props.checkSameFirmware} manifest={props.manifest}>
+        <esp-web-install-button overrides={props.checkSameFirmware} manifest={props.manifest} onClick ={()=>{
+            props.onClickESPButton()
+        }}>
             <button
                 slot="activate"
                 class="card card-actions !outline-none mt-0 shadow-none bg-[#192736] flex flex-col justify-between p-[14px] border-solid border-1 focus-visible:border-[#817DF7] border-[#192736] rounded-[24px] hover:border-[#817DF7] min-h-[210px] h-full max-w-[197px]  w-full ">
