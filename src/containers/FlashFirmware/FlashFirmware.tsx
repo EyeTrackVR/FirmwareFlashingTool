@@ -155,6 +155,7 @@ export const ManageFlashFirmware = () => {
             message: 'WIFI has been configured',
             type: ENotificationType.SUCCESS,
         })
+        setInstallationConfirmed(false)
 
         try {
             writableStream.releaseLock()
@@ -162,7 +163,7 @@ export const ManageFlashFirmware = () => {
             // we can ignore this error
         }
 
-        setInstallationConfirmed(false)
+        setPort(null)
     }
 
     const onClickUpdateNetworkSettings = async () => {
@@ -239,6 +240,7 @@ export const ManageFlashFirmware = () => {
             }
             if (className === installModalClassName && targetValue === 'Next') {
                 setInstallationConfirmed(false)
+                setPort(null)
             }
         })
     })
@@ -251,7 +253,10 @@ export const ManageFlashFirmware = () => {
             const ewtDialog = el?.shadowRoot?.querySelector('ewt-page-message')
             const label = ewtDialog?.getAttribute('label')
             if (label === installationSuccess) {
-                setInstallationConfirmed(true)
+                if (!installationConfirmed()) {
+                    setInstallationConfirmed(true)
+                }
+                return
             }
         }, 20)
         return () => clearInterval(intervalId)
@@ -260,6 +265,7 @@ export const ManageFlashFirmware = () => {
     createEffect(() => {
         const handleWifiConfigurationError = () => {
             setInstallationConfirmed(false)
+            setPort(null)
             addNotification({
                 title: 'WIFI configuration failed',
                 message: 'Failed to configure WIFI',
