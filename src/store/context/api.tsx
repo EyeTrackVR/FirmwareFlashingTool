@@ -45,7 +45,7 @@ interface AppAPIContext {
     //********************************* hooks *************************************/
     downloadAsset: (firmware: string) => Promise<void>
     doGHRequest: () => Promise<void>
-    useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<void>
+    useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<boolean>
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
     setNetwork: (ssid: string, password: string, mdns: string) => void
@@ -504,15 +504,28 @@ export const AppAPIProvider: Component<Context> = (props) => {
         endpointName: string,
         deviceName?: string,
         args?: string,
-    ): Promise<void> => {
-        let endpoint: string = getEndpoint(endpointName).url
-        const method: RESTType = getEndpoint(endpointName).type
+    ): Promise<boolean> => {
+        let endpoint: string = getEndpoint(endpointName)!.url
+        const method: RESTType = getEndpoint(endpointName)!.type
 
         if (typeof deviceName != 'undefined') {
             deviceName = 'http://' + deviceName
         } else {
             deviceName = 'http://localhost'
         }
+
+        // TODO: add device context to the store
+        /* const device = getDevices().find((device) => device.address === deviceName)
+        if (!device) {
+            const msg = 'No Device found at that address'
+            debug(msg)
+            addNotification({
+                title: 'Error',
+                message: msg,
+                type: ENotificationType.ERROR,
+            })
+            return false
+        } */
 
         if (args) {
             endpoint += args
@@ -531,12 +544,15 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     message: response.error,
                     type: ENotificationType.ERROR,
                 })
-                return
+                return false
             }
+            setRESTResponse(response)
+            setRESTStatus(RESTStatus.COMPLETE)
+            return true
         } catch (err) {
             setRESTStatus(RESTStatus.FAILED)
             error(`[REST Request]: ${err}`)
-            return
+            return false
         }
     }
 
@@ -547,7 +563,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
      *
      */
     const useOTA = async (firmwareName: string, device: string) => {
-        useRequestHook('ota', device)
+        await useRequestHook('ota', device)
         const path = await join(await appConfigDir(), firmwareName + '.bin')
         await upload(device, path)
     }

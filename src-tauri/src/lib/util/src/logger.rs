@@ -72,4 +72,5 @@ macro_rules! etvr_stdout {
 
 #[allow(unused_imports)]
 pub(crate) use etvr_stderr;
+#[allow(unused_imports)]
 pub(crate) use etvr_stdout;

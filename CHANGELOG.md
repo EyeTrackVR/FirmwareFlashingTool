@@ -3,6 +3,18 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.2.5](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.4...v1.2.5) (2024-03-29)
+
+
+### 🐛 Bug Fixes
+
+* Update specta formatter in API library ([054f0e1](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/054f0e1b26913bc09af4196507ef76cde4200300))
+
+
+### 🧑‍💻 Code Refactoring
+
+* Update dependencies and add unused macros ([3cc16c3](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/3cc16c321ca32b913dd152df931b5fd6b20d67cb))
+
 ## [1.2.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.3...v1.2.4) (2024-02-15)
 
 
