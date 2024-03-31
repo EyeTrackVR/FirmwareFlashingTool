@@ -8,9 +8,15 @@ import { WebviewWindow, appWindow, getCurrent } from '@tauri-apps/api/window'
 import { createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { debug, error } from 'tauri-plugin-log-api'
 import FlashFirmware from '@pages/FlashFirmware/FlashFirmware'
-import { installModalClassName, installModalTarget, installationSuccess, usb } from '@src/static'
+import {
+    installModalClassName,
+    installModalTarget,
+    installationSuccess,
+    portBaudRate,
+    usb,
+} from '@src/static'
 import { ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
-import { CustomHTMLElement } from '@src/static/types/interfaces'
+import { CustomHTMLElement, INavigator, INavigatorPort } from '@src/static/types/interfaces'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 
@@ -149,9 +155,75 @@ export const ManageFlashFirmware = () => {
             message: 'WIFI has been configured',
             type: ENotificationType.SUCCESS,
         })
-        await writableStream.close()
+
+        try {
+            writableStream.releaseLock()
+        } catch {
+            // we can ignore this error
+        }
+
         setInstallationConfirmed(false)
-        setPort(null)
+    }
+
+    const onClickUpdateNetworkSettings = async () => {
+        setInstallationConfirmed(false)
+        const port: INavigatorPort | undefined = await new Promise((resolve, reject) => {
+            try {
+                const port = (navigator as INavigator).serial.requestPort()
+                resolve(port)
+            } catch {
+                reject(undefined)
+            }
+        })
+
+        if (!port) {
+            alert('Failed to open the serial port, try again or contact us on Discord.')
+            return
+        }
+
+        const wifiConfigJSON = JSON.stringify({
+            command: 'set_wifi',
+            data: { ssid: ssid(), password: password() },
+        })
+        const mdnsConfigJSON = JSON.stringify({
+            command: 'set_mdns',
+            data: { hostname: mdns() },
+        })
+
+        try {
+            await port.open({ baudRate: portBaudRate })
+            const writableStream = (
+                port as unknown as { writable: WritableStream }
+            ).writable.getWriter()
+
+            await writableStream.write(new TextEncoder().encode(mdnsConfigJSON))
+            addNotification({
+                title: 'mdns updated',
+                message: 'mdns has been updated',
+                type: ENotificationType.SUCCESS,
+            })
+
+            await writableStream.write(new TextEncoder().encode(wifiConfigJSON))
+            addNotification({
+                title: 'WIFI updated',
+                message: 'WIFI has been updated',
+                type: ENotificationType.SUCCESS,
+            })
+
+            try {
+                writableStream.releaseLock()
+            } catch {
+                // we can ignore this error
+            }
+
+            port.close()
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                alert('Failed to update network settings')
+                port.close()
+            }
+            return
+        }
     }
 
     createEffect(() => {
@@ -165,9 +237,8 @@ export const ManageFlashFirmware = () => {
                 if (el?.port) setPort(el.port)
                 return
             }
-            if (targetValue === 'Back') {
+            if (className === installModalClassName && targetValue === 'Next') {
                 setInstallationConfirmed(false)
-                setPort(null)
             }
         })
     })
@@ -182,14 +253,13 @@ export const ManageFlashFirmware = () => {
             if (label === installationSuccess) {
                 setInstallationConfirmed(true)
             }
-        }, 200)
+        }, 20)
         return () => clearInterval(intervalId)
     })
 
     createEffect(() => {
         const handleWifiConfigurationError = () => {
             setInstallationConfirmed(false)
-            setPort(null)
             addNotification({
                 title: 'WIFI configuration failed',
                 message: 'Failed to configure WIFI',
@@ -205,6 +275,14 @@ export const ManageFlashFirmware = () => {
 
     return (
         <FlashFirmware
+            onClickESPButton={() => {
+                setInstallationConfirmed(false)
+                if (port()) {
+                    const closePort = port() as unknown as INavigatorPort
+                    closePort.close()
+                }
+                setPort(null)
+            }}
             isAPModeActive={apModeStatus()}
             isUSBBoard={isUSBBoard()}
             manifest={manifest()}
@@ -223,6 +301,14 @@ export const ManageFlashFirmware = () => {
                     default:
                         return
                 }
+            }}
+            onClickUpdateNetworkSettings={() => {
+                onClickUpdateNetworkSettings().catch((err) => {
+                    if ((err as DOMException).name === 'NotFoundError') {
+                        alert('Failed to open the serial port, try again or contact us on Discord.')
+                        return
+                    }
+                })
             }}
             onClickConfigurAPMode={() => {
                 if (!apModeStatus()) return
