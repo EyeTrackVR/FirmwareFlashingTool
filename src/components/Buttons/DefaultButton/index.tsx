@@ -9,14 +9,15 @@ export interface IProps {
 }
 
 export const Button: Component<IProps> = (props) => {
-    
-
     return (
         <button
             classList={{
-                'bg-[#192736] border-[#192736] focus-visible:border-[#817DF7] cursor-wait':props.isLoadingPrimaryButton,
-                'bg-[#817DF7] hover:bg-[#9793FD] border-[#192736] focus-visible:border-[#fff]':!props.isLoadingPrimaryButton && props.isActive,
-                'bg-[#192736] hover:bg-[#30475e] border-[#192736] focus-visible:border-[#817DF7]':!props.isLoadingPrimaryButton && !props.isActive
+                'bg-[#192736] border-[#192736] focus-visible:border-[#817DF7] cursor-wait':
+                    props.isLoadingPrimaryButton,
+                'bg-[#817DF7] hover:bg-[#9793FD] border-[#192736] focus-visible:border-[#fff]':
+                    !props.isLoadingPrimaryButton && props.isActive,
+                'bg-[#192736] hover:bg-[#30475e] border-[#192736] focus-visible:border-[#817DF7]':
+                    !props.isLoadingPrimaryButton && !props.isActive,
             }}
             type={props.type}
             class={'pr-[32px] pl-[32px] pt-[8px] pb-[8px] rounded-[6px] border-solid border-1'}

@@ -1,5 +1,5 @@
 import { FaSolidXmark } from 'solid-icons/fa'
-import { Component, createMemo } from 'solid-js'
+import { Component, createMemo, Show } from 'solid-js'
 import { Button } from '@components/Buttons/DefaultButton'
 import { Titlebar } from '@components/Titlebar/Titlebar'
 import { apModalID } from '@src/static'
@@ -64,19 +64,21 @@ export const APMode: Component<IProps> = (props) => {
                                     </p>
                                 </div>
                                 <div>
-                                    {props.isAPModeActive ? (
-                                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
-                                            Before pressing the <code>Send AP Request</code> check
-                                            that you have the firmware already{' '}
-                                            <code>installed</code> and you are connected to
-                                            <code>EyeTrackVR</code> Wi-Fi.
-                                        </p>
-                                    ) : (
+                                    <Show
+                                        when={!props.isAPModeActive}
+                                        fallback={
+                                            <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
+                                                Before pressing the <code>Send AP Request</code>{' '}
+                                                check that you have the firmware already{' '}
+                                                <code>installed</code> and you are connected to
+                                                <code>EyeTrackVR</code> Wi-Fi.
+                                            </p>
+                                        }>
                                         <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
                                             Read the <code>documentation</code> before turning on{' '}
                                             <code>AP mode</code>.
                                         </p>
-                                    )}
+                                    </Show>
                                 </div>
                             </div>
                             <div class="flex justify-center gap-[10px]">

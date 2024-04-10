@@ -49,9 +49,10 @@ const AppSettingsPage: Component<IProps> = (props) => {
                                 Flash settings
                             </p>
                         </div>
-                        <div 
+                        <div
                             classList={{
-                                'grid-cols-2 grid-rows-2 min-[920px]:grid-rows-1 min-[920px]:grid-cols-4': props.isUSBBoard,
+                                'grid-cols-2 grid-rows-2 min-[920px]:grid-rows-1 min-[920px]:grid-cols-4':
+                                    props.isUSBBoard,
                                 'grid-cols-2 grid-rows-2': !props.isUSBBoard,
                             }}
                             class="grid grid-flow-col gap-[16px]">
@@ -79,7 +80,7 @@ const AppSettingsPage: Component<IProps> = (props) => {
                                 onClick={props.onClickOpenDocs}
                                 img={<FaSolidGraduationCap size={48} fill="#FFFFFFe3" />}
                             />
-                            <Show when ={!props.isUSBBoard}>
+                            <Show when={!props.isUSBBoard}>
                                 <FlashButton
                                     label="Update network settings"
                                     img={<FaSolidWifi size={48} fill="#FFFFFFe3" />}
