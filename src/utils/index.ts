@@ -22,3 +22,7 @@ export const shortMdnsAddress = (text: string) => {
     const secondHalf = text.slice(text.length - mdnsLength, text.length)
     return `${firstHalf}...${secondHalf}`
 }
+
+export const sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
