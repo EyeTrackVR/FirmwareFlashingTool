@@ -55,7 +55,7 @@ export const BoardDescription: {
     [BOARD_TYPE.WROOMS_3_USB]: 'FREENOVE-ESP32-S3 (wired mode)',
     [BOARD_TYPE.WROOMS_3QIOUSB]: 'FREENOVE-ESP32-S3 (wired mode, for boards with octal flash)',
     // eslint-disable-next-line quotes
-    [BOARD_TYPE.XIAOSENSES_3]: "SeedStudio's XAIO ESP32-S3 Sense (wireless mode)",
+    [BOARD_TYPE.XIAOSENSES_3]: "SeedStudio's XIAO ESP32-S3 Sense (wireless mode)",
     // eslint-disable-next-line quotes
-    [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XAIO ESP32-S3 Sense (wired mode)",
+    [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
 }
