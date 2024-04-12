@@ -17,6 +17,7 @@ import {
 } from '@src/static'
 import { ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { CustomHTMLElement, INavigator, INavigatorPort } from '@src/static/types/interfaces'
+import { sleep } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 
@@ -140,16 +141,16 @@ export const ManageFlashFirmware = () => {
             port() as unknown as { writable: WritableStream }
         ).writable.getWriter()
 
-        const wifiConfigJSON = JSON.stringify(wifiConfig)
-        const mdnsConfigJSON = JSON.stringify(mdnsConfig)
-        await writableStream.write(new TextEncoder().encode(mdnsConfigJSON))
+        await sleep(200)
+        await writableStream.write(
+            new TextEncoder().encode(JSON.stringify({ commands: [mdnsConfig, wifiConfig] })),
+        )
         addNotification({
             title: 'mdns configured',
             message: 'mdns has been configured',
             type: ENotificationType.SUCCESS,
         })
 
-        await writableStream.write(new TextEncoder().encode(wifiConfigJSON))
         addNotification({
             title: 'WIFI configured',
             message: 'WIFI has been configured',
@@ -182,32 +183,26 @@ export const ManageFlashFirmware = () => {
             return
         }
 
-        const wifiConfigJSON = JSON.stringify({
-            command: 'set_wifi',
-            data: { ssid: ssid(), password: password() },
-        })
-        const mdnsConfigJSON = JSON.stringify({
-            command: 'set_mdns',
-            data: { hostname: mdns() },
-        })
+        // wifi config
+        const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
+        //mdns config
+        const mdnsConfig = { command: 'set_mdns', data: { hostname: mdns() } }
 
         try {
             await port.open({ baudRate: portBaudRate })
+
             const writableStream = (
                 port as unknown as { writable: WritableStream }
             ).writable.getWriter()
 
-            await writableStream.write(new TextEncoder().encode(mdnsConfigJSON))
-            addNotification({
-                title: 'mdns updated',
-                message: 'mdns has been updated',
-                type: ENotificationType.SUCCESS,
-            })
+            await sleep(200)
+            await writableStream.write(
+                new TextEncoder().encode(JSON.stringify({ commands: [mdnsConfig, wifiConfig] })),
+            )
 
-            await writableStream.write(new TextEncoder().encode(wifiConfigJSON))
             addNotification({
-                title: 'WIFI updated',
-                message: 'WIFI has been updated',
+                title: 'Network updated',
+                message: 'Network updated',
                 type: ENotificationType.SUCCESS,
             })
 
