@@ -14,7 +14,7 @@ export const SettingsButton: Component<IProps> = (props) => {
                 <Show when={props.step}>
                     <div>
                         <p
-                            class="text-[24px]  font-[700]"
+                            class="text-[24px] font-medium"
                             style={{ color: 'rgba(255, 255, 255, 0.50)' }}>
                             {props.step}
                         </p>

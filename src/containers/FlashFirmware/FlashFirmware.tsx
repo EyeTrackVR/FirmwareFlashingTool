@@ -8,9 +8,16 @@ import { WebviewWindow, appWindow, getCurrent } from '@tauri-apps/api/window'
 import { createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { debug, error } from 'tauri-plugin-log-api'
 import FlashFirmware from '@pages/FlashFirmware/FlashFirmware'
-import { installModalClassName, installModalTarget, installationSuccess, usb } from '@src/static'
+import {
+    installModalClassName,
+    installModalTarget,
+    installationSuccess,
+    portBaudRate,
+    usb,
+} from '@src/static'
 import { ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
-import { CustomHTMLElement } from '@src/static/types/interfaces'
+import { CustomHTMLElement, INavigator, INavigatorPort } from '@src/static/types/interfaces'
+import { sleep } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 
@@ -21,6 +28,7 @@ export const ManageFlashFirmware = () => {
         getFirmwareType,
         activeBoard,
         ssid,
+        mdns,
         password,
         apModeStatus,
         setAPModeStatus,
@@ -126,20 +134,92 @@ export const ManageFlashFirmware = () => {
         // wifi config
         const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
 
+        //mdns config
+        const mdnsConfig = { command: 'set_mdns', data: { hostname: mdns() } }
+
         const writableStream = (
             port() as unknown as { writable: WritableStream }
         ).writable.getWriter()
 
-        const wifiConfigJSON = JSON.stringify(wifiConfig)
-        await writableStream.write(new TextEncoder().encode(wifiConfigJSON))
-        writableStream.close()
-        setInstallationConfirmed(false)
-        setPort(null)
+        await sleep(200)
+        await writableStream.write(
+            new TextEncoder().encode(JSON.stringify({ commands: [mdnsConfig, wifiConfig] })),
+        )
+        addNotification({
+            title: 'mdns configured',
+            message: 'mdns has been configured',
+            type: ENotificationType.SUCCESS,
+        })
+
         addNotification({
             title: 'WIFI configured',
             message: 'WIFI has been configured',
             type: ENotificationType.SUCCESS,
         })
+        setInstallationConfirmed(false)
+
+        try {
+            writableStream.releaseLock()
+        } catch {
+            // we can ignore this error
+        }
+
+        setPort(null)
+    }
+
+    const onClickUpdateNetworkSettings = async () => {
+        setInstallationConfirmed(false)
+        const port: INavigatorPort | undefined = await new Promise((resolve, reject) => {
+            try {
+                const port = (navigator as INavigator).serial.requestPort()
+                resolve(port)
+            } catch {
+                reject(undefined)
+            }
+        })
+
+        if (!port) {
+            alert('Failed to open the serial port, try again or contact us on Discord.')
+            return
+        }
+
+        // wifi config
+        const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
+        //mdns config
+        const mdnsConfig = { command: 'set_mdns', data: { hostname: mdns() } }
+
+        try {
+            await port.open({ baudRate: portBaudRate })
+
+            const writableStream = (
+                port as unknown as { writable: WritableStream }
+            ).writable.getWriter()
+
+            await sleep(200)
+            await writableStream.write(
+                new TextEncoder().encode(JSON.stringify({ commands: [mdnsConfig, wifiConfig] })),
+            )
+
+            addNotification({
+                title: 'Network updated',
+                message: 'Network updated',
+                type: ENotificationType.SUCCESS,
+            })
+
+            try {
+                writableStream.releaseLock()
+            } catch {
+                // we can ignore this error
+            }
+
+            port.close()
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                alert('Failed to update network settings')
+                port.close()
+            }
+            return
+        }
     }
 
     createEffect(() => {
@@ -153,7 +233,7 @@ export const ManageFlashFirmware = () => {
                 if (el?.port) setPort(el.port)
                 return
             }
-            if (targetValue === 'Back') {
+            if (className === installModalClassName && targetValue === 'Next') {
                 setInstallationConfirmed(false)
                 setPort(null)
             }
@@ -168,9 +248,12 @@ export const ManageFlashFirmware = () => {
             const ewtDialog = el?.shadowRoot?.querySelector('ewt-page-message')
             const label = ewtDialog?.getAttribute('label')
             if (label === installationSuccess) {
-                setInstallationConfirmed(true)
+                if (!installationConfirmed()) {
+                    setInstallationConfirmed(true)
+                }
+                return
             }
-        }, 200)
+        }, 20)
         return () => clearInterval(intervalId)
     })
 
@@ -193,6 +276,14 @@ export const ManageFlashFirmware = () => {
 
     return (
         <FlashFirmware
+            onClickESPButton={() => {
+                setInstallationConfirmed(false)
+                if (port()) {
+                    const closePort = port() as unknown as INavigatorPort
+                    closePort.close()
+                }
+                setPort(null)
+            }}
             isAPModeActive={apModeStatus()}
             isUSBBoard={isUSBBoard()}
             manifest={manifest()}
@@ -211,6 +302,14 @@ export const ManageFlashFirmware = () => {
                     default:
                         return
                 }
+            }}
+            onClickUpdateNetworkSettings={() => {
+                onClickUpdateNetworkSettings().catch((err) => {
+                    if ((err as DOMException).name === 'NotFoundError') {
+                        alert('Failed to open the serial port, try again or contact us on Discord.')
+                        return
+                    }
+                })
             }}
             onClickConfigurAPMode={() => {
                 if (!apModeStatus()) return

@@ -138,6 +138,7 @@ export interface AppStoreAPI {
     ssid: string
     password: string
     apModeStatus: boolean
+    mdns: string
 }
 
 export interface UiStore {
@@ -145,4 +146,15 @@ export interface UiStore {
     showNotifications?: boolean
     menuOpen?: MenuOpen | null
     contextAnchor?: HTMLElement | null
+}
+
+export interface INavigatorPort extends Navigator {
+    open: ({ baudRate }: { baudRate: number }) => Promise<void>
+    close: () => void
+}
+
+export interface INavigator extends Navigator {
+    serial: {
+        requestPort: () => INavigatorPort
+    }
 }
