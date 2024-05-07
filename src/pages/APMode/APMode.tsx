@@ -1,9 +1,9 @@
-import { FaSolidXmark } from 'solid-icons/fa'
 import { Component, createMemo, Show } from 'solid-js'
 import { Button } from '@components/Buttons/DefaultButton'
+import ModalHeader from '@components/Modal/ModalHeader/Index'
 import { Titlebar } from '@components/Titlebar/Titlebar'
 import { apModalID } from '@src/static'
-import { TITLEBAR_ACTION } from '@src/static/types/enums'
+import { type TITLEBAR_ACTION } from '@src/static/types/enums'
 
 export interface IProps {
     onClickOpenModal: (id: string) => void
@@ -41,22 +41,7 @@ export const APMode: Component<IProps> = (props) => {
                 <div class="modal-box w-auto h-auto bg-transparent overflow-visible">
                     <div class="w-[500px] bg-[#0D1B26] p-[12px] rounded-[12px] border border-solid border-[#192736] z-10">
                         <div class="flex flex-col gap-[14px]">
-                            <div class="flex justify-between">
-                                <div>
-                                    <p class="text-left text-[18px] text-white font-normal leading-[20px] not-italic">
-                                        AP mode
-                                    </p>
-                                </div>
-                                <div class="modal-action mt-0">
-                                    <form method="dialog">
-                                        <button class="cursor-pointer p-[4px]  rounded-full border border-solid border-[#0D1B26] focus-visible:border-[#9793FD]">
-                                            <p class="text-white text-left">
-                                                <FaSolidXmark size={20} fill="#FFFFFF" />
-                                            </p>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                            <ModalHeader label="AP mode" />
                             <div class="flex flex-col gap-[14px]">
                                 <div>
                                     <p class="text-left text-[18px] text-[#9793FD] font-medium leading-[20px] not-italic">
