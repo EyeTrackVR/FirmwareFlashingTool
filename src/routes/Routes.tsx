@@ -20,7 +20,7 @@ const AppRoutes: Component = () => {
     const Path = useRoutes(routes)
 
     const { get, set } = usePersistentStore()
-    const { doGHRequest } = useAppAPIContext()
+    const { doGHRequest, channelMode } = useAppAPIContext()
 
     const { setDebugMode, getDebugMode } = useAppContext()
     const {
@@ -55,7 +55,10 @@ const AppRoutes: Component = () => {
         //* Check notification permissions
         checkPermission()
         //* Grab the github release info for OpenIris
-        doGHRequest()
+    })
+
+    createEffect(() => {
+        doGHRequest(channelMode())
     })
 
     const createSettingsObject = () => {
