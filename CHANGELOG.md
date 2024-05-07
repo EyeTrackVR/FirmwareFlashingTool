@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.3.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2024-05-07)
+
+
+### 🍕 Features
+
+* add firmware beta release channel ([eca16b7](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/eca16b7b55546cab49020a955b526806b7023b8e))
+
 ## [1.3.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.2.5...v1.3.0-beta.1) (2024-04-27)
 
 
