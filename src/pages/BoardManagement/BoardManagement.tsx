@@ -1,26 +1,29 @@
-import { Component, createMemo } from 'solid-js'
+import { type Component } from 'solid-js'
 import { SelectBoard } from '@components/Board/SelectBoard/SelectBoard'
-import { DebugMode } from '@components/DebugMode/DebugMode'
+import { Devtools } from '@components/DevTools/Devtools'
 import { Footer } from '@components/Footer/Footer'
 import { QuestionMark } from '@components/QuestionMark/QuestionMark'
-import { TITLEBAR_ACTION } from '@src/static/types/enums'
+import { type IDropdownList } from '@interfaces/interfaces'
+import { type CHANNEL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 
 export interface IProps {
-    activeBoard: string
-    firmwareVersion: string
-    setDebugMode: (debugMode: string) => void
+    onClickSetChannelMode: (data: string) => void
     onClickHeader: (action: TITLEBAR_ACTION) => void
+    setDebugMode: (debugMode: string) => void
     onClickOpenModal: (id: string) => void
     onSubmit: (board: string) => void
     onClickConfirm: () => void
-    boards: Array<{ board: string; description: string; debugMode?: boolean }>
+    boards: IDropdownList[]
+    channelOptions: IDropdownList[]
+    firmwareVersion: string
+    debugModes: IDropdownList[]
+    activeBoard: string
+    channelMode: CHANNEL_TYPE
     debugMode: string
-    debugModes: string[]
+    lockButton: boolean
 }
 
 export const BoardManagement: Component<IProps> = (props) => {
-    const isBoard = createMemo(() => !props.activeBoard)
-
     return (
         <div class="flex flex-grow">
             <div class="flex flex-col w-full">
@@ -31,29 +34,28 @@ export const BoardManagement: Component<IProps> = (props) => {
                                 onClickHeader={props.onClickHeader}
                                 onClickOpenModal={props.onClickOpenModal}
                             />
-                            <DebugMode
+                            <Devtools
+                                channelOptions={props.channelOptions}
+                                channelMode={props.channelMode}
                                 debugMode={props.debugMode}
                                 debugModes={props.debugModes}
                                 setDebugMode={props.setDebugMode}
                                 onClickHeader={props.onClickHeader}
                                 onClickOpenModal={props.onClickOpenModal}
+                                onClickSetChannelMode={props.onClickSetChannelMode}
                             />
                         </div>
                         <SelectBoard
                             firmwareVersion={props.firmwareVersion}
                             selectedBoard={props.activeBoard}
                             boards={props.boards}
-                            onSubmit={(data) => {
-                                if (props.activeBoard !== data) {
-                                    props.onSubmit(data)
-                                }
-                            }}
+                            onSubmit={props.onSubmit}
                         />
                     </div>
                 </div>
                 <Footer
                     onClickPrimary={props.onClickConfirm}
-                    isPrimaryActive={isBoard()}
+                    isPrimaryActive={props.lockButton}
                     primaryLabel="Confirm"
                 />
             </div>

@@ -1,5 +1,5 @@
 import { ENotificationAction, ENotificationType } from './enums'
-import type { RESTStatus, RESTType } from '@src/static/types/enums'
+import type { CHANNEL_TYPE, RESTStatus, RESTType } from '@src/static/types/enums'
 import type { DebugMode } from '@static/types'
 import type { WebviewWindow } from '@tauri-apps/api/window'
 import type { ToasterStore } from 'solid-headless'
@@ -85,6 +85,15 @@ export interface IGHRest {
     version: string
 }
 
+export interface IGHResponse {
+    url: string
+    status: number
+    ok: boolean
+    headers: Record<string, string>
+    rawHeaders: Record<string, string[]>
+    data: IGHRelease
+}
+
 export interface IGHRelease {
     data: object
     headers: object
@@ -92,6 +101,7 @@ export interface IGHRelease {
     ok: boolean
     status: number
     url: string
+    prerelease?: boolean
 }
 
 export interface IRestProps {
@@ -139,6 +149,7 @@ export interface AppStoreAPI {
     password: string
     apModeStatus: boolean
     mdns: string
+    channelMode: CHANNEL_TYPE
 }
 
 export interface UiStore {
@@ -157,4 +168,14 @@ export interface INavigator extends Navigator {
     serial: {
         requestPort: () => INavigatorPort
     }
+}
+
+export interface IChannelOptions {
+    label: CHANNEL_TYPE
+    description: string
+}
+
+export interface IDropdownList {
+    label: string | CHANNEL_TYPE
+    description?: string
 }

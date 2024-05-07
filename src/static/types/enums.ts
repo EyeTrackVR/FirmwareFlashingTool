@@ -109,3 +109,8 @@ export enum BOARD_TYPE {
     XIAOSENSES_3 = 'xiaosenses3',
     XIAOSENSES_3_USB = 'xiaosenses3_USB',
 }
+
+export enum CHANNEL_TYPE {
+    OFFICIAL = 'Official',
+    BETA = 'Beta',
+}

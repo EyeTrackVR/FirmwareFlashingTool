@@ -1,4 +1,5 @@
-import { BOARD_TYPE, STEP_STATUS_ENUM } from './types/enums'
+import { BOARD_TYPE, CHANNEL_TYPE, STEP_STATUS_ENUM } from './types/enums'
+import { type IChannelOptions } from '@interfaces/interfaces'
 
 export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
@@ -58,4 +59,16 @@ export const BoardDescription: {
     [BOARD_TYPE.XIAOSENSES_3]: "SeedStudio's XIAO ESP32-S3 Sense (wireless mode)",
     // eslint-disable-next-line quotes
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
+}
+
+export const ChannelOptions: Record<CHANNEL_TYPE, IChannelOptions> = {
+    [CHANNEL_TYPE.OFFICIAL]: {
+        label: CHANNEL_TYPE.OFFICIAL,
+        description: 'Official channel for official releases.',
+    },
+    [CHANNEL_TYPE.BETA]: {
+        label: CHANNEL_TYPE.BETA,
+        description:
+            'This channel is for testing purposes only. It is not recommended for day to day usage',
+    },
 }

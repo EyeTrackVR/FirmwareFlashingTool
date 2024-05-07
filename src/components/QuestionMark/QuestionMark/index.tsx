@@ -1,8 +1,8 @@
-import { Component } from 'solid-js'
+import { type Component } from 'solid-js'
 import { QuestionMarkModal } from '../QuestionMarkModal/QuestionMarkModal'
 import { Titlebar } from '@components/Titlebar/Titlebar'
 import { questionModalId } from '@src/static'
-import { TITLEBAR_ACTION } from '@src/static/types/enums'
+import { type TITLEBAR_ACTION } from '@src/static/types/enums'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
