@@ -2,7 +2,7 @@ import { Component, Show } from 'solid-js'
 
 export interface IProps {
     onClick: () => void
-    board: string
+    label: string
     description?: string
     isActive?: boolean
 }
@@ -24,7 +24,7 @@ export const Board: Component<IProps> = (props) => {
                 props.onClick()
             }}>
             <div class="text-white text-[16px] leading-[20px] font-medium not-italic">
-                <p>{props.board}</p>
+                <p>{props.label}</p>
             </div>
             <Show when={props.description}>
                 <div class="pt-[2px] text-white text-[12px] leading-[20px] font-normal not-italic max-w-[220px]">

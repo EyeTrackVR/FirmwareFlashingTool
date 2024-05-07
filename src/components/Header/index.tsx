@@ -3,14 +3,14 @@ import { Component } from 'solid-js'
 import { ProgressBar } from '@components/ProgressBar/ProgressBar'
 import './styles.css'
 
-interface Iprops {
+interface IProps {
     onClick: () => void
     step: { step: string; description: string; dashoffset: string; index: string }
     currentStep: string
     name: string
 }
 
-const MainHeader: Component<Iprops> = (props) => {
+const MainHeader: Component<IProps> = (props) => {
     return (
         <header class="w-full pt-[37px] pr-[40px] pl-[40px] ">
             <div class="flex justify-between">
