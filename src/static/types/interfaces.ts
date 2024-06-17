@@ -5,10 +5,6 @@ import type { WebviewWindow } from '@tauri-apps/api/window'
 import type { ToasterStore } from 'solid-headless'
 import type { JSXElement } from 'solid-js'
 
-export interface CustomHTMLElement extends HTMLElement {
-    port: Navigator
-}
-
 //* Utility Interfaces
 
 export interface ETVRError {
@@ -161,7 +157,7 @@ export interface UiStore {
 
 export interface INavigatorPort extends Navigator {
     open: ({ baudRate }: { baudRate: number }) => Promise<void>
-    close: () => void
+    close: () => Promise<void>
 }
 
 export interface INavigator extends Navigator {
