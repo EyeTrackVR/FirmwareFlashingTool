@@ -164,8 +164,6 @@ export const ManageFlashFirmware = () => {
             } catch {
                 // we can ignore this error
             }
-
-            await port.close()
         } catch (err: unknown) {
             if (err instanceof Error) {
                 alert('Failed to update network settings')
