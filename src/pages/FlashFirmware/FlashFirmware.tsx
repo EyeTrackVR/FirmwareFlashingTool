@@ -23,7 +23,6 @@ export interface IProps {
     onClickOpenModal: (id: string) => void
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickEnableAPMode: () => void
-    onClickESPButton: () => void
     onClickUpdateNetworkSettings: () => void
     isUSBBoard: boolean
     isAPModeActive: boolean
@@ -72,7 +71,6 @@ const AppSettingsPage: Component<IProps> = (props) => {
                                 label="Flash mode"
                                 img={<FaSolidPlug size={48} fill="#FFFFFFe3" />}
                                 manifest={props.manifest}
-                                onClickESPButton={props.onClickESPButton}
                                 checkSameFirmware={props.checkSameFirmware}
                             />
                             <FlashButton
@@ -82,7 +80,7 @@ const AppSettingsPage: Component<IProps> = (props) => {
                             />
                             <Show when={!props.isUSBBoard}>
                                 <FlashButton
-                                    label="Update network settings"
+                                    label="Send wifi network credentials"
                                     img={<FaSolidWifi size={48} fill="#FFFFFFe3" />}
                                     onClick={props.onClickUpdateNetworkSettings}
                                 />
