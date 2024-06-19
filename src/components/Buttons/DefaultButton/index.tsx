@@ -1,10 +1,11 @@
-import { Component } from 'solid-js'
+import { Component, Show } from 'solid-js'
 
 export interface IProps {
     type?: 'submit' | 'reset' | 'button' | undefined
     isLoadingPrimaryButton?: boolean
     isActive?: boolean
     label: string
+    isLoader?: boolean
     onClick?: () => void
 }
 
@@ -25,9 +26,17 @@ export const Button: Component<IProps> = (props) => {
                 e.preventDefault()
                 props.onClick?.()
             }}>
-            <p class="text-left text-[14px] text-white font-normal leading-[20px] not-italic whitespace-nowrap">
-                {props.label}
-            </p>
+            <Show
+                when={props.isLoader}
+                fallback={
+                    <p class="text-left text-[14px] text-white font-normal leading-[20px] not-italic whitespace-nowrap">
+                        {props.label}
+                    </p>
+                }>
+                <div class="flex justify-center items-center w-[114px]">
+                    <span class="loading loading-ring loading-sm " />
+                </div>
+            </Show>
         </button>
     )
 }
