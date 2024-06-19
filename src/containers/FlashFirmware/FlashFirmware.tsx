@@ -31,6 +31,25 @@ export const ManageFlashFirmware = () => {
     const { addNotification } = useAppNotificationsContext()
     const [manifest, setManifest] = createSignal<string>('')
     const [response, setResponse] = createSignal<object>()
+    const [port, setPort] = createSignal<INavigatorPort | undefined>(undefined)
+    const [isSending, setIsSending] = createSignal<boolean>(false)
+
+    const config = createMemo(() => {
+        // wifi config
+        const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
+        //mdns config
+        const mdnsConfig = { command: 'set_mdns', data: { hostname: mdns() } }
+
+        return JSON.stringify({ commands: [mdnsConfig, wifiConfig] })
+    })
+
+    const notify = (label: string, type: ENotificationType) => {
+        addNotification({
+            title: label,
+            message: label,
+            type: type,
+        })
+    }
 
     const erase = async () => {
         const appConfigPath = await appConfigDir()
@@ -95,6 +114,107 @@ export const ManageFlashFirmware = () => {
         await useRequestHook('save', '192.168.4.1')
     }
 
+    const validateBoardConnection = async (portSignature: INavigatorPort) => {
+        await portSignature.setSignals({
+            dataTerminalReady: false,
+            requestToSend: true,
+        })
+        await sleep(250)
+        await portSignature.setSignals({
+            dataTerminalReady: false,
+            requestToSend: false,
+        })
+        await sleep(250)
+    }
+
+    const closePort = async () => {
+        await port()?.close()
+        setPort(undefined)
+    }
+
+    const onClickUpdateNetworkSettings = async () => {
+        setIsSending(true)
+        let portSignature: INavigatorPort | undefined
+        // validate if board is still connected
+        try {
+            const serialPort = port()
+            if (serialPort) {
+                await validateBoardConnection(serialPort)
+            }
+        } catch (err) {
+            await closePort()
+        }
+
+        if (!port()) {
+            portSignature = await new Promise((resolve) => {
+                try {
+                    const port = (navigator as INavigator).serial.requestPort()
+                    resolve(port)
+                } catch {
+                    resolve(undefined)
+                }
+            })
+            setPort(portSignature)
+        } else {
+            portSignature = port()
+        }
+
+        if (!portSignature) {
+            setIsSending(false)
+            await closePort()
+            notify(
+                'Failed to open the serial port, try again or contact us on Discord.',
+                ENotificationType.INFO,
+            )
+            return
+        }
+
+        notify('preparing credentials', ENotificationType.INFO)
+        try {
+            await portSignature.open({ baudRate: portBaudRate })
+        } catch {
+            // we can ignore this error
+        }
+
+        const writableStream = (
+            portSignature as unknown as { writable: WritableStream }
+        ).writable.getWriter()
+        await writableStream.write(new TextEncoder().encode(config()))
+
+        try {
+            writableStream.releaseLock()
+        } catch {
+            // we can ignore this error
+        }
+
+        await sleep(1000)
+        notify('sending credentials', ENotificationType.INFO)
+        await sleep(4000)
+
+        try {
+            await validateBoardConnection(portSignature)
+        } catch (err) {
+            setIsSending(false)
+            await closePort()
+            if (err instanceof Error) {
+                notify('Failed to send wifi credentials', ENotificationType.ERROR)
+                return
+            }
+        }
+        setIsSending(false)
+        notify('Sent credentials', ENotificationType.INFO)
+    }
+
+    const handleCatchUpdateNetworkSettings = async (err: unknown) => {
+        setIsSending(false)
+        await closePort()
+        if (err instanceof Error) {
+            if (err.name === 'NotFoundError') return
+            notify('Failed to send wifi credentials', ENotificationType.ERROR)
+            return
+        }
+    }
+
     createEffect(() => {
         if (apModeStatus()) {
             listenToResponse().catch(console.error)
@@ -121,60 +241,9 @@ export const ManageFlashFirmware = () => {
             })
     })
 
-    const onClickUpdateNetworkSettings = async () => {
-        const port: INavigatorPort | undefined = await new Promise((resolve, reject) => {
-            try {
-                const port = (navigator as INavigator).serial.requestPort()
-                resolve(port)
-            } catch {
-                reject(undefined)
-            }
-        })
-
-        if (!port) {
-            alert('Failed to open the serial port, try again or contact us on Discord.')
-            return
-        }
-
-        // wifi config
-        const wifiConfig = { command: 'set_wifi', data: { ssid: ssid(), password: password() } }
-        //mdns config
-        const mdnsConfig = { command: 'set_mdns', data: { hostname: mdns() } }
-
-        try {
-            await port.open({ baudRate: portBaudRate })
-
-            const writableStream = (
-                port as unknown as { writable: WritableStream }
-            ).writable.getWriter()
-
-            await sleep(200)
-            await writableStream.write(
-                new TextEncoder().encode(JSON.stringify({ commands: [mdnsConfig, wifiConfig] })),
-            )
-
-            addNotification({
-                title: 'Network updated',
-                message: 'Network updated',
-                type: ENotificationType.SUCCESS,
-            })
-
-            try {
-                writableStream.releaseLock()
-            } catch {
-                // we can ignore this error
-            }
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                alert('Failed to update network settings')
-                await port.close()
-            }
-            return
-        }
-    }
-
     return (
         <FlashFirmware
+            isSending={isSending()}
             isAPModeActive={apModeStatus()}
             isUSBBoard={isUSBBoard()}
             manifest={manifest()}
@@ -193,6 +262,9 @@ export const ManageFlashFirmware = () => {
                     default:
                         return
                 }
+            }}
+            onClickESPButton={() => {
+                closePort().catch(() => {})
             }}
             onClickUpdateNetworkSettings={() => {
                 onClickUpdateNetworkSettings().catch((err) => {
@@ -234,6 +306,9 @@ export const ManageFlashFirmware = () => {
                         type: ENotificationType.ERROR,
                     })
                 })
+            }}
+            sendWifiCredentials={() => {
+                onClickUpdateNetworkSettings().catch(handleCatchUpdateNetworkSettings)
             }}
             onClickEraseSoft={() => {
                 ask('This action cannot be reverted. Are you sure?', {
