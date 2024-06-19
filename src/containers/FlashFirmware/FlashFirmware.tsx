@@ -191,16 +191,16 @@ export const ManageFlashFirmware = () => {
         notify('sending credentials', ENotificationType.INFO)
         await sleep(4000)
 
-        try {
-            await validateBoardConnection(portSignature)
-        } catch (err) {
-            setIsSending(false)
-            await closePort()
-            if (err instanceof Error) {
-                notify('Failed to send wifi credentials', ENotificationType.ERROR)
-                return
-            }
-        }
+        // try {
+        //     await validateBoardConnection(portSignature)
+        // } catch (err) {
+        //     setIsSending(false)
+        //     await closePort()
+        //     if (err instanceof Error) {
+        //         notify('Failed to send wifi credentials', ENotificationType.ERROR)
+        //         return
+        //     }
+        // }
         setIsSending(false)
         notify('Sent credentials', ENotificationType.INFO)
     }
