@@ -10,6 +10,7 @@ export const radius = 24
 export const usb = 'USB'
 export const questionModalId = 'questionModal'
 export const apModalID = 'apMode'
+export const wifiModalID = 'wifiMode'
 export const debugModalId = 'debugModal'
 export const staticMdns = 'openiristracker'
 

@@ -155,8 +155,15 @@ export interface UiStore {
     contextAnchor?: HTMLElement | null
 }
 
+interface SerialOutputSignals {
+    dataTerminalReady?: boolean | undefined
+    requestToSend?: boolean | undefined
+    break?: boolean | undefined
+}
+
 export interface INavigatorPort extends Navigator {
     open: ({ baudRate }: { baudRate: number }) => Promise<void>
+    setSignals(signals: SerialOutputSignals): Promise<void>
     close: () => Promise<void>
 }
 
