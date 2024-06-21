@@ -20,7 +20,7 @@
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "paths": {
-            "@interfaces/*": ["src/interfaces/*"],
+            "@interfaces/*": ["src/static/types/*"],
             "@components/*": ["src/components/*"],
             "@containers/*": ["src/containers/*"],
             "@store/*": ["src/store/*"],

@@ -1,9 +1,11 @@
 import { useNavigate } from '@solidjs/router'
 import { appWindow } from '@tauri-apps/api/window'
-import { createMemo } from 'solid-js'
+import { Accessor, createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
+import { type IDropdownList } from '@interfaces/interfaces'
+import { isValidChannel } from '@interfaces/utils'
 import { BoardManagement } from '@pages/BoardManagement/BoardManagement'
-import { BoardDescription, debugModes, supportedBoards, usb } from '@src/static'
+import { BoardDescription, ChannelOptions, debugModes, supportedBoards, usb } from '@src/static'
 import { DebugMode } from '@src/static/types'
 import { TITLEBAR_ACTION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@src/store/context/api'
@@ -12,21 +14,28 @@ import { useAppContext } from '@store/context/app'
 export const ManageBoard = () => {
     const navigate = useNavigate()
     const { getDebugMode, setDebugMode } = useAppContext()
-    const { getFirmwareAssets, getFirmwareVersion, setFirmwareType, activeBoard, setActiveBoard } =
-        useAppAPIContext()
+    const {
+        getFirmwareAssets,
+        getFirmwareVersion,
+        setFirmwareType,
+        activeBoard,
+        setActiveBoard,
+        channelMode,
+        setChannelMode,
+    } = useAppAPIContext()
 
-    const boards = createMemo(() => {
+    const boards: Accessor<IDropdownList[]> = createMemo(() => {
         return getFirmwareAssets()
             .map((item) => {
                 trace(`${item.name}`)
                 return {
-                    board: item.name,
+                    label: item.name,
                     description: BoardDescription[item.name.replace('_release', '')] ?? '--',
                 }
             })
             .sort((boardA, boardB) => {
-                if (supportedBoards.includes(boardA.board.replace('_release', ''))) return -1
-                if (supportedBoards.includes(boardB.board.replace('_release', ''))) return 1
+                if (supportedBoards.includes(boardA.label.replace('_release', ''))) return -1
+                if (supportedBoards.includes(boardB.label.replace('_release', ''))) return 1
                 return 0
             })
     })
@@ -45,8 +54,26 @@ export const ManageBoard = () => {
 
     return (
         <BoardManagement
+            boards={boards()}
+            lockButton={!activeBoard() || !firmwareVersion()}
+            channelMode={channelMode()}
+            channelOptions={Object.values(ChannelOptions)}
             debugMode={debugMode()}
-            debugModes={debugModes}
+            debugModes={debugModes.map((el) => ({
+                label: el,
+            }))}
+            activeBoard={activeBoard()}
+            firmwareVersion={firmwareVersion()}
+            onClickSetChannelMode={(label) => {
+                if (!isValidChannel(label)) {
+                    return
+                }
+                const elem: Element | null = document.activeElement
+                setChannelMode(label)
+                if (elem instanceof HTMLElement) {
+                    elem?.blur()
+                }
+            }}
             setDebugMode={(debugMode) => {
                 const elem: Element | null = document.activeElement
                 debug(debugMode)
@@ -55,15 +82,14 @@ export const ManageBoard = () => {
                     elem?.blur()
                 }
             }}
-            activeBoard={activeBoard()}
-            firmwareVersion={firmwareVersion()}
             onClickConfirm={() => {
-                if (!activeBoard()) {
+                if (!activeBoard() || !firmwareVersion()) {
                     return
                 }
                 navigate(isUSBBoard() ? '/flashFirmware' : '/network')
             }}
             onSubmit={(value) => {
+                if (activeBoard() === value) return
                 const elem: Element | null = document.activeElement
                 setActiveBoard(value)
                 const temp = getFirmwareAssets().find((item) => item.name === value)?.name
@@ -95,7 +121,6 @@ export const ManageBoard = () => {
                     el.showModal()
                 }
             }}
-            boards={boards()}
         />
     )
 }

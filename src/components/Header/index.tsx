@@ -3,16 +3,16 @@ import { Component } from 'solid-js'
 import { ProgressBar } from '@components/ProgressBar/ProgressBar'
 import './styles.css'
 
-interface Iprops {
+interface IProps {
     onClick: () => void
     step: { step: string; description: string; dashoffset: string; index: string }
     currentStep: string
     name: string
 }
 
-const MainHeader: Component<Iprops> = (props) => {
+const MainHeader: Component<IProps> = (props) => {
     return (
-        <header class="w-full pt-[46px] pr-[40px] pl-[40px] ">
+        <header class="w-full pt-[37px] pr-[40px] pl-[40px] ">
             <div class="flex justify-between">
                 <div
                     class="flex cursor-pointer"
@@ -22,7 +22,12 @@ const MainHeader: Component<Iprops> = (props) => {
                     <div class="flex items-end">
                         <div>
                             <Image.Root>
-                                <Image.Img src="images/logo.png" alt="logo" width="64px" />
+                                <Image.Img
+                                    src="images/logo.png"
+                                    alt="logo"
+                                    width="64px"
+                                    class="min-w-[64px]"
+                                />
                             </Image.Root>
                         </div>
                         <div class="pb-2 text-[20px] leading-20 text-white">

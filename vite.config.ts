@@ -8,7 +8,7 @@ export default defineConfig({
     envPrefix: ['VITE_', 'TAURI_'],
     resolve: {
         alias: {
-            '@interfaces': resolve(__dirname, './src/interfaces'),
+            '@interfaces': resolve(__dirname, './src/static/types'),
             '@components': resolve(__dirname, './src/components'),
             '@containers': resolve(__dirname, './src/containers'),
             '@routes': resolve(__dirname, './src/routes'),

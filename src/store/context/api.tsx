@@ -9,8 +9,15 @@ import { debug, error, warn, trace } from 'tauri-plugin-log-api'
 import { download, upload } from 'tauri-plugin-upload-api'
 import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
-import { ENotificationType, RESTStatus, RESTType, ESPEndpoints } from '@src/static/types/enums'
-import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease } from '@src/static/types/interfaces'
+import {
+    ENotificationType,
+    RESTStatus,
+    RESTType,
+    ESPEndpoints,
+    CHANNEL_TYPE,
+} from '@interfaces/enums'
+import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease, IGHResponse } from '@interfaces/interfaces'
+import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
 
@@ -19,7 +26,6 @@ interface AppAPIContext {
     getGHRestStatus: Accessor<RESTStatus>
     getFirmwareAssets: Accessor<IGHAsset[]>
     getFirmwareVersion: Accessor<string>
-    getGHEndpoint: Accessor<string>
     getFirmwareType: Accessor<string>
     setGHRestStatus: (status: RESTStatus) => void
     setFirmwareAssets: (assets: IGHAsset) => void
@@ -35,6 +41,8 @@ interface AppAPIContext {
     ssid: Accessor<string>
     apModeStatus: Accessor<boolean>
     password: Accessor<string>
+    mdns: Accessor<string>
+    channelMode: Accessor<CHANNEL_TYPE>
     setRESTStatus: (status: RESTStatus) => void
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
@@ -43,19 +51,18 @@ interface AppAPIContext {
     getEndpoint: (key: string) => IEndpoint
     //********************************* hooks *************************************/
     downloadAsset: (firmware: string) => Promise<void>
-    doGHRequest: () => Promise<void>
+    doGHRequest: (channelType: CHANNEL_TYPE) => Promise<void>
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<boolean>
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
-    setNetwork: (ssid: string, password: string) => void
+    setNetwork: (ssid: string, password: string, mdns: string) => void
+    setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
 export const AppAPIProvider: Component<Context> = (props) => {
     const { addNotification } = useAppNotificationsContext()
-
-    const ghEndpoint = 'https://api.github.com/repos/EyeTrackVR/OpenIris/releases/latest'
 
     // TODO: Use backend api schema to generate endpoints map and use that instead of hardcoding the endpoints
     const endpointsMap: Map<string, IEndpoint> = new Map<string, IEndpoint>([
@@ -75,6 +82,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
 
     const defaultState: AppStoreAPI = {
         activeBoard: '',
+        channelMode: CHANNEL_TYPE.OFFICIAL,
         restAPI: {
             status: RESTStatus.COMPLETE,
             device: '',
@@ -90,6 +98,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         firmwareType: '',
         loader: false,
         apModeStatus: false,
+        mdns: '',
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -113,6 +122,26 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+
+    const setChannelMode = (channel: CHANNEL_TYPE) => {
+        setState(
+            produce((s) => {
+                s.channelMode = channel
+            }),
+        )
+    }
+
+    const clearGHApiState = () => {
+        setState(
+            produce((s) => {
+                s.ghAPI.assets = []
+                s.ghAPI.assets = []
+                s.ghAPI.version = ''
+                s.activeBoard = ''
+            }),
+        )
+    }
+
     const setFirmwareAssets = (assets: IGHAsset) => {
         setState(
             produce((s) => {
@@ -142,11 +171,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
-    const setNetwork = (ssid: string, password: string) => {
+    const setNetwork = (ssid: string, password: string, mdns: string) => {
         setState(
             produce((s) => {
                 s.ssid = ssid
                 s.password = password
+                s.mdns = mdns
             }),
         )
     }
@@ -163,8 +193,9 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
-    const getGHEndpoint = createMemo(() => ghEndpoint)
     const loader = createMemo(() => apiState().loader)
+    const mdns = createMemo(() => apiState().mdns)
+    const channelMode = createMemo(() => apiState().channelMode)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
 
     //#endregion
@@ -388,21 +419,24 @@ export const AppAPIProvider: Component<Context> = (props) => {
      * @note Should be called on app start
      * @example
      * import { doGHRequest } from './github'
-     * doGHRequest()
+     * doGHRequest('Official')
      * .then(() => debug('Request sent'))
      * .catch((err) => error(err))
      */
-    const doGHRequest = async () => {
+
+    const doGHRequest = async (channelType: CHANNEL_TYPE) => {
         try {
+            clearGHApiState()
             const client = await getClient()
+            const endpoint = GHEndpoints[channelType]
 
             setGHRestStatus(RESTStatus.ACTIVE)
             setGHRestStatus(RESTStatus.LOADING)
 
-            debug(`[Github Release]: Github Endpoint ${getGHEndpoint()}`)
+            debug(`[Github Release]: Github Endpoint ${endpoint}`)
 
             try {
-                const response = await client.get<IGHRelease>(getGHEndpoint(), {
+                const githubResponse = await client.get<IGHResponse>(endpoint, {
                     timeout: 30,
                     // the expected response type
                     headers: {
@@ -410,6 +444,18 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     },
                     responseType: ResponseType.JSON,
                 })
+
+                let response: IGHResponse
+
+                if (!Array.isArray(githubResponse.data)) {
+                    response = githubResponse
+                } else {
+                    const preReleases = githubResponse.data.filter(({ prerelease }) => prerelease)
+                    response = {
+                        ...githubResponse,
+                        data: { ...preReleases[0] },
+                    }
+                }
 
                 trace(`[Github Response]: ${JSON.stringify(response)}`)
 
@@ -577,7 +623,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 getGHRestStatus,
                 getFirmwareAssets,
                 getFirmwareVersion,
-                getGHEndpoint,
                 getFirmwareType,
                 getRESTStatus,
                 getRESTDevice,
@@ -599,6 +644,9 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 setLoader,
                 apModeStatus,
                 setAPModeStatus,
+                channelMode,
+                mdns,
+                setChannelMode,
             }}>
             {props.children}
         </AppAPIContext.Provider>

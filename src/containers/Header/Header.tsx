@@ -16,19 +16,21 @@ export const Header = () => {
     })
 
     const step = createMemo(() => {
-        return stepStatus[DIRECTION[location.pathname]].index - isUSBBoard()
+        const index = stepStatus[DIRECTION[location.pathname]].index - isUSBBoard()
+        return index <= 0 ? 1 : index
     })
 
     return (
         <MainHeader
             name="Welcome!"
-            step={stepStatus[DIRECTION[location.pathname]]}
+            step={{
+                ...stepStatus[DIRECTION[location.pathname]],
+                step: `Step ${step()}`,
+            }}
             onClick={() => {
                 navigate('/')
             }}
-            currentStep={`${step() <= 0 ? 1 : step()}/${
-                Object.values(stepStatus).length - isUSBBoard()
-            } `}
+            currentStep={`${step()}/${Object.values(stepStatus).length - isUSBBoard()} `}
         />
     )
 }
