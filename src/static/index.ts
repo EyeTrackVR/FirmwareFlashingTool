@@ -8,11 +8,9 @@ export const portBaudRate = 115200
 export const mdnsLength = 12
 export const radius = 24
 export const usb = 'USB'
-export const installModalClassName = 'mdc-button__label'
-export const installModalTarget = 'Install'
-export const installationSuccess = 'Installation complete!'
 export const questionModalId = 'questionModal'
 export const apModalID = 'apMode'
+export const wifiModalID = 'wifiMode'
 export const debugModalId = 'debugModal'
 export const staticMdns = 'openiristracker'
 

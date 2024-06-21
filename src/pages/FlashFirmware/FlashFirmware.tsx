@@ -1,15 +1,10 @@
-import {
-    FaSolidDownload,
-    FaSolidGraduationCap,
-    FaSolidPlug,
-    FaSolidTrashCan,
-    FaSolidWifi,
-} from 'solid-icons/fa'
+import { FaSolidDownload, FaSolidGraduationCap, FaSolidPlug, FaSolidTrashCan } from 'solid-icons/fa'
 import { Component, Show } from 'solid-js'
 import { EspWebButton } from '@components/Buttons/EspWebButton/EspWebButton'
 import { FlashButton } from '@components/Buttons/FlashButton/FlashButton'
 import { Footer } from '@components/Footer/Footer'
 import { APMode } from '@pages/APMode/APMode'
+import { WifiCredentials } from '@pages/WifiCredentials/Index'
 import { TITLEBAR_ACTION } from '@src/static/types/enums'
 
 export interface IProps {
@@ -18,15 +13,17 @@ export interface IProps {
     onClickOpenDocs: () => void
     onClickEraseSoft: () => void
     onClickConfigurAPMode: () => void
-    manifest: string
-    checkSameFirmware: (manifest: { name: string }, improvInfo: { firmware: string }) => void
     onClickOpenModal: (id: string) => void
     onClickHeader: (action: TITLEBAR_ACTION) => void
+    sendWifiCredentials: () => void
     onClickEnableAPMode: () => void
-    onClickESPButton: () => void
     onClickUpdateNetworkSettings: () => void
+    onClickESPButton: () => void
+    checkSameFirmware: (manifest: { name: string }, improvInfo: { firmware: string }) => void
+    manifest: string
     isUSBBoard: boolean
     isAPModeActive: boolean
+    isSending: boolean
 }
 
 const AppSettingsPage: Component<IProps> = (props) => {
@@ -57,18 +54,20 @@ const AppSettingsPage: Component<IProps> = (props) => {
                             }}
                             class="grid grid-flow-col gap-[16px]">
                             <FlashButton
-                                step="1/2"
+                                step={props.isUSBBoard ? '1/2' : '1/3'}
                                 label="Download firmware assets"
                                 onClick={props.onClickDownloadFirmware}
                                 img={<FaSolidDownload size={48} fill="#FFFFFFe3" />}
                             />
-                            <FlashButton
-                                label="Erase Firmware Assets"
-                                onClick={props.onClickEraseSoft}
-                                img={<FaSolidTrashCan size={48} fill="#FFFFFFe3" />}
-                            />
+                            <Show when={!props.isUSBBoard}>
+                                <FlashButton
+                                    label="Erase Firmware Assets"
+                                    onClick={props.onClickEraseSoft}
+                                    img={<FaSolidTrashCan size={48} fill="#FFFFFFe3" />}
+                                />
+                            </Show>
                             <EspWebButton
-                                step="2/2"
+                                step={props.isUSBBoard ? '2/2' : '2/3'}
                                 label="Flash mode"
                                 img={<FaSolidPlug size={48} fill="#FFFFFFe3" />}
                                 manifest={props.manifest}
@@ -80,11 +79,20 @@ const AppSettingsPage: Component<IProps> = (props) => {
                                 onClick={props.onClickOpenDocs}
                                 img={<FaSolidGraduationCap size={48} fill="#FFFFFFe3" />}
                             />
-                            <Show when={!props.isUSBBoard}>
-                                <FlashButton
-                                    label="Update network settings"
-                                    img={<FaSolidWifi size={48} fill="#FFFFFFe3" />}
-                                    onClick={props.onClickUpdateNetworkSettings}
+                            <Show
+                                when={!props.isUSBBoard}
+                                fallback={
+                                    <FlashButton
+                                        label="Erase Firmware Assets"
+                                        onClick={props.onClickEraseSoft}
+                                        img={<FaSolidTrashCan size={48} fill="#FFFFFFe3" />}
+                                    />
+                                }>
+                                <WifiCredentials
+                                    isSending={props.isSending}
+                                    sendWifiCredentials={props.sendWifiCredentials}
+                                    onClickOpenModal={props.onClickOpenModal}
+                                    onClickHeader={props.onClickHeader}
                                 />
                             </Show>
                         </div>
