@@ -10,6 +10,7 @@ import { DebugMode } from '@src/static/types'
 import { TITLEBAR_ACTION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@src/store/context/api'
 import { useAppContext } from '@store/context/app'
+import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 
 export const ManageBoard = () => {
     const navigate = useNavigate()
@@ -90,6 +91,7 @@ export const ManageBoard = () => {
             }}
             onSubmit={(value) => {
                 if (activeBoard() === value) return
+                setIsSoftwareDownloaded(false)
                 const elem: Element | null = document.activeElement
                 setActiveBoard(value)
                 const temp = getFirmwareAssets().find((item) => item.name === value)?.name
