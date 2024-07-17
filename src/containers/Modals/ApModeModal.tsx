@@ -1,8 +1,10 @@
 import { listen } from '@tauri-apps/api/event'
-import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { appWindow } from '@tauri-apps/api/window'
+import { createEffect, createSignal, onCleanup, Show } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
-import { ENotificationType, MODAL_TYPE } from '@interfaces/enums'
-import { APMode } from '@pages/APMode/APMode'
+import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
+import { Modal } from '@pages/Modal/Index'
+import { apModalID } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
@@ -73,13 +75,28 @@ const ApModeModal = () => {
     })
 
     return (
-        <APMode
+        <Modal
+            id={apModalID}
             onClickCloseModal={() => {
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
-            isAPModeActive={modal().type === MODAL_TYPE.AP_MODE}
-            onClickHeader={() => {}}
-            onClickConfigurAPMode={() => {
+            isActive={modal().type === MODAL_TYPE.AP_MODE}
+            onClickHeader={(action: TITLEBAR_ACTION) => {
+                switch (action) {
+                    case TITLEBAR_ACTION.MINIMIZE:
+                        appWindow.minimize()
+                        break
+                    case TITLEBAR_ACTION.MAXIMIZE:
+                        appWindow.toggleMaximize()
+                        break
+                    case TITLEBAR_ACTION.CLOSE:
+                        appWindow.close()
+                        break
+                    default:
+                        return
+                }
+            }}
+            onClickConfigureAPMode={() => {
                 configureAPConnection().catch(() => {
                     addNotification({
                         title: 'AP Mode configuration failed',
@@ -87,8 +104,25 @@ const ApModeModal = () => {
                         type: ENotificationType.ERROR,
                     })
                 })
-            }}
-        />
+            }}>
+            {(when) => (
+                <Show
+                    when={when}
+                    fallback={
+                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
+                            Before pressing the <code class="code">Send AP Request</code> check that
+                            you have the firmware already <code class="code">installed</code> and
+                            you are connected to
+                            <code class="code">EyeTrackVR</code> Wi-Fi.
+                        </p>
+                    }>
+                    <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
+                        Read the <code class="code">documentation</code> before turning on{' '}
+                        <code class="code">AP mode</code>.
+                    </p>
+                </Show>
+            )}
+        </Modal>
     )
 }
 
