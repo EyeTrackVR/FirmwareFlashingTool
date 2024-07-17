@@ -3,6 +3,7 @@ import { type Component } from 'solid-js'
 
 export interface IProps {
     label: string
+    onClick?: () => void
 }
 
 const ModalHeader: Component<IProps> = (props) => {
@@ -13,7 +14,11 @@ const ModalHeader: Component<IProps> = (props) => {
                     {props.label}
                 </p>
             </div>
-            <div class="modal-action mt-0">
+            <div
+                class="modal-action mt-0"
+                onClick={() => {
+                    props.onClick?.()
+                }}>
                 <form method="dialog">
                     <button class="cursor-pointer p-[4px] rounded-full border border-solid border-[#0D1B26] focus-visible:border-[#9793FD]">
                         <p class="text-white text-left">
