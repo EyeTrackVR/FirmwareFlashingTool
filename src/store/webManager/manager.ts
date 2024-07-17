@@ -1,67 +1,62 @@
-import { Transport, ESPLoader } from 'esptool-js'
-import { FLASH_STATE_TYPE } from '@interfaces/enums'
-import {
-    type Manifest,
-    type IError,
-    type INavigator,
-    type INavigatorPort,
-    type Build,
-} from '@interfaces/interfaces'
-import { type chipFamilyType } from '@interfaces/types'
+import { ESPLoader, Transport } from 'esptool-js'
+import { Transform } from './utils'
+import { Build, type INavigator, type INavigatorPort, type Manifest } from '@interfaces/interfaces'
+import { DEVICE_LOST } from '@src/static'
 import { sleep } from '@src/utils'
 
 export class WebManager {
-    public error: IError = { state: FLASH_STATE_TYPE.UNKNOWN, message: null }
+    private flashFiles: Array<{ data: string; address: number }> | null = null
     private port: INavigatorPort | null = null
+    private espLoader: ESPLoader | null = null
+    private transport: Transport | null = null
+    private manifest: Manifest | null = null
     readonly romBaudRate: number = 115200
     readonly baudRate: number = 115200
-    public manifestPath: string | null = null
+    private build: Build | null = null
+    private totalSize: number = 0
+
+    isActivePort(): boolean {
+        return this.port !== null
+    }
+
+    async reset(): Promise<void> {
+        await this.closePort()
+        this.port = null
+    }
+
+    async disconnectTransport(): Promise<void> {
+        if (!this.transport) return
+        try {
+            await this.transport.disconnect()
+        } catch {
+            // transport can be already closed
+        }
+    }
 
     async connect(): Promise<void> {
-        try {
-            const requestPort = await (navigator as INavigator).serial.requestPort()
+        const requestPort = await (navigator as INavigator).serial.requestPort()
+        if (!requestPort) {
+            throw new Error(
+                'Failed to execute requestPort on Serial: No port selected by the user.',
+            )
+        }
+        this.port = requestPort
+    }
 
-            this.port = requestPort
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                this.error = {
-                    state: FLASH_STATE_TYPE.ERROR,
-                    message: err,
-                }
-                this.port = null
-            }
+    async closePort(): Promise<void> {
+        try {
+            if (!this.port) return
+            await this.port.close()
+        } catch (err) {
+            //can be already closed
         }
     }
-
-    public getPort(): INavigatorPort | null {
-        return this.port
-    }
-
     async openPort(): Promise<void> {
         if (!this.port) return
-
-        try {
-            await this.port.open({ baudRate: this.baudRate })
-        } catch (err: unknown) {
-            // we can ignore this error
-            if (err instanceof Error) {
-                console.log(err)
-            }
-        }
+        await this.port.open({ baudRate: this.baudRate })
     }
 
-    public getError(): IError {
-        return this.error
-    }
-
-    public closePort(): void {
-        if (this.port !== null) {
-            this.port.close()
-            this.port = null
-        }
-    }
-
-    private async restartBoard(): Promise<void> {
+    async restartBoard(): Promise<void> {
         if (this.port === null) return
 
         await this.port.setSignals({ dataTerminalReady: false, requestToSend: true })
@@ -71,226 +66,242 @@ export class WebManager {
         await sleep(250)
     }
 
-    private async restartTransport(transport: Transport) {
-        await transport.device.setSignals({ dataTerminalReady: false, requestToSend: true })
+    async restartTransport() {
+        if (!this.transport) return
+
+        await this.transport.device.setSignals({ dataTerminalReady: false, requestToSend: true })
         await sleep(250)
 
-        await transport.device.setSignals({ dataTerminalReady: false, requestToSend: false })
+        await this.transport.device.setSignals({ dataTerminalReady: false, requestToSend: false })
         await sleep(250)
     }
 
-    public async downloadManifest(manifestPath: string): Promise<Manifest> {
+    async initializeResetESPState() {
+        try {
+            await this.restartBoard()
+        } catch {
+            //
+        }
+        await Promise.all([this.closePort(), this.disconnectTransport()])
+    }
+
+    async initializeESPConnection(): Promise<void> {
+        await this.initializeResetESPState()
+        try {
+            const transport = new Transport(this.port)
+            const espLoader = new ESPLoader({
+                transport,
+                baudrate: this.baudRate,
+                romBaudrate: this.romBaudRate,
+                enableTracing: true,
+            })
+
+            const promise1 = new Promise((resolve, reject) => {
+                // eslint-disable-next-line
+                ;(async () => {
+                    try {
+                        await espLoader.main()
+                        await espLoader.flashId()
+                        resolve('')
+                    } catch (err) {
+                        reject(err)
+                    }
+                })()
+            })
+
+            const promise2 = new Promise((_, reject) => {
+                setTimeout(reject, 60000, DEVICE_LOST)
+            })
+            await Promise.race([promise1, promise2])
+            this.espLoader = espLoader
+            this.transport = transport
+        } catch {
+            await this.restartTransport()
+            await this.transport?.disconnect()
+            throw new Error(
+                'Failed to initialize. Try resetting your device or holding the BOOT button while clicking INSTALL.',
+            )
+        }
+    }
+
+    async checkChipFamily(): Promise<void> {
+        if (!this.espLoader) {
+            throw new Error('esp loader was not initialized')
+        }
+
+        if (!this.espLoader.chip.ROM_TEXT) {
+            await this.restartTransport()
+            await this.transport?.disconnect()
+            throw new Error(`Chip ${this.espLoader.chip.CHIP_NAME} is not supported`)
+        }
+    }
+
+    async downloadManifest(manifestPath: string) {
         const manifestURL = new URL(manifestPath, location.toString()).toString()
         const resp = await fetch(manifestURL)
-        const manifest = await resp.json()
-
-        if ('new_install_skip_erase' in manifest) {
-            // TODO: later add a better handle for this shit here
-            console.warn(
-                'Manifest option "new_install_skip_erase" is deprecated. Use "new_install_prompt_erase" instead.',
-            )
-            if (manifest.new_install_skip_erase) {
-                manifest.new_install_prompt_erase = true
-            }
-        }
-
-        return manifest
+        const manifest: Manifest = await resp.json()
+        this.manifest = manifest
     }
 
-    public async getLogs(
-        callback: (logs: string) => void,
-        abortSignal?: AbortSignal,
-    ): Promise<void> {
-        if (this.port === null) {
-            this.error = {
-                state: FLASH_STATE_TYPE.ERROR,
-                message: new Error('Port is not defined'),
-            }
-            return
-        }
+    async validateManifestBuild() {
+        if (!this.manifest) throw new Error('Manifest was not initialized')
 
-        await this.restartBoard()
+        const chipFamily = this.espLoader
+        if (!chipFamily) throw new Error('esp loader was not initialized')
 
-        if (this.port.readable) {
-            const textDecoderStream = new TextDecoderStream()
-            const transformStream = new TransformStream()
-            const writableStream = new WritableStream({
-                async write(chunk) {
-                    const line = chunk.replace('\r', '')
-                    await sleep(50)
-                    callback(line)
-                },
-            })
-
-            this.port.readable
-                .pipeThrough(textDecoderStream, {
-                    signal: abortSignal,
-                })
-                .pipeThrough(transformStream)
-                .pipeTo(writableStream)
-        }
-    }
-
-    manageError(error: Error) {
-        console.log(
-            'Failed to initialize. Try resetting your device or holding the BOOT button while clicking INSTALL.',
-        )
-        console.log('just in case error', error.message)
-    }
-
-    async flashFirmware(onEvent: (event: FLASH_STATE_TYPE) => void) {
-        let build: Build | undefined = undefined
-        let chipFamily: Build['chipFamily'] | undefined = undefined
-
-        const transport = new Transport(this.port)
-        const espLoader = new ESPLoader({
-            transport,
-            baudrate: this.baudRate,
-            romBaudrate: this.romBaudRate,
-            enableTracing: true,
-        })
-
-        onEvent(FLASH_STATE_TYPE.INITIALIZING)
-        try {
-            await espLoader.main()
-            await espLoader.flashId()
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                onEvent(FLASH_STATE_TYPE.INITIALIZING_FAILED)
-                this.manageError(error)
-            }
-        }
-        onEvent(FLASH_STATE_TYPE.INITIALIZING_SUCCEED)
-        onEvent(FLASH_STATE_TYPE.LOADING_CHIP)
-
-        chipFamily = espLoader.chip.CHIP_NAME as chipFamilyType
-
-        if (!espLoader.chip.ROM_TEXT) {
-            console.log(`Chip ${chipFamily} is not supported`)
-            onEvent(FLASH_STATE_TYPE.LOADING_CHIP_FAILED)
-            await this.restartTransport(transport)
-            await transport.disconnect()
-            return
-        }
-        onEvent(FLASH_STATE_TYPE.LOADING_CHIP_SUCCEED)
-        onEvent(FLASH_STATE_TYPE.LOADING_MANIFEST_PATH)
-        console.log(`Initialized. Found ${chipFamily}`)
-
-        if (this.manifestPath == null) {
-            onEvent(FLASH_STATE_TYPE.LOADING_MANIFEST_PATH_FAILED)
-            console.log('manifestPath is not defined')
-            return
-        }
-        onEvent(FLASH_STATE_TYPE.LOADING_MANIFEST_PATH_SUCCEED)
-        onEvent(FLASH_STATE_TYPE.LOADING_MANIFEST)
-
-        let manifest: Manifest | null = null
-        try {
-            manifest = await this.downloadManifest(this.manifestPath)
-            onEvent(FLASH_STATE_TYPE.LOADING_MANIFEST_SUCCEED)
-        } catch {
-            onEvent(FLASH_STATE_TYPE.LOADING_MANIFEST_FAILED)
-            console.log('failed to download manifest')
-            manifest = null
-            return
-        }
-
-        onEvent(FLASH_STATE_TYPE.LOADING_BUILD)
-        build = manifest.builds.find((b) => b.chipFamily === chipFamily)
-
+        const build = this.manifest.builds.find((b) => b.chipFamily === chipFamily.chip.CHIP_NAME)
         if (!build) {
-            onEvent(FLASH_STATE_TYPE.LOADING_BUILD_FAILED)
-            console.log('well we need to add a cool error here')
-            await this.restartTransport(transport)
-            await transport.disconnect()
-            return
-        }
-        onEvent(FLASH_STATE_TYPE.LOADING_BUILD_SUCCEED)
-        onEvent(FLASH_STATE_TYPE.DOWNLOADING_FIRMWARE)
-
-        const manifestURL = new URL(this.manifestPath, location.toString()).toString()
-        const filePromises = build.parts.map(async (part) => {
-            const url = new URL(part.path, manifestURL).toString()
-            const resp = await fetch(url)
-            if (!resp.ok) {
-                throw new Error(`Downlading firmware ${part.path} failed: ${resp.status}`)
-            }
-
-            const reader = new FileReader()
-            const blob = await resp.blob()
-
-            return new Promise<string>((resolve) => {
-                reader.addEventListener('load', () => resolve(reader.result as string))
-                //TODO: check this later readAsBinaryString
-                reader.readAsArrayBuffer(blob)
-            })
-        })
-
-        const fileArray: Array<{ data: string; address: number }> = []
-        let totalSize = 0
-
-        for (let part = 0; part < filePromises.length; part++) {
-            try {
-                const data = await filePromises[part]
-                fileArray.push({ data, address: build.parts[part].offset })
-                totalSize += data.length
-            } catch (error: unknown) {
-                if (error instanceof Error) {
-                    this.manageError(error)
-                }
-                await this.restartTransport(transport)
-                await transport.disconnect()
-                return
-            }
+            throw new Error(
+                `${chipFamily.chip.CHIP_NAME} is not supported, please contact us on Discord.`,
+            )
         }
 
-        let totalWritten = 0
+        this.build = build
+    }
+
+    async downloadFiles(manifestPath: string) {
+        if (!this.transport) throw new Error('Transport was not initialized')
+        if (!this.build) throw new Error('Build was not initialized')
+
+        const manifestURL = new URL(manifestPath, location.toString()).toString()
+        const filePromises = this.build.parts.map((part) =>
+            this.downloadFile(part.path, manifestURL),
+        )
 
         try {
-            await espLoader.writeFlash({
+            const files = await Promise.all(filePromises)
+            this.totalSize = files.reduce((sum, file) => sum + file.data.length, 0)
+            this.flashFiles = files
+        } catch (err: unknown) {
+            await this.handleError(err)
+        }
+    }
+
+    private async downloadFile(
+        path: string,
+        baseURL: string,
+    ): Promise<{ data: string; address: number }> {
+        const url = new URL(path, baseURL).toString()
+        const resp = await fetch(url)
+
+        if (!resp.ok) {
+            throw new Error(`Downloading firmware ${path} failed: ${resp.status}`)
+        }
+
+        const blob = await resp.blob()
+        const data = await this.readBlobAsBinaryString(blob)
+        const address = this.build?.parts.find((part) => part.path === path)?.offset ?? 0
+
+        return { data, address }
+    }
+
+    private readBlobAsBinaryString(blob: Blob): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = () => resolve(reader.result as string)
+            reader.onerror = () => reject(new Error('Failed to read blob as binary string'))
+            reader.readAsBinaryString(blob)
+        })
+    }
+
+    private async handleError(err: unknown): Promise<void> {
+        await this.restartTransport()
+        await this.disconnectTransport()
+
+        if (err instanceof Error) {
+            throw new Error(err.message)
+        }
+    }
+
+    async flashFirmware(callback: (precentageProgress: number) => void) {
+        if (!this.manifest) throw new Error('Manifest was not initialized')
+        if (!this.espLoader) throw new Error('esp loader was not initialized')
+        if (!this.transport) throw new Error('Transport was not initialized')
+        if (!this.flashFiles) throw new Error('Missing flash files')
+
+        const fileArray = this.flashFiles
+
+        const totalWritten = 0
+        const size = this.totalSize
+
+        try {
+            await this.espLoader.writeFlash({
                 fileArray,
                 flashSize: 'keep',
                 flashMode: 'keep',
                 flashFreq: 'keep',
                 eraseAll: false,
                 compress: true,
-
-                reportProgress: (fileIndex: number, written: number, total: number) => {
+                reportProgress(fileIndex, written, total) {
                     const uncompressedWritten = (written / total) * fileArray[fileIndex].data.length
-
-                    const newPct = Math.floor(
-                        ((totalWritten + uncompressedWritten) / totalSize) * 100,
+                    const precentageProgress = Math.floor(
+                        ((totalWritten + uncompressedWritten) / size) * 100,
                     )
-
-                    if (written === total) {
-                        totalWritten += uncompressedWritten
-                        return
-                    }
-
-                    console.log({
-                        message: `Writing progress: ${newPct}%`,
-                        bytesTotal: totalSize,
-                        bytesWritten: totalWritten + written,
-                        percentage: newPct,
-                    })
+                    callback(precentageProgress)
                 },
             })
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                this.manageError(error)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                throw new Error(`Flash failed: ${err.message}`)
             }
-            await this.restartTransport(transport)
-            await transport.disconnect()
+            await this.restartTransport()
+            await this.disconnectTransport()
+        }
+    }
+
+    async configureWifiConnection(wifiConfigFiles: string) {
+        const writableStream = (
+            this.port as unknown as { writable: WritableStream }
+        ).writable.getWriter()
+        await writableStream.write(new TextEncoder().encode(wifiConfigFiles))
+
+        try {
+            writableStream.releaseLock()
+        } catch {
+            // we can ignore this error
+        }
+        await sleep(5000)
+    }
+
+    async getLogs(
+        callback: (logs: string) => void,
+        errorCallback: (err: Error, hasOpenirisInstallation?: boolean) => void,
+        signal?: AbortSignal,
+    ) {
+        const port = this.port
+        if (!port) {
+            throw new Error('port is not initialized')
+        }
+
+        try {
+            await this.restartBoard()
+        } catch (err) {
+            if (err instanceof Error) {
+                errorCallback(err)
+            }
             return
         }
 
-        console.log('flash success')
-
-        await sleep(100)
-
-        await this.restartTransport(transport)
-        await transport.disconnect()
-
-        console.log('all done!!!')
+        port.readable!.pipeThrough(new TextDecoderStream(), { signal })
+            .pipeThrough(new TransformStream(new Transform()))
+            .pipeTo(
+                new WritableStream({
+                    write: (chunk) => {
+                        callback(chunk.replace('\r\n', ''))
+                    },
+                }),
+            )
+            .catch(async (err) => {
+                if (err !== 'openiris' && err !== 'logs') {
+                    errorCallback(err, false)
+                }
+                if (err.message === DEVICE_LOST) {
+                    await this.closePort()
+                    this.port = null
+                    if (err instanceof Error) {
+                        errorCallback(err)
+                    }
+                }
+            })
     }
 }

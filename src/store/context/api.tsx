@@ -249,13 +249,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getRelease = async (firmware: string) => {
         const appConfigDirPath = await appConfigDir()
         if (firmware === '' || firmware.length === 0) {
-            addNotification({
-                title: 'Please Select a Firmware',
-                message: 'A firmware must be selected before downloading',
-                type: ENotificationType.WARNING,
-            })
             debug('[Github Release]: No firmware selected')
-            return
+            throw new Error('A firmware must be selected before downloading')
         }
 
         trace(`[Github Release]: App Config Dir: ${appConfigDirPath}`)
@@ -287,12 +282,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 },
             )
             debug(`[Github Release]: Download Response: ${response}`)
-
-            addNotification({
-                title: 'ETVR Firmware Downloaded',
-                message: `Downloaded Firmware ${firmware}`,
-                type: ENotificationType.INFO,
-            })
 
             const res = await invoke('unzip_archive', {
                 archivePath: path,
@@ -340,6 +329,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 debug('[Github Release]: Manifest: ', config_json)
                 return
             }
+        } else {
+            throw new Error('Selected board is not supported')
         }
     }
 
