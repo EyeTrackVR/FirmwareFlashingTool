@@ -13,7 +13,7 @@ import {
 } from './terminal'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { logs as logsDescription } from '@src/static/ui/logs'
-import { download, trimLogsByTextLength } from '@src/utils'
+import { download, sleep, trimLogsByTextLength } from '@src/utils'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()
@@ -57,8 +57,10 @@ const updateState = (step: FLASH_STEP, status: FLASH_STATUS, error?: Error) => {
 }
 
 export const installOpenIris = async (
+    isUsbBoard: boolean,
     manifestPath: string,
     downloadManifest: () => Promise<void>,
+    configureWifiCredentials: () => void,
 ) => {
     clearLogs()
     if (!webManager.isActivePort()) {
@@ -154,45 +156,49 @@ export const installOpenIris = async (
         return
     }
 
+    if (!isUsbBoard) {
+        configureWifiCredentials()
+    }
+
     setProcessStatus(false)
 }
 
-export const updateNetwork = async (wifiConfigFiles: string) => {
+export const updateNetwork = async (wifiConfigFiles: string, callback: () => void) => {
     clearLogs()
     setProcessStatus(true)
 
-    if (!webManager.isActivePort()) {
-        try {
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.UNKNOWN)
-            await webManager.connect()
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
-        } catch (error: unknown) {
-            webManager.reset()
-            if (error instanceof Error) {
-                updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
-            }
-            return
-        }
-
-        try {
-            updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.UNKNOWN)
-            await webManager.openPort()
-            updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.SUCCESS)
-        } catch (error: unknown) {
-            webManager.reset()
-            if (error instanceof Error) {
-                updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.FAILED, error)
-            }
-            return
-        }
-    } else {
+    try {
+        updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.UNKNOWN)
+        await webManager.connect()
         updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
+    } catch (error: unknown) {
+        webManager.reset()
+        if (error instanceof Error) {
+            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
+        }
+        return
+    }
+    callback()
+
+    try {
+        updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.UNKNOWN)
+        await sleep(500)
+        await webManager.openPort()
         updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.SUCCESS)
+    } catch (error: unknown) {
+        webManager.reset()
+        if (error instanceof Error) {
+            updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.FAILED, error)
+        }
+        return
     }
 
     try {
         updateState(FLASH_STEP.SEND_WIFI_REQUEST, FLASH_STATUS.UNKNOWN)
         await webManager.configureWifiConnection(wifiConfigFiles)
+        await sleep(2000)
+        await webManager.configureWifiConnection(wifiConfigFiles)
+        await sleep(3000)
         updateState(FLASH_STEP.SEND_WIFI_REQUEST, FLASH_STATUS.SUCCESS)
     } catch (error: unknown) {
         if (error instanceof Error) {
@@ -219,7 +225,6 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
             }
             return
         }
-
         try {
             updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.UNKNOWN)
             await webManager.openPort()

@@ -33,7 +33,7 @@ export const Button: Component<IProps> = (props) => {
             <Show
                 when={props.isLoader}
                 fallback={
-                    <p class="text-left text-[14px] text-white font-normal leading-[20px] not-italic whitespace-nowrap">
+                    <p class="text-[14px] text-white font-normal leading-[20px] not-italic whitespace-nowrap text-center">
                         {props.label}
                     </p>
                 }>

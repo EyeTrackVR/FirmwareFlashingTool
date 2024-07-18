@@ -24,6 +24,7 @@ import {
     simulationAbortController,
 } from '@store/terminal/selectors'
 import {
+    clearLogs,
     restartFirmwareState,
     setAbortController,
     setProcessStatus,
@@ -89,9 +90,16 @@ export const ManageFlashFirmware = () => {
                 setAbortController('openiris')
                 setProcessStatus(true)
                 restartFirmwareState()
-                installOpenIris(manifestPath(), async () => {
-                    await downloadAsset(getFirmwareType())
-                }).catch(() => ({}))
+                installOpenIris(
+                    isUSBBoard(),
+                    manifestPath(),
+                    async () => {
+                        await downloadAsset(getFirmwareType())
+                    },
+                    () => {
+                        setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
+                    },
+                ).catch(() => ({}))
             }}
             onClickGetLogs={() => {
                 if (isActiveProcess()) {
@@ -117,6 +125,7 @@ export const ManageFlashFirmware = () => {
                     addNotification(notification())
                     return
                 }
+                setAbortController()
                 setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
             }}
             onClickAPMode={() => {
@@ -124,6 +133,8 @@ export const ManageFlashFirmware = () => {
                     addNotification(notification())
                     return
                 }
+                setAbortController()
+                clearLogs()
                 setOpenModal({ open: true, type: MODAL_TYPE.AP_MODE })
             }}
             onClickBack={() => {

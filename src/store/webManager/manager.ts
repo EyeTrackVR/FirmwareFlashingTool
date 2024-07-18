@@ -260,7 +260,6 @@ export class WebManager {
         } catch {
             // we can ignore this error
         }
-        await sleep(5000)
     }
 
     async getLogs(
