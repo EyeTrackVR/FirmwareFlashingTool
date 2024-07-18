@@ -4,6 +4,7 @@ import { type Component } from 'solid-js'
 export interface IProps {
     label: string
     onClick?: () => void
+    disabled?: boolean
 }
 
 const ModalHeader: Component<IProps> = (props) => {
@@ -20,7 +21,9 @@ const ModalHeader: Component<IProps> = (props) => {
                     props.onClick?.()
                 }}>
                 <form method="dialog">
-                    <button class="cursor-pointer p-[4px] rounded-full border border-solid border-[#0D1B26] focus-visible:border-[#9793FD]">
+                    <button
+                        class="cursor-pointer p-[4px] rounded-full border border-solid border-[#0D1B26] focus-visible:border-[#9793FD]"
+                        disabled={props.disabled}>
                         <p class="text-white text-left">
                             <FaSolidXmark size={20} fill="#FFFFFF" />
                         </p>

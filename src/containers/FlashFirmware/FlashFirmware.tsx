@@ -31,15 +31,7 @@ import {
 
 export const ManageFlashFirmware = () => {
     const [manifestPath, setManifestPath] = createSignal<string>('----')
-    const {
-        getFirmwareVersion,
-        activeBoard,
-        mdns,
-        ssid,
-        password,
-        downloadAsset,
-        getFirmwareType,
-    } = useAppAPIContext()
+    const { getFirmwareVersion, activeBoard, downloadAsset, getFirmwareType } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
     const { setOpenModal } = useAppUIContext()
     const navigate = useNavigate()
@@ -72,15 +64,6 @@ export const ManageFlashFirmware = () => {
     const isUSBBoard = createMemo(() => {
         return activeBoard().includes(usb)
     })
-
-    const wifiConfigFiles = createMemo(() =>
-        JSON.stringify({
-            commands: [
-                { command: 'set_mdns', data: { hostname: mdns() } },
-                { command: 'set_wifi', data: { ssid: ssid(), password: password() } },
-            ],
-        }),
-    )
 
     const notification = createMemo(() => {
         return {
