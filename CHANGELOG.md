@@ -1,3 +1,17 @@
+# 📦 Changelog 
+[![conventional commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
+> All notable changes to this project will be documented in this file
+
+## [1.4.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.3.0...v1.4.0-beta.1) (2024-07-18)
+
+
+### 🍕 Features
+
+* add firmware beta release channel ([eca16b7](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/eca16b7b55546cab49020a955b526806b7023b8e))
+* Add support for setting MDNS, add support for new serial command layout ([e2a29fd](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e2a29fd3e19e368170344dc34d65d23d6a1292de))
+* Move network provisioning to a separate step ([90ed5bf](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/90ed5bf8effded38518d71c94205993f0499f5d2))
+
 # 📦 Changelog
 
 [![conventional commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
