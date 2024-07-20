@@ -158,6 +158,7 @@ export const installOpenIris = async (
         updateState(FLASH_STEP.FLASH_FIRMWARE, FLASH_STATUS.SUCCESS)
     } catch (error: unknown) {
         if (error instanceof Error) {
+            setInstallationProgress(0)
             updateState(FLASH_STEP.FLASH_FIRMWARE, FLASH_STATUS.FAILED, error)
         }
         return
@@ -175,11 +176,15 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
         try {
             updateState(FLASH_STEP.BOARD_CONNECTION, FLASH_STATUS.UNKNOWN)
             await webManager.checkBoardConnection()
+            webManager.setBoardRestarted(true)
             deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
         } catch (err) {
             deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
+            webManager.setBoardRestarted(false)
             await webManager.reset()
         }
+    } else {
+        webManager.setBoardRestarted(false)
     }
 
     if (!webManager.isActivePort()) {

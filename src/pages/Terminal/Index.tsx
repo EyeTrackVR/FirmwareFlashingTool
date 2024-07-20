@@ -3,7 +3,7 @@ import { Footer } from '@components/Footer/Footer'
 import Firmware from '@components/Terminal/Firmware/Index'
 import Step from '@components/Terminal/Step/Index'
 import TerminalHeader from '@components/Terminal/TerminalHeader/Index'
-import { FLASH_STEP } from '@interfaces/enums'
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { IFirmwareState } from '@interfaces/interfaces'
 import { VirtualList } from '@pages/VirtualList/Index'
 
@@ -67,7 +67,9 @@ const Terminal: Component<IProps> = (props) => {
                                                         <Step
                                                             progress={
                                                                 element.step ===
-                                                                FLASH_STEP.FLASH_FIRMWARE
+                                                                    FLASH_STEP.FLASH_FIRMWARE &&
+                                                                element.status !==
+                                                                    FLASH_STATUS.FAILED
                                                                     ? props.percentageProgress
                                                                     : undefined
                                                             }
@@ -110,12 +112,15 @@ const Terminal: Component<IProps> = (props) => {
                             isPrimaryButtonDisabled={props.isActiveProcess}
                             isSecondButtonDisabled={props.isActiveProcess}
                             secondLabel="Install Openiris"
-                            primaryLabel="Download Logs"
+                            primaryLabel="Show logs"
                             size="max-[890px]:w-full"
                             styles="!justify-start"
                             isPrimaryActive={true}
                             isSecondActive={true}
-                            onClickPrimary={props.onClickDownloadLogs}
+                            onClickPrimary={() => {
+                                setOpen({})
+                                props.onClickGetLogs()
+                            }}
                             onClickSecond={() => {
                                 setOpen({})
                                 props.onClickInstallOpenIris()
@@ -127,28 +132,27 @@ const Terminal: Component<IProps> = (props) => {
                             primaryLabel="Update Network"
                             size="max-[890px]:w-full"
                             isPrimaryActive={true}
-                            secondLabel="Get logs"
+                            secondLabel="Download logs"
                             styles="w-full"
                             hidePrimaryButton={props.isUSBBoard}
                             onClickPrimary={() => {
                                 setOpen({})
                                 props.onClickUpdateNetwork()
                             }}
-                            onClickSecond={() => {
-                                setOpen({})
-                                props.onClickGetLogs()
-                            }}
+                            onClickSecond={props.onClickDownloadLogs}
                         />
-                        <Footer
-                            isSecondButtonDisabled={props.isActiveProcess}
-                            styles="max-[890px]:w-full !w-auto"
-                            size="max-[890px]:w-full"
-                            secondLabel="AP mode"
-                            onClickSecond={() => {
-                                setOpen({})
-                                props.onClickAPMode()
-                            }}
-                        />
+                        <Show when={!props.isUSBBoard}>
+                            <Footer
+                                styles="max-[890px]:w-full !w-auto"
+                                size="max-[890px]:w-full"
+                                primaryLabel="AP mode"
+                                isPrimaryActive={true}
+                                onClickPrimary={() => {
+                                    setOpen({})
+                                    props.onClickAPMode()
+                                }}
+                            />
+                        </Show>
                     </div>
                 </div>
             </div>

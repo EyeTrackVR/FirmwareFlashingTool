@@ -6,6 +6,7 @@ import { sleep } from '@src/utils'
 
 export class WebManager {
     private flashFiles: Array<{ data: string; address: number }> | null = null
+    private boardRestarted = false
     private port: INavigatorPort | null = null
     private espLoader: ESPLoader | null = null
     private transport: Transport | null = null
@@ -54,6 +55,10 @@ export class WebManager {
     async openPort(): Promise<void> {
         if (!this.port) return
         await this.port.open({ baudRate: this.baudRate })
+    }
+
+    setBoardRestarted(value: boolean) {
+        this.boardRestarted = value
     }
 
     async restartBoard(): Promise<void> {
@@ -281,13 +286,15 @@ export class WebManager {
             throw new Error('port is not initialized')
         }
 
-        try {
-            await this.restartBoard()
-        } catch (err) {
-            if (err instanceof Error) {
-                errorCallback(err)
+        if (!this.boardRestarted) {
+            try {
+                await this.restartBoard()
+            } catch (err) {
+                if (err instanceof Error) {
+                    errorCallback(err)
+                }
+                return
             }
-            return
         }
 
         port.readable!.pipeThrough(new TextDecoderStream(), { signal })
