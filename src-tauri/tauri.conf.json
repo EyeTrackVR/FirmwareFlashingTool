@@ -177,7 +177,7 @@
       {
         "fullscreen": false,
         "height": 810,
-        "width": 810,
+        "width": 845,
         "resizable": true,
         "center": true,
         "title": "EyeTrackVR Firmware Flashing Tool",

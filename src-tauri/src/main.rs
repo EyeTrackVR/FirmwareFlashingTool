@@ -95,7 +95,7 @@ async fn main() -> tauri::Result<()> {
         window
           .set_min_size(Some(PhysicalSize {
             width: 810,
-            height: 810,
+            height: 845,
           }))
           .unwrap();
       });

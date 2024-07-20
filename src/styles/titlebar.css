@@ -27,7 +27,6 @@
 }
 
 .titlebar-button {
-    pointer-events: all;
     cursor: pointer;
     display: inline-flex;
     justify-content: center;

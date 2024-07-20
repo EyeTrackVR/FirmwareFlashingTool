@@ -2,6 +2,24 @@ import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { IFlashState } from '@interfaces/interfaces'
 
 export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFlashState>> = {
+    [FLASH_STEP.BOARD_CONNECTION]: {
+        [FLASH_STATUS.UNKNOWN]: {
+            status: FLASH_STATUS.UNKNOWN,
+            label: 'Connecting to the board... Please wait.',
+        },
+        [FLASH_STATUS.SUCCESS]: {
+            status: FLASH_STATUS.SUCCESS,
+            label: 'Connected to the board!',
+        },
+        [FLASH_STATUS.FAILED]: {
+            status: FLASH_STATUS.FAILED,
+            label: 'Failed to connect to the board!',
+        },
+        [FLASH_STATUS.ABORTED]: {
+            status: FLASH_STATUS.ABORTED,
+            label: 'process aborted.',
+        },
+    },
     [FLASH_STEP.REQUEST_PORT]: {
         [FLASH_STATUS.UNKNOWN]: {
             status: FLASH_STATUS.UNKNOWN,
@@ -95,15 +113,15 @@ export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFla
     [FLASH_STEP.BUILD]: {
         [FLASH_STATUS.UNKNOWN]: {
             status: FLASH_STATUS.UNKNOWN,
-            label: 'Building firmware... Please wait.',
+            label: 'Preparing firmware... Please wait.',
         },
         [FLASH_STATUS.SUCCESS]: {
             status: FLASH_STATUS.SUCCESS,
-            label: 'Firmware build completed successfully!',
+            label: 'Preparing firmware completed successfully!',
         },
         [FLASH_STATUS.FAILED]: {
             status: FLASH_STATUS.FAILED,
-            label: 'Error: Firmware build failed.',
+            label: 'Error: Preparing firmware failed.',
         },
         [FLASH_STATUS.ABORTED]: {
             status: FLASH_STATUS.ABORTED,
@@ -146,24 +164,6 @@ export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFla
             label: 'process aborted.',
         },
     },
-    [FLASH_STEP.SEND_WIFI_REQUEST]: {
-        [FLASH_STATUS.UNKNOWN]: {
-            status: FLASH_STATUS.UNKNOWN,
-            label: 'Initializing wifi connection',
-        },
-        [FLASH_STATUS.SUCCESS]: {
-            status: FLASH_STATUS.SUCCESS,
-            label: 'Successfully connected to wifi',
-        },
-        [FLASH_STATUS.FAILED]: {
-            status: FLASH_STATUS.FAILED,
-            label: 'Failed to enable connection to wifi',
-        },
-        [FLASH_STATUS.ABORTED]: {
-            status: FLASH_STATUS.ABORTED,
-            label: 'process aborted.',
-        },
-    },
     [FLASH_STEP.OPEN_PORT]: {
         [FLASH_STATUS.UNKNOWN]: {
             status: FLASH_STATUS.UNKNOWN,
@@ -176,24 +176,6 @@ export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFla
         [FLASH_STATUS.FAILED]: {
             status: FLASH_STATUS.FAILED,
             label: 'Error: Failed to open port.',
-        },
-        [FLASH_STATUS.ABORTED]: {
-            status: FLASH_STATUS.ABORTED,
-            label: 'process aborted.',
-        },
-    },
-    [FLASH_STEP.EXCEEDED_LIMIT]: {
-        [FLASH_STATUS.UNKNOWN]: {
-            status: FLASH_STATUS.UNKNOWN,
-            label: 'Nothing to worry about, too many logs to display.',
-        },
-        [FLASH_STATUS.SUCCESS]: {
-            status: FLASH_STATUS.SUCCESS,
-            label: 'Nothing to worry about, too many logs to display.',
-        },
-        [FLASH_STATUS.FAILED]: {
-            status: FLASH_STATUS.FAILED,
-            label: 'Nothing to worry about, too many logs to display.',
         },
         [FLASH_STATUS.ABORTED]: {
             status: FLASH_STATUS.ABORTED,

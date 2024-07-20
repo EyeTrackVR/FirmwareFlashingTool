@@ -6,15 +6,11 @@ import { debug } from 'tauri-plugin-log-api'
 import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
 import Terminal from '@pages/Terminal/Index'
 import { usb } from '@src/static'
+import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
-import {
-    downloadDetailedLogs,
-    getFirmwareLogs,
-    installOpenIris,
-    openDocs,
-} from '@store/terminal/actions'
+import { getFirmwareLogs, installOpenIris, openDocs } from '@store/terminal/actions'
 import {
     detailedLogs,
     firmwareState,
@@ -24,7 +20,6 @@ import {
     simulationAbortController,
 } from '@store/terminal/selectors'
 import {
-    clearLogs,
     restartFirmwareState,
     setAbortController,
     setProcessStatus,
@@ -76,6 +71,7 @@ export const ManageFlashFirmware = () => {
 
     return (
         <Terminal
+            isUSBBoard={isUSBBoard()}
             percentageProgress={percentageProgress()}
             logs={logs()}
             isActiveProcess={isActiveProcess()}
@@ -118,7 +114,7 @@ export const ManageFlashFirmware = () => {
                     })
                     return
                 }
-                downloadDetailedLogs()
+                download(detailedLogs().toString(), 'esp-web-tools-logs.txt')
             }}
             onClickUpdateNetwork={() => {
                 if (isActiveProcess()) {
@@ -134,7 +130,6 @@ export const ManageFlashFirmware = () => {
                     return
                 }
                 setAbortController()
-                clearLogs()
                 setOpenModal({ open: true, type: MODAL_TYPE.AP_MODE })
             }}
             onClickBack={() => {

@@ -118,7 +118,7 @@ export enum CHANNEL_TYPE {
 //********************************* flash firmware state *************************************/
 
 export const enum FLASH_STEP {
-    EXCEEDED_LIMIT = 'EXCEEDED_LIMIT',
+    BOARD_CONNECTION = 'BOARD_CONNECTION',
     OPEN_PORT = 'OPEN_PORT',
     LOGS = 'LOGS',
     MANIFEST_PATH = 'MANIFEST_PATH',
@@ -126,7 +126,6 @@ export const enum FLASH_STEP {
     INITIALIZE = 'INITIALIZE',
     CHIP_FAMILY = 'CHIP_FAMILY',
     FLASH_FIRMWARE = 'FLASH_FIRMWARE',
-    SEND_WIFI_REQUEST = 'SEND_WIFI_REQUEST',
     BUILD = 'BUILD',
     DOWNLOAD_FILES = 'FILES',
 }

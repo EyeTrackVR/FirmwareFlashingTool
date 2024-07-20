@@ -20,6 +20,7 @@ export interface IProps {
     firmwareState: IFirmwareState[]
     isActiveProcess: boolean
     firmwareVersion: string
+    isUSBBoard: boolean
 }
 
 const Terminal: Component<IProps> = (props) => {
@@ -128,6 +129,7 @@ const Terminal: Component<IProps> = (props) => {
                             isPrimaryActive={true}
                             secondLabel="Get logs"
                             styles="w-full"
+                            hidePrimaryButton={props.isUSBBoard}
                             onClickPrimary={() => {
                                 setOpen({})
                                 props.onClickUpdateNetwork()

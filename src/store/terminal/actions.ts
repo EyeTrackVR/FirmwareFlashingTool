@@ -1,9 +1,10 @@
 import { getCurrent, WebviewWindow } from '@tauri-apps/api/window'
 import { debug } from 'tauri-plugin-log-api'
 import webManager from '../webManager/index'
-import { detailedLogs, isSoftwareDownloaded } from './selectors'
+import { detailedLogs, firmwareState, isSoftwareDownloaded } from './selectors'
 import {
     clearLogs,
+    deleteFirmwareState,
     setDetailedLogs,
     setInstallationProgress,
     setIsSoftwareDownloaded,
@@ -13,7 +14,7 @@ import {
 } from './terminal'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { logs as logsDescription } from '@src/static/ui/logs'
-import { download, sleep, trimLogsByTextLength } from '@src/utils'
+import { trimLogsByTextLength } from '@src/utils'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()
@@ -63,23 +64,34 @@ export const installOpenIris = async (
     configureWifiCredentials: () => void,
 ) => {
     clearLogs()
+
+    if (webManager.isActivePort()) {
+        try {
+            updateState(FLASH_STEP.BOARD_CONNECTION, FLASH_STATUS.UNKNOWN)
+            await webManager.checkBoardConnection()
+            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
+        } catch (err) {
+            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
+            await webManager.reset()
+        }
+    }
+
     if (!webManager.isActivePort()) {
         try {
             updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.UNKNOWN)
             await webManager.connect()
             updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
         } catch (error: unknown) {
-            await webManager.reset()
             if (error instanceof Error) {
                 updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
             }
+            await webManager.reset()
             return
         }
     } else {
         updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
     }
 
-    // initialize esp workspace
     try {
         updateState(FLASH_STEP.INITIALIZE, FLASH_STATUS.UNKNOWN)
         await webManager.initializeESPConnection()
@@ -92,7 +104,6 @@ export const installOpenIris = async (
         return
     }
 
-    // check chip family
     try {
         updateState(FLASH_STEP.CHIP_FAMILY, FLASH_STATUS.UNKNOWN)
         await webManager.checkChipFamily()
@@ -104,7 +115,6 @@ export const installOpenIris = async (
         return
     }
 
-    // validate manifest
     try {
         updateState(FLASH_STEP.MANIFEST_PATH, FLASH_STATUS.UNKNOWN)
         if (!isSoftwareDownloaded()) {
@@ -120,7 +130,6 @@ export const installOpenIris = async (
         return
     }
 
-    // validate build
     try {
         updateState(FLASH_STEP.BUILD, FLASH_STATUS.UNKNOWN)
         await webManager.validateManifestBuild()
@@ -132,7 +141,6 @@ export const installOpenIris = async (
         return
     }
 
-    // download file promises
     try {
         updateState(FLASH_STEP.DOWNLOAD_FILES, FLASH_STATUS.UNKNOWN)
         await webManager.downloadFiles(manifestPath)
@@ -144,7 +152,6 @@ export const installOpenIris = async (
         return
     }
 
-    // flash firmware
     try {
         updateState(FLASH_STEP.FLASH_FIRMWARE, FLASH_STATUS.UNKNOWN)
         await webManager.flashFirmware(setInstallationProgress)
@@ -159,59 +166,21 @@ export const installOpenIris = async (
     if (!isUsbBoard) {
         configureWifiCredentials()
     }
-
-    setProcessStatus(false)
-}
-
-export const updateNetwork = async (wifiConfigFiles: string, callback: () => void) => {
-    clearLogs()
-    setProcessStatus(true)
-
-    try {
-        updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.UNKNOWN)
-        await webManager.connect()
-        updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        webManager.reset()
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
-    callback()
-
-    try {
-        updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.UNKNOWN)
-        await sleep(500)
-        await webManager.openPort()
-        updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        webManager.reset()
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
-
-    try {
-        updateState(FLASH_STEP.SEND_WIFI_REQUEST, FLASH_STATUS.UNKNOWN)
-        await webManager.configureWifiConnection(wifiConfigFiles)
-        await sleep(2000)
-        await webManager.configureWifiConnection(wifiConfigFiles)
-        await sleep(3000)
-        updateState(FLASH_STEP.SEND_WIFI_REQUEST, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.SEND_WIFI_REQUEST, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
-
     setProcessStatus(false)
 }
 
 export const getFirmwareLogs = async (signal?: AbortController) => {
     clearLogs()
+    if (webManager.isActivePort()) {
+        try {
+            updateState(FLASH_STEP.BOARD_CONNECTION, FLASH_STATUS.UNKNOWN)
+            await webManager.checkBoardConnection()
+            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
+        } catch (err) {
+            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
+            await webManager.reset()
+        }
+    }
 
     if (!webManager.isActivePort()) {
         try {
@@ -219,10 +188,10 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
             await webManager.connect()
             updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
         } catch (error: unknown) {
-            webManager.reset()
             if (error instanceof Error) {
                 updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
             }
+            await webManager.reset()
             return
         }
         try {
@@ -230,10 +199,10 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
             await webManager.openPort()
             updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.SUCCESS)
         } catch (error: unknown) {
-            webManager.reset()
             if (error instanceof Error) {
                 updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.FAILED, error)
             }
+            await webManager.reset()
             return
         }
     } else {
@@ -270,13 +239,17 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
                 setDetailedLogs(data)
                 processLogsInChunks(data, chunkSize)
             },
-            (err, hasOpenirisInstallation) => {
+            async (err, hasOpenirisInstallation) => {
+                clearInterval(interval)
+                if (err.message.includes('port')) {
+                    await webManager.reset()
+                }
+                if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
                 if (!hasOpenirisInstallation) {
                     updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
                 } else {
                     updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
                 }
-                clearInterval(interval)
             },
             signal?.signal,
         )
@@ -308,8 +281,4 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
 
         slicer += SLICE_SIZE
     }, 1500)
-}
-
-export const downloadDetailedLogs = () => {
-    download(detailedLogs().toString(), 'esp-web-tools-logs.txt')
 }

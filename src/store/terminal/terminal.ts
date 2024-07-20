@@ -42,6 +42,14 @@ export const updateFirmwareState = ({ step, object }: IFirmwareState) => {
     )
 }
 
+export const deleteFirmwareState = (step: FLASH_STEP) => {
+    setState(
+        produce((s) => {
+            delete s.firmwareState[step]
+        }),
+    )
+}
+
 export const setProcessStatus = (status: boolean) => {
     setState(
         produce((s) => {

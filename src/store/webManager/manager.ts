@@ -66,7 +66,16 @@ export class WebManager {
         await sleep(250)
     }
 
-    async restartTransport() {
+    async checkBoardConnection(): Promise<void> {
+        try {
+            await this.openPort()
+        } catch {
+            //
+        }
+        await this.restartBoard()
+    }
+
+    async restartTransport(): Promise<void> {
         if (!this.transport) return
 
         await this.transport.device.setSignals({ dataTerminalReady: false, requestToSend: true })

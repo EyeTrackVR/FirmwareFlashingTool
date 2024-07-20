@@ -8,6 +8,7 @@ export interface IProps {
     isActive: boolean
     id: string
     children: JSX.Element
+    isSending?: boolean
 }
 
 export const Modal: Component<IProps> = (props) => {
@@ -34,7 +35,7 @@ export const Modal: Component<IProps> = (props) => {
                 onClick={() => {
                     props.onClickCloseModal()
                 }}>
-                <button class="cursor-default" />
+                <button class="cursor-default" disabled={props.isSending} />
             </form>
         </dialog>
     )
