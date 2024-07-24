@@ -51,8 +51,8 @@ const OperatingSystem = () => {
                                 </p>
                                 <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
                                     Try accessing the system from a supported platform such as
-                                    <code class="code"> Windows, macOS, iOS</code>. Thank you for
-                                    your understanding.
+                                    <code class="code">Windows, macOS</code>. Thank you for your
+                                    understanding.
                                 </p>
                                 <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
                                     Stay tuned for future updates!.
