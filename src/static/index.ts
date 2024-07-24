@@ -10,9 +10,15 @@ export const radius = 24
 export const usb = 'USB'
 export const questionModalId = 'questionModal'
 export const apModalID = 'apMode'
+export const logsModalID = 'logs'
 export const wifiModalID = 'wifiMode'
 export const debugModalId = 'debugModal'
+export const operatingSystemModal = 'operatingSystem'
 export const staticMdns = 'openiristracker'
+export const DEVICE_LOST = 'The device has been lost.'
+export const STREAM_IS_UNDER = 'The stream is under'
+export const SSID_MISSING = 'ssid missing'
+export const AP_IP_ADDRESS = 'AP IP address:'
 
 const circleSize = Math.PI * (radius * 2)
 

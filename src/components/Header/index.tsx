@@ -12,7 +12,7 @@ interface IProps {
 
 const MainHeader: Component<IProps> = (props) => {
     return (
-        <header class="w-full pt-[37px] pr-[40px] pl-[40px] ">
+        <header class="w-full">
             <div class="flex justify-between">
                 <div
                     class="flex cursor-pointer"
@@ -35,7 +35,7 @@ const MainHeader: Component<IProps> = (props) => {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-row justify-center items-center gap-[6px] min-w-[210px]">
+                <div class="flex flex-row justify-center items-center gap-[6px]  min-w-[210px]">
                     <ProgressBar
                         currentStep={props.currentStep}
                         dashoffset={props.step.dashoffset}

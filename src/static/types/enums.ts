@@ -114,3 +114,32 @@ export enum CHANNEL_TYPE {
     OFFICIAL = 'Official',
     BETA = 'Beta',
 }
+
+//********************************* flash firmware state *************************************/
+
+export const enum FLASH_STEP {
+    BOARD_CONNECTION = 'BOARD_CONNECTION',
+    OPEN_PORT = 'OPEN_PORT',
+    LOGS = 'LOGS',
+    MANIFEST_PATH = 'MANIFEST_PATH',
+    REQUEST_PORT = 'REQUEST_PORT',
+    INITIALIZE = 'INITIALIZE',
+    CHIP_FAMILY = 'CHIP_FAMILY',
+    FLASH_FIRMWARE = 'FLASH_FIRMWARE',
+    BUILD = 'BUILD',
+    DOWNLOAD_FILES = 'FILES',
+}
+
+export const enum FLASH_STATUS {
+    NONE = 'NONE',
+    SUCCESS = 'SUCCESS',
+    FAILED = 'FAILED',
+    UNKNOWN = 'UNKNOWN',
+    ABORTED = 'ABORTED',
+}
+
+export enum MODAL_TYPE {
+    UPDATE_NETWORK = 'UPDATE_NETWORK',
+    AP_MODE = 'AP_MODE',
+    NONE = 'NONE',
+}

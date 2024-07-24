@@ -96,13 +96,15 @@ const AppRoutes: Component = () => {
     })
 
     return (
-        <main class="flex flex-col h-full">
+        <div class="flex flex-col h-full">
             <Header />
-            <Path />
-            <ContextMenu id="dev-tools">
-                <DebugMenu />
-            </ContextMenu>
-        </main>
+            <div class="flex h-full flex-col overflow-hidden">
+                <Path />
+                <ContextMenu id="dev-tools">
+                    <DebugMenu />
+                </ContextMenu>
+            </div>
+        </div>
     )
 }
 

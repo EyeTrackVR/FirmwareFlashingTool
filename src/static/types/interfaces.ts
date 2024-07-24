@@ -1,5 +1,13 @@
-import { ENotificationAction, ENotificationType } from './enums'
-import type { CHANNEL_TYPE, RESTStatus, RESTType } from '@src/static/types/enums'
+import {
+    type CHANNEL_TYPE,
+    type RESTStatus,
+    type RESTType,
+    type MODAL_TYPE,
+    ENotificationAction,
+    ENotificationType,
+    FLASH_STATUS,
+    FLASH_STEP,
+} from './enums'
 import type { DebugMode } from '@static/types'
 import type { WebviewWindow } from '@tauri-apps/api/window'
 import type { ToasterStore } from 'solid-headless'
@@ -148,28 +156,46 @@ export interface AppStoreAPI {
     channelMode: CHANNEL_TYPE
 }
 
+export interface IOpenModal {
+    open: boolean
+    type: MODAL_TYPE
+}
+
 export interface UiStore {
-    openModal?: boolean
+    openModal: IOpenModal
     showNotifications?: boolean
     menuOpen?: MenuOpen | null
     contextAnchor?: HTMLElement | null
 }
 
-interface SerialOutputSignals {
-    dataTerminalReady?: boolean | undefined
-    requestToSend?: boolean | undefined
-    break?: boolean | undefined
+export interface ISignal {
+    requestToSend: boolean
+    dataTerminalReady: boolean
 }
 
 export interface INavigatorPort extends Navigator {
+    readable: {
+        locked: boolean
+        pipeThrough: (
+            data: TextDecoderStream,
+            object?: unknown,
+        ) => {
+            pipeThrough: (
+                data: TransformStream,
+                object?: unknown,
+            ) => {
+                pipeTo: (data: WritableStream, object?: unknown) => Promise<void>
+            }
+        }
+    }
+    setSignals: ({ requestToSend, dataTerminalReady }: ISignal) => Promise<void>
     open: ({ baudRate }: { baudRate: number }) => Promise<void>
-    setSignals(signals: SerialOutputSignals): Promise<void>
     close: () => Promise<void>
 }
 
 export interface INavigator extends Navigator {
     serial: {
-        requestPort: () => INavigatorPort
+        requestPort: () => Promise<INavigatorPort>
     }
 }
 
@@ -181,4 +207,35 @@ export interface IChannelOptions {
 export interface IDropdownList {
     label: string | CHANNEL_TYPE
     description?: string
+}
+
+export interface Build {
+    chipFamily: 'ESP32' | 'ESP8266' | 'ESP32-S2' | 'ESP32-S3' | 'ESP32-C3'
+    parts: {
+        path: string
+        offset: number
+    }[]
+}
+
+export interface Manifest {
+    new_install_improv_wait_time?: number
+    new_install_prompt_erase?: boolean
+    home_assistant_domain?: string
+    funding_url?: string
+    builds: Build[]
+    version: string
+    name: string
+}
+
+export interface IFlashState {
+    status: FLASH_STATUS
+    label: string
+    errorName?: string
+}
+
+export interface IFirmwareState {
+    errorName?: string
+    step: FLASH_STEP
+    status: FLASH_STATUS
+    label: string
 }
