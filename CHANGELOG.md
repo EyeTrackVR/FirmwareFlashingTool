@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.4.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2024-07-24)
+
+
+### 🍕 Features
+
+* Rewrite the flashing tool to support a more streamlined UX with a completely custom terminal view, fix logs  ([66117fc](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/66117fc36c1a7dbd744f2909ecb0b1169da88bfc))
+
 ## [1.4.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.3.0...v1.4.0-beta.1) (2024-07-18)
 
 
