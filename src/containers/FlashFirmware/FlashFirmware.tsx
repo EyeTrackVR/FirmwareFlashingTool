@@ -5,7 +5,7 @@ import { createEffect, createMemo, createSignal, onMount } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
 import Terminal from '@pages/Terminal/Index'
-import { usb } from '@src/static'
+import { BoardConnectionMethod, usb } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -69,8 +69,14 @@ export const ManageFlashFirmware = () => {
         }
     })
 
+    const board = createMemo(() => {
+        const connectionMethod = BoardConnectionMethod[activeBoard().replace('_release', '')]
+        return connectionMethod ? `${activeBoard()} (${connectionMethod})` : activeBoard()
+    })
+
     return (
         <Terminal
+            board={board()}
             isUSBBoard={isUSBBoard()}
             percentageProgress={percentageProgress()}
             logs={logs()}
