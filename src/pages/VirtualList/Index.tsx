@@ -46,6 +46,7 @@ export const VirtualList: Component<IProps> = (props) => {
 
     return (
         <div
+            class="scrollbarx scrollbar"
             ref={(el) => (parentRef = el)}
             style={{ height: height(), width: '100%', overflow: 'auto' }}>
             <div
@@ -68,6 +69,7 @@ export const VirtualList: Component<IProps> = (props) => {
                                     left: 0,
                                 }}>
                                 <pre
+                                    class="text-white"
                                     style={{
                                         'white-space': item.match(/\n/) ? 'nowrap' : 'none',
                                         hyphens: 'none',
