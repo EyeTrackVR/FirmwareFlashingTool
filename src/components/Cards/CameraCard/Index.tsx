@@ -6,6 +6,7 @@ export interface IProps {
     isConnected: boolean
     active: boolean
     isUSB: boolean
+    cameraName: string
     port: string
 }
 
@@ -19,7 +20,9 @@ const CameraCard: Component<IProps> = (props) => {
                 'bg-[#192736] border border-solid border-[#192736]': props.active,
             }}>
             <div class="flex gap-[6px] flex-col h-full justify-between  w-[70%]">
-                <p class="font-normal text-white leading-[20px] text-[14px] text-left">Left eye</p>
+                <p class="font-normal text-white leading-[20px] text-[14px] text-left">
+                    {props.cameraName}
+                </p>
                 <div class="flex gap-[4px]">
                     <p class="font-normal text-[#817DF7] leading-[20px] text-[14px] text-left">
                         Port:
