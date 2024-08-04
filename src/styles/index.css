@@ -59,7 +59,7 @@ input[type='password']::-ms-clear {
     /* overflow: hidden; */
     border-radius: 0.4rem;
     /* Clothoid Gradient */
-    background: #000f1a;
+    background: #00101a;
 }
 
 :root {
