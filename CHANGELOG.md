@@ -3,6 +3,14 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.4.0-beta.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2024-08-14)
+
+
+### 🍕 Features
+
+* pin rust toolchain version to 1.79.0 ([59df86e](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/59df86e35355e21e13b02e4991685a6414fb5dab))
+* ux improvements ([ba722e6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/ba722e69f2f35748b0d4cf24af05b1d3966ebd66))
+
 ## [1.4.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2024-07-24)
 
 
