@@ -37,11 +37,11 @@ const BeforeFlashingModal: Component<IProps> = (props) => {
                     </div>
                     <div>
                         <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
-                            &#x2022; Press the "B" button on your board if it has one
+                            &#x2022; hold B button while plugging the board in
                         </p>
                         <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic py-[10px]">
                             &#x2022; Make sure you have the antenna and camera plugged into the
-                            board
+                            board if you plan on using them wirelessly
                         </p>
                         <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
                             &#x2022; Make sure your password and ssid do not have special characters
