@@ -1,7 +1,7 @@
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
-import OpenirisModal from '@pages/Modals/OpenirisModal'
+import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
 import { usb } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -14,18 +14,19 @@ import {
     setProcessStatus,
 } from '@store/terminal/terminal'
 
-const InstallOpenirisContainer = () => {
+const BeforeFlashingContainer = () => {
     const { downloadAsset, getFirmwareType, activeBoard, manifestPath } = useAppAPIContext()
     const { modal, setOpenModal, hideModal, setHideModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
+
     const isUSBBoard = createMemo(() => {
         return activeBoard().includes(usb)
     })
 
     return (
-        <OpenirisModal
+        <BeforeFlashingModal
             checked={hideModal()}
-            isActive={modal().type === MODAL_TYPE.OPENIRIS}
+            isActive={modal().type === MODAL_TYPE.BEFORE_FLASHING}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -75,4 +76,4 @@ const InstallOpenirisContainer = () => {
     )
 }
 
-export default InstallOpenirisContainer
+export default BeforeFlashingContainer

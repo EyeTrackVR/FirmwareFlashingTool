@@ -1,6 +1,6 @@
 import { Match, Show, Switch } from 'solid-js'
 import ApModeContainer from './ApModeModalContainer'
-import OpenirisModal from './InstallOpenirisContainer'
+import BeforeFlashingModal from './BeforeFlashingContainer'
 import WifiModal from './WifiModalcontainer'
 import { MODAL_TYPE } from '@interfaces/enums'
 import { useAppUIContext } from '@store/context/ui'
@@ -18,8 +18,8 @@ export const ModalRoot = () => {
                     <Match when={modal().type === MODAL_TYPE.UPDATE_NETWORK}>
                         <WifiModal />
                     </Match>
-                    <Match when={modal().type === MODAL_TYPE.OPENIRIS}>
-                        <OpenirisModal />
+                    <Match when={modal().type === MODAL_TYPE.BEFORE_FLASHING}>
+                        <BeforeFlashingModal />
                     </Match>
                 </Switch>
             </div>

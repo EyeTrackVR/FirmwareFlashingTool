@@ -140,7 +140,7 @@ export const enum FLASH_STATUS {
 
 export enum MODAL_TYPE {
     UPDATE_NETWORK = 'UPDATE_NETWORK',
-    OPENIRIS = 'OPENIRIS',
+    BEFORE_FLASHING = 'BEFORE_FLASHING',
     AP_MODE = 'AP_MODE',
     NONE = 'NONE',
 }

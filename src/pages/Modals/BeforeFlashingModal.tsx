@@ -4,7 +4,7 @@ import { Button } from '@components/Buttons/DefaultButton'
 import { Modal } from '@components/Modal/Index'
 import ModalHeader from '@components/ModalHeader/Index'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { openirisModalID } from '@src/static'
+import { beforeFlashingModalID } from '@src/static'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -15,10 +15,10 @@ export interface IProps {
     checked: boolean
 }
 
-const OpenirisModal: Component<IProps> = (props) => {
+const BeforeFlashingModal: Component<IProps> = (props) => {
     return (
         <Modal
-            id={openirisModalID}
+            id={beforeFlashingModalID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>
@@ -69,4 +69,4 @@ const OpenirisModal: Component<IProps> = (props) => {
     )
 }
 
-export default OpenirisModal
+export default BeforeFlashingModal

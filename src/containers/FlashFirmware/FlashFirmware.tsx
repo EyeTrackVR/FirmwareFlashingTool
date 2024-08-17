@@ -46,7 +46,9 @@ export const ManageFlashFirmware = () => {
                     debug(`[WebSerial]: manifestfilePath ${manifestfilePath}`)
                     const url = convertFileSrc(manifestfilePath)
                     debug(`[WebSerial]: url ${url}`)
-                    saveManifestPath(url)
+                    if (!hideModal()) {
+                        saveManifestPath(url)
+                    }
                     setManifestPath(url)
                 })
             })
@@ -92,7 +94,7 @@ export const ManageFlashFirmware = () => {
                     return true
                 }
                 if (!hideModal()) {
-                    setOpenModal({ open: true, type: MODAL_TYPE.OPENIRIS })
+                    setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_FLASHING })
                     return true
                 }
                 setAbortController('openiris')
