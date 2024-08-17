@@ -1,6 +1,6 @@
 .titlebar,
 .customTitlebar {
-    background: #000f1a;
+    background: #00101a;
     z-index: 999;
     height: 30px;
     user-select: none;
@@ -36,6 +36,7 @@
 }
 
 .titlebar-button:hover {
+    border-radius: 2px;
     background: #03233a;
 }
 
