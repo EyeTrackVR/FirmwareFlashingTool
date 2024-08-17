@@ -27,9 +27,10 @@ import {
 
 export const ManageFlashFirmware = () => {
     const [manifestPath, setManifestPath] = createSignal<string>('----')
-    const { getFirmwareVersion, activeBoard, downloadAsset, getFirmwareType } = useAppAPIContext()
+    const { getFirmwareVersion, activeBoard, downloadAsset, getFirmwareType, saveManifestPath } =
+        useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
-    const { setOpenModal } = useAppUIContext()
+    const { setOpenModal, hideModal } = useAppUIContext()
     const navigate = useNavigate()
 
     onMount(() => {
@@ -45,6 +46,9 @@ export const ManageFlashFirmware = () => {
                     debug(`[WebSerial]: manifestfilePath ${manifestfilePath}`)
                     const url = convertFileSrc(manifestfilePath)
                     debug(`[WebSerial]: url ${url}`)
+                    if (!hideModal()) {
+                        saveManifestPath(url)
+                    }
                     setManifestPath(url)
                 })
             })
@@ -87,6 +91,10 @@ export const ManageFlashFirmware = () => {
             onClickInstallOpenIris={() => {
                 if (isActiveProcess()) {
                     addNotification(notification())
+                    return true
+                }
+                if (!hideModal()) {
+                    setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_FLASHING })
                     return true
                 }
                 setAbortController('openiris')

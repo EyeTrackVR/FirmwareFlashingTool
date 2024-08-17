@@ -1,5 +1,6 @@
-import { Show } from 'solid-js'
+import { Match, Show, Switch } from 'solid-js'
 import ApModeContainer from './ApModeModalContainer'
+import BeforeFlashingModal from './BeforeFlashingContainer'
 import WifiModal from './WifiModalcontainer'
 import { MODAL_TYPE } from '@interfaces/enums'
 import { useAppUIContext } from '@store/context/ui'
@@ -10,12 +11,17 @@ export const ModalRoot = () => {
     return (
         <Show when={modal().open}>
             <div class="absolute top-0 left-0">
-                <Show when={modal().type === MODAL_TYPE.AP_MODE}>
-                    <ApModeContainer />
-                </Show>
-                <Show when={modal().type === MODAL_TYPE.UPDATE_NETWORK}>
-                    <WifiModal />
-                </Show>
+                <Switch>
+                    <Match when={modal().type === MODAL_TYPE.AP_MODE}>
+                        <ApModeContainer />
+                    </Match>
+                    <Match when={modal().type === MODAL_TYPE.UPDATE_NETWORK}>
+                        <WifiModal />
+                    </Match>
+                    <Match when={modal().type === MODAL_TYPE.BEFORE_FLASHING}>
+                        <BeforeFlashingModal />
+                    </Match>
+                </Switch>
             </div>
         </Show>
     )
