@@ -90,6 +90,15 @@ export enum STEP_STATUS_ENUM {
     FLASH_FIRMWARE = 'FLASH_FIRMWARE',
 }
 
+export enum NAVIGATION {
+    SETTINGS = '/settings',
+    DEFAULT = '/',
+    HOME = '/home',
+    NETWORK = '/network',
+    FLASH_FIRMWARE = '/flashFirmware',
+    PAGE_404 = '/**',
+}
+
 export enum DIRECTION {
     '/' = STEP_STATUS_ENUM.SELECT_BOARD,
     '/network' = STEP_STATUS_ENUM.CONFIGURE_WIFI,
@@ -139,6 +148,10 @@ export const enum FLASH_STATUS {
 }
 
 export enum MODAL_TYPE {
+    ADD_NEW_CAMERA_ADDRESS = 'ADD_NEW_CAMERA_ADDRESS',
+    RECALIBRATE_CAMERA = 'RECALIBRATE_CAMERA',
+    ADVANCED_SETTINGS = 'ADVANCED_SETTINGS',
+    RECENTER_CAMERA = 'RECENTER_CAMERA',
     UPDATE_NETWORK = 'UPDATE_NETWORK',
     AP_MODE = 'AP_MODE',
     NONE = 'NONE',

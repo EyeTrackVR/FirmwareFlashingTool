@@ -1,16 +1,9 @@
 import { BsUsbSymbol } from 'solid-icons/bs'
 import { FaSolidWifi } from 'solid-icons/fa'
 import { Component, Show } from 'solid-js'
+import { ICamera } from '@interfaces/interfaces'
 
-export interface IProps {
-    isConnected: boolean
-    active: boolean
-    isUSB: boolean
-    cameraName: string
-    port: string
-}
-
-const CameraCard: Component<IProps> = (props) => {
+const CameraCard: Component<ICamera> = (props) => {
     return (
         <div
             class="flex items-center justify-between p-[12px] rounded-[9px] cursor-pointer w-[219px]"

@@ -168,6 +168,14 @@ export interface UiStore {
     contextAnchor?: HTMLElement | null
 }
 
+export interface ICamera {
+    isConnected: boolean
+    active: boolean
+    isUSB: boolean
+    cameraName: string
+    port: string
+}
+
 export interface ISignal {
     requestToSend: boolean
     dataTerminalReady: boolean
