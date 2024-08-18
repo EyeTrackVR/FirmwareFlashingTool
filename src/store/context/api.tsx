@@ -58,6 +58,8 @@ interface AppAPIContext {
     setNetwork: (ssid: string, password: string, mdns: string) => void
     setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
+    saveManifestPath: (url: string) => void
+    manifestPath: Accessor<string>
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
@@ -99,6 +101,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         loader: false,
         apModeStatus: false,
         mdns: '',
+        manifestPath: '',
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -189,6 +192,14 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
 
+    const saveManifestPath = (url: string) => {
+        setState(
+            produce((s) => {
+                s.manifestPath = url
+            }),
+        )
+    }
+
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
@@ -197,7 +208,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const mdns = createMemo(() => apiState().mdns)
     const channelMode = createMemo(() => apiState().channelMode)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
-
+    const manifestPath = createMemo(() => apiState().manifestPath)
     //#endregion
     //********************************* rest *************************************/
     //#region rest
@@ -638,6 +649,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 channelMode,
                 mdns,
                 setChannelMode,
+                saveManifestPath,
+                manifestPath,
             }}>
             {props.children}
         </AppAPIContext.Provider>

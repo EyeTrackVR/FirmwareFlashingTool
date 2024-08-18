@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.4.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2024-08-17)
+
+
+### 🍕 Features
+
+* Add dismissible readme panel before flashing ([7bbb6ae](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/7bbb6ae20b6321604aa0ad5c1de9894d9292ce6a))
+
 ## [1.4.0-beta.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2024-08-14)
 
 
