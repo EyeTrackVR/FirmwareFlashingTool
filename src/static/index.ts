@@ -65,6 +65,22 @@ export const BoardDescription: {
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
 }
 
+export const BoardConnectionMethod: {
+    [key in BOARD_TYPE]: string
+} = {
+    [BOARD_TYPE.ESP_32_AI_THINKER]: 'wireless mode',
+    [BOARD_TYPE.ESP_32]: 'wireless mode',
+    [BOARD_TYPE.ESP_32_M_5_STACK]: 'wireless mode',
+    [BOARD_TYPE.ESP_32_W_ROVER]: 'wireless mode',
+    [BOARD_TYPE.ESP_EYE]: 'wireless mode',
+    [BOARD_TYPE.WROOMS_3]: 'wireless mode',
+    [BOARD_TYPE.WROOMS_3_QIO]: 'wireless mode',
+    [BOARD_TYPE.WROOMS_3_USB]: 'wired mode',
+    [BOARD_TYPE.WROOMS_3QIOUSB]: 'wired mode',
+    [BOARD_TYPE.XIAOSENSES_3]: 'wireless mode',
+    [BOARD_TYPE.XIAOSENSES_3_USB]: 'wired mode',
+}
+
 export const ChannelOptions: Record<CHANNEL_TYPE, IChannelOptions> = {
     [CHANNEL_TYPE.OFFICIAL]: {
         label: CHANNEL_TYPE.OFFICIAL,

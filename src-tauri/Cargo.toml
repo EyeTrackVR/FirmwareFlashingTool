@@ -98,7 +98,6 @@ updater = ["tauri/updater"]
 version = "1.5.1"
 features = []
 
-[profile]
 [profile.dev]
 debug = 0
 

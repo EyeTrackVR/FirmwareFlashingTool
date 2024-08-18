@@ -21,6 +21,7 @@ export interface IProps {
     isActiveProcess: boolean
     firmwareVersion: string
     isUSBBoard: boolean
+    board: string
 }
 
 const Terminal: Component<IProps> = (props) => {
@@ -43,7 +44,7 @@ const Terminal: Component<IProps> = (props) => {
                     </div>
                     <div class="flex flex-col overflow-hidden w-full h-full bg-[#00101C] p-[24px] rounded-[12px] gap-[12px]">
                         <div class="flex p-[12px] justify-between items-center">
-                            <Firmware version={props.firmwareVersion} />
+                            <Firmware version={props.firmwareVersion} board={props.board} />
                         </div>
                         <div
                             class="flex flex-col overflow-y-auto h-full w-full scrollbar"
