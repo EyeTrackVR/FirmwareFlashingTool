@@ -154,6 +154,7 @@ export interface AppStoreAPI {
     apModeStatus: boolean
     mdns: string
     channelMode: CHANNEL_TYPE
+    manifestPath: string
 }
 
 export interface IOpenModal {
@@ -166,6 +167,7 @@ export interface UiStore {
     showNotifications?: boolean
     menuOpen?: MenuOpen | null
     contextAnchor?: HTMLElement | null
+    hideModal: boolean
 }
 
 export interface ICamera {

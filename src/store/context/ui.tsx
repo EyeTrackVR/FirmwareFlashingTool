@@ -9,9 +9,11 @@ interface AppUIContext {
     menuOpenStatus: Accessor<MenuOpen | null | undefined>
     getContextAnchor: Accessor<HTMLElement | null | undefined>
     showNotifications: Accessor<boolean | undefined>
+    hideModal: Accessor<boolean>
     setOpenModal: (data: IOpenModal) => void
     setMenu: (menuOpen: MenuOpen | null) => void
     setContextMenuAnchor: (id: string) => void
+    setHideModal: () => void
 }
 
 const AppUIContext = createContext<AppUIContext>()
@@ -23,6 +25,7 @@ export const AppUIProvider: Component<Context> = (props) => {
         },
         showNotifications: true,
         menuOpen: null,
+        hideModal: false,
     }
 
     const [state, setState] = createStore<UiStore>(defaultState)
@@ -54,12 +57,21 @@ export const AppUIProvider: Component<Context> = (props) => {
         )
     }
 
+    const setHideModal = () => {
+        setState(
+            produce((s) => {
+                s.hideModal = !s.hideModal
+            }),
+        )
+    }
+
     const uiState = createMemo(() => state)
 
     const modal = createMemo(() => uiState().openModal)
     const showNotifications = createMemo(() => uiState().showNotifications)
     const menuOpenStatus = createMemo(() => uiState().menuOpen)
     const getContextAnchor = createMemo(() => uiState().contextAnchor)
+    const hideModal = createMemo(() => uiState().hideModal)
 
     return (
         <AppUIContext.Provider
@@ -71,6 +83,8 @@ export const AppUIProvider: Component<Context> = (props) => {
                 setOpenModal,
                 setMenu,
                 setContextMenuAnchor,
+                hideModal,
+                setHideModal,
             }}>
             {props.children}
         </AppUIContext.Provider>
