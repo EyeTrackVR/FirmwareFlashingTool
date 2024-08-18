@@ -1,9 +1,9 @@
 import { type IconTypes } from 'solid-icons'
-import { ParentComponent } from 'solid-js'
+import { ParentComponent, Show } from 'solid-js'
 
 export interface IProps {
     header: string
-    description: string
+    description?: string
     HeaderIcon: IconTypes
 }
 
@@ -18,11 +18,13 @@ const Wrapper: ParentComponent<IProps> = (props) => {
                     {props.header}
                 </p>
             </div>
-            <div>
-                <p class="text-[14px] text-white font-normal leading-[20px] not-italic text-left select-none">
-                    {props.description}
-                </p>
-            </div>
+            <Show when={props.description}>
+                <div>
+                    <p class="text-[14px] text-white font-normal leading-[20px] not-italic text-left select-none">
+                        {props.description}
+                    </p>
+                </div>
+            </Show>
             <div>{props.children}</div>
         </div>
     )
