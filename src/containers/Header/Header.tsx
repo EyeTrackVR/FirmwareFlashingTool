@@ -19,13 +19,18 @@ export const Header = () => {
         return activeBoard().includes(usb) ? 1 : 0
     })
 
+    const stepData = createMemo(() => {
+        return stepStatus[DIRECTION[location.pathname]]
+    })
+
     const step = createMemo(() => {
-        const index = stepStatus[DIRECTION[location.pathname]].index - isUSBBoard()
+        const index = stepData()?.index ?? 0 - isUSBBoard()
         return index <= 0 ? 1 : index
     })
 
     return (
         <MainHeader
+            hideProgressBar={typeof stepData() === 'undefined'}
             name="Welcome!"
             step={{
                 ...stepStatus[DIRECTION[location.pathname]],
