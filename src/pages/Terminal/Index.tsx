@@ -35,7 +35,7 @@ const Terminal: Component<IProps> = (props) => {
     })
 
     return (
-        <div class="flex flex-col justify-between h-full gap-[12px] pt-[24px]">
+        <div class="flex flex-col justify-between h-full gap-[12px] pt-[24px] w-full">
             <div class="flex h-full justify-center items-center overflow-hidden">
                 <div class="max-w-[1800px] h-full w-full bg-[#0D1B26] p-[12px] flex flex-col gap-[12px] rounded-[12px] border-solid border-1 border-[#192736]">
                     <div class="flex flex-col gap-[12px]">
