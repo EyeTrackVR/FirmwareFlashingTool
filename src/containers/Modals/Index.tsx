@@ -10,7 +10,7 @@ export const ModalRoot = () => {
     const { modal } = useAppUIContext()
 
     return (
-        <Show when={true}>
+        <Show when={modal().open}>
             <div class="absolute top-0 left-0">
                 <Switch>
                     <Match when={modal().type === MODAL_TYPE.AP_MODE}>
