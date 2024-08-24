@@ -158,6 +158,7 @@ export interface AppStoreAPI {
 }
 
 export interface IOpenModal {
+    board?: string
     open: boolean
     type: MODAL_TYPE
 }
