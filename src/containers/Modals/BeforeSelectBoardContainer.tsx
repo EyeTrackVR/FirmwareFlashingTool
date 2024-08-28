@@ -1,5 +1,4 @@
 import { appWindow } from '@tauri-apps/api/window'
-import { debug } from 'tauri-plugin-log-api'
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeSelectBoard from '@pages/Modals/BeforeSelectBoard'
 import { useAppAPIContext } from '@store/context/api'
@@ -7,7 +6,7 @@ import { useAppUIContext } from '@store/context/ui'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 
 const BeforeSelectBoardContainer = () => {
-    const { getFirmwareAssets, setFirmwareType, setActiveBoard } = useAppAPIContext()
+    const { confirmFirmwareSelection } = useAppAPIContext()
     const { modal, setOpenModal } = useAppUIContext()
 
     return (
@@ -35,13 +34,8 @@ const BeforeSelectBoardContainer = () => {
                 const board = modal()?.board
                 if (board) {
                     setIsSoftwareDownloaded(false)
-                    setActiveBoard(board)
-                    const temp = getFirmwareAssets().find((item) => item.name === board)?.name
-                    const msg = temp ? temp : 'Not Selected'
-                    debug(`[Firmware]: ${msg}`)
-                    setFirmwareType(msg)
+                    confirmFirmwareSelection(board)
                 }
-
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
         />

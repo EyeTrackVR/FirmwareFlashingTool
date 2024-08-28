@@ -20,9 +20,8 @@ export const ManageBoard = () => {
     const {
         getFirmwareAssets,
         getFirmwareVersion,
-        setFirmwareType,
+        confirmFirmwareSelection,
         activeBoard,
-        setActiveBoard,
         channelMode,
         setChannelMode,
     } = useAppAPIContext()
@@ -118,11 +117,7 @@ export const ManageBoard = () => {
                 }
 
                 setIsSoftwareDownloaded(false)
-                setActiveBoard(value)
-                const temp = getFirmwareAssets().find((item) => item.name === value)?.name
-                const msg = temp ? temp : 'Not Selected'
-                debug(`[Firmware]: ${msg}`)
-                setFirmwareType(msg)
+                confirmFirmwareSelection(value)
             }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
