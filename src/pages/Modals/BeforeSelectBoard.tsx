@@ -26,9 +26,10 @@ const BeforeSelectBoard: Component<IProps> = (props) => {
                         Before selecting the board
                     </p>
                     <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
-                        <code class="code">_Release</code> Has a lot less debugging, may also be
-                        missing some things available only in debug for debug purposes, this should
-                        be flashed when everything is working.
+                        <code class="code">_Release</code> is meant to be flashed when everything
+                        was confirmed working with the regular version first. It has a lot less
+                        logging, and debugging features are missing which makes it harder to
+                        diagnose what's wrong when issues arise.
                     </p>
                 </div>
                 <Footer
