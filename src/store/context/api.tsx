@@ -59,6 +59,7 @@ interface AppAPIContext {
     setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
     saveManifestPath: (url: string) => void
+    confirmFirmwareSelection: (board: string) => void
     manifestPath: Accessor<string>
 }
 
@@ -613,6 +614,14 @@ export const AppAPIProvider: Component<Context> = (props) => {
     }
     //#endregion
 
+    const confirmFirmwareSelection = (board: string) => {
+        setActiveBoard(board)
+        const temp = getFirmwareAssets().find((item) => item.name === board)?.name
+        const msg = temp ? temp : 'Not Selected'
+        debug(`[Firmware]: ${msg}`)
+        setFirmwareType(msg)
+    }
+
     //#region API Provider
     return (
         <AppAPIContext.Provider
@@ -651,6 +660,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 setChannelMode,
                 saveManifestPath,
                 manifestPath,
+                confirmFirmwareSelection,
             }}>
             {props.children}
         </AppAPIContext.Provider>
