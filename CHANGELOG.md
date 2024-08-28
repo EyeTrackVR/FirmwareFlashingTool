@@ -3,6 +3,13 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.4.0-beta.5](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.4...v1.4.0-beta.5) (2024-08-28)
+
+
+### 🍕 Features
+
+* Add a modal confirming firmware selection ([704055c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/704055c0bd5c68654b11f17b01061b817589176a))
+
 ## [1.4.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2024-08-17)
 
 
