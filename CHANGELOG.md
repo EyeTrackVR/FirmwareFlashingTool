@@ -3,6 +3,21 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.4.0](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.3.0...v1.4.0) (2024-09-03)
+
+
+### 🍕 Features
+
+* Add a modal confirming firmware selection ([704055c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/704055c0bd5c68654b11f17b01061b817589176a))
+* Add dismissible readme panel before flashing ([7bbb6ae](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/7bbb6ae20b6321604aa0ad5c1de9894d9292ce6a))
+* add firmware beta release channel ([eca16b7](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/eca16b7b55546cab49020a955b526806b7023b8e))
+* Add support for setting MDNS, add support for new serial command layout ([e2a29fd](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e2a29fd3e19e368170344dc34d65d23d6a1292de))
+* Implement custom terminal, rework flashing flow, improve UX ([03e0ef6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/03e0ef6552dc523f7b98d3a36102a683e854e21e))
+* Move network provisioning to a separate step ([90ed5bf](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/90ed5bf8effded38518d71c94205993f0499f5d2))
+* pin rust toolchain version to 1.79.0 ([59df86e](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/59df86e35355e21e13b02e4991685a6414fb5dab))
+* Rewrite the flashing tool to support a more streamlined UX with a completely custom terminal view, fix logs  ([66117fc](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/66117fc36c1a7dbd744f2909ecb0b1169da88bfc))
+* ux improvements ([ba722e6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/ba722e69f2f35748b0d4cf24af05b1d3966ebd66))
+
 ## [1.4.0-beta.5](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.4...v1.4.0-beta.5) (2024-08-28)
 
 
