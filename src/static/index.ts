@@ -10,9 +10,17 @@ export const radius = 24
 export const usb = 'USB'
 export const questionModalId = 'questionModal'
 export const apModalID = 'apMode'
+export const logsModalID = 'logs'
 export const wifiModalID = 'wifiMode'
+export const beforeFlashingModalID = 'beforeFlashingMode'
+export const beforeSelectBoardModalID = 'BeforeSelectBoardMode'
 export const debugModalId = 'debugModal'
+export const operatingSystemModal = 'operatingSystem'
 export const staticMdns = 'openiristracker'
+export const DEVICE_LOST = 'The device has been lost.'
+export const STREAM_IS_UNDER = 'The stream is under'
+export const SSID_MISSING = 'ssid missing'
+export const AP_IP_ADDRESS = 'AP IP address:'
 
 const circleSize = Math.PI * (radius * 2)
 
@@ -57,6 +65,22 @@ export const BoardDescription: {
     [BOARD_TYPE.XIAOSENSES_3]: "SeedStudio's XIAO ESP32-S3 Sense (wireless mode)",
     // eslint-disable-next-line quotes
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
+}
+
+export const BoardConnectionMethod: {
+    [key in BOARD_TYPE]: string
+} = {
+    [BOARD_TYPE.ESP_32_AI_THINKER]: 'wireless mode',
+    [BOARD_TYPE.ESP_32]: 'wireless mode',
+    [BOARD_TYPE.ESP_32_M_5_STACK]: 'wireless mode',
+    [BOARD_TYPE.ESP_32_W_ROVER]: 'wireless mode',
+    [BOARD_TYPE.ESP_EYE]: 'wireless mode',
+    [BOARD_TYPE.WROOMS_3]: 'wireless mode',
+    [BOARD_TYPE.WROOMS_3_QIO]: 'wireless mode',
+    [BOARD_TYPE.WROOMS_3_USB]: 'wired mode',
+    [BOARD_TYPE.WROOMS_3QIOUSB]: 'wired mode',
+    [BOARD_TYPE.XIAOSENSES_3]: 'wireless mode',
+    [BOARD_TYPE.XIAOSENSES_3_USB]: 'wired mode',
 }
 
 export const ChannelOptions: Record<CHANNEL_TYPE, IChannelOptions> = {

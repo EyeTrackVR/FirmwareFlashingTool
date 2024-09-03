@@ -1,6 +1,6 @@
 {
   "name": "etvr-firmware-flasher-tool",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "A SolidJS project for EyeTrackVR",
   "author": "EyeTrackVR",
@@ -68,6 +68,7 @@
     "@stitches/core": "^1.2.8",
     "@tailwindcss/typography": "^0.5.10",
     "babel-preset-solid": "^1.7.12",
+    "esptool-js": "^0.4.1",
     "fp-ts": "^2.16.1",
     "highlight.js": "11.9.0",
     "lodash": "^4.17.21",

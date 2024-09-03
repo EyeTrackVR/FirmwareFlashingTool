@@ -1,6 +1,6 @@
 [package]
 name = "firmware_flashing_tool"
-version = "1.3.0"
+version = "1.4.0"
 description = "A tool to flash the firmware of the EyeTrackVR device."
 authors = ["DaOfficialWizard"]
 license = "MIT"
@@ -98,7 +98,6 @@ updater = ["tauri/updater"]
 version = "1.5.1"
 features = []
 
-[profile]
 [profile.dev]
 debug = 0
 

@@ -1,4 +1,4 @@
-import ModalHeader from '@components/Modal/ModalHeader/Index'
+import ModalHeader from '@components/ModalHeader/Index'
 
 export const QuestionMarkModal = () => {
     return (

@@ -1,5 +1,5 @@
-input[type=password]::-ms-reveal,
-input[type=password]::-ms-clear{
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
     display: none;
 }
 
@@ -52,19 +52,18 @@ input[type=password]::-ms-clear{
 #root {
     text-align: center;
     background-color: transparent;
-
-    padding: 0px;
+    padding: 40px 24px 24px;
     margin: 0px;
     box-sizing: border-box;
     height: 100vh;
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 0.4rem;
     /* Clothoid Gradient */
     background: #000f1a;
 }
 
 :root {
-    font-family: "Prompt", sans-serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
@@ -95,7 +94,7 @@ input[type=password]::-ms-clear{
 
 body {
     margin: 0;
-    font-family: "Prompt", sans-serif;
+    font-family: 'Prompt', sans-serif;
     cursor: default;
     background-color: transparent !important;
     width: 100%;
@@ -112,13 +111,14 @@ body {
     flex-grow: 1;
 }
 
-
-code{
+.code {
     border-radius: 4px;
     padding: 3px 6px;
     margin-left: 2px;
     margin-right: 2px;
     background-color: #65758529;
-    transition: color .25s,background-color .5s;
-    color:#a8b1ff;
+    transition:
+        color 0.25s,
+        background-color 0.5s;
+    color: #a8b1ff;
 }

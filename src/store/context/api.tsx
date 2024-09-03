@@ -58,6 +58,9 @@ interface AppAPIContext {
     setNetwork: (ssid: string, password: string, mdns: string) => void
     setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
+    saveManifestPath: (url: string) => void
+    confirmFirmwareSelection: (board: string) => void
+    manifestPath: Accessor<string>
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
@@ -99,6 +102,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         loader: false,
         apModeStatus: false,
         mdns: '',
+        manifestPath: '',
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -189,6 +193,14 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
 
+    const saveManifestPath = (url: string) => {
+        setState(
+            produce((s) => {
+                s.manifestPath = url
+            }),
+        )
+    }
+
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
@@ -197,7 +209,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const mdns = createMemo(() => apiState().mdns)
     const channelMode = createMemo(() => apiState().channelMode)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
-
+    const manifestPath = createMemo(() => apiState().manifestPath)
     //#endregion
     //********************************* rest *************************************/
     //#region rest
@@ -249,13 +261,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getRelease = async (firmware: string) => {
         const appConfigDirPath = await appConfigDir()
         if (firmware === '' || firmware.length === 0) {
-            addNotification({
-                title: 'Please Select a Firmware',
-                message: 'A firmware must be selected before downloading',
-                type: ENotificationType.WARNING,
-            })
             debug('[Github Release]: No firmware selected')
-            return
+            throw new Error('A firmware must be selected before downloading')
         }
 
         trace(`[Github Release]: App Config Dir: ${appConfigDirPath}`)
@@ -287,12 +294,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 },
             )
             debug(`[Github Release]: Download Response: ${response}`)
-
-            addNotification({
-                title: 'ETVR Firmware Downloaded',
-                message: `Downloaded Firmware ${firmware}`,
-                type: ENotificationType.INFO,
-            })
 
             const res = await invoke('unzip_archive', {
                 archivePath: path,
@@ -340,6 +341,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 debug('[Github Release]: Manifest: ', config_json)
                 return
             }
+        } else {
+            throw new Error('Selected board is not supported')
         }
     }
 
@@ -611,6 +614,14 @@ export const AppAPIProvider: Component<Context> = (props) => {
     }
     //#endregion
 
+    const confirmFirmwareSelection = (board: string) => {
+        setActiveBoard(board)
+        const temp = getFirmwareAssets().find((item) => item.name === board)?.name
+        const msg = temp ? temp : 'Not Selected'
+        debug(`[Firmware]: ${msg}`)
+        setFirmwareType(msg)
+    }
+
     //#region API Provider
     return (
         <AppAPIContext.Provider
@@ -647,6 +658,9 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 channelMode,
                 mdns,
                 setChannelMode,
+                saveManifestPath,
+                manifestPath,
+                confirmFirmwareSelection,
             }}>
             {props.children}
         </AppAPIContext.Provider>
