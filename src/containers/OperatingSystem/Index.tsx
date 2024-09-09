@@ -11,12 +11,14 @@ const OperatingSystem = () => {
     })
 
     createEffect(() => {
+        /*
         if (/Linux/.test(system())) {
             const el = document.getElementById(operatingSystemModal)
             if (el instanceof HTMLDialogElement) {
                 el.showModal()
             }
         }
+        */
     })
 
     return (

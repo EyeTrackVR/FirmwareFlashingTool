@@ -1,20 +1,18 @@
 import { getCurrent, WebviewWindow } from '@tauri-apps/api/window'
 import { debug } from 'tauri-plugin-log-api'
-import webManager from '../webManager/index'
-import { detailedLogs, firmwareState, isSoftwareDownloaded } from './selectors'
+import { detailedLogs, firmwareState } from './selectors'
 import {
     clearLogs,
-    deleteFirmwareState,
     setDetailedLogs,
     setInstallationProgress,
-    setIsSoftwareDownloaded,
     setLogs,
     setProcessStatus,
-    updateFirmwareState,
+    updateFirmwareState
 } from './terminal'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { logs as logsDescription } from '@src/static/ui/logs'
 import { trimLogsByTextLength } from '@src/utils'
+import { espApi } from '@src/esp/api'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()
@@ -57,110 +55,61 @@ const updateState = (step: FLASH_STEP, status: FLASH_STATUS, error?: Error) => {
     }
 }
 
+const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<void> => {
+    updateState(step, FLASH_STATUS.UNKNOWN)
+
+    try {
+        await action()
+    } catch (error) {
+        updateState(
+            step,
+            FLASH_STATUS.FAILED,
+            error instanceof Error
+                ? error
+                : typeof error === 'string' ? new Error(error) : undefined,
+        )
+        throw error
+    }
+
+    updateState(step, FLASH_STATUS.SUCCESS)
+}
+
 export const installOpenIris = async (
     isUsbBoard: boolean,
     manifestPath: string,
     downloadManifest: () => Promise<void>,
     configureWifiCredentials: () => void,
 ) => {
+    // @todo get this from state
+    const portName = '/dev/ttyACM1'
+
     clearLogs()
 
-    if (webManager.isActivePort()) {
-        try {
-            updateState(FLASH_STEP.BOARD_CONNECTION, FLASH_STATUS.UNKNOWN)
-            await webManager.checkBoardConnection()
-            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
-        } catch (err) {
-            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
-            await webManager.reset()
-        }
-    }
-
-    if (!webManager.isActivePort()) {
-        try {
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.UNKNOWN)
-            await webManager.connect()
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
-            }
-            await webManager.reset()
-            return
-        }
-    } else {
-        updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
-    }
-
     try {
-        updateState(FLASH_STEP.INITIALIZE, FLASH_STATUS.UNKNOWN)
-        await webManager.initializeESPConnection()
-        updateState(FLASH_STEP.INITIALIZE, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        await webManager.reset()
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.INITIALIZE, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
+        await runStep(
+            FLASH_STEP.REQUEST_PORT,
+            async () => {
+                await espApi.testConnection(portName)
+            },
+        )
 
-    try {
-        updateState(FLASH_STEP.CHIP_FAMILY, FLASH_STATUS.UNKNOWN)
-        await webManager.checkChipFamily()
-        updateState(FLASH_STEP.CHIP_FAMILY, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.CHIP_FAMILY, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
+        await runStep(
+            FLASH_STEP.MANIFEST_PATH,
+            async () => {
+                await downloadManifest()
+            },
+        )
 
-    try {
-        updateState(FLASH_STEP.MANIFEST_PATH, FLASH_STATUS.UNKNOWN)
-        if (!isSoftwareDownloaded()) {
-            await downloadManifest()
-        }
-        setIsSoftwareDownloaded(true)
-        await webManager.downloadManifest(manifestPath)
-        updateState(FLASH_STEP.MANIFEST_PATH, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.MANIFEST_PATH, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
-
-    try {
-        updateState(FLASH_STEP.BUILD, FLASH_STATUS.UNKNOWN)
-        await webManager.validateManifestBuild()
-        updateState(FLASH_STEP.BUILD, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.BUILD, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
-
-    try {
-        updateState(FLASH_STEP.DOWNLOAD_FILES, FLASH_STATUS.UNKNOWN)
-        await webManager.downloadFiles(manifestPath)
-        updateState(FLASH_STEP.DOWNLOAD_FILES, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            updateState(FLASH_STEP.DOWNLOAD_FILES, FLASH_STATUS.FAILED, error)
-        }
-        return
-    }
-
-    try {
-        updateState(FLASH_STEP.FLASH_FIRMWARE, FLASH_STATUS.UNKNOWN)
-        await webManager.flashFirmware(setInstallationProgress)
-        updateState(FLASH_STEP.FLASH_FIRMWARE, FLASH_STATUS.SUCCESS)
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            setInstallationProgress(0)
-            updateState(FLASH_STEP.FLASH_FIRMWARE, FLASH_STATUS.FAILED, error)
-        }
+        await runStep(
+            FLASH_STEP.FLASH_FIRMWARE,
+            async () => {
+                await espApi.flash(
+                    portName,
+                    setInstallationProgress
+                )
+            },
+        )
+    } catch {
         return
     }
 
@@ -171,51 +120,10 @@ export const installOpenIris = async (
 }
 
 export const getFirmwareLogs = async (signal?: AbortController) => {
+    // @todo get this from state
+    const portName = '/dev/ttyACM1'
+
     clearLogs()
-    if (webManager.isActivePort()) {
-        try {
-            updateState(FLASH_STEP.BOARD_CONNECTION, FLASH_STATUS.UNKNOWN)
-            await webManager.checkBoardConnection()
-            webManager.setBoardRestarted(true)
-            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
-        } catch (err) {
-            deleteFirmwareState(FLASH_STEP.BOARD_CONNECTION)
-            webManager.setBoardRestarted(false)
-            await webManager.reset()
-        }
-    } else {
-        webManager.setBoardRestarted(false)
-    }
-
-    if (!webManager.isActivePort()) {
-        try {
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.UNKNOWN)
-            await webManager.connect()
-            updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.FAILED, error)
-            }
-            await webManager.reset()
-            return
-        }
-        try {
-            updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.UNKNOWN)
-            await webManager.openPort()
-            updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.SUCCESS)
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.FAILED, error)
-            }
-            await webManager.reset()
-            return
-        }
-    } else {
-        updateState(FLASH_STEP.REQUEST_PORT, FLASH_STATUS.SUCCESS)
-        updateState(FLASH_STEP.OPEN_PORT, FLASH_STATUS.SUCCESS)
-    }
-
-    updateState(FLASH_STEP.LOGS, FLASH_STATUS.UNKNOWN)
 
     const logs: string[] = []
     const SLICE_SIZE = 100
@@ -237,28 +145,6 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
         }
         processChunk()
     }
-
-    webManager
-        .getLogs(
-            (data) => {
-                setDetailedLogs(data)
-                processLogsInChunks(data, chunkSize)
-            },
-            async (err, hasOpenirisInstallation) => {
-                clearInterval(interval)
-                if (err.message.includes('port')) {
-                    await webManager.reset()
-                }
-                if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
-                if (!hasOpenirisInstallation) {
-                    updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
-                } else {
-                    updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
-                }
-            },
-            signal?.signal,
-        )
-        .catch(() => {})
 
     const interval = setInterval(() => {
         if (signal?.signal?.aborted) {
@@ -286,4 +172,34 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
 
         slicer += SLICE_SIZE
     }, 1500)
+
+    try {
+        await runStep(
+            FLASH_STEP.LOGS,
+            async () => {
+                await espApi.streamLogs(
+                    portName,
+                    (data) => {
+                        console.log(data);
+                        setDetailedLogs(data)
+                        processLogsInChunks(data, chunkSize)
+                    },
+                    async (err, hasOpenirisInstallation) => {
+                        console.log(err);
+                        clearInterval(interval)
+
+                        if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
+                        if (!hasOpenirisInstallation) {
+                            updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
+                        } else {
+                            updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
+                        }
+                    },
+                    signal?.signal,
+                )
+            },
+        )
+    } catch {
+        return
+    }
 }

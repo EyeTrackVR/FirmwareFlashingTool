@@ -1,6 +1,6 @@
 import { removeFile, readTextFile, BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { getClient, ResponseType } from '@tauri-apps/api/http'
-import { appConfigDir, join } from '@tauri-apps/api/path'
+import { appConfigDir, appDataDir, join } from '@tauri-apps/api/path'
 import { invoke, convertFileSrc } from '@tauri-apps/api/tauri'
 import { pipe } from 'fp-ts/lib/function'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
@@ -46,6 +46,7 @@ interface AppAPIContext {
     setRESTStatus: (status: RESTStatus) => void
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
+    activePortName: Accessor<string>
     //********************************* endpoints *************************************/
     getEndpoints: Accessor<Map<string, IEndpoint>>
     getEndpoint: (key: string) => IEndpoint
@@ -55,6 +56,7 @@ interface AppAPIContext {
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<boolean>
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
+    setActivePortName: (portName: string) => void
     setNetwork: (ssid: string, password: string, mdns: string) => void
     setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
@@ -103,6 +105,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         apModeStatus: false,
         mdns: '',
         manifestPath: '',
+        activePortName: '',
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -175,6 +178,13 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+    const setActivePortName = (activePortName: string) => {
+        setState(
+            produce((s) => {
+                s.activePortName = activePortName
+            }),
+        )
+    }
     const setNetwork = (ssid: string, password: string, mdns: string) => {
         setState(
             produce((s) => {
@@ -235,6 +245,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
     const activeBoard = createMemo(() => apiState().activeBoard)
+    const activePortName = createMemo(() => apiState().activePortName)
     const getRESTStatus = createMemo(() => apiState().restAPI.status)
     const getRESTDevice = createMemo(() => apiState().restAPI.device)
     const getRESTResponse = createMemo(() => apiState().restAPI.response)
@@ -259,13 +270,13 @@ export const AppAPIProvider: Component<Context> = (props) => {
 
     //#region hooks
     const getRelease = async (firmware: string) => {
-        const appConfigDirPath = await appConfigDir()
+        const appDataDirPath = await appDataDir()
         if (firmware === '' || firmware.length === 0) {
             debug('[Github Release]: No firmware selected')
             throw new Error('A firmware must be selected before downloading')
         }
 
-        trace(`[Github Release]: App Config Dir: ${appConfigDirPath}`)
+        trace(`[Github Release]: App Data Dir: ${appDataDirPath}`)
 
         // check if the firmware chosen matches the one names in the firmwareAssets array of objects
         const firmwareAsset = getFirmwareAssets().find((asset) => asset.name === firmware)
@@ -282,7 +293,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     firmwareAsset.browser_download_url.split('/').length - 1
                 ]
 
-            const path = await join(appConfigDirPath, fileName)
+            const path = await join(appDataDirPath, fileName)
             trace(`[Github Release]: Path: ${path}`)
 
             // get the latest release
@@ -297,7 +308,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
 
             const res = await invoke('unzip_archive', {
                 archivePath: path,
-                targetDir: appConfigDirPath,
+                targetDir: appDataDirPath,
             })
             await removeFile(path)
 
@@ -314,7 +325,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 for (let i = 0; i < config_json['builds'].length; i++) {
                     for (let j = 0; j < config_json['builds'][i]['parts'].length; j++) {
                         const firmwarePath = await join(
-                            appConfigDirPath,
+                            appDataDirPath,
                             config_json['builds'][i]['parts'][j]['path'],
                         )
                         debug(`[Github Release]: Firmware Path: ${firmwarePath}`)
@@ -631,6 +642,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 setNetwork,
                 setActiveBoard,
                 activeBoard,
+                activePortName,
+                setActivePortName,
                 getGHRestStatus,
                 getFirmwareAssets,
                 getFirmwareVersion,
