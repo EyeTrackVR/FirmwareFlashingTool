@@ -7,6 +7,9 @@ import {
     ENotificationType,
     FLASH_STATUS,
     FLASH_STEP,
+    STATUS,
+    BUTTON_ACTION,
+    CONNECTION_STATUS,
 } from './enums'
 import type { DebugMode } from '@static/types'
 import type { WebviewWindow } from '@tauri-apps/api/window'
@@ -170,14 +173,6 @@ export interface UiStore {
     hideModal: boolean
 }
 
-export interface ICamera {
-    isConnected: boolean
-    active: boolean
-    isUSB: boolean
-    cameraName: string
-    port: string
-}
-
 export interface ISignal {
     requestToSend: boolean
     dataTerminalReady: boolean
@@ -215,8 +210,11 @@ export interface IChannelOptions {
 }
 
 export interface IDropdownList {
+    action?: BUTTON_ACTION
     label: string | CHANNEL_TYPE
     description?: string
+    status?: STATUS
+    mode?: CONNECTION_STATUS
 }
 
 export interface Build {
@@ -248,4 +246,16 @@ export interface IFirmwareState {
     step: FLASH_STEP
     status: FLASH_STATUS
     label: string
+}
+
+export interface ICameraStatistics {
+    mode: string
+    fps: string
+    mbps: string
+    latency: string
+}
+
+export interface ICamera {
+    address: string
+    header: string
 }

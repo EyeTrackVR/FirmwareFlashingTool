@@ -52,6 +52,13 @@ export enum ExitCodes {
     ERROR_UNKNOWN = 2,
 }
 
+export enum STATUS {
+    ACTIVE = 'ACTIVE',
+    PENDING = 'PENDING',
+    ERROR = 'ERROR',
+    UNKNOWN = 'UNKNOWN',
+}
+
 export enum RESTStatus {
     ACTIVE = 'ACTIVE',
     COMPLETE = 'COMPLETE',
@@ -156,4 +163,23 @@ export enum MODAL_TYPE {
     BEFORE_FLASHING = 'BEFORE_FLASHING',
     AP_MODE = 'AP_MODE',
     NONE = 'NONE',
+}
+
+export enum BUTTON_ACTION {
+    RECALIBRATE_CAMERA = 'RECALIBRATE_CAMERA',
+    ADVANCED_SETTINGS = 'ADVANCED_SETTINGS',
+    CROPPING_MODE = 'CROPPING_MODE',
+    RECALIBRATE = 'RECALIBRATE',
+    RECENTER = 'RECENTER',
+}
+
+export enum CAMERA_DIRECTION {
+    RIGHT = 'RIGHT',
+    LEFT = 'LEFT',
+}
+
+export enum CONNECTION_STATUS {
+    TRACKING = 'TRACKING',
+    UNKNOWN = 'UNKNOWN',
+    ERROR = 'ERROR',
 }
