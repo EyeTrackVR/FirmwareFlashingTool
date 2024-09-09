@@ -1,12 +1,15 @@
 import { FiMinus, FiPlus } from 'solid-icons/fi'
 import { Component } from 'solid-js'
 import IconButton from '@components/Buttons/IconButton/Index'
-
+import Slider from '@components/Slider/Index'
 export interface IProps {
     onClickIncrease: () => void
     onClickDecrease: () => void
-    value: string
+    onInput: (value: string) => void
+    value: number
     label: string
+    min: string
+    max: string
 }
 
 const Counter: Component<IProps> = (props) => {
@@ -17,17 +20,26 @@ const Counter: Component<IProps> = (props) => {
             </p>
             <div class="flex w-full gap-[8px]">
                 <div class="flex items-center ">
-                    <IconButton onClick={props.onClickDecrease}>
+                    <IconButton
+                        onClick={() => {
+                            if (props.value <= +props.min) return
+                            props.onClickDecrease()
+                        }}>
                         <FiMinus size={24} color="#fff" />
                     </IconButton>
                 </div>
-                <div class="bg-[#192736] flex justify-center items-center rounded-[8px] w-full min-h-[50px]">
-                    <p class="not-italic font-normal text-white leading-[20px] text-[18px] text-center select-none">
-                        {props.value ?? '----'}
-                    </p>
-                </div>
+                <Slider
+                    value={props.value}
+                    onInput={props.onInput}
+                    min={props.min}
+                    max={props.max}
+                />
                 <div class="flex items-center">
-                    <IconButton onClick={props.onClickIncrease}>
+                    <IconButton
+                        onClick={() => {
+                            if (props.value >= +props.max) return
+                            props.onClickIncrease()
+                        }}>
                         <FiPlus size={24} color="#fff" />
                     </IconButton>
                 </div>

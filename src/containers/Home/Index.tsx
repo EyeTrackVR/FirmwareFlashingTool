@@ -1,28 +1,66 @@
 import { createMemo } from 'solid-js'
+import { BUTTON_ACTION, CAMERA_DIRECTION, CONNECTION_STATUS } from '@interfaces/enums'
 import Homepage from '@pages/Homepage/Index'
-import { useAppUIContext } from '@store/context/ui'
 
 const Index = () => {
-    const { setOpenModal } = useAppUIContext()
+    const rightCameraStatistics = createMemo(() => {
+        return {
+            fps: '72',
+            latency: '14',
+            mbps: '0.1892',
+            mode: 'Tracking',
+        }
+    })
 
-    //mock data
+    // add some sort of "hardwareType" to somehow validate the right camera
+
+    const cameras = createMemo(() => {
+        return [
+            {
+                label: 'Camera 1',
+                description: 'http:111.111.1.111',
+                mode: CONNECTION_STATUS.TRACKING,
+            },
+            { label: 'Camera 2', description: 'http:111.111.1.111', mode: CONNECTION_STATUS.ERROR },
+            { label: 'Both eyes' },
+        ]
+    })
+
     const camera = createMemo(() => {
         return {
-            isConnected: true,
-            active: false,
-            isUSB: true,
-            cameraName: 'Camera 1',
-            port: 'Com1',
+            address: 'http:111.111.1.111',
+            header: 'Camera 1',
         }
     })
 
     return (
         <Homepage
-            cameras={[camera(), camera()]}
-            onClickCameraRotation={() => {}}
-            onClickCroppingMode={() => {}}
-            onClickOpenModal={(type) => {
-                setOpenModal({ open: true, type })
+            rightCameraStatistics={rightCameraStatistics()}
+            leftCameraStatistics={rightCameraStatistics()}
+            cameras={cameras()}
+            leftCamera={camera()}
+            rightCamera={camera()}
+            onClickAction={(action) => {
+                switch (action) {
+                    case BUTTON_ACTION.RECALIBRATE_CAMERA:
+                        break
+                    case BUTTON_ACTION.CROPPING_MODE:
+                        break
+                    case BUTTON_ACTION.RECALIBRATE:
+                        break
+                    case BUTTON_ACTION.RECENTER:
+                        break
+                }
+            }}
+            setRotationValue={(cameraDiraction) => {
+                switch (cameraDiraction) {
+                    case CAMERA_DIRECTION.RIGHT:
+                        break
+                    case CAMERA_DIRECTION.LEFT:
+                        break
+                    default:
+                        break
+                }
             }}
         />
     )
