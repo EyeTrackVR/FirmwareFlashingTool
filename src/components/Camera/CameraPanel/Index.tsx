@@ -20,7 +20,7 @@ const CameraPanel: Component<IProps> = (props) => {
         <div class="flex flex-col gap-[12px] w-full">
             <CameraWrapper
                 cameraAddress={props?.camera?.address ?? '----'}
-                header={props?.camera?.header ?? 'Left eye'}
+                header={props?.camera?.header ?? '----'}
                 cameraStatistics={props.cameraStatistics}
                 HeaderIcon={AiFillCamera}>
                 <div class="flex gap-[12px] justify-center">
