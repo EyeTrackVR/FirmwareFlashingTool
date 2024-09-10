@@ -73,7 +73,7 @@ const Homepage: Component<IProps> = (props) => {
                                 }}
                             />
                             <DropdownList
-                                styles="dropdown-content menu p-[12px] !top-[50px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-auto"
+                                styles="dropdown-content menu p-[12px] !top-[50px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-auto z-10"
                                 activeElement={activeCamera()?.label ?? HARDWARE_TYPE.BOTH}
                                 fallbackLabel="Searching..."
                                 data={props.cameras}
@@ -128,7 +128,7 @@ const Homepage: Component<IProps> = (props) => {
                                 }}
                             />
                             <DropdownList
-                                styles="dropdown-content menu p-[12px] !top-[50px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-auto"
+                                styles="dropdown-content menu p-[12px] !top-[50px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-auto z-10"
                                 fallbackLabel="Loading actions..."
                                 data={actions}
                                 disableStyles

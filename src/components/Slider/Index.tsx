@@ -7,7 +7,7 @@ interface IProps {
     max: string
 }
 
-const Index: Component<IProps> = (props) => {
+const Slider: Component<IProps> = (props) => {
     const bubblePosition = createMemo(() => {
         const negNewVal = -1 * props.value
         return {
@@ -33,4 +33,4 @@ const Index: Component<IProps> = (props) => {
     )
 }
 
-export default Index
+export default Slider
