@@ -10,6 +10,7 @@ import {
     STATUS,
     BUTTON_ACTION,
     CONNECTION_STATUS,
+    HARDWARE_TYPE,
 } from './enums'
 import type { DebugMode } from '@static/types'
 import type { WebviewWindow } from '@tauri-apps/api/window'
@@ -215,6 +216,7 @@ export interface IDropdownList {
     description?: string
     status?: STATUS
     mode?: CONNECTION_STATUS
+    hardwareType?: HARDWARE_TYPE
 }
 
 export interface Build {
@@ -258,4 +260,14 @@ export interface ICameraStatistics {
 export interface ICamera {
     address: string
     header: string
+    video: string
+}
+
+export interface ICameraHardware {
+    label: string
+    description: string
+    address?: string
+    video?: string
+    mode?: CONNECTION_STATUS
+    hardwareType: HARDWARE_TYPE
 }

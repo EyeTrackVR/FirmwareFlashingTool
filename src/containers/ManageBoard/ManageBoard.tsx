@@ -1,6 +1,6 @@
 import { useNavigate } from '@solidjs/router'
 import { appWindow } from '@tauri-apps/api/window'
-import { Accessor, createMemo } from 'solid-js'
+import { Accessor, createMemo, onMount } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
 import { type IDropdownList } from '@interfaces/interfaces'
 import { isValidChannel } from '@interfaces/utils'
@@ -52,6 +52,11 @@ export const ManageBoard = () => {
     const isUSBBoard = createMemo(() => {
         return activeBoard().includes(usb)
     })
+
+    // left for development
+    // onMount(() => {
+    //     navigate('/home')
+    // })
 
     return (
         <BoardManagement

@@ -4,16 +4,16 @@ import CameraPanel from '@components/Camera/CameraPanel/Index'
 import Dropdown from '@components/Dropdown/Dropdown/Index'
 import DropdownList from '@components/Dropdown/DropdownList/Index'
 import { Footer } from '@components/Footer/Footer'
-import { BUTTON_ACTION, CAMERA_DIRECTION } from '@interfaces/enums'
-import { ICamera, ICameraStatistics, IDropdownList } from '@interfaces/interfaces'
+import { BUTTON_ACTION, CAMERA_DIRECTION, HARDWARE_TYPE } from '@interfaces/enums'
+import { ICamera, ICameraHardware, ICameraStatistics } from '@interfaces/interfaces'
 import { actions } from '@src/static'
 
 export interface IProps {
     setRotationValue: (cameraDiraction: CAMERA_DIRECTION, value: string) => void
     onClickAction: (action: BUTTON_ACTION) => void
-    rightCameraStatistics?: ICameraStatistics
-    leftCameraStatistics?: ICameraStatistics
-    cameras: IDropdownList[]
+    rightCameraStatistics: ICameraStatistics
+    leftCameraStatistics: ICameraStatistics
+    cameras: ICameraHardware[]
     rightCamera?: ICamera
     leftCamera?: ICamera
 }
@@ -21,33 +21,23 @@ export interface IProps {
 const Homepage: Component<IProps> = (props) => {
     const [rightCameraRotation, setRightCameraRotation] = createSignal<number>(0)
     const [leftCameraRotation, setLeftCameraRotation] = createSignal<number>(0)
-    const [selectedCamera, setSelectedCamera] = createSignal<string>('')
+    const [selectedCamera, setSelectedCamera] = createSignal<HARDWARE_TYPE>(HARDWARE_TYPE.BOTH)
     const [rotateActions, setRotateActions] = createSignal<boolean>(false)
     const [rotate, setRotate] = createSignal<boolean>(false)
 
     const activeCamera = createMemo(() => {
-        if (!selectedCamera()) {
-            return props.cameras.length >= 2 ? 'Both eyes' : props.cameras[0].label
+        if (selectedCamera() === HARDWARE_TYPE.BOTH && props.cameras.length === 1) {
+            return props.cameras[0]
         }
-        return selectedCamera()
-    })
-
-    const camera = createMemo(() => {
-        return props.cameras.find((camera) => camera.label === selectedCamera())
+        return props.cameras.find((camera) => camera.hardwareType === selectedCamera())
     })
 
     const showRightCamera = createMemo(() => {
-        return (
-            typeof props.rightCameraStatistics !== 'undefined' &&
-            typeof props.rightCamera !== 'undefined'
-        )
+        return typeof props.rightCamera !== 'undefined' && selectedCamera() !== HARDWARE_TYPE.LEFT
     })
 
     const showLeftCamera = createMemo(() => {
-        return (
-            typeof props.leftCameraStatistics !== 'undefined' &&
-            typeof props.leftCamera !== 'undefined'
-        )
+        return typeof props.leftCamera !== 'undefined' && selectedCamera() !== HARDWARE_TYPE.RIGHT
     })
 
     const closeModal = () => {
@@ -71,9 +61,9 @@ const Homepage: Component<IProps> = (props) => {
                             }}>
                             <SelectButton
                                 styles="!bg-[#0D1B26] border-[#192736]"
-                                label={activeCamera()}
+                                label={activeCamera()?.label ?? HARDWARE_TYPE.BOTH}
                                 rotate={rotate()}
-                                connectionStatus={camera()?.mode}
+                                connectionStatus={activeCamera()?.mode}
                                 type="button"
                                 tabIndex={0}
                                 onClick={() => {
@@ -84,18 +74,20 @@ const Homepage: Component<IProps> = (props) => {
                             />
                             <DropdownList
                                 styles="dropdown-content menu p-[12px] !top-[50px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-auto"
-                                activeElement={activeCamera()}
+                                activeElement={activeCamera()?.label ?? HARDWARE_TYPE.BOTH}
                                 fallbackLabel="Searching..."
                                 data={props.cameras}
                                 disableStyles
                                 onClick={(data) => {
-                                    setSelectedCamera(data.label)
-                                    closeModal()
+                                    if (data.hardwareType) {
+                                        setSelectedCamera(data.hardwareType)
+                                        closeModal()
+                                    }
                                 }}
                             />
                         </Dropdown>
                     </div>
-                    <div class="flex flex-row gap-[12px] max-[945px]:hidden">
+                    <div class="flex flex-row gap-[12px] max-[990px]:hidden">
                         <Footer
                             primaryLabel="Cropping mode"
                             isPrimaryActive={false}
@@ -115,7 +107,7 @@ const Homepage: Component<IProps> = (props) => {
                             }}
                         />
                     </div>
-                    <div class="max-[945px]:visible min-[946px]:hidden">
+                    <div class="max-[992px]:visible min-[991px]:hidden">
                         <Dropdown
                             styles="w-[176px]"
                             onFocusOut={(event) => {
@@ -158,11 +150,11 @@ const Homepage: Component<IProps> = (props) => {
                     />
                 </div>
                 <div class="overflow-y-scroll scrollbar flex flex-col gap-[12px] max-w-[1600px] w-full mx-auto">
-                    <div class="flex gap-[12px] max-[1200px]:flex-col">
+                    <div class="flex gap-[12px] max-[1200px]:flex-col justify-center">
                         <Show when={showLeftCamera()}>
                             <CameraPanel
                                 cameraRotation={leftCameraRotation()}
-                                cameraStatistics={props.leftCameraStatistics!}
+                                cameraStatistics={props.leftCameraStatistics}
                                 camera={props.leftCamera}
                                 onClickDecrease={() => {
                                     setLeftCameraRotation((prev) => prev - 1)
@@ -179,8 +171,8 @@ const Homepage: Component<IProps> = (props) => {
                         <Show when={showRightCamera()}>
                             <CameraPanel
                                 cameraRotation={rightCameraRotation()}
-                                cameraStatistics={props.rightCameraStatistics!}
-                                camera={props.leftCamera}
+                                cameraStatistics={props.rightCameraStatistics}
+                                camera={props.rightCamera}
                                 onClickDecrease={() => {
                                     setRightCameraRotation((prev) => prev - 1)
                                 }}

@@ -17,7 +17,7 @@ export interface IProps {
 
 const CameraPanel: Component<IProps> = (props) => {
     return (
-        <div class="flex flex-col gap-[12px]">
+        <div class="flex flex-col gap-[12px] w-full">
             <CameraWrapper
                 cameraAddress={props?.camera?.address ?? '----'}
                 header={props?.camera?.header ?? 'Left eye'}
