@@ -183,3 +183,9 @@ export enum CONNECTION_STATUS {
     UNKNOWN = 'UNKNOWN',
     ERROR = 'ERROR',
 }
+
+export enum HARDWARE_TYPE {
+    LEFT = 'Left',
+    RIGHT = 'Right',
+    BOTH = 'Both eyes',
+}
