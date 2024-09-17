@@ -3,16 +3,16 @@ import { Component, createMemo } from 'solid-js'
 interface IProps {
     onInput: (value: string) => void
     value: number
-    min: string
-    max: string
+    min: number
+    max: number
 }
 
 const Slider: Component<IProps> = (props) => {
     const bubblePosition = createMemo(() => {
-        const negNewVal = -1 * props.value
+        const percentage = (props.value / props.max) * 100
         return {
-            left: props.value + '%',
-            transform: 'translate(' + negNewVal + '%, 2px)',
+            left: percentage + '%',
+            transform: 'translate(' + -percentage + '%, 2px)',
         }
     })
 
