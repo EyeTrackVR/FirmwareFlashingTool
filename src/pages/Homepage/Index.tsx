@@ -4,12 +4,12 @@ import CameraPanel from '@components/Camera/CameraPanel/Index'
 import Dropdown from '@components/Dropdown/Dropdown/Index'
 import DropdownList from '@components/Dropdown/DropdownList/Index'
 import { Footer } from '@components/Footer/Footer'
-import { BUTTON_ACTION, CAMERA_DIRECTION, HARDWARE_TYPE } from '@interfaces/enums'
+import { BUTTON_ACTION, TRACKER_TYPE, HARDWARE_TYPE } from '@interfaces/enums'
 import { ICamera, ICameraHardware, ICameraStatistics } from '@interfaces/interfaces'
 import { actions } from '@src/static'
 
 export interface IProps {
-    setRotationValue: (cameraDiraction: CAMERA_DIRECTION, value: string) => void
+    setRotationValue: (trackerType: TRACKER_TYPE, value: string) => void
     onClickAction: (action: BUTTON_ACTION) => void
     rightCameraStatistics: ICameraStatistics
     leftCameraStatistics: ICameraStatistics
@@ -163,7 +163,7 @@ const Homepage: Component<IProps> = (props) => {
                                     setLeftCameraRotation((prev) => prev + 1)
                                 }}
                                 onInput={(value) => {
-                                    props.setRotationValue(CAMERA_DIRECTION.LEFT, value)
+                                    props.setRotationValue(TRACKER_TYPE.LEFT, value)
                                     setLeftCameraRotation(+value)
                                 }}
                             />
@@ -180,7 +180,7 @@ const Homepage: Component<IProps> = (props) => {
                                     setRightCameraRotation((prev) => prev + 1)
                                 }}
                                 onInput={(value) => {
-                                    props.setRotationValue(CAMERA_DIRECTION.RIGHT, value)
+                                    props.setRotationValue(TRACKER_TYPE.RIGHT, value)
                                     setRightCameraRotation(+value)
                                 }}
                             />

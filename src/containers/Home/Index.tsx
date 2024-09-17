@@ -1,10 +1,5 @@
 import { createMemo } from 'solid-js'
-import {
-    BUTTON_ACTION,
-    CAMERA_DIRECTION,
-    CONNECTION_STATUS,
-    HARDWARE_TYPE,
-} from '@interfaces/enums'
+import { BUTTON_ACTION, TRACKER_TYPE, CONNECTION_STATUS, HARDWARE_TYPE } from '@interfaces/enums'
 import { ICameraHardware } from '@interfaces/interfaces'
 import Homepage from '@pages/Homepage/Index'
 
@@ -94,11 +89,11 @@ const Index = () => {
                         break
                 }
             }}
-            setRotationValue={(cameraDiraction) => {
-                switch (cameraDiraction) {
-                    case CAMERA_DIRECTION.RIGHT:
+            setRotationValue={(trackerType) => {
+                switch (trackerType) {
+                    case TRACKER_TYPE.RIGHT:
                         break
-                    case CAMERA_DIRECTION.LEFT:
+                    case TRACKER_TYPE.LEFT:
                         break
                     default:
                         break

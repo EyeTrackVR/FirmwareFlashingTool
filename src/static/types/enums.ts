@@ -99,7 +99,7 @@ export enum STEP_STATUS_ENUM {
 
 export enum NAVIGATION {
     SETTINGS = '/settings',
-    DEFAULT = '/',
+    CONFIGURE_WIZARD = '/',
     HOME = '/home',
     NETWORK = '/network',
     FLASH_FIRMWARE = '/flashFirmware',
@@ -173,7 +173,7 @@ export enum BUTTON_ACTION {
     RECENTER = 'RECENTER',
 }
 
-export enum CAMERA_DIRECTION {
+export enum TRACKER_TYPE {
     RIGHT = 'RIGHT',
     LEFT = 'LEFT',
 }

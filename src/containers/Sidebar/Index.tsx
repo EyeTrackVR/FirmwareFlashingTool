@@ -34,17 +34,20 @@ const Sidebar: Component<IProps> = (props) => {
                 </div>
                 <div
                     onClick={() => {
-                        props.onClick(NAVIGATION.DEFAULT)
+                        props.onClick(NAVIGATION.CONFIGURE_WIZARD)
                     }}
                     classList={{
                         'hover:bg-[#354473] bg-[#2B375E] focus-visible:border-[#fff]':
-                            props.navigation === NAVIGATION.DEFAULT,
+                            props.navigation === NAVIGATION.CONFIGURE_WIZARD,
                     }}
                     class="cursor-pointer p-[8px] rounded-[6px]">
                     <div class="flex flex-col justify-center items-center gap-[10px]">
                         <BiSolidExtension
                             size={34}
-                            color={props.navigation === NAVIGATION.DEFAULT ? '#9092FF' : '#192736'}
+                            classList={{
+                                '#9092FF': props.navigation === NAVIGATION.CONFIGURE_WIZARD,
+                                '#192736': props.navigation !== NAVIGATION.CONFIGURE_WIZARD,
+                            }}
                         />
                         <p class="text-[14px] text-white font-normal leading-[20px] not-italic text-center max-w-[66px] whitespace-wrap">
                             Configure setup
