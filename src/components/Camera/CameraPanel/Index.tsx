@@ -38,8 +38,8 @@ const CameraPanel: Component<IProps> = (props) => {
                 <Counter
                     value={props.cameraRotation}
                     label="Rotation"
-                    max="100"
-                    min="0"
+                    max={360}
+                    min={0}
                     onClickDecrease={props.onClickDecrease}
                     onClickIncrease={props.onClickIncrease}
                     onInput={props.onInput}

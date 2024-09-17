@@ -8,8 +8,8 @@ export interface IProps {
     onInput: (value: string) => void
     value: number
     label: string
-    min: string
-    max: string
+    min: number
+    max: number
 }
 
 const Counter: Component<IProps> = (props) => {
