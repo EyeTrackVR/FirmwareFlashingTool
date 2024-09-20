@@ -1,10 +1,10 @@
-use std::{fs, thread};
 use std::borrow::Cow;
 use std::io::{Read, Write};
-use std::sync::{mpsc, Mutex, PoisonError};
 use std::sync::mpsc::TryRecvError;
+use std::sync::{mpsc, Mutex, PoisonError};
 use std::thread::sleep;
 use std::time::Duration;
+use std::{fs, thread};
 
 use espflash::connection::reset::{ResetAfterOperation, ResetBeforeOperation};
 use espflash::elf::RomSegment;
@@ -13,7 +13,7 @@ use espflash::targets::Chip;
 use log::error;
 use serde::{Deserialize, Serialize, Serializer};
 use serialport::{FlowControl, SerialPort, SerialPortInfo, SerialPortType};
-use tauri::{AppHandle, command, Runtime, State, Window};
+use tauri::{command, AppHandle, Runtime, State, Window};
 use thiserror::Error;
 
 use crate::manifest::{load_manifest, ManifestError};
@@ -68,21 +68,22 @@ type EspResult<T> = Result<T, EspError>;
 #[command]
 pub fn available_ports() -> EspResult<Vec<SerialPortInfo>> {
   let ports = serialport::available_ports()?;
-  let ports = ports.into_iter()
-      .filter(|port_info| matches!(&port_info.port_type, SerialPortType::UsbPort(..)))
-      .collect::<Vec<_>>();
+  let ports = ports
+    .into_iter()
+    .filter(|port_info| matches!(&port_info.port_type, SerialPortType::UsbPort(..)))
+    .collect::<Vec<_>>();
   Ok(ports)
 }
 
-fn connect(
-  port_name: &str
-) -> EspResult<Flasher> {
+fn connect(port_name: &str) -> EspResult<Flasher> {
   let ports = available_ports()?;
   let port_info = ports
-      .iter()
-      .find(|port_info| port_info.port_name.eq_ignore_ascii_case(&port_name))
-      .ok_or_else(|| EspError::UnknownPort { port_name: port_name.to_string() })?
-      .to_owned();
+    .iter()
+    .find(|port_info| port_info.port_name.eq_ignore_ascii_case(&port_name))
+    .ok_or_else(|| EspError::UnknownPort {
+      port_name: port_name.to_string(),
+    })?
+    .to_owned();
 
   let port_info = match port_info.port_type {
     SerialPortType::UsbPort(info) => info,
@@ -90,8 +91,8 @@ fn connect(
   };
 
   let serial_port = serialport::new(port_name, 115_200)
-      .flow_control(FlowControl::None)
-      .open_native()?;
+    .flow_control(FlowControl::None)
+    .open_native()?;
 
   Ok(Flasher::connect(
     serial_port,
@@ -120,21 +121,26 @@ struct EspflashProgress<R: Runtime> {
 }
 
 fn emit_espflash_status<R: Runtime>(window: &Window<R>, event_name: &str, status: EspflashStatus) {
-  if let Err(error) = window.emit(
-    &event_name,
-    status,
-  ) {
+  if let Err(error) = window.emit(&event_name, status) {
     println!("Failed to send flash status: {}", error)
   }
 }
 
 impl<R: Runtime> ProgressCallbacks for EspflashProgress<R> {
   fn init(&mut self, address: u32, total: usize) {
-    emit_espflash_status(&self.window, &self.event_name, EspflashStatus::Init { address, total });
+    emit_espflash_status(
+      &self.window,
+      &self.event_name,
+      EspflashStatus::Init { address, total },
+    );
   }
 
   fn update(&mut self, current: usize) {
-    emit_espflash_status(&self.window, &self.event_name, EspflashStatus::Update { current });
+    emit_espflash_status(
+      &self.window,
+      &self.event_name,
+      EspflashStatus::Update { current },
+    );
   }
 
   fn finish(&mut self) {
@@ -143,19 +149,13 @@ impl<R: Runtime> ProgressCallbacks for EspflashProgress<R> {
 }
 
 #[command]
-pub fn test_connection(
-  port_name: String,
-) -> EspResult<()> {
+pub fn test_connection(port_name: String) -> EspResult<()> {
   connect(&port_name)?;
   Ok(())
 }
 
 #[command(async)]
-pub fn flash<R: Runtime>(
-  app: AppHandle<R>,
-  window: Window<R>,
-  port_name: String,
-) -> EspResult<()> {
+pub fn flash<R: Runtime>(app: AppHandle<R>, window: Window<R>, port_name: String) -> EspResult<()> {
   let mut flasher = connect(&port_name)?;
 
   // It's safe to unwrap here, as it was already successfully used at this point
@@ -171,12 +171,20 @@ pub fn flash<R: Runtime>(
     Chip::Esp32p4 => "ESP32-P4",
     Chip::Esp32s2 => "ESP32-S2",
     Chip::Esp32s3 => "ESP32-S3",
-    _ => return Err(EspError::UnknownChip { chip })
+    _ => return Err(EspError::UnknownChip { chip }),
   };
 
-  let build = match manifest.builds.into_iter().find(|build| build.chip_family == chip_family) {
+  let build = match manifest
+    .builds
+    .into_iter()
+    .find(|build| build.chip_family == chip_family)
+  {
     Some(build) => build,
-    None => return Err(EspError::UnsupportedChipFamily {chip_family: chip_family.to_string()}),
+    None => {
+      return Err(EspError::UnsupportedChipFamily {
+        chip_family: chip_family.to_string(),
+      })
+    }
   };
 
   let mut rom_segments = Vec::with_capacity(build.parts.len());
@@ -214,8 +222,8 @@ pub fn stream_logs<R: Runtime>(
   port_name: String,
 ) -> EspResult<()> {
   let mut serial_port = serialport::new(port_name, 115_200)
-      .flow_control(FlowControl::None)
-      .open_native()?;
+    .flow_control(FlowControl::None)
+    .open_native()?;
 
   serial_port.write_data_terminal_ready(false)?;
   serial_port.write_request_to_send(true)?;
@@ -232,7 +240,7 @@ pub fn stream_logs<R: Runtime>(
     match stream_cancel_receiver.try_recv() {
       Ok(()) => break,
       Err(TryRecvError::Disconnected) => break,
-      _ => {},
+      _ => {}
     }
 
     let mut buffer = [0u8; 1024];
@@ -241,7 +249,7 @@ pub fn stream_logs<R: Runtime>(
       Err(error) if std::io::ErrorKind::TimedOut == error.kind() => {
         sleep(Duration::from_millis(250));
         continue;
-      },
+      }
       Err(error) => {
         let _ = window.emit("plugin-esp-logs", LogEvent::Error(error.to_string()));
         break;
@@ -256,9 +264,7 @@ pub fn stream_logs<R: Runtime>(
 }
 
 #[command]
-pub fn cancel_stream_logs(
-  state: State<'_, Mutex<EspState>>,
-) -> EspResult<()> {
+pub fn cancel_stream_logs(state: State<'_, Mutex<EspState>>) -> EspResult<()> {
   let mut state = state.lock().unwrap();
 
   if let Some(sender) = state.log_stream_cancel.clone() {
@@ -271,7 +277,7 @@ pub fn cancel_stream_logs(
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "command", content = "data", rename_all = "snake_case")]
-enum Command {
+pub enum Command {
   SetWifi { ssid: String, password: String },
   SetMdns { hostname: String },
 }
@@ -281,16 +287,15 @@ struct CommandsOperation {
   pub commands: Vec<Command>,
 }
 
-pub fn send_commands(
-  port_name: String,
-  commands: Vec<Command>,
-) -> EspResult<()> {
+#[command]
+pub fn send_commands(port_name: String, commands: Vec<Command>) -> EspResult<()> {
   let mut serial_port = serialport::new(port_name, 115_200)
-      .flow_control(FlowControl::None)
-      .open_native()?;
+    .flow_control(FlowControl::None)
+    .open_native()?;
 
   let operation = CommandsOperation { commands };
   serial_port.write_all(serde_json::to_string(&operation)?.as_bytes())?;
+  log::debug!("{:?}", serde_json::to_string(&operation));
 
   Ok(())
 }

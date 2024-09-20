@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 use tauri::{
-    Manager,
-    plugin::{Builder, TauriPlugin}, Runtime,
+  plugin::{Builder, TauriPlugin},
+  Manager, Runtime,
 };
 
 use api::*;
@@ -9,9 +9,9 @@ use api::*;
 use crate::state::EspState;
 
 mod api;
-mod state;
-mod manifest;
 mod command;
+mod manifest;
+mod state;
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
   Builder::new("esp")
@@ -19,12 +19,13 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       available_ports,
       test_connection,
       flash,
-        stream_logs,
-        cancel_stream_logs,
+      stream_logs,
+      cancel_stream_logs,
+      send_commands
     ])
     .setup(move |app| {
       app.manage(Mutex::new(EspState {
-        log_stream_cancel: None
+        log_stream_cancel: None,
       }));
       Ok(())
     })

@@ -7,12 +7,12 @@ import {
     setInstallationProgress,
     setLogs,
     setProcessStatus,
-    updateFirmwareState
+    updateFirmwareState,
 } from './terminal'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
+import { espApi } from '@src/esp/api'
 import { logs as logsDescription } from '@src/static/ui/logs'
 import { trimLogsByTextLength } from '@src/utils'
-import { espApi } from '@src/esp/api'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()
@@ -61,12 +61,26 @@ const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<v
     try {
         await action()
     } catch (error) {
+        if (error instanceof Error) {
+            updateState(step, FLASH_STATUS.FAILED, error)
+            return
+        }
+
+        if (typeof error === 'string' && error.match(/Unknown port/)) {
+            updateState(
+                step,
+                FLASH_STATUS.FAILED,
+                new Error(
+                    `No port selected by the user, or the board is not connected.  error: ${error}`,
+                ),
+            )
+            throw error
+        }
+
         updateState(
             step,
             FLASH_STATUS.FAILED,
-            error instanceof Error
-                ? error
-                : typeof error === 'string' ? new Error(error) : undefined,
+            typeof error === 'string' ? new Error(error) : undefined,
         )
         throw error
     }
@@ -76,39 +90,24 @@ const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<v
 
 export const installOpenIris = async (
     isUsbBoard: boolean,
-    manifestPath: string,
+    portName: string,
     downloadManifest: () => Promise<void>,
     configureWifiCredentials: () => void,
 ) => {
-    // @todo get this from state
-    const portName = '/dev/ttyACM1'
-
     clearLogs()
 
     try {
-        await runStep(
-            FLASH_STEP.REQUEST_PORT,
-            async () => {
-                await espApi.testConnection(portName)
-            },
-        )
+        await runStep(FLASH_STEP.REQUEST_PORT, async () => {
+            await espApi.testConnection(portName)
+        })
 
-        await runStep(
-            FLASH_STEP.MANIFEST_PATH,
-            async () => {
-                await downloadManifest()
-            },
-        )
+        await runStep(FLASH_STEP.MANIFEST_PATH, async () => {
+            await downloadManifest()
+        })
 
-        await runStep(
-            FLASH_STEP.FLASH_FIRMWARE,
-            async () => {
-                await espApi.flash(
-                    portName,
-                    setInstallationProgress
-                )
-            },
-        )
+        await runStep(FLASH_STEP.FLASH_FIRMWARE, async () => {
+            await espApi.flash(portName, setInstallationProgress)
+        })
     } catch {
         return
     }
@@ -119,10 +118,7 @@ export const installOpenIris = async (
     setProcessStatus(false)
 }
 
-export const getFirmwareLogs = async (signal?: AbortController) => {
-    // @todo get this from state
-    const portName = '/dev/ttyACM1'
-
+export const getFirmwareLogs = async (portName: string, signal?: AbortController) => {
     clearLogs()
 
     const logs: string[] = []
@@ -174,31 +170,25 @@ export const getFirmwareLogs = async (signal?: AbortController) => {
     }, 1500)
 
     try {
-        await runStep(
-            FLASH_STEP.LOGS,
-            async () => {
-                await espApi.streamLogs(
-                    portName,
-                    (data) => {
-                        console.log(data);
-                        setDetailedLogs(data)
-                        processLogsInChunks(data, chunkSize)
-                    },
-                    async (err, hasOpenirisInstallation) => {
-                        console.log(err);
-                        clearInterval(interval)
-
-                        if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
-                        if (!hasOpenirisInstallation) {
-                            updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
-                        } else {
-                            updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
-                        }
-                    },
-                    signal?.signal,
-                )
-            },
-        )
+        await runStep(FLASH_STEP.LOGS, async () => {
+            await espApi.streamLogs(
+                portName,
+                (data) => {
+                    setDetailedLogs(data)
+                    processLogsInChunks(data, chunkSize)
+                },
+                async (err, hasOpenirisInstallation) => {
+                    clearInterval(interval)
+                    if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
+                    if (!hasOpenirisInstallation) {
+                        updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
+                    } else {
+                        updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
+                    }
+                },
+                signal?.signal,
+            )
+        })
     } catch {
         return
     }

@@ -2,26 +2,26 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 
 export type UsbSerialPortInfo = {
-    portName: string;
-    vid: number;
-    pid: number;
-    manufacturer: string | null;
-    product: string | null;
-    serialNumber: string | null;
-};
+    portName: string
+    vid: number
+    pid: number
+    manufacturer: string | null
+    product: string | null
+    serialNumber: string | null
+}
 
 type NativePortInfo = {
-    port_name: string;
+    port_name: string
     port_type: {
         UsbPort: {
-            vid: number;
-            pid: number;
-            manufacturer: string | null;
-            product: string | null;
-            serial_number: string | null;
-        };
-    };
-};
+            vid: number
+            pid: number
+            manufacturer: string | null
+            product: string | null
+            serial_number: string | null
+        }
+    }
+}
 
 const availablePorts = async (): Promise<UsbSerialPortInfo[]> => {
     const nativePortInfos = await invoke<NativePortInfo[]>('plugin:esp|available_ports')
@@ -42,29 +42,29 @@ const testConnection = async (portName: string): Promise<void> => {
     })
 }
 
-type EspflashStatus = {
-    type: 'Init';
-    address: number;
-    total: number;
-} | {
-    type: 'Update';
-    current: number;
-} | {
-    type: 'Finish';
-}
+type EspflashStatus =
+    | {
+          type: 'Init'
+          address: number
+          total: number
+      }
+    | {
+          type: 'Update'
+          current: number
+      }
+    | {
+          type: 'Finish'
+      }
 
 export type ProgressCallback = (percentage: number) => void
 
-const flash = async (
-    portName: string,
-    progressCallback: ProgressCallback
-): Promise<void> => {
+const flash = async (portName: string, progressCallback: ProgressCallback): Promise<void> => {
     let total = 0
 
     const unlisten = await appWindow.listen<EspflashStatus>(
         `plugin-esp-flash-${portName}`,
-        ({payload}) => {
-            console.debug(payload);
+        ({ payload }) => {
+            console.debug(payload)
             switch (payload.type) {
                 case 'Init': {
                     total = payload.total
@@ -75,7 +75,7 @@ const flash = async (
                     if (total > 0) {
                         // In theory the total should always be set before the first Progress event,
                         // but we check this just for sanity.
-                        progressCallback(Math.round(payload.current / total * 100))
+                        progressCallback(Math.round((payload.current / total) * 100))
                     }
                     break
                 }
@@ -97,11 +97,13 @@ const flash = async (
     }
 }
 
-type LogEvent = {
-    Data: string
-} | {
-    Error: string;
-}
+type LogEvent =
+    | {
+          Data: string
+      }
+    | {
+          Error: string
+      }
 
 const streamLogs = async (
     portName: string,
@@ -111,23 +113,19 @@ const streamLogs = async (
 ): Promise<void> => {
     let buffer = ''
 
-    const unlisten = await appWindow.listen<LogEvent>(
-        'plugin-esp-logs',
-        ({payload}) => {
-            if ('Data' in payload) {
-                console.log(payload.Data);
-                buffer += payload.Data
-                const lines = buffer.split('\r\n')
-                buffer = lines.pop()!
+    const unlisten = await appWindow.listen<LogEvent>('plugin-esp-logs', ({ payload }) => {
+        if ('Data' in payload) {
+            buffer += payload.Data
+            const lines = buffer.split('\r\n')
+            buffer = lines.pop()!
 
-                for (const line of lines) {
-                    callback(line)
-                }
-            } else {
-                errorCallback(new Error(payload.Error));
+            for (const line of lines) {
+                callback(line)
             }
-        },
-    )
+        } else {
+            errorCallback(new Error(payload.Error))
+        }
+    })
 
     signal?.addEventListener('abort', () => {
         unlisten()
@@ -142,26 +140,23 @@ const streamLogs = async (
 }
 
 export type SetWifiCommand = {
-    command: 'set_wifi';
+    command: 'set_wifi'
     data: {
-        ssid: string;
-        password: string;
-    };
-};
+        ssid: string
+        password: string
+    }
+}
 
 export type SetMdnsCommand = {
-    command: 'set_mdns';
+    command: 'set_mdns'
     data: {
-        hostname: string;
-    };
-};
+        hostname: string
+    }
+}
 
-export type Command = SetWifiCommand | SetMdnsCommand;
+export type Command = SetWifiCommand | SetMdnsCommand
 
-const sendCommands = async (
-    portName: string,
-    commands: Command[],
-): Promise<void> => {
+const sendCommands = async (portName: string, commands: Command[]): Promise<void> => {
     await invoke<void>('plugin:esp|send_commands', {
         portName,
         commands,

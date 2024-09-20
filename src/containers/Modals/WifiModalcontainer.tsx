@@ -3,20 +3,21 @@ import { createMemo, createSignal } from 'solid-js'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import WifiModal from '@pages/Modals/WifiModal'
 import { type Command, espApi } from '@src/esp/api'
+import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 
 const WifiModalContainer = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
-    const { mdns, ssid, password } = useAppAPIContext()
+    const { mdns, ssid, password, activePort } = useAppAPIContext()
     const { modal, setOpenModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
 
     const config = createMemo<Command[]>(() => {
         return [
-            { command: 'set_wifi', data: { ssid: ssid(), password: password() } },
             { command: 'set_mdns', data: { hostname: mdns() } },
+            { command: 'set_wifi', data: { ssid: ssid(), password: password() } },
         ]
     })
 
@@ -24,14 +25,22 @@ const WifiModalContainer = () => {
         addNotification({ title, message: title, type })
     }
 
-    const onClickUpdateNetworkSettings = async () => {
-        // @todo get this from state
-        const portName = '/dev/ttyACM1'
+    const activePortName = createMemo(() => {
+        return activePort().activePortName
+    })
 
+    const onClickUpdateNetworkSettings = async () => {
         setIsSending(true)
 
+        if (activePortName() === DEFAULT_PORT_NAME) {
+            setTimeout(() => {
+                setIsSending(false)
+            }, 250)
+            return
+        }
+
         notify('sending credentials', ENotificationType.INFO)
-        await espApi.sendCommands(portName, config())
+        await espApi.sendCommands(activePortName(), config())
         notify('Sent credentials', ENotificationType.INFO)
 
         setIsSending(false)
@@ -64,7 +73,11 @@ const WifiModalContainer = () => {
             onClick={() => {
                 if (isSending()) return
                 onClickUpdateNetworkSettings().catch(async (err) => {
-                    notify(err.message, ENotificationType.ERROR)
+                    if (err instanceof Error) {
+                        notify(err.message, ENotificationType.ERROR)
+                    } else {
+                        notify(err, ENotificationType.ERROR)
+                    }
                     setIsSending(false)
                 })
             }}
