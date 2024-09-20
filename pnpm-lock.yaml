@@ -114,9 +114,6 @@ importers:
       '@types/node':
         specifier: ^20.8.2
         version: 20.10.4
-      '@types/w3c-web-serial':
-        specifier: ^1.0.6
-        version: 1.0.6
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.7.4
         version: 6.13.2(@typescript-eslint/parser@6.13.2)(eslint@8.55.0)(typescript@5.3.3)
@@ -2245,10 +2242,6 @@ packages:
 
   /@types/semver@7.5.6:
     resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
-    dev: true
-
-  /@types/w3c-web-serial@1.0.6:
-    resolution: {integrity: sha512-5IlDdQ2C56sCVwc7CUlqT9Axxw+0V/FbWRbErklYIzZ5mKL9s4l7epXHygn+4X7L2nmAPnVvRl55XUVo0760Rg==}
     dev: true
 
   /@types/web-bluetooth@0.0.16:
