@@ -1,12 +1,13 @@
-import { useRoutes } from '@solidjs/router'
+import { useLocation, useNavigate, useRoutes } from '@solidjs/router'
 import { isEqual } from 'lodash'
-import { createEffect, lazy, onMount, type Component } from 'solid-js'
+import { createEffect, lazy, onMount, type Component, Show } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
 import type { PersistentSettings } from '@static/types'
 import { Header } from '@containers/Header/Header'
-import { ENotificationAction } from '@src/static/types/enums'
+import Sidebar from '@containers/Sidebar/Index'
+import { ENotificationAction, NAVIGATION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppContext } from '@store/context/app'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -18,6 +19,8 @@ const DebugMenu = lazy(() => import('@components/ContextMenu/DevTools'))
 
 const AppRoutes: Component = () => {
     const Path = useRoutes(routes)
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const { get, set } = usePersistentStore()
     const { doGHRequest, channelMode } = useAppAPIContext()
@@ -98,11 +101,21 @@ const AppRoutes: Component = () => {
     return (
         <div class="flex flex-col h-full">
             <Header />
-            <div class="flex h-full flex-col overflow-hidden">
-                <Path />
-                <ContextMenu id="dev-tools">
-                    <DebugMenu />
-                </ContextMenu>
+            <div class="flex h-full flex-row overflow-hidden">
+                <Show when={location.pathname === NAVIGATION.HOME}>
+                    <Sidebar
+                        navigation={location.pathname}
+                        onClick={(route) => {
+                            navigate(route)
+                        }}
+                    />
+                </Show>
+                <div class="flex w-full h-full">
+                    <Path />
+                    <ContextMenu id="dev-tools">
+                        <DebugMenu />
+                    </ContextMenu>
+                </div>
             </div>
         </div>
     )

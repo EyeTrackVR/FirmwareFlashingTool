@@ -1,11 +1,12 @@
 import { Image } from '@kobalte/core'
-import { Component } from 'solid-js'
+import { Component, Show } from 'solid-js'
 import { ProgressBar } from '@components/ProgressBar/ProgressBar'
 import './styles.css'
 
 interface IProps {
     onClick: () => void
     step: { step: string; description: string; dashoffset: string; index: string }
+    hideProgressBar: boolean
     currentStep: string
     name: string
 }
@@ -35,20 +36,22 @@ const MainHeader: Component<IProps> = (props) => {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-row justify-center items-center gap-[6px]  min-w-[210px]">
-                    <ProgressBar
-                        currentStep={props.currentStep}
-                        dashoffset={props.step.dashoffset}
-                    />
-                    <div class="flex flex-col  items-start justify-end w-full">
-                        <div class="text-white text-[14px] font-bold leading-normal">
-                            <p>{props.step.step}</p>
-                        </div>
-                        <div class="text-white font-inter text-[12px] font-normal leading-normal">
-                            <p>{props.step.description}</p>
+                <Show when={!props.hideProgressBar}>
+                    <div class="flex flex-row justify-center items-center gap-[6px]  min-w-[210px]">
+                        <ProgressBar
+                            currentStep={props.currentStep}
+                            dashoffset={props.step.dashoffset}
+                        />
+                        <div class="flex flex-col  items-start justify-end w-full">
+                            <div class="text-white text-[14px] font-bold leading-normal">
+                                <p>{props.step.step}</p>
+                            </div>
+                            <div class="text-white font-inter text-[12px] font-normal leading-normal">
+                                <p>{props.step.description}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Show>
             </div>
         </header>
     )

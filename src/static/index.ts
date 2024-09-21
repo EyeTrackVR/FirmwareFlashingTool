@@ -1,4 +1,4 @@
-import { BOARD_TYPE, CHANNEL_TYPE, STEP_STATUS_ENUM } from './types/enums'
+import { BOARD_TYPE, BUTTON_ACTION, CHANNEL_TYPE, STEP_STATUS_ENUM } from './types/enums'
 import { type IChannelOptions } from '@interfaces/interfaces'
 
 export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
@@ -22,6 +22,12 @@ export const SSID_MISSING = 'ssid missing'
 export const AP_IP_ADDRESS = 'AP IP address:'
 
 const circleSize = Math.PI * (radius * 2)
+
+export const actions = [
+    { label: 'Cropping mode', action: BUTTON_ACTION.CROPPING_MODE },
+    { label: 'Recalibrate', action: BUTTON_ACTION.RECALIBRATE },
+    { label: 'Recenter', action: BUTTON_ACTION.RECENTER },
+]
 
 export const stepStatus: {
     [key in STEP_STATUS_ENUM]: {

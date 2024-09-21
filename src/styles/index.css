@@ -122,3 +122,11 @@ body {
         background-color 0.5s;
     color: #a8b1ff;
 }
+
+.line {
+    width: 100%;
+    appearance: none;
+    height: 38px;
+    background-color: #192736;
+    border-radius: 6px;
+}

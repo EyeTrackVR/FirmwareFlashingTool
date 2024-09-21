@@ -52,6 +52,13 @@ export enum ExitCodes {
     ERROR_UNKNOWN = 2,
 }
 
+export enum STATUS {
+    ACTIVE = 'ACTIVE',
+    PENDING = 'PENDING',
+    ERROR = 'ERROR',
+    UNKNOWN = 'UNKNOWN',
+}
+
 export enum RESTStatus {
     ACTIVE = 'ACTIVE',
     COMPLETE = 'COMPLETE',
@@ -88,6 +95,15 @@ export enum STEP_STATUS_ENUM {
     CONFIGURE_WIFI = 'CONFIGURE_WIFI',
     SELECT_BOARD = 'SELECT_BOARD',
     FLASH_FIRMWARE = 'FLASH_FIRMWARE',
+}
+
+export enum NAVIGATION {
+    SETTINGS = '/settings',
+    CONFIGURE_WIZARD = '/',
+    HOME = '/home',
+    NETWORK = '/network',
+    FLASH_FIRMWARE = '/flashFirmware',
+    PAGE_404 = '/**',
 }
 
 export enum DIRECTION {
@@ -139,8 +155,37 @@ export const enum FLASH_STATUS {
 }
 
 export enum MODAL_TYPE {
+    ADD_NEW_CAMERA_ADDRESS = 'ADD_NEW_CAMERA_ADDRESS',
+    RECALIBRATE_CAMERA = 'RECALIBRATE_CAMERA',
+    ADVANCED_SETTINGS = 'ADVANCED_SETTINGS',
+    RECENTER_CAMERA = 'RECENTER_CAMERA',
     UPDATE_NETWORK = 'UPDATE_NETWORK',
     BEFORE_FLASHING = 'BEFORE_FLASHING',
     AP_MODE = 'AP_MODE',
     NONE = 'NONE',
+}
+
+export enum BUTTON_ACTION {
+    RECALIBRATE_CAMERA = 'RECALIBRATE_CAMERA',
+    ADVANCED_SETTINGS = 'ADVANCED_SETTINGS',
+    CROPPING_MODE = 'CROPPING_MODE',
+    RECALIBRATE = 'RECALIBRATE',
+    RECENTER = 'RECENTER',
+}
+
+export enum TRACKER_TYPE {
+    RIGHT = 'RIGHT',
+    LEFT = 'LEFT',
+}
+
+export enum CONNECTION_STATUS {
+    TRACKING = 'TRACKING',
+    UNKNOWN = 'UNKNOWN',
+    ERROR = 'ERROR',
+}
+
+export enum HARDWARE_TYPE {
+    LEFT = 'Left',
+    RIGHT = 'Right',
+    BOTH = 'Both eyes',
 }

@@ -53,6 +53,11 @@ export const ManageBoard = () => {
         return activeBoard().includes(usb)
     })
 
+    // left for development
+    // onMount(() => {
+    //     navigate('/home')
+    // })
+
     return (
         <BoardManagement
             boards={boards()}
