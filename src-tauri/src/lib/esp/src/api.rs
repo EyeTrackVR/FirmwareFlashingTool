@@ -196,10 +196,12 @@ pub fn flash<R: Runtime>(app: AppHandle<R>, window: Window<R>, port_name: String
     })
   }
 
+  let hexed_port_name : String = port_name.as_bytes().iter().map(|byte| format!("{:02x}", byte)).collect();
+
   flasher.write_bins_to_flash(
     &rom_segments,
     Some(&mut EspflashProgress {
-      event_name: format!("plugin-esp-flash-{}", port_name),
+      event_name: format!("plugin-esp-flash-{}", hexed_port_name),
       window,
     }),
   )?;

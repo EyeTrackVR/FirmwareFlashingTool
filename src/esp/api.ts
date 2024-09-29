@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
+import { stringToHex } from '@src/utils'
 
 export type UsbSerialPortInfo = {
     portName: string
@@ -61,10 +62,10 @@ export type ProgressCallback = (percentage: number) => void
 const flash = async (portName: string, progressCallback: ProgressCallback): Promise<void> => {
     let total = 0
 
+    const portEventNameHexed = stringToHex(portName)
     const unlisten = await appWindow.listen<EspflashStatus>(
-        `plugin-esp-flash-${portName}`,
+        `plugin-esp-flash-${portEventNameHexed}`,
         ({ payload }) => {
-            console.debug(payload)
             switch (payload.type) {
                 case 'Init': {
                     total = payload.total
