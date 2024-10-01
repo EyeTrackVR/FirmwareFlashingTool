@@ -3,13 +3,12 @@ import { appDataDir, join } from '@tauri-apps/api/path'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { createEffect, createMemo, createSignal, onMount } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
-import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
+import { ENotificationType, FLASH_STATUS, MODAL_TYPE, NAVIGATION } from '@interfaces/enums'
 import Terminal from '@pages/Terminal/Index'
-import { BoardConnectionMethod, usb } from '@src/static'
+import { BOARD_CONNECTION_METHOD, USB_ID } from '@src/static'
 import { download } from '@src/utils'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 import { getFirmwareLogs, installOpenIris, openDocs } from '@store/terminal/actions'
 import {
     detailedLogs,
@@ -24,6 +23,7 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { useAppUIContext } from '@store/ui/ui'
 
 export const ManageFlashFirmware = () => {
     const [manifestPath, setManifestPath] = createSignal<string>('----')
@@ -62,7 +62,7 @@ export const ManageFlashFirmware = () => {
     })
 
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB_ID)
     })
 
     const notification = createMemo(() => {
@@ -74,7 +74,7 @@ export const ManageFlashFirmware = () => {
     })
 
     const board = createMemo(() => {
-        const connectionMethod = BoardConnectionMethod[activeBoard().replace('_release', '')]
+        const connectionMethod = BOARD_CONNECTION_METHOD[activeBoard().replace('_release', '')]
         return connectionMethod ? `${activeBoard()} (${connectionMethod})` : activeBoard()
     })
 
@@ -152,7 +152,10 @@ export const ManageFlashFirmware = () => {
                     return
                 }
                 setAbortController()
-                navigate(isUSBBoard() ? '/' : '/network')
+                navigate(isUSBBoard() ? NAVIGATION.CONFIGURE_BOARD : NAVIGATION.NETWORK)
+            }}
+            onClickSetup={() => {
+                navigate(NAVIGATION.CONFIGURE_SETUP)
             }}
         />
     )

@@ -3,7 +3,7 @@ import { Button } from '@components/Buttons/DefaultButton'
 import { Modal } from '@components/Modal/Index'
 import ModalHeader from '@components/ModalHeader/Index'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { wifiModalID } from '@src/static'
+import { WIFI_MODAL_ID } from '@src/static'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -16,7 +16,7 @@ export interface IProps {
 const WifiModal: Component<IProps> = (props) => {
     return (
         <Modal
-            id={wifiModalID}
+            id={WIFI_MODAL_ID}
             isSending={props.isSending}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}

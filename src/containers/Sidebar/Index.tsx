@@ -12,7 +12,7 @@ export interface IProps {
 const Sidebar: Component<IProps> = (props) => {
     return (
         <div class="flex flex-col justify-between pr-[24px] pt-[10px]">
-            <div class="flex flex-col gap-[24px]">
+            <div class="flex flex-col gap-[12px]">
                 <div
                     onClick={() => {
                         props.onClick(NAVIGATION.HOME)
@@ -34,20 +34,18 @@ const Sidebar: Component<IProps> = (props) => {
                 </div>
                 <div
                     onClick={() => {
-                        props.onClick(NAVIGATION.CONFIGURE_WIZARD)
+                        props.onClick(NAVIGATION.WELCOME)
                     }}
                     classList={{
                         'hover:bg-[#354473] bg-[#2B375E] focus-visible:border-[#fff]':
-                            props.navigation === NAVIGATION.CONFIGURE_WIZARD,
+                            props.navigation === NAVIGATION.WELCOME,
+                        'hover:bg-[#081A27]': props.navigation !== NAVIGATION.WELCOME,
                     }}
-                    class="cursor-pointer p-[8px] rounded-[6px]">
+                    class="cursor-pointer p-[8px] rounded-[6px] ">
                     <div class="flex flex-col justify-center items-center gap-[10px]">
                         <BiSolidExtension
                             size={34}
-                            classList={{
-                                '#9092FF': props.navigation === NAVIGATION.CONFIGURE_WIZARD,
-                                '#192736': props.navigation !== NAVIGATION.CONFIGURE_WIZARD,
-                            }}
+                            color={props.navigation === NAVIGATION.WELCOME ? '#9092FF' : '#192736'}
                         />
                         <p class="text-[14px] text-white font-normal leading-[20px] not-italic text-center max-w-[66px] whitespace-wrap">
                             Configure setup
@@ -62,6 +60,7 @@ const Sidebar: Component<IProps> = (props) => {
                 classList={{
                     'hover:bg-[#354473] bg-[#2B375E] focus-visible:border-[#fff]':
                         props.navigation === NAVIGATION.SETTINGS,
+                    'hover:bg-[#081A27]': props.navigation !== NAVIGATION.SETTINGS,
                 }}
                 class="rounded-[6px] p-[8px] cursor-pointer">
                 <div class="flex flex-col justify-center items-center gap-[19px]">

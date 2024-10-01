@@ -1,27 +1,32 @@
-import { BOARD_TYPE, BUTTON_ACTION, CHANNEL_TYPE, STEP_STATUS_ENUM } from './types/enums'
+import {
+    BOARD_TYPE,
+    BUTTON_ACTION,
+    CHANNEL_TYPE,
+    HARDWARE_TYPE,
+    NAVIGATION,
+    STEP_STATUS_ENUM,
+} from './types/enums'
 import { type IChannelOptions } from '@interfaces/interfaces'
 
-export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
-export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
-export const defaultMdnsLength = 24
-export const portBaudRate = 115200
-export const mdnsLength = 12
-export const radius = 24
-export const usb = 'USB'
-export const questionModalId = 'questionModal'
-export const apModalID = 'apMode'
-export const logsModalID = 'logs'
-export const wifiModalID = 'wifiMode'
-export const beforeFlashingModalID = 'beforeFlashingMode'
-export const debugModalId = 'debugModal'
-export const operatingSystemModal = 'operatingSystem'
-export const staticMdns = 'openiristracker'
+export const BOARD_HARDWARE_TYPE = [HARDWARE_TYPE.LEFT, HARDWARE_TYPE.RIGHT]
+export const SUPPORTED_BOARDS: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
+export const DEBUG_MODES: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
+export const CIRCLE_RADIUS = 24
+export const USB_ID = 'USB'
+export const QUESTION_MODAL_ID = 'questionModal'
+export const AP_MODAL_ID = 'apMode'
+export const WIFI_MODAL_ID = 'wifiMode'
+export const BEFORE_FLASH_MODAL_ID = 'beforeFlashingMode'
+export const OPERATING_SYSTEM_MODAL_ID = 'operatingSystem'
+export const DEBUL_MODAL_ID = 'debugModal'
+export const STATIC_MNDS_NAME = 'openiristracker'
 export const DEVICE_LOST = 'The device has been lost.'
 export const STREAM_IS_UNDER = 'The stream is under'
 export const SSID_MISSING = 'ssid missing'
 export const AP_IP_ADDRESS = 'AP IP address:'
+export const ADD_BOARD_LIMIT = 2
 
-const circleSize = Math.PI * (radius * 2)
+const CIRCLE_SIZE = Math.PI * (CIRCLE_RADIUS * 2)
 
 export const actions = [
     { label: 'Cropping mode', action: BUTTON_ACTION.CROPPING_MODE },
@@ -39,21 +44,21 @@ export const stepStatus: {
     [STEP_STATUS_ENUM.SELECT_BOARD]: {
         index: '1',
         description: 'Select board',
-        dashoffset: ((105 / 100) * circleSize).toString(),
+        dashoffset: ((105 / 100) * CIRCLE_SIZE).toString(),
     },
     [STEP_STATUS_ENUM.CONFIGURE_WIFI]: {
         index: '2',
         description: 'Configure wifi network',
-        dashoffset: (((105 - 50) / 100) * circleSize).toString(),
+        dashoffset: (((105 - 50) / 100) * CIRCLE_SIZE).toString(),
     },
     [STEP_STATUS_ENUM.FLASH_FIRMWARE]: {
         index: '3',
         description: 'Flash firmware assets',
-        dashoffset: (((100 - 100) / 100) * circleSize).toString(),
+        dashoffset: (((100 - 100) / 100) * CIRCLE_SIZE).toString(),
     },
 }
 
-export const BoardDescription: {
+export const BOARD_DESCRIPTION: {
     [key in BOARD_TYPE]: string
 } = {
     [BOARD_TYPE.ESP_32_AI_THINKER]: 'Default for ESP32-AI-THINKER and ESP CAM boards.',
@@ -72,7 +77,7 @@ export const BoardDescription: {
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
 }
 
-export const BoardConnectionMethod: {
+export const BOARD_CONNECTION_METHOD: {
     [key in BOARD_TYPE]: string
 } = {
     [BOARD_TYPE.ESP_32_AI_THINKER]: 'wireless mode',
@@ -88,7 +93,7 @@ export const BoardConnectionMethod: {
     [BOARD_TYPE.XIAOSENSES_3_USB]: 'wired mode',
 }
 
-export const ChannelOptions: Record<CHANNEL_TYPE, IChannelOptions> = {
+export const CHANNEL_OPTIONS: Record<CHANNEL_TYPE, IChannelOptions> = {
     [CHANNEL_TYPE.OFFICIAL]: {
         label: CHANNEL_TYPE.OFFICIAL,
         description: 'Official channel for official releases.',
@@ -98,4 +103,10 @@ export const ChannelOptions: Record<CHANNEL_TYPE, IChannelOptions> = {
         description:
             'This channel is for testing purposes only. It is not recommended for day to day usage',
     },
+}
+
+export const DIRECTION: Record<string, STEP_STATUS_ENUM> = {
+    [NAVIGATION.CONFIGURE_BOARD]: STEP_STATUS_ENUM.SELECT_BOARD,
+    [NAVIGATION.NETWORK]: STEP_STATUS_ENUM.CONFIGURE_WIFI,
+    [NAVIGATION.FLASH_FIRMWARE]: STEP_STATUS_ENUM.FLASH_FIRMWARE,
 }

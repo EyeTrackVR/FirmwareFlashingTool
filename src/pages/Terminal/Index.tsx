@@ -14,6 +14,7 @@ export interface IProps {
     onClickOpenDocs: () => void
     onClickGetLogs: () => void
     onClickAPMode: () => void
+    onClickSetup: () => void
     onClickBack: () => void
     percentageProgress: number
     logs: Record<FLASH_STEP, string[]> | object
@@ -165,7 +166,14 @@ const Terminal: Component<IProps> = (props) => {
                         setHover({})
                         props.onClickBack()
                     }}
+                    onClickPrimary={() => {
+                        setOpen({})
+                        setHover({})
+                        props.onClickSetup()
+                    }}
+                    isPrimaryActive={false}
                     secondLabel="Back"
+                    primaryLabel="Setup etvr"
                 />
             </div>
         </div>

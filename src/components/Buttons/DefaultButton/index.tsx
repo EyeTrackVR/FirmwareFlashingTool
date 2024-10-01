@@ -14,6 +14,7 @@ export interface IProps {
 export const Button: Component<IProps> = (props) => {
     return (
         <button
+            disabled={props.disabled}
             classList={{
                 'cursor-not-allowed': props.disabled,
                 [props.size!]: typeof props.size !== 'undefined',

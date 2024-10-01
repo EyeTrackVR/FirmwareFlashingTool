@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import { radius } from '@src/static'
+import { CIRCLE_RADIUS } from '@src/static'
 import './styles.css'
 export interface IProps {
     currentStep: string
@@ -14,7 +14,7 @@ export const ProgressBar: Component<IProps> = (props) => {
             </div>
             <svg id="svg" width="60" height="60" version="1.1">
                 <circle
-                    r={radius}
+                    r={CIRCLE_RADIUS}
                     cx="30"
                     cy="30"
                     fill="transparent"
@@ -25,7 +25,7 @@ export const ProgressBar: Component<IProps> = (props) => {
                 <circle
                     stroke-width="4"
                     id="bar"
-                    r={radius}
+                    r={CIRCLE_RADIUS}
                     cx="30"
                     cy="30"
                     fill="transparent"

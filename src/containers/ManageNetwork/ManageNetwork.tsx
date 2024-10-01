@@ -1,12 +1,12 @@
 import { useNavigate } from '@solidjs/router'
+import { NAVIGATION } from '@interfaces/enums'
 import { NetworkManagement } from '@pages/NetworkManagement/NetworkManagement'
-import { staticMdns } from '@src/static'
-import { useAppAPIContext } from '@store/context/api'
+import { STATIC_MNDS_NAME } from '@src/static'
+import { useAppAPIContext } from '@store/api/api'
 
 export const ManageNetwork = () => {
     const navigate = useNavigate()
-    const { ssid, password, setNetwork, mdns } = useAppAPIContext()
-    const { loader } = useAppAPIContext()
+    const { ssid, password, setNetwork, mdns, loader } = useAppAPIContext()
 
     return (
         <NetworkManagement
@@ -15,13 +15,13 @@ export const ManageNetwork = () => {
             mdns={mdns()}
             password={password()}
             onClickSkip={() => {
-                navigate('/')
+                navigate(NAVIGATION.CONFIGURE_BOARD)
             }}
             onSubmit={(ssid, password, trackerName) => {
                 if (loader()) return
-                const mdns = !trackerName ? staticMdns : trackerName
+                const mdns = !trackerName ? STATIC_MNDS_NAME : trackerName
                 setNetwork(ssid, password, mdns)
-                navigate('/flashFirmware')
+                navigate(NAVIGATION.FLASH_FIRMWARE)
             }}
         />
     )

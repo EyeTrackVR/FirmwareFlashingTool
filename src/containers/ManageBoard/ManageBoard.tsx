@@ -5,16 +5,22 @@ import { debug, trace } from 'tauri-plugin-log-api'
 import { type IDropdownList } from '@interfaces/interfaces'
 import { isValidChannel } from '@interfaces/utils'
 import { BoardManagement } from '@pages/BoardManagement/BoardManagement'
-import { BoardDescription, ChannelOptions, debugModes, supportedBoards, usb } from '@src/static'
+import {
+    BOARD_DESCRIPTION,
+    CHANNEL_OPTIONS,
+    DEBUG_MODES,
+    SUPPORTED_BOARDS,
+    USB_ID,
+} from '@src/static'
 import { DebugMode } from '@src/static/types'
 import { TITLEBAR_ACTION } from '@src/static/types/enums'
-import { useAppAPIContext } from '@src/store/context/api'
-import { useAppContext } from '@store/context/app'
+import { useAppAPIContext } from '@store/api/api'
+import { setDebugMode } from '@store/appContext/appContext'
+import { debugMode } from '@store/appContext/selectors'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 
 export const ManageBoard = () => {
     const navigate = useNavigate()
-    const { getDebugMode, setDebugMode } = useAppContext()
     const {
         getFirmwareAssets,
         getFirmwareVersion,
@@ -31,12 +37,12 @@ export const ManageBoard = () => {
                 trace(`${item.name}`)
                 return {
                     label: item.name,
-                    description: BoardDescription[item.name.replace('_release', '')] ?? '--',
+                    description: BOARD_DESCRIPTION[item.name.replace('_release', '')] ?? '--',
                 }
             })
             .sort((boardA, boardB) => {
-                if (supportedBoards.includes(boardA.label.replace('_release', ''))) return -1
-                if (supportedBoards.includes(boardB.label.replace('_release', ''))) return 1
+                if (SUPPORTED_BOARDS.includes(boardA.label.replace('_release', ''))) return -1
+                if (SUPPORTED_BOARDS.includes(boardB.label.replace('_release', ''))) return 1
                 return 0
             })
     })
@@ -45,27 +51,18 @@ export const ManageBoard = () => {
         return getFirmwareVersion?.() ?? ''
     })
 
-    const debugMode = createMemo(() => {
-        return getDebugMode() ?? ''
-    })
-
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB_ID)
     })
-
-    // left for development
-    // onMount(() => {
-    //     navigate('/home')
-    // })
 
     return (
         <BoardManagement
             boards={boards()}
             lockButton={!activeBoard() || !firmwareVersion()}
             channelMode={channelMode()}
-            channelOptions={Object.values(ChannelOptions)}
+            channelOptions={Object.values(CHANNEL_OPTIONS)}
             debugMode={debugMode()}
-            debugModes={debugModes.map((el) => ({
+            debugModes={DEBUG_MODES.map((el) => ({
                 label: el,
             }))}
             activeBoard={activeBoard()}

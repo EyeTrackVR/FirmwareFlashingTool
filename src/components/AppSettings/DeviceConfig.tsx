@@ -3,8 +3,9 @@ import { createSignal, onCleanup, onMount } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import Highlight from '@components/Highlight'
 import { ENotificationType } from '@static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
+
 import '@static/highlight.js/styles/atom-one-dark.css'
 
 // TODO: Implement a device config viewer
@@ -31,7 +32,6 @@ const DeviceConfig = () => {
     })
 
     const handleGetConfig = async () => {
-
         debug(`Response: ${response()}`)
 
         //* Check if there is a response from the device

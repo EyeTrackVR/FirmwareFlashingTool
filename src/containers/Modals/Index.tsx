@@ -3,7 +3,7 @@ import ApModeContainer from './ApModeModalContainer'
 import BeforeFlashingModal from './BeforeFlashingContainer'
 import WifiModal from './WifiModalcontainer'
 import { MODAL_TYPE } from '@interfaces/enums'
-import { useAppUIContext } from '@store/context/ui'
+import { useAppUIContext } from '@store/ui/ui'
 
 export const ModalRoot = () => {
     const { modal } = useAppUIContext()

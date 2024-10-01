@@ -2,7 +2,7 @@ import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, createMemo, Show } from 'solid-js'
 import { Titlebar } from '@components/Titlebar/Titlebar'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { operatingSystemModal } from '@src/static'
+import { OPERATING_SYSTEM_MODAL_ID } from '@src/static'
 import { checkSystem } from '@src/utils'
 
 const OperatingSystem = () => {
@@ -12,7 +12,7 @@ const OperatingSystem = () => {
 
     createEffect(() => {
         if (/Linux/.test(system())) {
-            const el = document.getElementById(operatingSystemModal)
+            const el = document.getElementById(OPERATING_SYSTEM_MODAL_ID)
             if (el instanceof HTMLDialogElement) {
                 el.showModal()
             }
@@ -21,7 +21,7 @@ const OperatingSystem = () => {
 
     return (
         <Show when={/Linux/.test(system())}>
-            <dialog id={operatingSystemModal} class="modal">
+            <dialog id={OPERATING_SYSTEM_MODAL_ID} class="modal">
                 <Titlebar
                     onClickHeader={(action: TITLEBAR_ACTION) => {
                         switch (action) {

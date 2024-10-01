@@ -8,7 +8,7 @@ import { Titlebar } from '@components/Titlebar/Titlebar'
 import { type CHANNEL_TYPE, type TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import { IEventType } from '@interfaces/types'
-import { debugModalId } from '@src/static'
+import { DEBUL_MODAL_ID } from '@src/static'
 
 export interface IProps {
     debugMode: string
@@ -35,11 +35,11 @@ export const Devtools: Component<IProps> = (props) => {
             <button
                 class="ml-auto flex items-center justify-center leadu w-[35px] h-[35px] rounded-full border border-solid border-[#192736] bg-[#0D1B26] cursor-pointer focus-visible:border-[#9793FD]"
                 onClick={() => {
-                    props.onClickOpenModal(debugModalId)
+                    props.onClickOpenModal(DEBUL_MODAL_ID)
                 }}>
                 <FaSolidGear size={12} fill="#FFFFFFe3" />
             </button>
-            <dialog id={debugModalId} class="modal">
+            <dialog id={DEBUL_MODAL_ID} class="modal">
                 <Titlebar onClickHeader={props.onClickHeader} />
                 <div class="modal-box overflow-visible flex items-center  w-auto h-auto p-[10px] bg-transparent flex-col">
                     <div class="w-[350px] bg-[#0D1B26] p-[12px] rounded-[12px] border border-solid border-[#192736] z-10">

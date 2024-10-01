@@ -4,11 +4,11 @@ import logo from '../../../../src-tauri/icons/Square310x310Logo.png'
 import Counter from '@components/Counter/Index'
 import CameraWrapper from '@components/Wrappers/CameraWrapper/Index'
 import Wrapper from '@components/Wrappers/Wrapper/Index'
-import { ICamera, ICameraStatistics } from '@interfaces/interfaces'
+import { IBoard, IBoardStatistics } from '@interfaces/interfaces'
 
 export interface IProps {
-    camera?: ICamera
-    cameraStatistics: ICameraStatistics
+    camera?: IBoard
+    cameraStatistics?: IBoardStatistics
     cameraRotation: number
     onClickIncrease: () => void
     onClickDecrease: () => void
@@ -20,7 +20,7 @@ const CameraPanel: Component<IProps> = (props) => {
         <div class="flex flex-col gap-[12px] w-full">
             <CameraWrapper
                 cameraAddress={props?.camera?.address ?? '----'}
-                header={props?.camera?.header ?? '----'}
+                header={props?.camera?.label ?? '----'}
                 cameraStatistics={props.cameraStatistics}
                 HeaderIcon={AiFillCamera}>
                 <div class="flex gap-[12px] justify-center">

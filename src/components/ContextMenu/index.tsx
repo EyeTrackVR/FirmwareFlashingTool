@@ -3,7 +3,7 @@ import { Portal } from 'solid-js/web'
 import { onClickOutside, useEventListener } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import type { NewMenu } from '@static/types/interfaces'
-import { useAppUIContext } from '@src/store/context/ui'
+import { useAppUIContext } from '@store/ui/ui'
 import './styles.css'
 
 const NewContextMenu: Component<NewMenu> = (props) => {

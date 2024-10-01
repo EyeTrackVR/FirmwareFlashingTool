@@ -4,9 +4,9 @@ import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import ApModeModal from '@pages/Modals/ApModeModal'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
+import { useAppUIContext } from '@store/ui/ui'
 
 const ApModeContainer = () => {
     const { modal, setOpenModal } = useAppUIContext()

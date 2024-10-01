@@ -3,9 +3,9 @@ import { createMemo, createSignal } from 'solid-js'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import WifiModal from '@pages/Modals/WifiModal'
 import { sleep } from '@src/utils'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
+import { useAppUIContext } from '@store/ui/ui'
 import webManager from '@store/webManager/index'
 
 const WifiModalContainer = () => {

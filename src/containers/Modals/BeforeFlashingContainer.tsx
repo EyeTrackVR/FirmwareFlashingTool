@@ -2,10 +2,9 @@ import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
-import { usb } from '@src/static'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { USB_ID } from '@src/static'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 import { installOpenIris } from '@store/terminal/actions'
 import { isActiveProcess } from '@store/terminal/selectors'
 import {
@@ -13,6 +12,7 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { useAppUIContext } from '@store/ui/ui'
 
 const BeforeFlashingContainer = () => {
     const { downloadAsset, getFirmwareType, activeBoard, manifestPath } = useAppAPIContext()
@@ -20,7 +20,7 @@ const BeforeFlashingContainer = () => {
     const { addNotification } = useAppNotificationsContext()
 
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB_ID)
     })
 
     return (

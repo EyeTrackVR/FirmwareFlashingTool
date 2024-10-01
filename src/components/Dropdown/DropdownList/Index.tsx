@@ -33,7 +33,7 @@ const DropdownList: Component<IProps> = (props) => {
                     fallback={
                         <div class="flex flex-row gap-[6px]">
                             <span class="loading loading-ring loading-md" />
-                            <p class="whitespace-nowrap">{props.fallbackLabel ?? 'Loading...'}</p>
+                            <p>{props.fallbackLabel ?? 'Loading...'}</p>
                         </div>
                     }>
                     <For each={props.data}>
@@ -41,7 +41,11 @@ const DropdownList: Component<IProps> = (props) => {
                             return (
                                 <Board
                                     {...data}
-                                    isActive={data.label === props?.activeElement}
+                                    isActive={
+                                        data?.hardwareType
+                                            ? data.hardwareType === props?.activeElement
+                                            : data.label === props?.activeElement
+                                    }
                                     onClick={() => {
                                         props.onClick(data)
                                     }}

@@ -98,18 +98,14 @@ export enum STEP_STATUS_ENUM {
 }
 
 export enum NAVIGATION {
+    CONFIGURE_BOARD = '/configureBoard',
+    CONFIGURE_SETUP = '/configureSetup',
     SETTINGS = '/settings',
-    CONFIGURE_WIZARD = '/',
-    HOME = '/home',
+    WELCOME = '/welcome',
+    HOME = '/',
     NETWORK = '/network',
     FLASH_FIRMWARE = '/flashFirmware',
     PAGE_404 = '/**',
-}
-
-export enum DIRECTION {
-    '/' = STEP_STATUS_ENUM.SELECT_BOARD,
-    '/network' = STEP_STATUS_ENUM.CONFIGURE_WIFI,
-    '/flashFirmware' = STEP_STATUS_ENUM.FLASH_FIRMWARE,
 }
 
 export enum BOARD_TYPE {
@@ -180,6 +176,7 @@ export enum TRACKER_TYPE {
 
 export enum CONNECTION_STATUS {
     TRACKING = 'TRACKING',
+    DISABLED = 'DISABLED',
     UNKNOWN = 'UNKNOWN',
     ERROR = 'ERROR',
 }

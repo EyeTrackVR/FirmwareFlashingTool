@@ -3,8 +3,8 @@ import { createSignal, onCleanup, onMount } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import Input from '@components/Inputs/Input/Input'
 import { ENotificationType } from '@static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 
 const NetworkSettings = () => {
     const [ssid, setSsid] = createSignal('')
