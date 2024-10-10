@@ -3,7 +3,7 @@ import { Button } from '@components/Buttons/DefaultButton'
 import { Modal } from '@components/Modal/Index'
 import ModalHeader from '@components/ModalHeader/Index'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { apModalID } from '@src/static'
+import { AP_MODAL_ID } from '@src/static'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -17,7 +17,7 @@ const ApModeModal: Component<IProps> = (props) => {
 
     return (
         <Modal
-            id={apModalID}
+            id={AP_MODAL_ID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>

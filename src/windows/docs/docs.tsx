@@ -2,12 +2,10 @@
 import { Router } from '@solidjs/router'
 import { onMount, Suspense } from 'solid-js'
 import { render } from 'solid-js/web'
-import { useAppContextMain, AppContextMainProvider } from '@src/store/context/main'
 import '@styles/docs-imports.css'
+import { handleTitlebar } from '@store/appContext/actions'
 
 const App = () => {
-    const { handleTitlebar } = useAppContextMain()
-
     onMount(() => {
         handleTitlebar()
     })
@@ -37,9 +35,7 @@ const App = () => {
 render(
     () => (
         <Router>
-            <AppContextMainProvider>
-                <App />
-            </AppContextMainProvider>
+            <App />
         </Router>
     ),
     document.getElementById('root') as HTMLElement,

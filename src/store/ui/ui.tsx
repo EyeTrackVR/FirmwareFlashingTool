@@ -2,7 +2,7 @@ import { Accessor, createContext, createMemo, useContext, type Component } from 
 import { createStore, produce } from 'solid-js/store'
 import type { Context } from '@static/types'
 import type { IOpenModal, MenuOpen, UiStore } from '@static/types/interfaces'
-import { MODAL_TYPE } from '@interfaces/enums'
+import { MODAL_TYPE, NAVIGATION } from '@interfaces/enums'
 
 interface AppUIContext {
     modal: Accessor<IOpenModal>
@@ -10,7 +10,10 @@ interface AppUIContext {
     getContextAnchor: Accessor<HTMLElement | null | undefined>
     showNotifications: Accessor<boolean | undefined>
     hideModal: Accessor<boolean>
+    navigationStep: Accessor<NAVIGATION | undefined>
     setOpenModal: (data: IOpenModal) => void
+    setNavigationStep: (step: NAVIGATION) => void
+    setResetNavigationStep: () => void
     setMenu: (menuOpen: MenuOpen | null) => void
     setContextMenuAnchor: (id: string) => void
     setHideModal: () => void
@@ -26,6 +29,7 @@ export const AppUIProvider: Component<Context> = (props) => {
         showNotifications: true,
         menuOpen: null,
         hideModal: false,
+        navigationStep: undefined,
     }
 
     const [state, setState] = createStore<UiStore>(defaultState)
@@ -65,6 +69,22 @@ export const AppUIProvider: Component<Context> = (props) => {
         )
     }
 
+    const setNavigationStep = (step: NAVIGATION) => {
+        setState(
+            produce((s) => {
+                s.navigationStep = step
+            }),
+        )
+    }
+
+    const setResetNavigationStep = () => {
+        setState(
+            produce((s) => {
+                s.navigationStep = undefined
+            }),
+        )
+    }
+
     const uiState = createMemo(() => state)
 
     const modal = createMemo(() => uiState().openModal)
@@ -72,6 +92,7 @@ export const AppUIProvider: Component<Context> = (props) => {
     const menuOpenStatus = createMemo(() => uiState().menuOpen)
     const getContextAnchor = createMemo(() => uiState().contextAnchor)
     const hideModal = createMemo(() => uiState().hideModal)
+    const navigationStep = createMemo(() => uiState().navigationStep)
 
     return (
         <AppUIContext.Provider
@@ -85,6 +106,9 @@ export const AppUIProvider: Component<Context> = (props) => {
                 setContextMenuAnchor,
                 hideModal,
                 setHideModal,
+                navigationStep,
+                setNavigationStep,
+                setResetNavigationStep,
             }}>
             {props.children}
         </AppUIContext.Provider>

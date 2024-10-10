@@ -6,7 +6,7 @@ import { createSignal, Component, Show } from 'solid-js'
 import type { Notifications } from '@src/static/types/interfaces'
 import CloseIcon from '@components/CloseIcon'
 import { ENotificationType } from '@src/static/types/enums'
-import { useAppNotificationsContext } from '@src/store/context/notifications'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 
 interface ToastProps {
     id: string

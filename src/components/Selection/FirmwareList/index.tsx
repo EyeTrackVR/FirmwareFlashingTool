@@ -1,7 +1,7 @@
 import { type Component, createSignal, createEffect, onMount } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
 import Selection from '@components/Selection'
-import { useAppAPIContext } from '@src/store/context/api'
+import { useAppAPIContext } from '@store/api/api'
 
 const FirmwareList: Component = () => {
     const [firmwareVersion, setFirmwareVersion] = createSignal('')

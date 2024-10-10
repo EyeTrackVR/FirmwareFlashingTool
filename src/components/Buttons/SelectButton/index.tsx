@@ -55,7 +55,11 @@ export const SelectButton: Component<IProps> = (props) => {
                                     {props.label}
                                 </p>
                             </div>
-                            <Show when={typeof props.connectionStatus !== 'undefined'}>
+                            <Show
+                                when={
+                                    typeof props.connectionStatus !== 'undefined' &&
+                                    props.connectionStatus !== CONNECTION_STATUS.DISABLED
+                                }>
                                 <ConnectionStatus
                                     mode={props?.connectionStatus ?? CONNECTION_STATUS.UNKNOWN}
                                 />

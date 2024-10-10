@@ -28,11 +28,11 @@ export const Board: Component<IProps> = (props) => {
             }}>
             <div class="flex flex-row items-center gap-[60px] justify-between">
                 <div>
-                    <div class="text-white text-[16px] leading-[20px] font-medium not-italic whitespace-nowrap w-auto">
+                    <div class="text-white text-[16px] leading-[20px] font-medium not-italic w-auto">
                         <p>{props.label}</p>
                     </div>
                     <Show when={props.description}>
-                        <div class="pt-[2px] text-white text-[12px] leading-[20px] font-normal not-italic max-w-[220px] whitespace-nowrap">
+                        <div class="pt-[2px] text-white text-[12px] leading-[20px] font-normal not-italic max-w-[220px] ">
                             <p>
                                 {(props.description ?? '').slice(0, 1).toLocaleUpperCase() +
                                     (props.description ?? '').slice(1).toLocaleLowerCase()}

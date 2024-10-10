@@ -7,7 +7,6 @@ import { createContext, useContext, createMemo, type Component, Accessor } from 
 import { createStore, produce } from 'solid-js/store'
 import { debug, error, warn, trace } from 'tauri-plugin-log-api'
 import { download, upload } from 'tauri-plugin-upload-api'
-import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
 import {
     ENotificationType,
@@ -19,6 +18,7 @@ import {
 import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease, IGHResponse } from '@interfaces/interfaces'
 import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 import { makeRequest } from 'tauri-plugin-request-client'
 
 interface AppAPIContext {

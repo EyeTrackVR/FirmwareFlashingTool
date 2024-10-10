@@ -8,11 +8,12 @@ import type { PersistentSettings } from '@static/types'
 import { Header } from '@containers/Header/Header'
 import Sidebar from '@containers/Sidebar/Index'
 import { ENotificationAction, NAVIGATION } from '@src/static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppContext } from '@store/context/app'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { useAppAPIContext } from '@store/api/api'
+import { setDebugMode } from '@store/appContext/appContext'
+import { debugMode } from '@store/appContext/selectors'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 import { usePersistentStore } from '@store/tauriStore'
+import { useAppUIContext } from '@store/ui/ui'
 
 const ContextMenu = lazy(() => import('@components/ContextMenu'))
 const DebugMenu = lazy(() => import('@components/ContextMenu/DevTools'))
@@ -25,7 +26,6 @@ const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
     const { doGHRequest, channelMode } = useAppAPIContext()
 
-    const { setDebugMode, getDebugMode } = useAppContext()
     const {
         setEnableNotifications,
         setEnableNotificationsSounds,
@@ -69,7 +69,7 @@ const AppRoutes: Component = () => {
             enableNotifications: getEnableNotifications(),
             enableNotificationsSounds: getEnableNotificationsSounds(),
             globalNotificationsType: getGlobalNotificationsType(),
-            debugMode: getDebugMode(),
+            debugMode: debugMode(),
         }
         return settings
     }
@@ -100,7 +100,9 @@ const AppRoutes: Component = () => {
 
     return (
         <div class="flex flex-col h-full">
-            <Header />
+            <Show when={location.pathname !== NAVIGATION.WELCOME}>
+                <Header />
+            </Show>
             <div class="flex h-full flex-row overflow-hidden">
                 <Show when={location.pathname === NAVIGATION.HOME}>
                     <Sidebar

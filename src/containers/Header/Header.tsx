@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from '@solidjs/router'
 import { createMemo } from 'solid-js'
 import MainHeader from '@components/Header'
-import { stepStatus, usb } from '@src/static'
-import { DIRECTION, ENotificationType } from '@src/static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { DIRECTION, stepStatus, USB_ID } from '@src/static'
+import { ENotificationType, NAVIGATION } from '@src/static/types/enums'
+import { useAppAPIContext } from '@store/api/api'
+import { useAppNotificationsContext } from '@store/notifications/notifications'
 import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 
@@ -16,7 +16,7 @@ export const Header = () => {
     const { activeBoard } = useAppAPIContext()
 
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb) ? 1 : 0
+        return activeBoard().includes(USB_ID) ? 1 : 0
     })
 
     const stepData = createMemo(() => {
@@ -24,7 +24,8 @@ export const Header = () => {
     })
 
     const step = createMemo(() => {
-        const index = stepData()?.index ?? 0 - isUSBBoard()
+        if (!stepData()) return 0
+        const index = Number(stepData()?.index ?? 0) - isUSBBoard()
         return index <= 0 ? 1 : index
     })
 
@@ -46,7 +47,7 @@ export const Header = () => {
                     return true
                 }
                 setAbortController()
-                navigate('/')
+                navigate(NAVIGATION.HOME)
             }}
             currentStep={`${step()}/${Object.values(stepStatus).length - isUSBBoard()} `}
         />

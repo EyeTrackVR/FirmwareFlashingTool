@@ -4,7 +4,7 @@ import { Button } from '@components/Buttons/DefaultButton'
 import { Modal } from '@components/Modal/Index'
 import ModalHeader from '@components/ModalHeader/Index'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { beforeFlashingModalID } from '@src/static'
+import { BEFORE_FLASH_MODAL_ID } from '@src/static'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -18,7 +18,7 @@ export interface IProps {
 const BeforeFlashingModal: Component<IProps> = (props) => {
     return (
         <Modal
-            id={beforeFlashingModalID}
+            id={BEFORE_FLASH_MODAL_ID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>

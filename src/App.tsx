@@ -1,6 +1,8 @@
 import { lazy, onMount, Suspense } from 'solid-js'
-import { useAppContextMain } from './store/context/main'
-import { AppProvider } from '@store/context/app'
+import { AppAPIProvider } from '@store/api/api'
+import { handleAppBoot, handleTitlebar } from '@store/appContext/actions'
+import { AppNotificationProvider } from '@store/notifications/notifications'
+import { AppUIProvider } from '@store/ui/ui'
 
 const AppRoutes = lazy(() => import('@routes/Routes'))
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
@@ -8,8 +10,6 @@ const Modals = lazy(() => import('@containers/Modals/Index'))
 const OperatingSystem = lazy(() => import('@containers/OperatingSystem/Index'))
 
 const App = () => {
-    const { handleTitlebar, handleAppBoot } = useAppContextMain()
-
     onMount(() => {
         handleTitlebar(true)
         handleAppBoot()
@@ -17,12 +17,16 @@ const App = () => {
 
     return (
         <Suspense>
-            <AppProvider>
-                <OperatingSystem />
-                <Modals />
-                <AppRoutes />
-                <ToastNotificationWindow />
-            </AppProvider>
+            <AppUIProvider>
+                <AppNotificationProvider>
+                    <AppAPIProvider>
+                        <OperatingSystem />
+                        <Modals />
+                        <AppRoutes />
+                        <ToastNotificationWindow />
+                    </AppAPIProvider>
+                </AppNotificationProvider>
+            </AppUIProvider>
         </Suspense>
     )
 }

@@ -1,5 +1,3 @@
-import { defaultMdnsLength, mdnsLength } from '@src/static'
-
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
 }
@@ -16,11 +14,13 @@ export const isEmpty = <T>(obj: object | Array<T>) => {
     return !obj.length
 }
 
-export const shortMdnsAddress = (text: string) => {
-    if (text.length < defaultMdnsLength) return text
-    const firstHalf = text.slice(0, mdnsLength)
-    const secondHalf = text.slice(text.length - mdnsLength, text.length)
-    return `${firstHalf}...${secondHalf}`
+export const shortAddress = (text: string, size = 24) => {
+    if (text.length <= size * 2) return text
+
+    const start = text.slice(0, size)
+    const end = text.slice(-size)
+
+    return `${start}...${end}`
 }
 
 export const sleep = (ms: number) => {

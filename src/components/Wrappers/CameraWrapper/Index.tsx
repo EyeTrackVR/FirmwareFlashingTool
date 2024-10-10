@@ -1,9 +1,10 @@
 import { type IconTypes } from 'solid-icons'
-import { ParentComponent } from 'solid-js'
-import { ICameraStatistics } from '@interfaces/interfaces'
+import { ParentComponent, Show } from 'solid-js'
+import { IBoardStatistics } from '@interfaces/interfaces'
+import { shortAddress } from '@src/utils'
 
 export interface IProps {
-    cameraStatistics: ICameraStatistics
+    cameraStatistics?: IBoardStatistics
     header: string
     description?: string
     cameraAddress: string
@@ -23,20 +24,23 @@ const CameraWrapper: ParentComponent<IProps> = (props) => {
                             {props.header}
                         </p>
                         <p class="text-[12px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
-                            {props.cameraAddress}
+                            {shortAddress(props.cameraAddress, 12)}
                         </p>
                     </div>
-                    <div class="flex flex-row h-full gap-[12px] justify-center">
-                        <p class="text-[14px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
-                            Mode: {props.cameraStatistics.mode}
-                        </p>
-                        <p class="text-[14px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
-                            {props.cameraStatistics.fps} Fps {props.cameraStatistics.latency}ms
-                        </p>
-                        <p class="text-[14px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
-                            {props.cameraStatistics.mbps} Mbps
-                        </p>
-                    </div>
+                    <Show when={typeof props.cameraStatistics !== 'undefined'}>
+                        <div class="flex flex-row h-full gap-[12px] justify-center">
+                            <p class="text-[14px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
+                                {`Mode: ${props?.cameraStatistics?.mode ?? '--'}`}
+                            </p>
+                            <p class="text-[14px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
+                                {`${props?.cameraStatistics?.fps ?? 0} Fps $
+                                {props?.cameraStatistics?.latency ?? 0}ms`}
+                            </p>
+                            <p class="text-[14px] font-normal text-white leading-[16px] not-italic text-left select-none break-all">
+                                {`${props?.cameraStatistics?.mbps ?? 0} Mbps`}
+                            </p>
+                        </div>
+                    </Show>
                 </div>
             </div>
             {props.children}

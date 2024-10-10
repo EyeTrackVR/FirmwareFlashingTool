@@ -20,7 +20,7 @@ export interface IProps {
 
 export const Footer: Component<IProps> = (props) => {
     return (
-        <footer class={classNames(props.styles, 'flex w-full justify-end gap-[12px]')}>
+        <div class={classNames(props.styles, 'flex w-full justify-end gap-[12px]')}>
             <Show when={props.onClickSecond}>
                 <Button
                     disabled={props.isSecondButtonDisabled}
@@ -42,6 +42,6 @@ export const Footer: Component<IProps> = (props) => {
                     onClick={props.onClickPrimary}
                 />
             </Show>
-        </footer>
+        </div>
     )
 }

@@ -11,6 +11,7 @@ import {
     BUTTON_ACTION,
     CONNECTION_STATUS,
     HARDWARE_TYPE,
+    NAVIGATION,
 } from './enums'
 import type { DebugMode } from '@static/types'
 import type { WebviewWindow } from '@tauri-apps/api/window'
@@ -172,6 +173,7 @@ export interface UiStore {
     menuOpen?: MenuOpen | null
     contextAnchor?: HTMLElement | null
     hideModal: boolean
+    navigationStep: NAVIGATION | undefined
 }
 
 export interface ISignal {
@@ -250,24 +252,21 @@ export interface IFirmwareState {
     label: string
 }
 
-export interface ICameraStatistics {
+export interface IBoardStatistics {
     mode: string
     fps: string
     mbps: string
     latency: string
 }
 
-export interface ICamera {
+export interface IBoard {
+    label: string
     address: string
-    header: string
-    video: string
 }
 
-export interface ICameraHardware {
+export interface IBoardHardware {
     label: string
-    description: string
-    address?: string
-    video?: string
-    mode?: CONNECTION_STATUS
+    address: string
+    mode: CONNECTION_STATUS
     hardwareType: HARDWARE_TYPE
 }
