@@ -28,15 +28,15 @@ jobs:
             matrix:
                 node-version: [18.x]
                 include:
-                    - os: ubuntu-latest
+                    - platform: ubuntu-latest
                       rust_target: x86_64-unknown-linux-gnu
-                    - os: windows-latest
+                    - platform: windows-latest
                       rust_target: x86_64-pc-windows-msvc
-                    - os: macos-latest
+                    - platform: macos-latest
                       rust_target: x86_64-apple-darwin
-                    - os: macos-latest
+                    - platform: macos-latest
                       rust_target: aarch64-apple-darwin
-        runs-on: ${{ matrix.os }}
+        runs-on: ${{ matrix.platform }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -56,7 +56,7 @@ jobs:
                   override: true
                   profile: minimal
                   toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
-                  target: ${{ matrix.platform.rust_target }}
+                  target: ${{ matrix.rust_target }}
 
             - uses: Swatinem/rust-cache@v2
 
@@ -74,7 +74,7 @@ jobs:
                   npm install -g typescript
                   npm install -g pnpm
 
-            - name: install dependencies (windows only)
+            - name: install dependencies (macos only)
               if: matrix.platform == 'macos-latest'
               run: |
                   brew install pnpm
@@ -88,7 +88,7 @@ jobs:
             - uses: JonasKruckenberg/tauri-build@v1.2.3
               id: tauri_build
               with:
-                  target: ${{ matrix.platform.rust_target }}
+                  target: ${{ matrix.rust_target }}
 
             - uses: actions/upload-artifact@v4
               with:
