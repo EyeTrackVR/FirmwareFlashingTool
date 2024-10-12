@@ -32,10 +32,10 @@ jobs:
                       rust_target: x86_64-unknown-linux-gnu
                     - platform: windows-latest
                       rust_target: x86_64-pc-windows-msvc
-                    - platform: macos-latest
-                      rust_target: x86_64-apple-darwin
-                    - platform: macos-latest
-                      rust_target: aarch64-apple-darwin
+                    # - platform: macos-latest
+                    #   rust_target: x86_64-apple-darwin
+                    # - platform: macos-latest
+                    #   rust_target: aarch64-apple-darwin
         runs-on: ${{ matrix.platform }}
         steps:
             - name: Checkout repository
@@ -74,18 +74,10 @@ jobs:
                   npm install -g typescript
                   npm install -g pnpm
 
-            - name: Setup node
-              if: matrix.platform == 'macos-latest'
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-
             - name: install dependencies (macos only)
               if: matrix.platform == 'macos-latest'
               run: |
-                  brew install node@18
                   brew install pnpm
-                  npm install --save-dev @tauri-apps/cli
 
             - name: Install dependencies (PNPM)
               run: pnpm install --no-frozen-lockfile
