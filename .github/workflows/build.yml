@@ -44,7 +44,7 @@ jobs:
                   token: ${{ env.GITHUB_TOKEN }}
 
             - name: Node.js setup ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
                   # node-version-file: '.nvmrc'
@@ -73,6 +73,11 @@ jobs:
               run: |
                   npm install -g typescript
                   npm install -g pnpm
+
+            - name: install dependencies (windows only)
+              if: matrix.platform == 'macos-latest'
+              run: |
+                  brew install pnpm
 
             - name: Install dependencies (PNPM)
               run: pnpm install --no-frozen-lockfile
@@ -107,7 +112,7 @@ jobs:
                   name: production-files
                   path: ./dist
             - name: Setup node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: 18
             - run: npm install -g conventional-changelog-conventionalcommits@6
