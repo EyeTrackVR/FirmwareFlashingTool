@@ -74,6 +74,12 @@ jobs:
                   npm install -g typescript
                   npm install -g pnpm
 
+            - name: Setup node
+              if: matrix.platform == 'macos-latest'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+
             - name: install dependencies (macos only)
               if: matrix.platform == 'macos-latest'
               run: |
