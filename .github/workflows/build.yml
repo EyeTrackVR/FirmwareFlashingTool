@@ -115,7 +115,8 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 20
-            - run: npm install -g conventional-changelog-conventionalcommits@6
+            # remember to update the conventionalcommits version when updating semantic relese
+            - run: npm install -g conventional-changelog-conventionalcommits@8
             - run: npm install -g semantic-release@v24.1.2
             - run: npm install -g @semantic-release/exec
             - run: npm install -g @semantic-release/git
