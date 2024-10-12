@@ -83,6 +83,7 @@ jobs:
             - name: install dependencies (macos only)
               if: matrix.platform == 'macos-latest'
               run: |
+                  brew install node@18
                   brew install pnpm
                   npm install --save-dev @tauri-apps/cli
 
