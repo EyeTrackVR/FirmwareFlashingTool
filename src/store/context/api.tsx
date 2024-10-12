@@ -1,7 +1,7 @@
 import { removeFile, readTextFile, BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { getClient, ResponseType } from '@tauri-apps/api/http'
-import { appConfigDir, join } from '@tauri-apps/api/path'
-import { invoke, convertFileSrc } from '@tauri-apps/api/tauri'
+import { appConfigDir, appDataDir, join } from '@tauri-apps/api/path'
+import { invoke } from '@tauri-apps/api/tauri'
 import { pipe } from 'fp-ts/lib/function'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
@@ -16,7 +16,15 @@ import {
     ESPEndpoints,
     CHANNEL_TYPE,
 } from '@interfaces/enums'
-import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease, IGHResponse } from '@interfaces/interfaces'
+import {
+    AppStoreAPI,
+    IDropdownList,
+    IEndpoint,
+    IGHAsset,
+    IGHRelease,
+    IGHResponse,
+} from '@interfaces/interfaces'
+import { DEFAULT_PORT_NAME } from '@src/static'
 import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
@@ -46,6 +54,7 @@ interface AppAPIContext {
     setRESTStatus: (status: RESTStatus) => void
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
+    activePort: Accessor<{ activePortName: string; autoSelect: boolean }>
     //********************************* endpoints *************************************/
     getEndpoints: Accessor<Map<string, IEndpoint>>
     getEndpoint: (key: string) => IEndpoint
@@ -55,12 +64,15 @@ interface AppAPIContext {
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<boolean>
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
+    setActivePortName: (portName: string, autoSelect: boolean) => void
     setNetwork: (ssid: string, password: string, mdns: string) => void
     setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
     saveManifestPath: (url: string) => void
     confirmFirmwareSelection: (board: string) => void
     manifestPath: Accessor<string>
+    ports: Accessor<IDropdownList[]>
+    setPorts: (ports: IDropdownList[]) => void
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
@@ -103,6 +115,11 @@ export const AppAPIProvider: Component<Context> = (props) => {
         apModeStatus: false,
         mdns: '',
         manifestPath: '',
+        activePort: {
+            activePortName: DEFAULT_PORT_NAME,
+            autoSelect: true,
+        },
+        ports: [],
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -160,6 +177,13 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+    const setPorts = (ports: IDropdownList[]) => {
+        setState(
+            produce((s) => {
+                s.ports = ports
+            }),
+        )
+    }
 
     const setFirmwareType = (type: string) => {
         setState(
@@ -172,6 +196,16 @@ export const AppAPIProvider: Component<Context> = (props) => {
         setState(
             produce((s) => {
                 s.activeBoard = activeBoard
+            }),
+        )
+    }
+    const setActivePortName = (activePortName: string, autoSelect: boolean) => {
+        setState(
+            produce((s) => {
+                s.activePort = {
+                    activePortName,
+                    autoSelect,
+                }
             }),
         )
     }
@@ -235,11 +269,13 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
     const activeBoard = createMemo(() => apiState().activeBoard)
+    const activePort = createMemo(() => apiState().activePort)
     const getRESTStatus = createMemo(() => apiState().restAPI.status)
     const getRESTDevice = createMemo(() => apiState().restAPI.device)
     const getRESTResponse = createMemo(() => apiState().restAPI.response)
     const ssid = createMemo(() => apiState().ssid)
     const password = createMemo(() => apiState().password)
+    const ports = createMemo(() => apiState().ports)
     const getEndpoints = createMemo(() => endpointsMap)
     const getEndpoint = (key: string) =>
         pipe(
@@ -259,13 +295,13 @@ export const AppAPIProvider: Component<Context> = (props) => {
 
     //#region hooks
     const getRelease = async (firmware: string) => {
-        const appConfigDirPath = await appConfigDir()
+        const appDataDirPath = await appDataDir()
         if (firmware === '' || firmware.length === 0) {
             debug('[Github Release]: No firmware selected')
             throw new Error('A firmware must be selected before downloading')
         }
 
-        trace(`[Github Release]: App Config Dir: ${appConfigDirPath}`)
+        trace(`[Github Release]: App Data Dir: ${appDataDirPath}`)
 
         // check if the firmware chosen matches the one names in the firmwareAssets array of objects
         const firmwareAsset = getFirmwareAssets().find((asset) => asset.name === firmware)
@@ -282,7 +318,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                     firmwareAsset.browser_download_url.split('/').length - 1
                 ]
 
-            const path = await join(appConfigDirPath, fileName)
+            const path = await join(appDataDirPath, fileName)
             trace(`[Github Release]: Path: ${path}`)
 
             // get the latest release
@@ -297,50 +333,11 @@ export const AppAPIProvider: Component<Context> = (props) => {
 
             const res = await invoke('unzip_archive', {
                 archivePath: path,
-                targetDir: appConfigDirPath,
+                targetDir: appDataDirPath,
             })
             await removeFile(path)
 
             debug(`[Github Release]: Unzip Response: ${res}`)
-
-            const manifest = await readTextFile('manifest.json', { dir: BaseDirectory.AppConfig })
-
-            const config_json = JSON.parse(manifest)
-
-            if (manifest !== '') {
-                // modify the version property
-                config_json['version'] = getFirmwareVersion()
-                // loop through the builds array and the parts array and update the path property
-                for (let i = 0; i < config_json['builds'].length; i++) {
-                    for (let j = 0; j < config_json['builds'][i]['parts'].length; j++) {
-                        const firmwarePath = await join(
-                            appConfigDirPath,
-                            config_json['builds'][i]['parts'][j]['path'],
-                        )
-                        debug(`[Github Release]: Firmware Path: ${firmwarePath}`)
-                        const firmwareSrc = convertFileSrc(firmwarePath)
-                        debug(`[Github Release]: Firmware Src: ${firmwareSrc}`)
-                        config_json['builds'][i]['parts'][j]['path'] = firmwareSrc
-                    }
-                }
-
-                // write the config file
-                writeTextFile('manifest.json', JSON.stringify(config_json), {
-                    dir: BaseDirectory.AppConfig,
-                })
-                    .then(() => {
-                        debug('[Manifest Updated]: Manifest Updated Successfully')
-                    })
-                    .finally(() => {
-                        debug('[Manifest Updated]: Finished')
-                    })
-                    .catch((err) => {
-                        error(`[Manifest Update Error]: ${err}`)
-                    })
-
-                debug('[Github Release]: Manifest: ', config_json)
-                return
-            }
         } else {
             throw new Error('Selected board is not supported')
         }
@@ -631,6 +628,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 setNetwork,
                 setActiveBoard,
                 activeBoard,
+                activePort,
+                setActivePortName,
                 getGHRestStatus,
                 getFirmwareAssets,
                 getFirmwareVersion,
@@ -661,6 +660,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 saveManifestPath,
                 manifestPath,
                 confirmFirmwareSelection,
+                ports,
+                setPorts,
             }}>
             {props.children}
         </AppAPIContext.Provider>

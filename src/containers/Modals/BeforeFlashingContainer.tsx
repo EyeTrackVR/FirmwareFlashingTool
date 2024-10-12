@@ -15,12 +15,16 @@ import {
 } from '@store/terminal/terminal'
 
 const BeforeFlashingContainer = () => {
-    const { downloadAsset, getFirmwareType, activeBoard, manifestPath } = useAppAPIContext()
+    const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
     const { modal, setOpenModal, hideModal, setHideModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
 
     const isUSBBoard = createMemo(() => {
         return activeBoard().includes(usb)
+    })
+
+    const activePortName = createMemo(() => {
+        return activePort().activePortName
     })
 
     return (
@@ -63,7 +67,7 @@ const BeforeFlashingContainer = () => {
                 restartFirmwareState()
                 installOpenIris(
                     isUSBBoard(),
-                    manifestPath(),
+                    activePortName(),
                     async () => {
                         await downloadAsset(getFirmwareType())
                     },

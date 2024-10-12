@@ -29,6 +29,10 @@ pub async fn unzip_archive(archive_path: String, target_dir: String) -> Result<S
 pub async fn handle_save_window_state<R: tauri::Runtime>(
   app: tauri::AppHandle<R>,
 ) -> Result<(), String> {
+  
+  // disabled on macos, because it's causing infinite loading with a constant white screen
+  // todo fixme  
+  #[cfg(not(target_os = "macos"))]
   app
     .save_window_state(StateFlags::all())
     .expect("[Window State]: Failed to save window state");
@@ -41,6 +45,10 @@ pub async fn handle_save_window_state<R: tauri::Runtime>(
 pub async fn handle_load_window_state<R: tauri::Runtime>(
   window: tauri::Window<R>,
 ) -> Result<(), String> {
+
+  // disabled on macos, because it's causing infinite loading with a constant white screen
+  // todo fixme 
+  #[cfg(not(target_os = "macos"))]
   window
     .restore_state(StateFlags::all())
     .expect("[Window State]: Failed to restore window state");
