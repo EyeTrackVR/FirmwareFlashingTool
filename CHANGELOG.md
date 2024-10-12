@@ -3,6 +3,21 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.5.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0...v1.5.0-beta.1) (2024-10-12)
+
+
+### 🍕 Features
+
+* add node setup for macos ([9e1e231](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/9e1e23106dbd0dddd80fcaeda73851f04a218368))
+* Add pnpm dependency to macOS build ([123c652](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/123c652b46399d1e276c9bd1e79046b4cd86f32c))
+* disable macos builds as a test ([f112bbb](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/f112bbb8aa567fa9a573ef63bca36b72f54a95b8))
+* experimental, try to fix macos arm build issues ([cf14d6f](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/cf14d6f969a108c547c7a75babebad9ea9ee3b33))
+* Fix platform typo ([d17bf22](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/d17bf22a27e82ad3cb94e9a06d82cbd5a2d4db9a))
+* initial stab on posix system support ([4cd4e80](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/4cd4e80559bc3378f1da4f6b7a10f4620d39d5bf))
+* initial stab on posix system support by DASPRiD ([653ff6a](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/653ff6aedd7e57866e3b8e395a023acf1a4b3f2f))
+* install node with brew ([3462794](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/3462794753a79cd8adf80050bb010fb9aa32aea8))
+* Update upload/download actions, enable other platforms in build ([86a5187](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/86a51873a6123bee9dd5c5dec4ec2b7c76a90c54))
+
 ## [1.4.0](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.3.0...v1.4.0) (2024-09-03)
 
 
