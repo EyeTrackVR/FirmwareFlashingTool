@@ -27,20 +27,19 @@ jobs:
             fail-fast: false
             matrix:
                 node-version: [18.x]
-                platform: [windows-latest]
                 include:
-                    #- os: ubuntu-latest
-                    #  rust_target: x86_64-unknown-linux-gnu
+                    - os: ubuntu-latest
+                      rust_target: x86_64-unknown-linux-gnu
                     - os: windows-latest
                       rust_target: x86_64-pc-windows-msvc
-                    #- os: macos-latest
-                    #  rust_target: x86_64-apple-darwin
-                    #- os: macos-latest
-                    #  rust_target: aarch64-apple-darwin
-        runs-on: ${{ matrix.platform }}
+                    - os: macos-latest
+                      rust_target: x86_64-apple-darwin
+                    - os: macos-latest
+                      rust_target: aarch64-apple-darwin
+        runs-on: ${{ matrix.os }}
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   token: ${{ env.GITHUB_TOKEN }}
 
@@ -86,7 +85,7 @@ jobs:
               with:
                   target: ${{ matrix.platform.rust_target }}
 
-            - uses: actions/upload-artifact@v3
+            - uses: actions/upload-artifact@v4
               with:
                   name: production-files
                   path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"
@@ -103,7 +102,7 @@ jobs:
             - name: Create Directory
               run: mkdir -p dist
             - name: Download artifact
-              uses: actions/download-artifact@v2
+              uses: actions/download-artifact@v4
               with:
                   name: production-files
                   path: ./dist
@@ -134,6 +133,6 @@ jobs:
         timeout-minutes: 10
         steps:
             - name: '♻️ remove build artifacts'
-              uses: geekyeggo/delete-artifact@v1
+              uses: geekyeggo/delete-artifact@v5
               with:
                   name: production-files
