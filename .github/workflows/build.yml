@@ -114,7 +114,7 @@ jobs:
             - name: Setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
             - run: npm install -g conventional-changelog-conventionalcommits@6
             - run: npm install -g semantic-release@v24.1.2
             - run: npm install -g @semantic-release/exec
