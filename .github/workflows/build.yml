@@ -78,6 +78,7 @@ jobs:
               if: matrix.platform == 'macos-latest'
               run: |
                   brew install pnpm
+                  npm install --save-dev @tauri-apps/cli
 
             - name: Install dependencies (PNPM)
               run: pnpm install --no-frozen-lockfile
