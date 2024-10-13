@@ -26,7 +26,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [windows-latest, ubuntu-22.04]
+                os: [ubuntu-22.04, windows-latest]
                 node-version: [18.x]
                 include:
                     - platform: ubuntu-22.04
@@ -89,7 +89,7 @@ jobs:
             - uses: JonasKruckenberg/tauri-build@v1.2.3
               id: tauri_build
               with:
-                  target: ${{ matrix.rust_target }}
+                  target: ${{ matrix.platform.rust_target }}
 
             - uses: actions/upload-artifact@v4
               with:
