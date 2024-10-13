@@ -26,6 +26,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
+                os: [windows-latest, ubuntu-latest]
                 node-version: [18.x]
                 include:
                     - platform: ubuntu-latest
@@ -36,7 +37,7 @@ jobs:
                     #   rust_target: x86_64-apple-darwin
                     # - platform: macos-latest
                     #   rust_target: aarch64-apple-darwin
-        runs-on: ${{ matrix.platform }}
+        runs-on: ${{ matrix.os }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
