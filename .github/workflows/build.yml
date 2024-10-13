@@ -26,10 +26,10 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [windows-latest, ubuntu-latest]
+                os: [windows-latest, ubuntu-22.04]
                 node-version: [18.x]
                 include:
-                    - platform: ubuntu-latest
+                    - platform: ubuntu-22.04
                       rust_target: x86_64-unknown-linux-gnu
                     - platform: windows-latest
                       rust_target: x86_64-pc-windows-msvc
@@ -62,10 +62,10 @@ jobs:
             - uses: Swatinem/rust-cache@v2
 
             - name: Install dependencies (ubuntu only)
-              if: matrix.os == 'ubuntu-latest'
+              if: matrix.os == 'ubuntu-22.04'
               run: |
                   sudo apt-get update
-                  sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+                  sudo apt-get install -y  javascriptcoregtk-4.1 libsoup-3.0 libwebkit2gtk-4.0-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev webkit2gtk-4.0 patchelf libsoup2.4-dev
                   npm install -g pnpm
                   npm install -g typescript
 
