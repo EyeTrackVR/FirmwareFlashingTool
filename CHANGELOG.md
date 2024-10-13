@@ -3,6 +3,14 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.5.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.1...v1.5.0-beta.2) (2024-10-12)
+
+### 🍕 Features
+
+* update conventionalcommits version to v8 ([5a9b5a2](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/5a9b5a20eac8091f5debb9305bde97162e3a48ad))
+* Update node version for semantic release ([e0b1ec1](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e0b1ec1b3e1dad39c381879ccadf500138c6ac40))
+* update semantic release to 24.1.2 ([050280f](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/050280f98d465b668b578f8a44fbb15010932a47))
+
 ## [1.5.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0...v1.5.0-beta.1) (2024-10-12)
 
 
