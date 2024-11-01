@@ -2,7 +2,9 @@
 name = "firmware_flashing_tool"
 version = "1.4.0"
 description = "A tool to flash the firmware of the EyeTrackVR device."
-authors = ["DaOfficialWizard"]
+authors = [
+  "DaOfficialWizard",
+]
 license = "MIT"
 repository = "https://github.com/RedHawk989/EyeTrackVR"
 default-run = "firmware_flashing_tool"
@@ -60,10 +62,15 @@ branch = "v1"
 
 [dependencies.tokio]
 version = "1"
-features = ["full"]
+features = [
+  "full",
+]
 
 [workspace]
-members = ["src/lib/api", "src/lib/util"]
+members = [
+  "src/lib/api",
+  "src/lib/util",
+]
 
 [workspace.dependencies]
 dialoguer = "0.11.0"
@@ -71,32 +78,83 @@ log = "0.4.21"
 
 [workspace.dependencies.reqwest]
 version = "0.11"
-features = ["json", "rustls-tls"]
+features = [
+  "json",
+  "rustls-tls",
+]
 
 [workspace.dependencies.serde]
 version = "1.0.197"
-features = ["derive"]
+features = [
+  "derive",
+]
 
 [workspace.dependencies.specta]
 version = "2.0.0-rc.7"
-features = ["functions", "tauri"]
+features = [
+  "functions",
+  "tauri",
+]
 
 [workspace.dependencies.tauri-specta]
 version = "2.0.0-rc.4"
-features = ["javascript", "typescript"]
+features = [
+  "javascript",
+  "typescript",
+]
 
 [workspace.dependencies.tauri]
 version = "1.6.1"
-features = ["process-exit", "protocol-asset", "fs-all", "dialog-all", "http-all", "icon-ico", "notification-all", "os-all", "path-all", "process-relaunch", "shell-open", "system-tray", "window-center", "window-close", "window-create", "window-hide", "window-maximize", "window-minimize", "window-request-user-attention", "window-set-decorations", "window-set-focus", "window-set-fullscreen", "window-set-position", "window-set-resizable", "window-set-size", "window-set-title", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"]
+features = [
+  "process-exit",
+  "protocol-asset",
+  "fs-all",
+  "dialog-all",
+  "http-all",
+  "icon-ico",
+  "notification-all",
+  "os-all",
+  "path-all",
+  "process-relaunch",
+  "shell-all",
+  "system-tray",
+  "window-center",
+  "window-close",
+  "window-create",
+  "window-hide",
+  "window-maximize",
+  "window-minimize",
+  "window-request-user-attention",
+  "window-set-decorations",
+  "window-set-focus",
+  "window-set-fullscreen",
+  "window-set-position",
+  "window-set-resizable",
+  "window-set-size",
+  "window-set-title",
+  "window-show",
+  "window-start-dragging",
+  "window-unmaximize",
+  "window-unminimize",
+  "process-command-api",
+  "devtools",                      # TODO: delete it later 
+]
 
 [features]
-default = ["custom-protocol"]
-custom-protocol = ["tauri/custom-protocol"]
-updater = ["tauri/updater"]
+default = [
+  "custom-protocol",
+]
+custom-protocol = [
+  "tauri/custom-protocol",
+]
+updater = [
+  "tauri/updater",
+]
 
 [build-dependencies.tauri-build]
 version = "1.5.1"
-features = []
+features = [
+]
 
 [profile.dev]
 debug = 0

@@ -23,12 +23,7 @@ struct SingleInstancePayload {
   cwd: String,
 }
 
-#[derive(Clone, Serialize)]
-struct SystemTrayPayload {
-  message: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Serialize, Debug, Deserialize)]
 struct Config {
   names: Vec<String>,
   urls: Vec<String>,
