@@ -1,5 +1,5 @@
 import { createMemo } from 'solid-js'
-import { BUTTON_ACTION, TRACKER_TYPE, HARDWARE_TYPE } from '@interfaces/enums'
+import { TRACKER_TYPE, HARDWARE_TYPE, BUTTON_ACTION } from '@interfaces/enums'
 import Homepage from '@pages/Homepage/Index'
 import { boardStatistics, sortedBoards } from '@store/appContext/selectors'
 

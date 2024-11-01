@@ -14,6 +14,7 @@ use tauri::{self, ipc::RemoteDomainAccessScope, Manager, RunEvent, WindowEvent};
 
 // use custom modules
 mod modules;
+use modules::initialize_etvr_backend;
 use modules::menu;
 use modules::tauri_commands;
 
@@ -73,9 +74,10 @@ async fn main() -> tauri::Result<()> {
       let app_handle = app.handle();
 
       app.windows().iter().for_each(|(_, window)| {
+        initialize_etvr_backend::initialize_etvr_backend(window.clone());
+
         tokio::spawn({
           let window = window.clone();
-
           async move {
             sleep(Duration::from_secs(3)).await;
             if !window.is_visible().unwrap_or(true) {

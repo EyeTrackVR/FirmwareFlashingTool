@@ -4,10 +4,10 @@ import { handleAppBoot, handleTitlebar } from '@store/appContext/actions'
 import { AppNotificationProvider } from '@store/notifications/notifications'
 import { AppUIProvider } from '@store/ui/ui'
 
-const AppRoutes = lazy(() => import('@routes/Routes'))
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
-const Modals = lazy(() => import('@containers/Modals/Index'))
 const OperatingSystem = lazy(() => import('@containers/OperatingSystem/Index'))
+const Modals = lazy(() => import('@containers/Modals/Index'))
+const AppRoutes = lazy(() => import('@routes/Routes'))
 
 const App = () => {
     onMount(() => {
