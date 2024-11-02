@@ -7,7 +7,6 @@ import { AppUIProvider } from '@store/ui/ui'
 const AppRoutes = lazy(() => import('@routes/Routes'))
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
 const Modals = lazy(() => import('@containers/Modals/Index'))
-const OperatingSystem = lazy(() => import('@containers/OperatingSystem/Index'))
 
 const App = () => {
     onMount(() => {
@@ -20,7 +19,6 @@ const App = () => {
             <AppUIProvider>
                 <AppNotificationProvider>
                     <AppAPIProvider>
-                        <OperatingSystem />
                         <Modals />
                         <AppRoutes />
                         <ToastNotificationWindow />

@@ -1,11 +1,10 @@
 import { useNavigate } from '@solidjs/router'
-import { appDataDir, join } from '@tauri-apps/api/path'
-import { convertFileSrc } from '@tauri-apps/api/tauri'
-import { createEffect, createMemo, createSignal, onMount } from 'solid-js'
-import { debug } from 'tauri-plugin-log-api'
+import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 import { ENotificationType, FLASH_STATUS, MODAL_TYPE, NAVIGATION } from '@interfaces/enums'
+import { IDropdownList } from '@interfaces/interfaces'
 import Terminal from '@pages/Terminal/Index'
-import { BOARD_CONNECTION_METHOD, USB_ID } from '@src/static'
+import { espApi, UsbSerialPortInfo } from '@src/esp/api'
+import { BOARD_CONNECTION_METHOD, DEFAULT_PORT_NAME, USB_ID } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/api/api'
 import { useAppNotificationsContext } from '@store/notifications/notifications'
@@ -26,9 +25,16 @@ import {
 import { useAppUIContext } from '@store/ui/ui'
 
 export const ManageFlashFirmware = () => {
-    const [manifestPath, setManifestPath] = createSignal<string>('----')
-    const { getFirmwareVersion, activeBoard, downloadAsset, getFirmwareType, saveManifestPath } =
-        useAppAPIContext()
+    const {
+        getFirmwareVersion,
+        activeBoard,
+        downloadAsset,
+        getFirmwareType,
+        setActivePortName,
+        activePort,
+        ports,
+        setPorts,
+    } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
     const { setOpenModal, hideModal } = useAppUIContext()
     const navigate = useNavigate()
@@ -38,21 +44,51 @@ export const ManageFlashFirmware = () => {
         restartFirmwareState()
     })
 
+    let hasCleared = false
+
+    const loadPorts = (availablePorts: UsbSerialPortInfo[]) => {
+        if (ports().length === availablePorts.length) return
+
+        if (!availablePorts.length) {
+            if (!hasCleared) {
+                setActivePortName(DEFAULT_PORT_NAME, true)
+                setPorts([])
+                hasCleared = true
+            }
+            return
+        }
+
+        hasCleared = false
+
+        const portList: IDropdownList[] = availablePorts.map((port) => ({
+            label: port.portName,
+            description:
+                port?.product && port?.manufacturer
+                    ? `(${port.manufacturer}) ${port.product}`
+                    : `${port.vid}:${port.pid}`,
+        }))
+
+        if (activePort().autoSelect) {
+            setActivePortName(portList[0]?.label ?? DEFAULT_PORT_NAME, true)
+        }
+
+        setPorts(portList)
+    }
+
+    const onLoadError = () => {
+        addNotification({
+            title: 'Failed to load ports',
+            message: 'Failed to load ports',
+            type: ENotificationType.ERROR,
+        })
+    }
+
     createEffect(() => {
-        appDataDir()
-            .then((appDataDirPath) => {
-                debug(`[WebSerial]: appDataDirPath ${appDataDirPath}`)
-                join(appDataDirPath, 'manifest.json').then((manifestfilePath) => {
-                    debug(`[WebSerial]: manifestfilePath ${manifestfilePath}`)
-                    const url = convertFileSrc(manifestfilePath)
-                    debug(`[WebSerial]: url ${url}`)
-                    if (!hideModal()) {
-                        saveManifestPath(url)
-                    }
-                    setManifestPath(url)
-                })
-            })
-            .catch(() => {})
+        const interval = setInterval(() => {
+            espApi.availablePorts().then(loadPorts).catch(onLoadError)
+        }, 250)
+
+        onCleanup(() => clearInterval(interval))
     })
 
     const flashFirmwareState = createMemo(() => {
@@ -78,8 +114,14 @@ export const ManageFlashFirmware = () => {
         return connectionMethod ? `${activeBoard()} (${connectionMethod})` : activeBoard()
     })
 
+    const activePortName = createMemo(() => {
+        return activePort().activePortName
+    })
+
     return (
         <Terminal
+            activePort={activePort()}
+            ports={ports()}
             board={board()}
             isUSBBoard={isUSBBoard()}
             percentageProgress={percentageProgress()}
@@ -88,6 +130,13 @@ export const ManageFlashFirmware = () => {
             onClickOpenDocs={openDocs}
             firmwareVersion={`Openiris-${getFirmwareVersion()}`}
             firmwareState={flashFirmwareState().filter((el) => el?.status !== FLASH_STATUS.NONE)}
+            onClickPort={(port) => {
+                setActivePortName(port, false)
+                const elem: Element | null = document.activeElement
+                if (elem instanceof HTMLElement) {
+                    elem?.blur()
+                }
+            }}
             onClickInstallOpenIris={() => {
                 if (isActiveProcess()) {
                     addNotification(notification())
@@ -102,7 +151,7 @@ export const ManageFlashFirmware = () => {
                 restartFirmwareState()
                 installOpenIris(
                     isUSBBoard(),
-                    manifestPath(),
+                    activePortName(),
                     async () => {
                         await downloadAsset(getFirmwareType())
                     },
@@ -112,12 +161,13 @@ export const ManageFlashFirmware = () => {
                 ).catch(() => ({}))
             }}
             onClickGetLogs={() => {
+                if (activePortName() === DEFAULT_PORT_NAME) return
                 if (isActiveProcess()) {
                     addNotification(notification())
                     return
                 }
                 setAbortController('logs')
-                getFirmwareLogs(simulationAbortController()).catch(() => {})
+                getFirmwareLogs(activePortName(), simulationAbortController()).catch(() => {})
             }}
             onClickDownloadLogs={() => {
                 if (!detailedLogs().toString()) {
@@ -139,6 +189,7 @@ export const ManageFlashFirmware = () => {
                 setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
             }}
             onClickAPMode={() => {
+                if (activePortName() === DEFAULT_PORT_NAME) return
                 if (isActiveProcess()) {
                     addNotification(notification())
                     return

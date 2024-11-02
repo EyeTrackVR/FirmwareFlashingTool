@@ -13,23 +13,24 @@ import {
     USB_ID,
 } from '@src/static'
 import { DebugMode } from '@src/static/types'
-import { TITLEBAR_ACTION } from '@src/static/types/enums'
+import { MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/api/api'
 import { setDebugMode } from '@store/appContext/appContext'
 import { debugMode } from '@store/appContext/selectors'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
+import { useAppUIContext } from '@store/ui/ui'
 
 export const ManageBoard = () => {
     const navigate = useNavigate()
     const {
         getFirmwareAssets,
         getFirmwareVersion,
-        setFirmwareType,
+        confirmFirmwareSelection,
         activeBoard,
-        setActiveBoard,
         channelMode,
         setChannelMode,
     } = useAppAPIContext()
+    const { setOpenModal } = useAppUIContext()
 
     const boards: Accessor<IDropdownList[]> = createMemo(() => {
         return getFirmwareAssets()
@@ -41,8 +42,22 @@ export const ManageBoard = () => {
                 }
             })
             .sort((boardA, boardB) => {
-                if (SUPPORTED_BOARDS.includes(boardA.label.replace('_release', ''))) return -1
-                if (SUPPORTED_BOARDS.includes(boardB.label.replace('_release', ''))) return 1
+                const boardALabel = boardA.label.replace('_release', '')
+                const boardBLabel = boardB.label.replace('_release', '')
+                const isBoardARelease = boardA.label.includes('_release')
+                const isBoardBRelease = boardB.label.includes('_release')
+
+                const boardAIsSupported = SUPPORTED_BOARDS.includes(boardALabel)
+                const boardBIsSupported = SUPPORTED_BOARDS.includes(boardBLabel)
+
+                if (boardAIsSupported && boardBIsSupported) {
+                    if (isBoardARelease && !isBoardBRelease) return 1
+                    if (!isBoardARelease && isBoardBRelease) return -1
+                }
+
+                if (boardAIsSupported && !boardBIsSupported) return -1
+                if (!boardAIsSupported && boardBIsSupported) return 1
+
                 return 0
             })
     })
@@ -92,17 +107,19 @@ export const ManageBoard = () => {
                 navigate(isUSBBoard() ? '/flashFirmware' : '/network')
             }}
             onSubmit={(value) => {
-                if (activeBoard() === value) return
-                setIsSoftwareDownloaded(false)
                 const elem: Element | null = document.activeElement
-                setActiveBoard(value)
-                const temp = getFirmwareAssets().find((item) => item.name === value)?.name
-                const msg = temp ? temp : 'Not Selected'
-                debug(`[Firmware]: ${msg}`)
-                setFirmwareType(msg)
                 if (elem instanceof HTMLElement) {
                     elem?.blur()
                 }
+
+                if (activeBoard() === value) return
+                if (value.match(/_release/)) {
+                    setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_SELECT_BOARD, board: value })
+                    return
+                }
+
+                setIsSoftwareDownloaded(false)
+                confirmFirmwareSelection(value)
             }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
