@@ -40,6 +40,9 @@ workspace = true
 [dependencies.tauri-plugin-request-client]
 path = "src/lib/api"
 
+[dependencies.tauri-plugin-esp]
+path = "src/lib/esp"
+
 [dependencies.tauri-plugin-window-state]
 git = "https://github.com/tauri-apps/plugins-workspace"
 branch = "v1"
@@ -70,6 +73,7 @@ features = [
 members = [
   "src/lib/api",
   "src/lib/util",
+  "src/lib/esp",
 ]
 
 [workspace.dependencies]

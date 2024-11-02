@@ -64,6 +64,7 @@ async fn main() -> tauri::Result<()> {
     .plugin(tauri_plugin_request_client::init())
     // save window position and size between sessions
     .plugin(tauri_plugin_window_state::Builder::default().build())
+    .plugin(tauri_plugin_esp::init())
     .setup(move |app| {
       // TODO: Implement the Updater
       //#[cfg(feature = "updater")]

@@ -96,7 +96,6 @@ export const Devtools: Component<IProps> = (props) => {
                                 label={props.channelMode}
                             />
                             <DropdownList
-                                isScrollbar
                                 activeElement={props.debugMode}
                                 data={props.debugModes}
                                 tabIndex={0}

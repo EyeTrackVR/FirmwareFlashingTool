@@ -1,6 +1,7 @@
 import { Match, Show, Switch } from 'solid-js'
 import ApModeContainer from './ApModeModalContainer'
 import BeforeFlashingModal from './BeforeFlashingContainer'
+import BeforeSelectBoardModal from './BeforeSelectBoardContainer'
 import WifiModal from './WifiModalcontainer'
 import { MODAL_TYPE } from '@interfaces/enums'
 import { useAppUIContext } from '@store/ui/ui'
@@ -20,6 +21,9 @@ export const ModalRoot = () => {
                     </Match>
                     <Match when={modal().type === MODAL_TYPE.BEFORE_FLASHING}>
                         <BeforeFlashingModal />
+                    </Match>
+                    <Match when={modal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}>
+                        <BeforeSelectBoardModal />
                     </Match>
                 </Switch>
             </div>

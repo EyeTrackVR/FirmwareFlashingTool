@@ -148,6 +148,11 @@ export interface AppStoreNotifications {
     globalNotificationsType: ENotificationAction
 }
 
+export type IActivePort = {
+    activePortName: string
+    autoSelect: boolean
+}
+
 export interface AppStoreAPI {
     loader: boolean
     restAPI: IRest
@@ -160,9 +165,12 @@ export interface AppStoreAPI {
     mdns: string
     channelMode: CHANNEL_TYPE
     manifestPath: string
+    activePort: IActivePort
+    ports: IDropdownList[]
 }
 
 export interface IOpenModal {
+    board?: string
     open: boolean
     type: MODAL_TYPE
 }

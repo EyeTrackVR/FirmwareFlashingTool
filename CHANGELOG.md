@@ -3,6 +3,51 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.5.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.1...v1.5.0-beta.2) (2024-10-12)
+
+### 🍕 Features
+
+* update conventionalcommits version to v8 ([5a9b5a2](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/5a9b5a20eac8091f5debb9305bde97162e3a48ad))
+* Update node version for semantic release ([e0b1ec1](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e0b1ec1b3e1dad39c381879ccadf500138c6ac40))
+* update semantic release to 24.1.2 ([050280f](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/050280f98d465b668b578f8a44fbb15010932a47))
+
+## [1.5.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0...v1.5.0-beta.1) (2024-10-12)
+
+
+### 🍕 Features
+
+* add node setup for macos ([9e1e231](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/9e1e23106dbd0dddd80fcaeda73851f04a218368))
+* Add pnpm dependency to macOS build ([123c652](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/123c652b46399d1e276c9bd1e79046b4cd86f32c))
+* disable macos builds as a test ([f112bbb](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/f112bbb8aa567fa9a573ef63bca36b72f54a95b8))
+* experimental, try to fix macos arm build issues ([cf14d6f](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/cf14d6f969a108c547c7a75babebad9ea9ee3b33))
+* Fix platform typo ([d17bf22](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/d17bf22a27e82ad3cb94e9a06d82cbd5a2d4db9a))
+* initial stab on posix system support ([4cd4e80](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/4cd4e80559bc3378f1da4f6b7a10f4620d39d5bf))
+* initial stab on posix system support by DASPRiD ([653ff6a](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/653ff6aedd7e57866e3b8e395a023acf1a4b3f2f))
+* install node with brew ([3462794](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/3462794753a79cd8adf80050bb010fb9aa32aea8))
+* Update upload/download actions, enable other platforms in build ([86a5187](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/86a51873a6123bee9dd5c5dec4ec2b7c76a90c54))
+
+## [1.4.0](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.3.0...v1.4.0) (2024-09-03)
+
+
+### 🍕 Features
+
+* Add a modal confirming firmware selection ([704055c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/704055c0bd5c68654b11f17b01061b817589176a))
+* Add dismissible readme panel before flashing ([7bbb6ae](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/7bbb6ae20b6321604aa0ad5c1de9894d9292ce6a))
+* add firmware beta release channel ([eca16b7](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/eca16b7b55546cab49020a955b526806b7023b8e))
+* Add support for setting MDNS, add support for new serial command layout ([e2a29fd](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e2a29fd3e19e368170344dc34d65d23d6a1292de))
+* Implement custom terminal, rework flashing flow, improve UX ([03e0ef6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/03e0ef6552dc523f7b98d3a36102a683e854e21e))
+* Move network provisioning to a separate step ([90ed5bf](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/90ed5bf8effded38518d71c94205993f0499f5d2))
+* pin rust toolchain version to 1.79.0 ([59df86e](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/59df86e35355e21e13b02e4991685a6414fb5dab))
+* Rewrite the flashing tool to support a more streamlined UX with a completely custom terminal view, fix logs  ([66117fc](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/66117fc36c1a7dbd744f2909ecb0b1169da88bfc))
+* ux improvements ([ba722e6](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/ba722e69f2f35748b0d4cf24af05b1d3966ebd66))
+
+## [1.4.0-beta.5](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.4...v1.4.0-beta.5) (2024-08-28)
+
+
+### 🍕 Features
+
+* Add a modal confirming firmware selection ([704055c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/704055c0bd5c68654b11f17b01061b817589176a))
+
 ## [1.4.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2024-08-17)
 
 

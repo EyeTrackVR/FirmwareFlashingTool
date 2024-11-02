@@ -17,14 +17,15 @@ export const QUESTION_MODAL_ID = 'questionModal'
 export const AP_MODAL_ID = 'apMode'
 export const WIFI_MODAL_ID = 'wifiMode'
 export const BEFORE_FLASH_MODAL_ID = 'beforeFlashingMode'
-export const OPERATING_SYSTEM_MODAL_ID = 'operatingSystem'
 export const DEBUL_MODAL_ID = 'debugModal'
 export const STATIC_MNDS_NAME = 'openiristracker'
 export const DEVICE_LOST = 'The device has been lost.'
+export const BEFORE_SELECT_BOARD_MODAL_ID = 'BeforeSelectBoardMode'
 export const STREAM_IS_UNDER = 'The stream is under'
 export const SSID_MISSING = 'ssid missing'
 export const AP_IP_ADDRESS = 'AP IP address:'
 export const ADD_BOARD_LIMIT = 2
+export const DEFAULT_PORT_NAME = 'auto'
 
 const CIRCLE_SIZE = Math.PI * (CIRCLE_RADIUS * 2)
 
