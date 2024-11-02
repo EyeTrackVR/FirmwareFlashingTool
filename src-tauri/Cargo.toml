@@ -137,7 +137,7 @@ features = [
   "window-unmaximize",
   "window-unminimize",
   "process-command-api",
-  "devtools",                      # TODO: delete it later 
+  # "devtools",                      # only for debugging
 ]
 
 [features]
