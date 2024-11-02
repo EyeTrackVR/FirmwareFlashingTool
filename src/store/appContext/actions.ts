@@ -51,8 +51,5 @@ export const handleTitlebar = (main = false) => {
 
 export const getDetachConsole = () => {
     const detachConsole = attachConsole()
-
     return detachConsole
 }
-
-//#endregion

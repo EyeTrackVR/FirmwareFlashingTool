@@ -80,11 +80,16 @@
         ]
       },
       "shell": {
-        "all": false,
-        "execute": false,
-        "open": ".*",
-        "scope": [],
-        "sidecar": false
+        "all": true,
+        "execute": true,
+        "sidecar": true,
+        "open": true,
+        "scope": [
+          {
+            "name": "backend/backend",
+            "sidecar": true
+          }
+        ]
       },
       "window": {
         "all": false,
@@ -133,8 +138,12 @@
       ],
       "identifier": "com.eyetrackvrfft.dev",
       "longDescription": "",
-      "resources": [],
-      "externalBin": [],
+      "resources": [
+        "backend"
+      ],
+      "externalBin": [
+        "backend/backend"
+      ],
       "shortDescription": "",
       "targets": "all",
       "macOS": {
