@@ -3,6 +3,12 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.5.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.3...v1.5.0-beta.4) (2025-01-14)
+
+### 🍕 Features
+
+* Force semantic release rebuild to test linux builds ([d9ca15b](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/d9ca15b821f2cc2043ec0ece29ef152d510dfbfa))
+
 ## [1.5.0-beta.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.2...v1.5.0-beta.3) (2025-01-14)
 
 ### 🍕 Features
