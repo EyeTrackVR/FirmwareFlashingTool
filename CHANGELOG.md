@@ -3,6 +3,16 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.5.0-beta.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.2...v1.5.0-beta.3) (2025-01-14)
+
+### 🍕 Features
+
+* Add missing dependencies for usb flashing utility on linux ([aa81338](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/aa81338875cfca3e0c2b1ecbb7de2835724c975d))
+* add missing ubuntu dependencies, downgrade ubuntu version ([55c3d8e](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/55c3d8e35f5de8fc24dc4554a4b3c8ec281a89a9))
+* Hopefully fix ubuntu build for linux ([84d5f02](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/84d5f0216c14dd1352b5f8f802d4b464be8918bb))
+* make the build actually run for ubuntu and windows ([8aee984](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/8aee984755947b51ebadc07a737bd8f20818e7e6))
+* Switch os to platform to fix ubuntu pipeline ([5cf716a](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/5cf716a65e16032b0b488e13ccf2218d0748de36))
+
 ## [1.5.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.1...v1.5.0-beta.2) (2024-10-12)
 
 ### 🍕 Features
