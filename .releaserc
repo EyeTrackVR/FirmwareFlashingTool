@@ -171,15 +171,9 @@
             {
                 "addReleases": "bottom",
                 "assets": [
-                    {
-                        "path": "./dist/**/*.msi"
-                    },
-                    {
-                        "path": "./dist/**/*.AppImage"
-                    },
-                    {
-                        "path": "./dist/**/*.deb"
-                    }
+                    { "path": "./dist/**/*.msi" },
+                    { "path": "./dist/**/*.AppImage" },
+                    { "path": "./dist/**/*.deb" }
                 ]
             }
         ],
