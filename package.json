@@ -1,6 +1,6 @@
 {
   "name": "etvr-firmware-flasher-tool",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "description": "A SolidJS project for EyeTrackVR",
   "author": "EyeTrackVR",
@@ -83,6 +83,7 @@
     "solidjs-use": "^2.3.0",
     "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log",
     "tauri-plugin-request-client": "workspace:*",
+    "tauri-plugin-serialport-api": "github:deid84/tauri-plugin-serialport#v1.0.0",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store",
     "tauri-plugin-upload-api": "github:tauri-apps/tauri-plugin-upload"
   }

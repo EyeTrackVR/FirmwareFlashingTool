@@ -15,12 +15,12 @@ export const wifiModalID = 'wifiMode'
 export const beforeFlashingModalID = 'beforeFlashingMode'
 export const beforeSelectBoardModalID = 'BeforeSelectBoardMode'
 export const debugModalId = 'debugModal'
-export const operatingSystemModal = 'operatingSystem'
 export const staticMdns = 'openiristracker'
 export const DEVICE_LOST = 'The device has been lost.'
 export const STREAM_IS_UNDER = 'The stream is under'
 export const SSID_MISSING = 'ssid missing'
 export const AP_IP_ADDRESS = 'AP IP address:'
+export const DEFAULT_PORT_NAME = 'auto'
 
 const circleSize = Math.PI * (radius * 2)
 

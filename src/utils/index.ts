@@ -76,23 +76,16 @@ export const trimLogsByTextLength = (logs: string, maxLength: number): string[] 
     return validLogs
 }
 
-export const checkSystem = () => {
-    //@ts-expect-error userAgentData can be undefined
-    const platform = window.navigator?.userAgentData?.platform || window.navigator.platform
-    const systems = {
-        macOS: ['macOS', 'Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
-        Windows: ['Win32', 'Win64', 'Windows', 'WinCE'],
-    }
+export const shortName = (label: string, size: number = 12): string => {
+    if (label.length <= size * 2) return label
+    return `${label.slice(0, size)}...${label.slice(-size)}`
+}
 
-    for (const [os, platforms] of Object.entries(systems)) {
-        if (platforms.includes(platform)) {
-            return os
-        }
+export const  stringToHex = (str: string) => {
+    let hex = '';
+    for (let i = 0; i < str.length; i++) {
+        // Convert each character to its UTF-16 code unit and then to hex
+        hex += str.charCodeAt(i).toString(16).padStart(2, '0'); // pad to 2 digits
     }
-
-    if (/Linux/.test(platform)) {
-        return 'Linux'
-    }
-
-    return ''
+    return hex;
 }

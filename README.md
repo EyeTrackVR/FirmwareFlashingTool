@@ -29,7 +29,7 @@ This project uses custom `Tauri Plugins` to communicate with the hardware. These
 > You **must** run the following command to install the project deps and build the plugins before running the app:
 
 ```bash
-pnpm setup
+pnpm run setup
 ```
 
 ## Available Scripts

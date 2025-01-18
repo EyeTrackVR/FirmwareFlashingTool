@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "EyeTrackVR Firmware Flashing Tool",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   "tauri": {
     "allowlist": {
@@ -128,7 +128,7 @@
       "icon": [
         "../public/images/icons/icon-48x48.png",
         "../public/images/icons/icon-128x128.png",
-        "../public/images/icons/144x144.png",
+        "../public/images/icons/icon-144x144.png",
         "../public/images/icons/favicon.ico"
       ],
       "identifier": "com.eyetrackvrfft.dev",

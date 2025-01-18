@@ -1,11 +1,15 @@
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
+import { Button } from '@components/Buttons/DefaultButton'
 import { Footer } from '@components/Footer/Footer'
+import PortDropdown from '@components/PortDropdown'
 import Firmware from '@components/Terminal/Firmware/Index'
 import Step from '@components/Terminal/Step/Index'
 import TerminalHeader from '@components/Terminal/TerminalHeader/Index'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
-import { IFirmwareState } from '@interfaces/interfaces'
+import { IActivePort, IDropdownList, IFirmwareState } from '@interfaces/interfaces'
 import { VirtualList } from '@pages/VirtualList/Index'
+import { DEFAULT_PORT_NAME } from '@src/static'
+import { shortName } from '@src/utils'
 
 export interface IProps {
     onClickInstallOpenIris: () => void
@@ -14,13 +18,16 @@ export interface IProps {
     onClickOpenDocs: () => void
     onClickGetLogs: () => void
     onClickAPMode: () => void
+    onClickPort: (port: string) => void
     onClickBack: () => void
-    percentageProgress: number
     logs: Record<FLASH_STEP, string[]> | object
     firmwareState: IFirmwareState[]
+    ports: IDropdownList[]
+    percentageProgress: number
     isActiveProcess: boolean
     firmwareVersion: string
     isUSBBoard: boolean
+    activePort: IActivePort
     board: string
 }
 
@@ -34,6 +41,29 @@ const Terminal: Component<IProps> = (props) => {
             containerRef.scrollTop = containerRef.scrollHeight
         }
     })
+
+    const handleClick = (action: () => void) => () => {
+        setOpen({})
+        action()
+    }
+
+    const renderPortDropdown = (additionalClass: string) => (
+        <PortDropdown
+            class={additionalClass}
+            onClick={(port) => props.onClickPort(port.label)}
+            data={props.ports}
+            isScrollbar={props.ports.length >= 4}
+            label={shortName(
+                props.activePort.autoSelect
+                    ? DEFAULT_PORT_NAME
+                    : props.activePort.activePortName.toLowerCase(),
+                3,
+            )}
+            activeElement={
+                props.activePort.autoSelect ? DEFAULT_PORT_NAME : props.activePort.activePortName
+            }
+        />
+    )
 
     return (
         <div class="flex flex-col justify-between h-full gap-[12px] pt-[24px]">
@@ -108,66 +138,74 @@ const Terminal: Component<IProps> = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-[12px] max-[890px]:flex-col flex-row">
-                        <Footer
-                            isPrimaryButtonDisabled={props.isActiveProcess}
-                            isSecondButtonDisabled={props.isActiveProcess}
-                            secondLabel="Install Openiris"
-                            primaryLabel="Show logs"
-                            size="max-[890px]:w-full"
-                            styles="!justify-start"
-                            isPrimaryActive={true}
-                            isSecondActive={true}
-                            onClickPrimary={() => {
-                                setOpen({})
-                                props.onClickGetLogs()
-                            }}
-                            onClickSecond={() => {
-                                setOpen({})
-                                props.onClickInstallOpenIris()
-                            }}
-                        />
-                        <Footer
-                            isPrimaryButtonDisabled={props.isActiveProcess}
-                            isSecondButtonDisabled={props.isActiveProcess}
-                            primaryLabel="Update Network"
-                            size="max-[890px]:w-full"
-                            isPrimaryActive={true}
-                            secondLabel="Download logs"
-                            styles="w-full"
-                            hidePrimaryButton={props.isUSBBoard}
-                            onClickPrimary={() => {
-                                setOpen({})
-                                props.onClickUpdateNetwork()
-                            }}
-                            onClickSecond={props.onClickDownloadLogs}
-                        />
-                        <Show when={!props.isUSBBoard}>
-                            <Footer
-                                styles="max-[890px]:w-full !w-auto"
-                                size="max-[890px]:w-full"
-                                primaryLabel="AP mode"
-                                isPrimaryActive={true}
-                                onClickPrimary={() => {
-                                    setOpen({})
-                                    props.onClickAPMode()
-                                }}
+                    <div class="flex gap-3 max-[1027px]:flex-col flex-row w-full">
+                        <div class="flex gap-3">
+                            <Button
+                                size="max-[1027px]:w-[92%]"
+                                type="button"
+                                label="Install Openiris"
+                                isActive={true}
+                                onClick={handleClick(props.onClickInstallOpenIris)}
                             />
+                            <Button
+                                size="max-[1027px]:hidden"
+                                type="button"
+                                label="Show logs"
+                                onClick={handleClick(props.onClickGetLogs)}
+                            />
+                            {renderPortDropdown('max-[1027px]:visible !w-full min-[1028px]:hidden')}
+                        </div>
+                        <div class="flex w-full justify-end gap-3">
+                            <Button
+                                size="max-[1027px]:w-full"
+                                type="button"
+                                label="Download logs"
+                                onClick={props.onClickDownloadLogs}
+                            />
+                            <Button
+                                size="max-[1027px]:visible w-full min-[1028px]:hidden"
+                                type="button"
+                                label="Show logs"
+                                onClick={handleClick(props.onClickGetLogs)}
+                            />
+                            <Show when={!props.isUSBBoard}>
+                                <Button
+                                    size="max-[1027px]:hidden"
+                                    type="button"
+                                    label="Update Network"
+                                    onClick={handleClick(props.onClickUpdateNetwork)}
+                                />
+                            </Show>
+                        </div>
+                        <Show when={!props.isUSBBoard}>
+                            <div class="max-[1027px]:flex gap-3">
+                                <Button
+                                    size="max-[1027px]:w-full"
+                                    type="button"
+                                    label="AP mode"
+                                    onClick={handleClick(props.onClickAPMode)}
+                                />
+                                <Button
+                                    size="max-[1027px]:visible w-full min-[1028px]:hidden"
+                                    type="button"
+                                    label="Update Network"
+                                    onClick={handleClick(props.onClickUpdateNetwork)}
+                                />
+                            </div>
                         </Show>
+                        {renderPortDropdown('max-[1027px]:hidden !w-auto min-[1028px]:visible')}
                     </div>
                 </div>
             </div>
-            <div>
-                <Footer
-                    isPrimaryButtonDisabled={props.isActiveProcess}
-                    onClickSecond={() => {
-                        setOpen({})
-                        setHover({})
-                        props.onClickBack()
-                    }}
-                    secondLabel="Back"
-                />
-            </div>
+            <Footer
+                isPrimaryButtonDisabled={props.isActiveProcess}
+                onClickSecond={() => {
+                    setOpen({})
+                    setHover({})
+                    props.onClickBack()
+                }}
+                secondLabel="Back"
+            />
         </div>
     )
 }

@@ -11,6 +11,7 @@ export interface IProps {
     tabIndex?: number
     fallbackLabel?: string
     isScrollbar?: boolean
+    disableTop?: boolean
 }
 
 const DropdownList: Component<IProps> = (props) => {
@@ -22,14 +23,14 @@ const DropdownList: Component<IProps> = (props) => {
                 props.styles,
                 'dropdown-content right-[-13px] p-[12px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-[350px]',
             )}
-            style={{ top: 'calc(100% + 20px)' }}>
+            style={!props.disableTop ? { top: 'calc(100% + 20px)' } : undefined}>
             <div
                 classList={{ ['pr-[12px] scrollbar']: props.isScrollbar }}
                 class={'overflow-y-scroll max-h-[250px] flex flex-col gap-[10px] w-full'}>
                 <Show
                     when={props.data.length}
                     fallback={
-                        <div class="flex flex-row gap-[6px]">
+                        <div class="flex flex-row gap-[6px] items-center">
                             <span class="loading loading-ring loading-md" />
                             <p>{props.fallbackLabel ?? 'Loading...'}</p>
                         </div>
