@@ -4,7 +4,7 @@ import { Accessor, createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
 import { type IDropdownList } from '@interfaces/interfaces'
 import { isValidChannel } from '@interfaces/utils'
-import { BoardManagement } from '@pages/BoardManagement/BoardManagement'
+import { BoardManagement } from '@pages/BoardManagement'
 import { BoardDescription, ChannelOptions, debugModes, supportedBoards, usb } from '@src/static'
 import { DebugMode } from '@src/static/types'
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
@@ -115,7 +115,6 @@ export const ManageBoard = () => {
                     setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_SELECT_BOARD, board: value })
                     return
                 }
-
                 setIsSoftwareDownloaded(false)
                 confirmFirmwareSelection(value)
             }}

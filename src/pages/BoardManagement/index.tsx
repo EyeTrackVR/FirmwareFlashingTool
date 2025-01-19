@@ -1,8 +1,7 @@
 import { type Component } from 'solid-js'
-import { SelectBoard } from '@components/Board/SelectBoard/SelectBoard'
-import { Devtools } from '@components/DevTools/Devtools'
-import { Footer } from '@components/Footer/Footer'
-import { QuestionMark } from '@components/QuestionMark/QuestionMark'
+import { SelectBoard } from '@components/Board/SelectBoard'
+import { Devtools } from '@components/DevTools'
+import { Footer } from '@components/Footer'
 import { type IDropdownList } from '@interfaces/interfaces'
 import { type CHANNEL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 
@@ -30,10 +29,6 @@ export const BoardManagement: Component<IProps> = (props) => {
                 <div class="flex flex-col gap-[10px] h-full justify-center items-center">
                     <div class="flex flex-col gap-[10px] justify-start">
                         <div class="flex justify-end gap-[12px]">
-                            <QuestionMark
-                                onClickHeader={props.onClickHeader}
-                                onClickOpenModal={props.onClickOpenModal}
-                            />
                             <Devtools
                                 channelOptions={props.channelOptions}
                                 channelMode={props.channelMode}

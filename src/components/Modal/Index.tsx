@@ -1,5 +1,5 @@
 import { Component, createEffect, JSX } from 'solid-js'
-import { Titlebar } from '@components/Titlebar/Titlebar'
+import { Titlebar } from '@components/Titlebar'
 import { type TITLEBAR_ACTION } from '@src/static/types/enums'
 
 export interface IProps {

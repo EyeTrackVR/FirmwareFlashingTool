@@ -1,5 +1,5 @@
 import { Component, For, Show } from 'solid-js'
-import { Board } from '@components/Board/Board/Board'
+import { Board } from '@components/Board/Board'
 import { IDropdownList } from '@interfaces/interfaces'
 import { classNames } from '@src/utils'
 export interface IProps {

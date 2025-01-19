@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import Input from '@components/Inputs/Input/Input'
+import Input from '@components/Inputs/Input'
 import NetworkInput from '@components/Inputs/NetworkInput'
 import PasswordInput from '@components/Inputs/PasswordInput'
 import { shortMdnsAddress } from '@src/utils'

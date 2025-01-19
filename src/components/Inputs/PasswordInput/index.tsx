@@ -37,10 +37,10 @@ const PasswordInput: Component<IProps> = (props) => {
                 type={showPassword() ? 'text' : 'password'}
             />
             <div
-                classList={{ 'pr-[1px]': !showPassword() }}
+                classList={{ 'pr-[1px]': showPassword() }}
                 class={'cursor-pointer text-[#7288a1]'}
                 onClick={() => setShowPassword(!showPassword())}>
-                {showPassword() ? <FaRegularEyeSlash size={18} /> : <FaRegularEye size={16} />}
+                {!showPassword() ? <FaRegularEyeSlash size={18} /> : <FaRegularEye size={16} />}
             </div>
         </div>
     )

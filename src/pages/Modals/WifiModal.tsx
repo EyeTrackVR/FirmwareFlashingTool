@@ -1,7 +1,7 @@
 import { Component } from 'solid-js'
 import { Button } from '@components/Buttons/DefaultButton'
-import { Modal } from '@components/Modal/Index'
-import ModalHeader from '@components/ModalHeader/Index'
+import { Modal } from '@components/Modal'
+import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { wifiModalID } from '@src/static'
 

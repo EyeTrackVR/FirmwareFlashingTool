@@ -1,7 +1,7 @@
 import { Component, Show } from 'solid-js'
 import { SelectButton } from '@components/Buttons/SelectButton'
-import Dropdown from '@components/Dropdown/Dropdown/Index'
-import DropdownList from '@components/Dropdown/DropdownList/Index'
+import Dropdown from '@components/Dropdown/Dropdown'
+import DropdownList from '@components/Dropdown/DropdownList'
 import { type IDropdownList } from '@interfaces/interfaces'
 
 export interface IProps {

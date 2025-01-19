@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import Checkbox from '@components/Checkbox/Index'
+import Checkbox from '@components/Checkbox'
 
 export interface IProps {
     onClick: () => void

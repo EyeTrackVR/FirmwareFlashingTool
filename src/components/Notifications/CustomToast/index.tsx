@@ -4,7 +4,7 @@ import { FiAlertTriangle, FiAlertOctagon } from 'solid-icons/fi'
 import { IoAlertCircleSharp } from 'solid-icons/io'
 import { createSignal, Component, Show } from 'solid-js'
 import type { Notifications } from '@src/static/types/interfaces'
-import CloseIcon from '@components/CloseIcon'
+import { IoCloseSharp } from 'solid-icons/io'
 import { ENotificationType } from '@src/static/types/enums'
 import { useAppNotificationsContext } from '@src/store/context/notifications'
 
@@ -56,9 +56,9 @@ const CustomToast: Component<ToastProps> = (props) => {
                     </span>
                     <button
                         type="button"
-                        class="bg-slate-600 hover:bg-slate-700 focus:bg-slate-900 flex-none w-6 h-6 p-1 text-gray-50 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                        class="bg-slate-600 hover:bg-slate-700 focus:bg-slate-900 flex-none w-6 h-6 p-1 text-gray-50 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 flex justify-center items-center"
                         onClick={dismiss}>
-                        <CloseIcon />
+                        <IoCloseSharp width={12} height={12} />
                     </button>
                 </Alert>
             </Toast>

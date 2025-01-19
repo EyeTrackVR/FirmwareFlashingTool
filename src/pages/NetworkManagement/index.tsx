@@ -1,6 +1,6 @@
 import { Component, createMemo, createSignal, onMount } from 'solid-js'
-import { Footer } from '@components/Footer/Footer'
-import { SelectNetwork } from '@components/SelectNetwork/SelectNetwork'
+import { Footer } from '@components/Footer'
+import { SelectNetwork } from '@components/SelectNetwork'
 
 export interface IProps {
     onClickSkip: () => void

@@ -1,8 +1,8 @@
 import { Component } from 'solid-js'
-import CheckboxButton from '@components/Buttons/CheckboxButton/Index'
+import CheckboxButton from '@components/Buttons/CheckboxButton'
 import { Button } from '@components/Buttons/DefaultButton'
-import { Modal } from '@components/Modal/Index'
-import ModalHeader from '@components/ModalHeader/Index'
+import { Modal } from '@components/Modal'
+import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { beforeFlashingModalID } from '@src/static'
 

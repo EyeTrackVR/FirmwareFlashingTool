@@ -1,7 +1,6 @@
 import { Image } from '@kobalte/core'
 import { Component } from 'solid-js'
-import { ProgressBar } from '@components/ProgressBar/ProgressBar'
-import './styles.css'
+import { ProgressBar } from '@components/ProgressBar'
 
 interface IProps {
     onClick: () => void

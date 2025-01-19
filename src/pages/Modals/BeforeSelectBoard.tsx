@@ -1,7 +1,7 @@
 import { Component } from 'solid-js'
-import { Footer } from '@components/Footer/Footer'
-import { Modal } from '@components/Modal/Index'
-import ModalHeader from '@components/ModalHeader/Index'
+import { Footer } from '@components/Footer'
+import { Modal } from '@components/Modal'
+import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { beforeSelectBoardModalID } from '@src/static'
 

@@ -1,7 +1,7 @@
 import { Component } from 'solid-js'
-import { DropdownButton } from '@components/Buttons/DropdownButton/Index'
-import Dropdown from '@components/Dropdown/Dropdown/Index'
-import DropdownList from '@components/Dropdown/DropdownList/Index'
+import { DropdownButton } from '@components/Buttons/DropdownButton'
+import Dropdown from '@components/Dropdown/Dropdown'
+import DropdownList from '@components/Dropdown/DropdownList'
 import { IDropdownList } from '@interfaces/interfaces'
 import { classNames } from '@src/utils'
 
