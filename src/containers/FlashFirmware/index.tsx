@@ -1,8 +1,7 @@
-import { useNavigate } from '@solidjs/router'
-import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import Terminal from '@pages/Terminal'
+import { useNavigate } from '@solidjs/router'
 import { espApi, UsbSerialPortInfo } from '@src/esp/api'
 import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
 import { download } from '@src/utils'
@@ -23,6 +22,7 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 
 export const ManageFlashFirmware = () => {
     const {

@@ -1,7 +1,7 @@
 import { Progress } from '@kobalte/core'
 import { relaunch } from '@tauri-apps/api/process'
 import { checkUpdate, installUpdate, type UpdateResult } from '@tauri-apps/api/updater'
-import { createSignal, createEffect, Show } from 'solid-js'
+import { createEffect, createSignal, Show } from 'solid-js'
 import './styles.css'
 
 const Updater = () => {

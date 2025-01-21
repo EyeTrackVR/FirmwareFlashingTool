@@ -1,6 +1,8 @@
-import { Component } from 'solid-js'
+import Typography from '@components/Typography'
 import { radius } from '@src/static'
+import { Component } from 'solid-js'
 import './styles.css'
+
 export interface IProps {
     currentStep: string
     dashoffset: string
@@ -10,7 +12,9 @@ export const ProgressBar: Component<IProps> = (props) => {
     return (
         <div class="relative">
             <div class="step">
-                <p class="text-white text-[16px] font-medium">{props.currentStep}</p>
+                <Typography color="white" text="bodyMedium" class="">
+                    {props.currentStep}
+                </Typography>
             </div>
             <svg id="svg" width="60" height="60" version="1.1">
                 <circle

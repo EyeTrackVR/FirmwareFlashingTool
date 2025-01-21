@@ -1,3 +1,4 @@
+import Typography from '@components/Typography'
 import { Component, Show } from 'solid-js'
 
 export interface IProps {
@@ -11,25 +12,23 @@ export const Board: Component<IProps> = (props) => {
     return (
         <button
             classList={{
-                'hover:bg-[#9793FD] border-[#817DF7] hover:border-[#9793FD] bg-[#817DF7] focus-visible:border-[#fff]':
+                'hover:bg-purple-100 border-purple-200 hover:border-purple-100 bg-purple-200 focus-visible:border-white-100':
                     props.isActive,
-                'hover:bg-[#192736] border-[#0D1B26] focus-visible:border-[#9793FD]':
+                'hover:bg-black-800 border-black-900 focus-visible:border-purple-100':
                     !props.isActive,
             }}
-            class={
-                'rounded-[6px] pt-[6px] pb-[6px] pr-[12px] pl-[12px] text-left  border border-solid cursor-pointer'
-            }
+            class="rounded-6 pt-6 pb-6 pr-12 pl-12 text-left border border-solid cursor-pointer"
             onClick={(e) => {
                 e.preventDefault()
                 props.onClick()
             }}>
-            <div class="text-white text-[16px] leading-[20px] font-medium not-italic w-full">
-                <p>{props.label}</p>
-            </div>
+            <Typography color="white" text="body">
+                {props.label}
+            </Typography>
             <Show when={props.description}>
-                <div class="pt-[2px] text-white text-[12px] leading-[20px] font-normal not-italic">
-                    <p>{props.description}</p>
-                </div>
+                <Typography color="white" text="small" class="leading-[20px] pt-2">
+                    {props.description}
+                </Typography>
             </Show>
         </button>
     )

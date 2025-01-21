@@ -1,9 +1,9 @@
-import { Component } from 'solid-js'
 import { DropdownButton } from '@components/Buttons/DropdownButton'
 import Dropdown from '@components/Dropdown/Dropdown'
 import DropdownList from '@components/Dropdown/DropdownList'
 import { IDropdownList } from '@interfaces/interfaces'
 import { classNames } from '@src/utils'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClick: (port: IDropdownList) => void
@@ -21,7 +21,7 @@ const PortDropdown: Component<IProps> = (props) => {
             <DropdownList
                 disableTop
                 isScrollbar={props.isScrollbar}
-                styles="dropdown-content menu w-auto !right-0 mb-[12px] !w-[350px]"
+                styles="dropdown-content menu w-auto !right-0 mb-12 !w-[350px]"
                 fallbackLabel="Looking for ports..."
                 activeElement={props.activeElement}
                 data={props.data}

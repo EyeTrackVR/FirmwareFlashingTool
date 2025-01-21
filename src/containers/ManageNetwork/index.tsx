@@ -1,5 +1,5 @@
-import { useNavigate } from '@solidjs/router'
 import { NetworkManagement } from '@pages/NetworkManagement'
+import { useNavigate } from '@solidjs/router'
 import { staticMdns } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 

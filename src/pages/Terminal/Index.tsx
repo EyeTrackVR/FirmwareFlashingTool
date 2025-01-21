@@ -7,7 +7,7 @@ import Step from '@components/Terminal/Step'
 import TerminalHeader from '@components/Terminal/TerminalHeader'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { IActivePort, IDropdownList, IFirmwareState } from '@interfaces/interfaces'
-import { VirtualList } from '@pages/VirtualList/Index'
+import { VirtualList } from '@pages/VirtualList'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { shortName } from '@src/utils'
 
@@ -22,12 +22,12 @@ export interface IProps {
     onClickBack: () => void
     logs: Record<FLASH_STEP, string[]> | object
     firmwareState: IFirmwareState[]
-    ports: IDropdownList[]
     percentageProgress: number
     isActiveProcess: boolean
     firmwareVersion: string
-    isUSBBoard: boolean
     activePort: IActivePort
+    ports: IDropdownList[]
+    isUSBBoard: boolean
     board: string
 }
 
@@ -66,25 +66,25 @@ const Terminal: Component<IProps> = (props) => {
     )
 
     return (
-        <div class="flex flex-col justify-between h-full gap-[12px] pt-[24px]">
+        <div class="flex flex-col justify-between h-full gap-12 pt-24">
             <div class="flex h-full justify-center items-center overflow-hidden">
-                <div class="max-w-[1800px] h-full w-full bg-[#0D1B26] p-[12px] flex flex-col gap-[12px] rounded-[12px] border-solid border-1 border-[#192736]">
-                    <div class="flex flex-col gap-[12px]">
+                <div class="max-w-[1800px] h-full w-full bg-black-900 p-12 flex flex-col gap-12 rounded-12 border-solid border-1 border-black-800">
+                    <div class="flex flex-col gap-12">
                         <TerminalHeader onClickOpenDocs={props.onClickOpenDocs} />
                     </div>
-                    <div class="flex flex-col overflow-hidden w-full h-full bg-[#00101C] p-[24px] rounded-[12px] gap-[12px]">
-                        <div class="flex p-[12px] justify-between items-center">
+                    <div class="flex flex-col overflow-hidden w-full h-full bg-black-700 p-24 rounded-12 gap-12">
+                        <div class="flex p-12 justify-between items-center">
                             <Firmware version={props.firmwareVersion} board={props.board} />
                         </div>
                         <div
                             class="flex flex-col overflow-y-auto h-full w-full scrollbar"
                             ref={containerRef}>
-                            <div class="flex flex-col gap-[12px] ">
+                            <div class="flex flex-col gap-12">
                                 <Show when={props.firmwareState.length}>
                                     <For each={props.firmwareState}>
                                         {(element) => {
                                             return (
-                                                <div class="flex flex-col gap-[6px]">
+                                                <div class="flex flex-col gap-6">
                                                     <div
                                                         class="w-full"
                                                         onMouseEnter={() => {
@@ -121,13 +121,13 @@ const Terminal: Component<IProps> = (props) => {
                                                         />
                                                     </div>
                                                     <Show when={open()[element.step]}>
-                                                        <div class="px-[12px]">
+                                                        <div class="px-12">
                                                             <VirtualList
                                                                 items={
                                                                     props.logs[element.step] ?? []
                                                                 }
                                                             />
-                                                            <div class="w-full h-[1px] border-b-[1px] border-solid border-[#192736]" />
+                                                            <div class="w-full h-[1px] border-b-[1px] border-solid border-black-800" />
                                                         </div>
                                                     </Show>
                                                 </div>
@@ -138,28 +138,30 @@ const Terminal: Component<IProps> = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-3 max-[1027px]:flex-col flex-row w-full">
-                        <div class="flex gap-3">
+                    <div class="flex gap-12 max-[1027px]:flex-col flex-row w-full">
+                        <div class="flex gap-12">
                             <Button
-                                size="max-[1027px]:w-[92%]"
                                 type="button"
-                                label="Install Openiris"
                                 isActive={true}
+                                label="Install Openiris"
+                                size="max-[1027px]:w-[92%]"
                                 onClick={handleClick(props.onClickInstallOpenIris)}
                             />
                             <Button
-                                size="max-[1027px]:hidden"
                                 type="button"
                                 label="Show logs"
+                                size="max-[1027px]:hidden"
                                 onClick={handleClick(props.onClickGetLogs)}
                             />
-                            {renderPortDropdown('max-[1027px]:visible !w-full min-[1028px]:hidden')}
+                            {renderPortDropdown(
+                                'max-[1027px]:visible !w-full !h-full min-[1028px]:hidden',
+                            )}
                         </div>
-                        <div class="flex w-full justify-end gap-3">
+                        <div class="flex w-full justify-end gap-12">
                             <Button
-                                size="max-[1027px]:w-full"
                                 type="button"
                                 label="Download logs"
+                                size="max-[1027px]:w-full"
                                 onClick={props.onClickDownloadLogs}
                             />
                             <Button
@@ -170,26 +172,26 @@ const Terminal: Component<IProps> = (props) => {
                             />
                             <Show when={!props.isUSBBoard}>
                                 <Button
-                                    size="max-[1027px]:hidden"
                                     type="button"
                                     label="Update Network"
+                                    size="max-[1027px]:hidden"
                                     onClick={handleClick(props.onClickUpdateNetwork)}
                                 />
                             </Show>
                         </div>
                         <Show when={!props.isUSBBoard}>
-                            <div class="max-[1027px]:flex gap-3">
+                            <div class="max-[1027px]:flex gap-12">
                                 <Button
-                                    size="max-[1027px]:w-full"
                                     type="button"
                                     label="AP mode"
+                                    size="max-[1027px]:w-full"
                                     onClick={handleClick(props.onClickAPMode)}
                                 />
                                 <Button
-                                    size="max-[1027px]:visible w-full min-[1028px]:hidden"
                                     type="button"
                                     label="Update Network"
                                     onClick={handleClick(props.onClickUpdateNetwork)}
+                                    size="max-[1027px]:visible w-full min-[1028px]:hidden"
                                 />
                             </div>
                         </Show>

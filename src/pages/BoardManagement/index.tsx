@@ -24,36 +24,32 @@ export interface IProps {
 
 export const BoardManagement: Component<IProps> = (props) => {
     return (
-        <div class="flex flex-grow">
-            <div class="flex flex-col w-full">
-                <div class="flex flex-col gap-[10px] h-full justify-center items-center">
-                    <div class="flex flex-col gap-[10px] justify-start">
-                        <div class="flex justify-end gap-[12px]">
-                            <Devtools
-                                channelOptions={props.channelOptions}
-                                channelMode={props.channelMode}
-                                debugMode={props.debugMode}
-                                debugModes={props.debugModes}
-                                setDebugMode={props.setDebugMode}
-                                onClickHeader={props.onClickHeader}
-                                onClickOpenModal={props.onClickOpenModal}
-                                onClickSetChannelMode={props.onClickSetChannelMode}
-                            />
-                        </div>
-                        <SelectBoard
-                            firmwareVersion={props.firmwareVersion}
-                            selectedBoard={props.activeBoard}
-                            boards={props.boards}
-                            onSubmit={props.onSubmit}
-                        />
-                    </div>
+        <div class="flex flex-col h-full w-full">
+            <div class="flex h-full justify-center items-center">
+                <div class="flex flex-col gap-10 justify-start">
+                    <Devtools
+                        channelOptions={props.channelOptions}
+                        channelMode={props.channelMode}
+                        debugMode={props.debugMode}
+                        debugModes={props.debugModes}
+                        setDebugMode={props.setDebugMode}
+                        onClickHeader={props.onClickHeader}
+                        onClickOpenModal={props.onClickOpenModal}
+                        onClickSetChannelMode={props.onClickSetChannelMode}
+                    />
+                    <SelectBoard
+                        firmwareVersion={props.firmwareVersion}
+                        selectedBoard={props.activeBoard}
+                        boards={props.boards}
+                        onSubmit={props.onSubmit}
+                    />
                 </div>
-                <Footer
-                    onClickPrimary={props.onClickConfirm}
-                    isPrimaryActive={props.lockButton}
-                    primaryLabel="Confirm"
-                />
             </div>
+            <Footer
+                onClickPrimary={props.onClickConfirm}
+                isPrimaryActive={props.lockButton}
+                primaryLabel="Confirm"
+            />
         </div>
     )
 }

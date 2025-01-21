@@ -1,8 +1,9 @@
-import { Component } from 'solid-js'
 import Input from '@components/Inputs/Input'
 import NetworkInput from '@components/Inputs/NetworkInput'
 import PasswordInput from '@components/Inputs/PasswordInput'
+import Typography from '@components/Typography'
 import { shortMdnsAddress } from '@src/utils'
+import { Component } from 'solid-js'
 
 export interface IProps {
     ssid: string
@@ -17,16 +18,16 @@ export const SelectNetwork: Component<IProps> = (props) => {
     return (
         <form
             action="#"
-            class="flex flex-col gap-[10px] w-[320px] p-[24px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26]">
-            <div class="flex flex-col gap-[10px]">
-                <div class="text-left text-[14px] text-white font-medium leading-[14px] not-italic">
+            class="flex flex-col gap-10 w-[320px] p-24 rounded-12 border border-solid border-black-800 bg-black-900">
+            <div class="flex flex-col gap-10">
+                <Typography color="white" text="caption" class="text-left">
                     Tracker name
-                </div>
-                <div class="text-left text-[12px] text-[#4F6B87] font-medium leading-[14px] not-italic break-words">
+                </Typography>
+                <Typography color="blue" text="small" class="text-left">
                     {`The tracker will be accessible under: http://${
                         !props.mdns ? 'openiristracker' : shortMdnsAddress(props.mdns)
                     }.local`}
-                </div>
+                </Typography>
                 <div>
                     <NetworkInput
                         id="mdns"
@@ -37,10 +38,10 @@ export const SelectNetwork: Component<IProps> = (props) => {
                     />
                 </div>
             </div>
-            <div class="flex flex-col gap-[10px]">
-                <div class="text-left text-[14px] text-white font-medium leading-[14px] not-italic">
+            <div class="flex flex-col gap-10">
+                <Typography color="white" text="caption" class="text-left">
                     SSID
-                </div>
+                </Typography>
                 <div>
                     <Input
                         id="firstName"
@@ -54,10 +55,10 @@ export const SelectNetwork: Component<IProps> = (props) => {
                     />
                 </div>
             </div>
-            <div class="flex flex-col gap-[10px]">
-                <div class="text-left text-[14px] text-white font-medium leading-[14px] not-italic">
+            <div class="flex flex-col gap-10">
+                <Typography color="white" text="caption" class="text-left">
                     Password
-                </div>
+                </Typography>
                 <div>
                     <PasswordInput
                         required={true}

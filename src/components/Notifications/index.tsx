@@ -1,9 +1,9 @@
+import { Notifications } from '@src/static/types/interfaces'
+import { useAppNotificationsContext } from '@src/store/context/notifications'
 import { Toaster, ToasterStore, Transition, useToaster } from 'solid-headless'
 import { createEffect, createSignal, For, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import CustomToast from './CustomToast'
-import { Notifications } from '@src/static/types/interfaces'
-import { useAppNotificationsContext } from '@src/store/context/notifications'
 
 const ToastNotificationWindow = () => {
     const { getNotifications, getEnableNotifications } = useAppNotificationsContext()
@@ -31,7 +31,7 @@ const ToastNotificationWindow = () => {
         }
     })
     return (
-        <Toaster class="absolute p-2 fixed-0 right-0 bottom-0 z-10">
+        <Toaster class="absolute pr-12 pb-12 fixed-0 right-0 bottom-0 z-10">
             <Transition
                 show={isOpen()}
                 class="relative transition"
@@ -42,7 +42,7 @@ const ToastNotificationWindow = () => {
                 leaveFrom="opacity-100 scale-100 translate-y-0"
                 leaveTo="opacity-0 scale-50  translate-y-full"
                 afterLeave={clearNotifs}>
-                <div class="flex-1 flex flex-col-reverse space-y-reverse space-y-1 overflow-y-hidden overflow-x-hidden rounded-lg">
+                <div class="flex-1 flex flex-col-reverse space-y-reverse space-y-2 overflow-y-hidden overflow-x-hidden rounded-lg">
                     <For each={notifs().slice(0).reverse()}>
                         {(item) => {
                             debug(`[Notifications]: Rendering - ${item.id}`)

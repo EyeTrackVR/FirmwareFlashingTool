@@ -1,10 +1,10 @@
+import { MODAL_TYPE } from '@interfaces/enums'
+import { useAppUIContext } from '@store/context/ui'
 import { Match, Show, Switch } from 'solid-js'
 import ApModeContainer from './ApModeModalContainer'
 import BeforeFlashingModal from './BeforeFlashingContainer'
 import BeforeSelectBoardModal from './BeforeSelectBoardContainer'
 import WifiModal from './WifiModalcontainer'
-import { MODAL_TYPE } from '@interfaces/enums'
-import { useAppUIContext } from '@store/context/ui'
 
 export const ModalRoot = () => {
     const { modal } = useAppUIContext()

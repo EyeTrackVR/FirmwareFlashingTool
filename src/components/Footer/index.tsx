@@ -1,6 +1,7 @@
-import { Component, Show } from 'solid-js'
 import { Button } from '@components/Buttons/DefaultButton'
 import { classNames } from '@src/utils'
+import { Component, Show } from 'solid-js'
+
 export interface IProps {
     onClickSecond?: () => void
     onClickPrimary?: () => void
@@ -20,7 +21,7 @@ export interface IProps {
 
 export const Footer: Component<IProps> = (props) => {
     return (
-        <footer class={classNames(props.styles, 'flex w-full justify-end gap-[12px]')}>
+        <footer class={classNames(props.styles, 'flex w-full justify-end gap-12')}>
             <Show when={props.onClickSecond}>
                 <Button
                     disabled={props.isSecondButtonDisabled}

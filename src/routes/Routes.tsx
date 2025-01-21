@@ -12,13 +12,13 @@ import { useAppContext } from '@store/context/app'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 import { usePersistentStore } from '@store/tauriStore'
-import { Header } from '@containers/Header/Header'
+import { Header } from '@containers/Header'
 
 const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
     const { doGHRequest, channelMode } = useAppAPIContext()
-
     const { setDebugMode, getDebugMode } = useAppContext()
+    const { setContextMenuAnchor } = useAppUIContext()
     const {
         setEnableNotifications,
         setEnableNotificationsSounds,
@@ -28,8 +28,6 @@ const AppRoutes: Component = () => {
         getGlobalNotificationsType,
         checkPermission,
     } = useAppNotificationsContext()
-
-    const { setContextMenuAnchor, getContextAnchor } = useAppUIContext()
 
     onMount(() => {
         setContextMenuAnchor('custom-context-menu')

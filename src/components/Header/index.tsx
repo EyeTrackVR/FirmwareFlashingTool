@@ -1,6 +1,7 @@
+import { ProgressBar } from '@components/ProgressBar'
+import Typography from '@components/Typography'
 import { Image } from '@kobalte/core'
 import { Component } from 'solid-js'
-import { ProgressBar } from '@components/ProgressBar'
 
 interface IProps {
     onClick: () => void
@@ -29,23 +30,23 @@ const MainHeader: Component<IProps> = (props) => {
                                 />
                             </Image.Root>
                         </div>
-                        <div class="pb-2 text-[20px] leading-20 text-white">
-                            <p>EyetrackVR</p>
-                        </div>
+                        <Typography color="white" text="h3" class="pb-2">
+                            EyetrackVR
+                        </Typography>
                     </div>
                 </div>
-                <div class="flex flex-row justify-center items-center gap-[6px]  min-w-[210px]">
+                <div class="flex flex-row justify-center items-center gap-6 min-w-[210px]">
                     <ProgressBar
                         currentStep={props.currentStep}
                         dashoffset={props.step.dashoffset}
                     />
-                    <div class="flex flex-col  items-start justify-end w-full">
-                        <div class="text-white text-[14px] font-bold leading-normal">
-                            <p>{props.step.step}</p>
-                        </div>
-                        <div class="text-white font-inter text-[12px] font-normal leading-normal">
-                            <p>{props.step.description}</p>
-                        </div>
+                    <div class="flex flex-col items-start justify-end w-full gap-4">
+                        <Typography color="white" text="captionBold">
+                            {props.step.step}
+                        </Typography>
+                        <Typography color="white" text="small">
+                            {props.step.description}
+                        </Typography>
                     </div>
                 </div>
             </div>

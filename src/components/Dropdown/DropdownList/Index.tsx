@@ -1,7 +1,9 @@
-import { Component, For, Show } from 'solid-js'
 import { Board } from '@components/Board/Board'
+import Typography from '@components/Typography'
 import { IDropdownList } from '@interfaces/interfaces'
 import { classNames } from '@src/utils'
+import { Component, For, Show } from 'solid-js'
+
 export interface IProps {
     onClick: (data: IDropdownList) => void
     ref?: (el: HTMLDivElement) => void
@@ -21,18 +23,20 @@ const DropdownList: Component<IProps> = (props) => {
             ref={(el) => props.ref?.(el)}
             class={classNames(
                 props.styles,
-                'dropdown-content right-[-13px] p-[12px] rounded-[12px] border border-solid border-[#192736] bg-[#0D1B26] w-[350px]',
+                'dropdown-content right-[-13px] p-12 rounded-12 border border-solid border-black-800 bg-black-900 w-[350px]',
             )}
             style={!props.disableTop ? { top: 'calc(100% + 20px)' } : undefined}>
             <div
-                classList={{ ['pr-[12px] scrollbar']: props.isScrollbar }}
-                class={'overflow-y-scroll max-h-[250px] flex flex-col gap-[10px] w-full'}>
+                classList={{ ['pr-12 scrollbar']: props.isScrollbar }}
+                class={'overflow-y-scroll max-h-[250px] flex flex-col gap-10 w-full'}>
                 <Show
                     when={props.data.length}
                     fallback={
-                        <div class="flex flex-row gap-[6px] items-center">
+                        <div class="flex flex-row gap-12 items-center">
                             <span class="loading loading-ring loading-md" />
-                            <p>{props.fallbackLabel ?? 'Loading...'}</p>
+                            <Typography color="white" text="caption">
+                                {props.fallbackLabel ?? 'Loading...'}
+                            </Typography>
                         </div>
                     }>
                     <For each={props.data}>

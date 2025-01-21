@@ -1,3 +1,4 @@
+import Typography from '@components/Typography'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -10,30 +11,22 @@ export interface IProps {
 
 export const SelectButton: Component<IProps> = (props) => {
     return (
-        <div class="w-full">
-            <div class="flex flex-col gap-[14px]">
-                <div class=" w-full flex flex-col gap-[8px]">
-                    <div>
-                        <p class="text-left text-[14px] text-white font-normal leading-[20px] not-italic">
-                            {props.header}
-                        </p>
-                    </div>
-                    <div>
-                        <button
-                            tabIndex={props.tabIndex}
-                            type={props.type}
-                            class="pl-[12px] pr-[12px] h-[39px] bg-[#192736] w-full rounded-[6px] border-solid border-1 border-[#192736] focus:border-817DF7 focus-visible:border-[#9793FD] hover:border-[#817DF7] cursor-pointer"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                props.onClick?.()
-                            }}>
-                            <p class="text-left text-white text-[12px] font-normal leading-[20px] not-italic">
-                                {props.label}
-                            </p>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="w-full flex flex-col gap-8">
+            <Typography color="white" text="caption" class="text-left">
+                {props.header}
+            </Typography>
+            <button
+                tabIndex={props.tabIndex}
+                type={props.type}
+                class="pl-12 pr-12 py-12 bg-black-800 w-full rounded-6 border-solid border-1 border-black-800 focus-visible:border-purple-100 hover:border-purple-200 cursor-pointer"
+                onClick={(e) => {
+                    e.preventDefault()
+                    props.onClick?.()
+                }}>
+                <Typography color="white" text="small" class="text-left">
+                    {props.label}
+                </Typography>
+            </button>
         </div>
     )
 }

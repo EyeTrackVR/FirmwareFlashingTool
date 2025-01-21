@@ -1,12 +1,12 @@
-import { useLocation, useNavigate } from '@solidjs/router'
-import { createMemo } from 'solid-js'
 import MainHeader from '@components/Header'
+import { useLocation, useNavigate } from '@solidjs/router'
 import { stepStatus, usb } from '@src/static'
 import { DIRECTION, ENotificationType } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
+import { createMemo } from 'solid-js'
 
 export const Header = () => {
     const location = useLocation()

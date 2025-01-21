@@ -5,6 +5,7 @@ import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { beforeFlashingModalID } from '@src/static'
+import Typography from '@components/Typography'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -22,43 +23,39 @@ const BeforeFlashingModal: Component<IProps> = (props) => {
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>
-            <div class="flex flex-col gap-[14px]">
+            <div class="flex flex-col gap-14">
                 <ModalHeader label="Reminder!" onClick={props.onClickClose} />
-                <div class="flex flex-col gap-[14px]">
-                    <div>
-                        <p class="text-left text-[18px] text-[#9793FD] font-medium leading-[20px] not-italic">
-                            Before flashing
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
-                            Make sure to follow the steps below 👇
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
+                <div class="flex flex-col gap-14">
+                    <Typography color="purple" text="h3" class="text-left">
+                        Before flashing
+                    </Typography>
+                    <Typography color="white" text="caption" class="text-left">
+                        Make sure to follow the steps below 👇
+                    </Typography>
+                    <div class="flex flex-col gap-14">
+                        <Typography color="white" text="caption" class="text-left">
                             &#x2022; hold B button while plugging the board in
-                        </p>
-                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic py-[10px]">
+                        </Typography>
+                        <Typography color="white" text="caption" class="text-left leading-[26px]">
                             &#x2022; Make sure you have the antenna and camera plugged into the
                             board if you plan on using them wirelessly
-                        </p>
-                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
+                        </Typography>
+                        <Typography color="white" text="caption" class="text-left leading-[26px]">
                             &#x2022; Make sure your password and ssid do not have special characters
-                        </p>
-                        <p class="text-left text-[14px] text-white font-normal leading-[26px] not-italic">
+                        </Typography>
+                        <Typography color="white" text="caption" class="text-left">
                             &#x2022; Make sure you have a stable internet connection
-                        </p>
+                        </Typography>
                     </div>
                 </div>
-                <div class="flex gap-[10px] justify-between">
+                <div class="flex gap-10 justify-between">
                     <CheckboxButton
                         onClick={props.onClickCheckbox}
                         checked={props.checked}
                         label="Don’t show this again"
                     />
                     <Button
-                        type={'button'}
+                        type="button"
                         isActive={true}
                         label="Install Openiris"
                         onClick={props.onClickInstallOpeniris}

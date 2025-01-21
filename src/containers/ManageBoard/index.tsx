@@ -1,10 +1,7 @@
-import { useNavigate } from '@solidjs/router'
-import { appWindow } from '@tauri-apps/api/window'
-import { Accessor, createMemo } from 'solid-js'
-import { debug, trace } from 'tauri-plugin-log-api'
 import { type IDropdownList } from '@interfaces/interfaces'
 import { isValidChannel } from '@interfaces/utils'
 import { BoardManagement } from '@pages/BoardManagement'
+import { useNavigate } from '@solidjs/router'
 import { BoardDescription, ChannelOptions, debugModes, supportedBoards, usb } from '@src/static'
 import { DebugMode } from '@src/static/types'
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
@@ -12,6 +9,9 @@ import { useAppAPIContext } from '@src/store/context/api'
 import { useAppContext } from '@store/context/app'
 import { useAppUIContext } from '@store/context/ui'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
+import { appWindow } from '@tauri-apps/api/window'
+import { Accessor, createMemo } from 'solid-js'
+import { debug, trace } from 'tauri-plugin-log-api'
 
 export const ManageBoard = () => {
     const navigate = useNavigate()
