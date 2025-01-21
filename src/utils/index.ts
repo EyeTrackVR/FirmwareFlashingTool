@@ -81,11 +81,11 @@ export const shortName = (label: string, size: number = 12): string => {
     return `${label.slice(0, size)}...${label.slice(-size)}`
 }
 
-export const  stringToHex = (str: string) => {
-    let hex = '';
+export const stringToHex = (str: string) => {
+    let hex = ''
     for (let i = 0; i < str.length; i++) {
         // Convert each character to its UTF-16 code unit and then to hex
-        hex += str.charCodeAt(i).toString(16).padStart(2, '0'); // pad to 2 digits
+        hex += str.charCodeAt(i).toString(16).padStart(2, '0') // pad to 2 digits
     }
-    return hex;
+    return hex
 }

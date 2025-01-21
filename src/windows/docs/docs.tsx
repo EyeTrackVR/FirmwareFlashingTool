@@ -36,11 +36,15 @@ const App = () => {
 
 render(
     () => (
-        <Router>
-            <AppContextMainProvider>
-                <App />
-            </AppContextMainProvider>
-        </Router>
+        <Router
+            root={() => {
+                return (
+                    <AppContextMainProvider>
+                        <App />
+                    </AppContextMainProvider>
+                )
+            }}
+        />
     ),
     document.getElementById('root') as HTMLElement,
 )
