@@ -30,7 +30,7 @@ const MainHeader: Component<IProps> = (props) => {
                                 />
                             </Image.Root>
                         </div>
-                        <Typography color="white" text="h3" class="pb-2">
+                        <Typography color="white" text="h3" class="pb-8">
                             EyetrackVR
                         </Typography>
                     </div>

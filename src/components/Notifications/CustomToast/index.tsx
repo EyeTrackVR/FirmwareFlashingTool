@@ -25,7 +25,7 @@ const CustomToast: Component<ToastProps> = (props) => {
     return (
         <Transition
             show={isOpen()}
-            class="relative transition rounded-lg bg-black-900"
+            class="relative transition rounded-lg bg-black-900 rounded-6 border border-solid border-black-800"
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-50"
             enterTo="opacity-100 scale-100"
@@ -36,7 +36,7 @@ const CustomToast: Component<ToastProps> = (props) => {
                 getNotifications()?.remove(props.id)
             }}>
             <Toast class="flex justify-between items-center">
-                <Alert class="bg-black-900 flex flex-row items-center gap-6 p-12 rounded-6 border border-solid border-black-800 max-w-[400px]">
+                <Alert class="bg-black-900 flex flex-row items-center gap-6 p-12 rounded-6 max-w-[400px]">
                     <div>
                         <Show when={props.notif.type === ENotificationType.SUCCESS}>
                             <AiOutlineCheckCircle size={25} color="#68D391" />

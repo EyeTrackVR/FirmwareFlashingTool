@@ -19,7 +19,7 @@ const NetworkInput: Component<IProps> = (props) => {
                 'border-solid border-1 border-purple-200': active(),
                 'border-solid border-1 border-black-800': !active(),
             }}
-            class="flex justify-center items-center p-6 h-[39px] bg-black-800 w-full rounded6 placeholder-white-100 text-white-100">
+            class="flex justify-center items-center rounded-6 p-6 h-[39px] bg-black-800 w-full rounded6 placeholder-white-100 text-white-100">
             <Typography color="lightGrey" text="small">
                 http://
             </Typography>
@@ -28,7 +28,7 @@ const NetworkInput: Component<IProps> = (props) => {
                 autofocus={props.autoFocus}
                 onFocus={() => setActive(true)}
                 onBlur={() => setActive(false)}
-                class="h-full pl-2 pr-2 bg-black-800 w-full rounded-6 border-solid border-0 focus:ring-0 focus:ring-black-800 border-black-800 placeholder-white-100 text-[12px] text-white-100 focus:border-0 focus:border-black-800"
+                class="h-full pl-2 pr-2 bg-black-800 w-full border-solid border-0 focus:ring-0 focus:ring-black-800 border-black-800 placeholder-white-100 text-[12px] text-white-100 focus:border-0 focus:border-black-800"
                 onInput={(e) => {
                     props.onChange(e.currentTarget.value)
                     e.currentTarget.value = props.value

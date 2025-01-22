@@ -38,7 +38,7 @@ export const Button: Component<IProps> = (props) => {
                         {props.label}
                     </Typography>
                 }>
-                <div class="flex justify-center items-center w-[114px]">
+                <div class="flex justify-center items-center w-[118px]">
                     <span class="loading loading-ring w-16" />
                 </div>
             </Show>
