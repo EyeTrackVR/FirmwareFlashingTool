@@ -8,7 +8,7 @@ export interface IProps {
     isActive?: boolean
 }
 
-export const Board: Component<IProps> = (props) => {
+export const DefaultBoard: Component<IProps> = (props) => {
     return (
         <button
             classList={{
@@ -34,4 +34,4 @@ export const Board: Component<IProps> = (props) => {
     )
 }
 
-export default Board
+export default DefaultBoard

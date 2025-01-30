@@ -1,4 +1,4 @@
-import { Board } from '@components/Board/Board'
+import { DefaultBoard } from '@components/Board/DefaultBoard'
 import Typography from '@components/Typography'
 import { IDropdownList } from '@interfaces/interfaces'
 import { classNames } from '@src/utils'
@@ -41,7 +41,7 @@ const DropdownList: Component<IProps> = (props) => {
                     }>
                     <For each={props.data}>
                         {(data) => (
-                            <Board
+                            <DefaultBoard
                                 {...data}
                                 isActive={data.label === props.activeElement}
                                 onClick={() => {
