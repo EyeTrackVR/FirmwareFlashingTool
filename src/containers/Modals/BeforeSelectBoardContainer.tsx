@@ -1,9 +1,9 @@
-import { appWindow } from '@tauri-apps/api/window'
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeSelectBoard from '@pages/Modals/BeforeSelectBoard'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
+import { appWindow } from '@tauri-apps/api/window'
 
 const BeforeSelectBoardContainer = () => {
     const { confirmFirmwareSelection } = useAppAPIContext()

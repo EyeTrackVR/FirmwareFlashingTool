@@ -1,12 +1,12 @@
-import { Transition, Toast, Alert } from 'solid-headless'
-import { AiOutlineCheckCircle } from 'solid-icons/ai'
-import { FiAlertTriangle, FiAlertOctagon } from 'solid-icons/fi'
-import { IoAlertCircleSharp } from 'solid-icons/io'
-import { createSignal, Component, Show } from 'solid-js'
-import type { Notifications } from '@src/static/types/interfaces'
-import CloseIcon from '@components/CloseIcon'
+import Typography from '@components/Typography'
 import { ENotificationType } from '@src/static/types/enums'
+import type { Notifications } from '@src/static/types/interfaces'
 import { useAppNotificationsContext } from '@src/store/context/notifications'
+import { Alert, Toast, Transition } from 'solid-headless'
+import { AiOutlineCheckCircle } from 'solid-icons/ai'
+import { FiAlertOctagon, FiAlertTriangle } from 'solid-icons/fi'
+import { IoAlertCircleSharp, IoCloseSharp } from 'solid-icons/io'
+import { Component, createSignal, Show } from 'solid-js'
 
 interface ToastProps {
     id: string
@@ -25,7 +25,7 @@ const CustomToast: Component<ToastProps> = (props) => {
     return (
         <Transition
             show={isOpen()}
-            class="relative transition rounded-lg bg-slate-600"
+            class="relative transition rounded-lg bg-black-900 rounded-6 border border-solid border-black-800"
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-50"
             enterTo="opacity-100 scale-100"
@@ -36,7 +36,7 @@ const CustomToast: Component<ToastProps> = (props) => {
                 getNotifications()?.remove(props.id)
             }}>
             <Toast class="flex justify-between items-center">
-                <Alert class="bg-slate-600 flex grow flex-row items-center justify-center text-xl text-bold text-gray-50 p-4">
+                <Alert class="bg-black-900 flex flex-row items-center gap-6 p-12 rounded-6 max-w-[400px]">
                     <div>
                         <Show when={props.notif.type === ENotificationType.SUCCESS}>
                             <AiOutlineCheckCircle size={25} color="#68D391" />
@@ -51,14 +51,14 @@ const CustomToast: Component<ToastProps> = (props) => {
                             <IoAlertCircleSharp size={25} color="#90CDF4" />
                         </Show>
                     </div>
-                    <span class="flex-1 text-sm pl-1 pr-1 font-normal text-gray-50">
+                    <Typography color="white" text="small" ellipsis>
                         {props.notif.message}
-                    </span>
+                    </Typography>
                     <button
                         type="button"
-                        class="bg-slate-600 hover:bg-slate-700 focus:bg-slate-900 flex-none w-6 h-6 p-1 text-gray-50 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                        class="rounded-100 w-16 h-16 focus:outline-none focus-visible:ring-1 focus-visible:ring-purple-100 flex justify-center items-center"
                         onClick={dismiss}>
-                        <CloseIcon />
+                        <IoCloseSharp size={16} />
                     </button>
                 </Alert>
             </Toast>

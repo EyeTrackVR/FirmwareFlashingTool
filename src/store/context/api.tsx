@@ -28,6 +28,7 @@ import { DEFAULT_PORT_NAME } from '@src/static'
 import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
+import { formatDeviceName } from '@src/utils'
 
 interface AppAPIContext {
     //********************************* gh rest *************************************/
@@ -376,7 +377,9 @@ export const AppAPIProvider: Component<Context> = (props) => {
         const firmware_assets = assets.map((asset: { name: string }) => asset.name)
 
         // split the firmware_assets array of strings on the first dash and return the first element of the array
-        const boardName = firmware_assets.map((asset: string) => asset.split('-')[0])
+        const boardName = firmware_assets.map((asset: string) => {
+            return formatDeviceName(asset)
+        })
 
         // set the board name in the store
         for (let i = 0; i < boardName.length; i++) {

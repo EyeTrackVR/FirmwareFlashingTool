@@ -1,5 +1,3 @@
-import { appWindow } from '@tauri-apps/api/window'
-import { createMemo, createSignal } from 'solid-js'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import WifiModal from '@pages/Modals/WifiModal'
 import { type Command, espApi } from '@src/esp/api'
@@ -7,6 +5,8 @@ import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
+import { appWindow } from '@tauri-apps/api/window'
+import { createMemo, createSignal } from 'solid-js'
 
 const WifiModalContainer = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)

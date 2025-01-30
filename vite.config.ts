@@ -21,6 +21,7 @@ export default defineConfig({
             '@store': resolve(__dirname, './src/store'),
             '@static': resolve(__dirname, './src/static'),
             '@utils': resolve(__dirname, './src/utils'),
+            '@common': resolve(__dirname, './src/common'),
         },
     },
     plugins: [solidPlugin(), optimizeLodashImports()],

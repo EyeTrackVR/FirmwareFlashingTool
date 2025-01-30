@@ -1,5 +1,3 @@
-import { appWindow } from '@tauri-apps/api/window'
-import { createMemo } from 'solid-js'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
 import { usb } from '@src/static'
@@ -13,6 +11,8 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { appWindow } from '@tauri-apps/api/window'
+import { createMemo } from 'solid-js'
 
 const BeforeFlashingContainer = () => {
     const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
