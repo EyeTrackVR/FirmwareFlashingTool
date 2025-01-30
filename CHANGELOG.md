@@ -3,6 +3,12 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.5.0-beta.5](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.4...v1.5.0-beta.5) (2025-01-30)
+
+### 🍕 Features
+
+* Update dependencies, add proper Project Babble support ([da5e79c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/da5e79cb757838cd3f51c331efc586b457d71f86))
+
 ## [1.5.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0-beta.3...v1.5.0-beta.4) (2025-01-14)
 
 ### 🍕 Features
