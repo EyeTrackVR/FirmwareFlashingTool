@@ -1,3 +1,14 @@
+# 📦 Changelog 
+[![conventional commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
+> All notable changes to this project will be documented in this file
+
+## [1.6.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0...v1.6.0-beta.1) (2025-01-30)
+
+### 🍕 Features
+
+* Update dependencies, add proper Project Babble support ([da5e79c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/da5e79cb757838cd3f51c331efc586b457d71f86))
+
 # 📦 Changelog
 
 [![conventional commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
