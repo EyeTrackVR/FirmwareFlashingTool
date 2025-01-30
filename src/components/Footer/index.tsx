@@ -1,4 +1,4 @@
-import { Button } from '@components/Buttons/DefaultButton'
+import { Button } from '@components/Buttons/Button'
 import { classNames } from '@src/utils'
 import { Component, Show } from 'solid-js'
 

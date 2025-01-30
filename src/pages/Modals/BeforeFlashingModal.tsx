@@ -1,11 +1,11 @@
 import { Component } from 'solid-js'
-import CheckboxButton from '@components/Buttons/CheckboxButton'
-import { Button } from '@components/Buttons/DefaultButton'
+import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { beforeFlashingModalID } from '@src/static'
 import Typography from '@components/Typography'
+import CheckboxButton from '@components/Buttons/Checkbox'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void

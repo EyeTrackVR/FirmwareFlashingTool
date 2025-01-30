@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import { Button } from '@components/Buttons/DefaultButton'
+import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
