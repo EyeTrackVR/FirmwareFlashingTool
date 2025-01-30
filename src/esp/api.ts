@@ -1,6 +1,6 @@
+import { stringToHex } from '@src/utils'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
-import { stringToHex } from '@src/utils'
 
 export type UsbSerialPortInfo = {
     portName: string

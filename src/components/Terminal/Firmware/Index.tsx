@@ -1,3 +1,4 @@
+import Typography from '@components/Typography'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -7,10 +8,10 @@ export interface IProps {
 
 const Firmware: Component<IProps> = (props) => {
     return (
-        <div class="flex w-full gap-[6px] select-none">
-            <p class="text-left not-italic font-[500] text-white leading-[14px] text-[16px]">
+        <div class="flex w-full gap-6 select-none">
+            <Typography color="white" text="body">
                 {props.version} {`${!props.board.trim() ? '' : `| ${props.board}`}`}
-            </p>
+            </Typography>
         </div>
     )
 }

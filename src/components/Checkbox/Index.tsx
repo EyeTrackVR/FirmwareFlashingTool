@@ -7,10 +7,8 @@ export interface IProps {
 const Checkbox: Component<IProps> = (props) => {
     return (
         <div
-            classList={{
-                'bg-[#9793FD]': props.checked,
-            }}
-            class="w-[14px] h-[14px] border border-solid border-[#9793FD] rounded-[4px] "
+            classList={{ 'bg-purple-200': props.checked }}
+            class="w-14 h-14 border border-solid border-purple-200 rounded-4"
         />
     )
 }

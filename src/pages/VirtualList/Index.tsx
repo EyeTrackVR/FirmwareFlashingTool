@@ -69,7 +69,7 @@ export const VirtualList: Component<IProps> = (props) => {
                                     left: 0,
                                 }}>
                                 <pre
-                                    class="text-white"
+                                    class="text-white-100"
                                     style={{
                                         'white-space': item.match(/\n/) ? 'nowrap' : 'none',
                                         hyphens: 'none',

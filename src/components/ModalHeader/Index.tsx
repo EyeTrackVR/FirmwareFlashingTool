@@ -1,32 +1,30 @@
+import Typography from '@components/Typography'
+import theme from '@src/common/theme'
 import { FaSolidXmark } from 'solid-icons/fa'
 import { type Component } from 'solid-js'
 
 export interface IProps {
-    label: string
     onClick?: () => void
     disabled?: boolean
+    label: string
 }
 
 const ModalHeader: Component<IProps> = (props) => {
     return (
-        <div class="flex justify-between">
-            <div>
-                <p class="text-left text-[18px] text-white font-medium leading-[20px] not-italic">
-                    {props.label}
-                </p>
-            </div>
+        <div class="flex justify-between items-center">
+            <Typography color="white" text="body" class="text-left">
+                {props.label}
+            </Typography>
             <div
                 class="modal-action mt-0"
                 onClick={() => {
                     props.onClick?.()
                 }}>
-                <form method="dialog">
+                <form method="dialog" class="flex">
                     <button
-                        class="cursor-pointer p-[4px] rounded-full border border-solid border-[#0D1B26] focus-visible:border-[#9793FD]"
+                        class="cursor-pointer rounded-100 border border-solid border-black-900 focus-visible:border-purple-200"
                         disabled={props.disabled}>
-                        <p class="text-white text-left">
-                            <FaSolidXmark size={20} fill="#FFFFFF" />
-                        </p>
+                        <FaSolidXmark size={20} fill={theme.colors.white[100]} />
                     </button>
                 </form>
             </div>

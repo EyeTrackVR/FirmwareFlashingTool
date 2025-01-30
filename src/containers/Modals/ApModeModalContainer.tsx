@@ -1,12 +1,12 @@
-import { listen } from '@tauri-apps/api/event'
-import { appWindow } from '@tauri-apps/api/window'
-import { createEffect, createSignal, onCleanup } from 'solid-js'
-import { debug } from 'tauri-plugin-log-api'
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import ApModeModal from '@pages/Modals/ApModeModal'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
+import { listen } from '@tauri-apps/api/event'
+import { appWindow } from '@tauri-apps/api/window'
+import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { debug } from 'tauri-plugin-log-api'
 
 const ApModeContainer = () => {
     const { modal, setOpenModal } = useAppUIContext()

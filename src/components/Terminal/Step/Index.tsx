@@ -1,8 +1,11 @@
-import { OcCheckcircle2, OcX, OcCircleslash2 } from 'solid-icons/oc'
-import { RiArrowsArrowDropRightLine } from 'solid-icons/ri'
-import { Component, Show } from 'solid-js'
+import Typography from '@components/Typography'
 import { FLASH_STATUS } from '@interfaces/enums'
 import { IFirmwareState } from '@interfaces/interfaces'
+import theme from '@src/common/theme'
+import { OcCheckcircle2, OcCircleslash2, OcX } from 'solid-icons/oc'
+import { RiArrowsArrowDropRightLine } from 'solid-icons/ri'
+import { Component, Show } from 'solid-js'
+
 export interface IProps extends IFirmwareState {
     onMouseDown: () => void
     hasLogs: boolean
@@ -13,9 +16,9 @@ export interface IProps extends IFirmwareState {
 
 const Step: Component<IProps> = (props) => {
     return (
-        <div class="flex w-full relative flex-col justify-start items-start gap-[12px]">
+        <div class="flex w-full relative flex-col justify-start items-start gap-12">
             <div
-                class="absolute top-0 left-0 bg-[#9092FF80] h-full  transition-all duration-[250ms] ease-in-out rounded-[6px]"
+                class="absolute top-0 left-0 bg-[#9092FF80] h-full transition-all duration-[250ms] ease-in-out rounded-6"
                 style={{ width: `${props.progress}%` }}
             />
             <div
@@ -23,12 +26,12 @@ const Step: Component<IProps> = (props) => {
                     if (!props.hasLogs) return
                     props.onMouseDown()
                 }}
-                class="p-[8px] w-full pr-[8px] h-[44px] rounded-[6px] flex items-center justify-start gap-[12px]  "
+                class="p-8 w-full pr-8 h-[44px] rounded-[6px] flex items-center justify-start gap-12"
                 classList={{
                     'cursor-pointer': props.hasLogs,
                     'border border-solid border-[#00101C]': props.status !== FLASH_STATUS.FAILED,
                     'border border-solid border-[#FB7D89]': props.status === FLASH_STATUS.FAILED,
-                    'bg-[#192736]': props.open && props.status !== FLASH_STATUS.FAILED,
+                    'bg-black-800': props.open && props.status !== FLASH_STATUS.FAILED,
                     'bg-[#00101C]': !props.hover && !props.open,
                     'bg-[#FB7D8966]':
                         (props.hover || props.open) && props.status === FLASH_STATUS.FAILED,
@@ -49,11 +52,11 @@ const Step: Component<IProps> = (props) => {
                             size={28}
                         />
                     </div>
-                    <div class="p-[6px] rounded-full">
+                    <div class="p-[6px] rounded-100">
                         {props.status === FLASH_STATUS.SUCCESS ? (
-                            <OcCheckcircle2 color="#9092FF" size={16} />
+                            <OcCheckcircle2 color={theme.colors.purple[300]} size={16} />
                         ) : props.status === FLASH_STATUS.FAILED ? (
-                            <OcX color="#FB7D89" size={16} />
+                            <OcX color={theme.colors.red[200]} size={16} />
                         ) : props.status === FLASH_STATUS.ABORTED ? (
                             <OcCircleslash2 size={16} />
                         ) : (
@@ -62,13 +65,13 @@ const Step: Component<IProps> = (props) => {
                     </div>
                 </div>
                 <div class="flex justify-between w-full">
-                    <p class="not-italic font-normal text-white leading-[14px] text-[14px] text-left">
+                    <Typography color="white" text="caption">
                         {props.label}
-                    </p>
+                    </Typography>
                     <Show when={typeof props.progress !== 'undefined'}>
-                        <p class="not-italic font-normal text-['#9092FF'] leading-[14px] text-[14px] text-left">
+                        <Typography color="purple" text="caption">
                             {props.progress}%
-                        </p>
+                        </Typography>
                     </Show>
                 </div>
             </div>

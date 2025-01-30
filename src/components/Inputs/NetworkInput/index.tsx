@@ -1,12 +1,13 @@
+import Typography from '@components/Typography'
 import { createSignal, type Component } from 'solid-js'
 
 interface IProps {
     onChange: (value: string) => void
     placeholder: string
+    autoFocus?: boolean
     type?: string
     id?: string
     value: string
-    autoFocus?: boolean
 }
 
 const NetworkInput: Component<IProps> = (props) => {
@@ -15,25 +16,19 @@ const NetworkInput: Component<IProps> = (props) => {
     return (
         <div
             classList={{
-                'border-solid border-1 border-[#817DF7]': active(),
-                'border-solid border-1 border-[#192736]': !active(),
+                'border-solid border-1 border-purple-200': active(),
+                'border-solid border-1 border-black-800': !active(),
             }}
-            class={
-                'flex justify-center items-center p-[6px] h-[39px] bg-[#192736] w-full rounded-[6px] placeholder-white text-[12px] text-white'
-            }>
-            <div>
-                <p class="select-none text-left text-[12px] leading-[14px] not-italic text-[#7288a1] font-medium">
-                    http://
-                </p>
-            </div>
+            class="flex justify-center items-center rounded-6 p-6 h-[39px] bg-black-800 w-full rounded6 placeholder-white-100 text-white-100">
+            <Typography color="lightGrey" text="small">
+                http://
+            </Typography>
             <input
                 autocomplete="off"
                 autofocus={props.autoFocus}
                 onFocus={() => setActive(true)}
                 onBlur={() => setActive(false)}
-                class={
-                    'h-full pl-[2px] pr-[2px] bg-[#192736] w-full rounded-[6px] border-solid border-0 focus:ring-0 focus:ring-[#192736] border-[#192736] placeholder-white text-[12px] text-white focus:border-0 focus:border-[#192736]'
-                }
+                class="h-full pl-2 pr-2 bg-black-800 w-full border-solid border-0 focus:ring-0 focus:ring-black-800 border-black-800 placeholder-white-100 text-[12px] text-white-100 focus:border-0 focus:border-black-800"
                 onInput={(e) => {
                     props.onChange(e.currentTarget.value)
                     e.currentTarget.value = props.value
@@ -44,11 +39,9 @@ const NetworkInput: Component<IProps> = (props) => {
                 value={props.value}
                 id={props.id}
             />
-            <div>
-                <p class="select-none text-left text-[12px] leading-[14px] not-italic text-[#7288a1] font-medium">
-                    .local
-                </p>
-            </div>
+            <Typography color="lightGrey" text="small">
+                .local
+            </Typography>
         </div>
     )
 }

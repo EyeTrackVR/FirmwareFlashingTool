@@ -1,3 +1,4 @@
+import Typography from '@components/Typography'
 import { Component, Show } from 'solid-js'
 
 export interface IProps {
@@ -17,15 +18,15 @@ export const Button: Component<IProps> = (props) => {
             classList={{
                 'cursor-not-allowed': props.disabled,
                 [props.size!]: typeof props.size !== 'undefined',
-                'bg-[#192736] border-[#192736] focus-visible:border-[#817DF7] cursor-wait':
+                'bg-black-800 border-black-800 focus-visible:border-purple-200 cursor-wait':
                     props.isLoadingPrimaryButton,
-                'bg-[#817DF7] hover:bg-[#9793FD] border-[#192736] focus-visible:border-[#fff]':
+                'bg-purple-200 hover:bg-purple-100 border-black-800 focus-visible:border-white-100':
                     !props.isLoadingPrimaryButton && props.isActive,
-                'bg-[#192736] hover:bg-[#30475e] border-[#192736] focus-visible:border-[#817DF7]':
+                'bg-black-800 hover:bg-grey-200 border-black-800 focus-visible:border-purple-200':
                     !props.isLoadingPrimaryButton && !props.isActive,
             }}
             type={props.type}
-            class={'pr-[32px] pl-[32px] pt-[8px] pb-[8px] rounded-[6px] border-solid border-1'}
+            class="pr-32 pl-32 pt-11 pb-11 rounded-6 border-solid border-1"
             onMouseDown={(e) => {
                 e.preventDefault()
                 props.onClick?.()
@@ -33,12 +34,12 @@ export const Button: Component<IProps> = (props) => {
             <Show
                 when={props.isLoader}
                 fallback={
-                    <p class="text-[14px] text-white font-normal leading-[20px] not-italic whitespace-nowrap text-center">
+                    <Typography color="white" text="caption" nowrap>
                         {props.label}
-                    </p>
+                    </Typography>
                 }>
-                <div class="flex justify-center items-center w-[114px]">
-                    <span class="loading loading-ring loading-sm " />
+                <div class="flex justify-center items-center w-[118px]">
+                    <span class="loading loading-ring w-16" />
                 </div>
             </Show>
         </button>

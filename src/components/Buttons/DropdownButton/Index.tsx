@@ -1,3 +1,4 @@
+import Typography from '@components/Typography'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -6,10 +7,10 @@ export interface IProps {
 
 export const DropdownButton: Component<IProps> = (props) => {
     return (
-        <button class="bg-[#192736] hover:bg-[#30475e] border-[#192736] focus-visible:border-[#817DF7] pr-[32px] pl-[32px] pt-[8px] pb-[8px] rounded-[6px] border-solid border-1">
-            <p class="text-[14px] text-white font-normal leading-[20px] not-italic whitespace-nowrap text-center">
+        <button class="bg-black-800 hover:bg-grey-200 border-black-800 focus-visible:border-purple-100 pr-32 pl-32 pt-8 pb-8 rounded-6 border-solid border-1 h-full">
+            <Typography color="white" text="caption">
                 {props.label}
-            </p>
+            </Typography>
         </button>
     )
 }

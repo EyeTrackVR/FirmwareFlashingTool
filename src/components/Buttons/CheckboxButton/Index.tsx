@@ -1,5 +1,6 @@
+import Checkbox from '@components/Checkbox'
+import Typography from '@components/Typography'
 import { Component } from 'solid-js'
-import Checkbox from '@components/Checkbox/Index'
 
 export interface IProps {
     onClick: () => void
@@ -10,14 +11,14 @@ export interface IProps {
 const CheckboxButton: Component<IProps> = (props) => {
     return (
         <div
-            class="flex flex-row justify-center items-center gap-[6px] cursor-pointer"
+            class="flex flex-row justify-center items-center gap-6 cursor-pointer"
             onClick={() => {
                 props.onClick()
             }}>
             <Checkbox checked={props.checked} />
-            <p class="text-left text-[14px] text-[#9793FD] font-normal leading-[26px] not-italic">
+            <Typography color="purple" text="caption" class="leading-[17px]">
                 Don’t show this again
-            </p>
+            </Typography>
         </div>
     )
 }
