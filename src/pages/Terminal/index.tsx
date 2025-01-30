@@ -1,5 +1,5 @@
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
-import { Button } from '@components/Buttons/DefaultButton'
+import { Button } from '@components/Buttons/Button'
 import { Footer } from '@components/Footer'
 import PortDropdown from '@components/Dropdown/PortDropdown'
 import Firmware from '@components/Terminal/Firmware'
