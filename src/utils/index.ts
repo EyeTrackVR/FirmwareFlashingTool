@@ -89,3 +89,10 @@ export const stringToHex = (str: string) => {
     }
     return hex
 }
+
+export const formatDeviceName = (filename: string): string => {
+    return filename
+        .replace(/\.zip$/, '')
+        .split('-v')[0]
+        .replace(/-/g, '_')
+}

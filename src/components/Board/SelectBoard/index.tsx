@@ -14,7 +14,7 @@ export interface IProps {
 
 export const SelectBoard: Component<IProps> = (props) => {
     return (
-        <div class="relative w-[285px] p-24 rounded-12 border border-solid border-black-800 bg-black-900">
+        <div class="relative w-[300px] p-24 rounded-12 border border-solid border-black-800 bg-black-900">
             <div class="flex flex-col gap-8">
                 <Dropdown>
                     <SelectButton
@@ -25,7 +25,7 @@ export const SelectBoard: Component<IProps> = (props) => {
                     />
                     <DropdownList
                         isScrollbar
-                        styles="dropdown-content right-[-25px] mt-38 p-12 rounded-12 border border-solid border-black-800 bg-black-900 !w-[285px]"
+                        styles="dropdown-content right-[-25px] mt-38 p-12 rounded-12 border border-solid border-black-800 bg-black-900 !w-[300px]"
                         fallbackLabel="Looking for boards!"
                         activeElement={props.selectedBoard}
                         data={props.boards}

@@ -22,7 +22,7 @@ export const Board: Component<IProps> = (props) => {
                 e.preventDefault()
                 props.onClick()
             }}>
-            <Typography color="white" text="body">
+            <Typography color="white" text="body" class="break-all">
                 {props.label}
             </Typography>
             <Show when={props.description}>

@@ -51,6 +51,10 @@ export const stepStatus: {
 export const BoardDescription: {
     [key in BOARD_TYPE]: string
 } = {
+    [BOARD_TYPE.BABBLE_WROOMS_S3]: 'Official Babble tracker board (wireless mode)',
+    [BOARD_TYPE.BABBLE_WROOMS_S3_RELEASE]: 'Official Babble tracker board (wireless mode)',
+    [BOARD_TYPE.BABBLE_USB_WROOMS_S3]: 'Official Babble tracker board (wired mode)',
+    [BOARD_TYPE.BABBLE_USB_WROOMS_S3_RELEASE]: 'Official Babble tracker board (wired mode)',
     [BOARD_TYPE.ESP_32_AI_THINKER]: 'Default for ESP32-AI-THINKER and ESP CAM boards.',
     [BOARD_TYPE.ESP_32]:
         'Special ESP32-CAM, it is unlikely that you will need to use this environment.',
@@ -61,15 +65,17 @@ export const BoardDescription: {
     [BOARD_TYPE.WROOMS_3_QIO]: 'FREENOVE-ESP32-S3 (wireless mode, for boards with octal flash)',
     [BOARD_TYPE.WROOMS_3_USB]: 'FREENOVE-ESP32-S3 (wired mode)',
     [BOARD_TYPE.WROOMS_3QIOUSB]: 'FREENOVE-ESP32-S3 (wired mode, for boards with octal flash)',
-    // eslint-disable-next-line quotes
     [BOARD_TYPE.XIAOSENSES_3]: "SeedStudio's XIAO ESP32-S3 Sense (wireless mode)",
-    // eslint-disable-next-line quotes
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
 }
 
 export const BoardConnectionMethod: {
     [key in BOARD_TYPE]: string
 } = {
+    [BOARD_TYPE.BABBLE_WROOMS_S3]: 'wireless mode',
+    [BOARD_TYPE.BABBLE_WROOMS_S3_RELEASE]: 'wireless mode',
+    [BOARD_TYPE.BABBLE_USB_WROOMS_S3_RELEASE]: 'wired mode',
+    [BOARD_TYPE.BABBLE_USB_WROOMS_S3]: 'wired mode',
     [BOARD_TYPE.ESP_32_AI_THINKER]: 'wireless mode',
     [BOARD_TYPE.ESP_32]: 'wireless mode',
     [BOARD_TYPE.ESP_32_M_5_STACK]: 'wireless mode',

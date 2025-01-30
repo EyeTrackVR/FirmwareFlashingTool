@@ -97,6 +97,10 @@ export enum DIRECTION {
 }
 
 export enum BOARD_TYPE {
+    BABBLE_WROOMS_S3 = 'Babble_wrooms_s3',
+    BABBLE_WROOMS_S3_RELEASE = 'Babble_wrooms_s3_release',
+    BABBLE_USB_WROOMS_S3 = 'Babble_USB_wrooms_s3',
+    BABBLE_USB_WROOMS_S3_RELEASE = 'Babble_USB_wrooms_s3_release',
     ESP_32_AI_THINKER = 'esp32AIThinker',
     ESP_32 = 'esp32Cam',
     ESP_32_M_5_STACK = 'esp32M5Stack',
