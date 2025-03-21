@@ -14,6 +14,8 @@ use tauri::{self, ipc::RemoteDomainAccessScope, Manager, RunEvent, WindowEvent};
 
 // use custom modules
 mod modules;
+use modules::etvr_backend_client;
+use modules::init_etvr_backend;
 use modules::menu;
 use modules::tauri_commands;
 
@@ -51,6 +53,7 @@ async fn main() -> tauri::Result<()> {
       tauri_commands::unzip_archive,
       tauri_commands::handle_save_window_state,
       tauri_commands::handle_load_window_state,
+      etvr_backend_client::shutdown_etvr_backend,
     ])
     // allow only one instance and propagate args and cwd to existing instance
     .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
@@ -79,6 +82,11 @@ async fn main() -> tauri::Result<()> {
       let app_handle = app.handle();
 
       app.windows().iter().for_each(|(_, window)| {
+
+        if (window.label() == "main"){
+          init_etvr_backend::initialize_etvr_backend();
+        }
+
         tokio::spawn({
           let window = window.clone();
 
@@ -131,7 +139,6 @@ async fn main() -> tauri::Result<()> {
 
   app.run(move |_app, event| match event {
     RunEvent::Ready => {}
-    RunEvent::ExitRequested { .. } => {}
     _ => {}
   });
 

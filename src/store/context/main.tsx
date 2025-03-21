@@ -30,8 +30,7 @@ export const AppContextMainProvider: Component<Context> = (props) => {
             const { save } = usePersistentStore()
             await save()
 
-            // stopMDNS()
-            await exit(ExitCodes.USER_EXIT)
+            await invoke('shutdown_etvr_backend')
         }
         await appWindow.close()
     }

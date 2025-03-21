@@ -90,7 +90,7 @@ features = ["javascript", "typescript"]
 
 [workspace.dependencies.tauri]
 version = "1.6.1"
-features = ["process-exit", "protocol-asset", "fs-all", "dialog-all", "http-all", "icon-ico", "notification-all", "os-all", "path-all", "process-relaunch", "shell-open", "system-tray", "window-center", "window-close", "window-create", "window-hide", "window-maximize", "window-minimize", "window-request-user-attention", "window-set-decorations", "window-set-focus", "window-set-fullscreen", "window-set-position", "window-set-resizable", "window-set-size", "window-set-title", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"]
+features = ["process-exit", "protocol-asset", "fs-all", "dialog-all", "http-all", "icon-ico", "notification-all", "os-all", "path-all", "process-relaunch", "shell-all", "system-tray", "window-center", "window-close", "window-create", "window-hide", "window-maximize", "window-minimize", "window-request-user-attention", "window-set-decorations", "window-set-focus", "window-set-fullscreen", "window-set-position", "window-set-resizable", "window-set-size", "window-set-title", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"]
 
 [features]
 default = ["custom-protocol"]
@@ -100,9 +100,6 @@ updater = ["tauri/updater"]
 [build-dependencies.tauri-build]
 version = "1.5.1"
 features = []
-
-[profile.dev]
-debug = 0
 
 [profile.release]
 panic = "abort"
