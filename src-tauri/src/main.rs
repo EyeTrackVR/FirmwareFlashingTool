@@ -3,6 +3,7 @@
   windows_subsystem = "windows"
 )]
 
+use std::sync::Mutex;
 use std::time::Duration;
 
 use log::error;
@@ -82,11 +83,6 @@ async fn main() -> tauri::Result<()> {
       let app_handle = app.handle();
 
       app.windows().iter().for_each(|(_, window)| {
-
-        if (window.label() == "main"){
-          init_etvr_backend::initialize_etvr_backend();
-        }
-
         tokio::spawn({
           let window = window.clone();
 
@@ -137,6 +133,7 @@ async fn main() -> tauri::Result<()> {
     .on_system_tray_event(menu::handle_menu_event)
     .build(tauri::generate_context!())?;
 
+  init_etvr_backend::initialize_etvr_backend();
   app.run(move |_app, event| match event {
     RunEvent::Ready => {}
     _ => {}
