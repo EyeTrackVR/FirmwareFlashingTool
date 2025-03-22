@@ -3,7 +3,7 @@
   windows_subsystem = "windows"
 )]
 
-use std::sync::mpsc::{sync_channel, Sender};
+use std::sync::mpsc::{channel, Sender};
 use std::sync::Mutex;
 use std::time::Duration;
 
@@ -136,12 +136,12 @@ async fn main() -> tauri::Result<()> {
     .on_system_tray_event(menu::handle_menu_event)
     .build(tauri::generate_context!())?;
 
-  let (tx, rx) = sync_channel(1);
+  let (tx, rx) = channel::<()>();
   app.manage(AppState {
     sidecar_sender: tx,
   });
 
-  init_etvr_backend::initialize_etvr_backend(rx);
+  init_etvr_backend::initialize_etvr_backend(app.handle(), rx);
   app.run(move |_app, event| match event {
     RunEvent::Ready => {}
     _ => {}

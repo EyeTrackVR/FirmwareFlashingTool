@@ -1,5 +1,5 @@
-use std::sync::mpsc::SyncSender;
+use std::sync::mpsc::Sender;
 
 pub struct AppState {
-    pub sidecar_sender: SyncSender<i32>,
+    pub sidecar_sender: Sender<()>,
 }
