@@ -3,6 +3,7 @@
   windows_subsystem = "windows"
 )]
 
+use std::sync::mpsc::{sync_channel, Sender};
 use std::sync::Mutex;
 use std::time::Duration;
 
@@ -15,6 +16,9 @@ use tauri::{self, ipc::RemoteDomainAccessScope, Manager, RunEvent, WindowEvent};
 
 // use custom modules
 mod modules;
+mod state;
+
+use crate::state::AppState;
 use modules::etvr_backend_client;
 use modules::init_etvr_backend;
 use modules::menu;
@@ -77,7 +81,6 @@ async fn main() -> tauri::Result<()> {
       // TODO: Implement the Updater
       //#[cfg(feature = "updater")]
       //tauri::updater::builder(app.handle()).should_install(|_current, _latest| true);
-
       app.trigger_global("set-backend-ready", None);
 
       let app_handle = app.handle();
@@ -133,7 +136,12 @@ async fn main() -> tauri::Result<()> {
     .on_system_tray_event(menu::handle_menu_event)
     .build(tauri::generate_context!())?;
 
-  init_etvr_backend::initialize_etvr_backend();
+  let (tx, rx) = sync_channel(1);
+  app.manage(AppState {
+    sidecar_sender: tx,
+  });
+
+  init_etvr_backend::initialize_etvr_backend(rx);
   app.run(move |_app, event| match event {
     RunEvent::Ready => {}
     _ => {}
