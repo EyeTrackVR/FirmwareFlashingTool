@@ -1,11 +1,12 @@
+use crate::constants::ETVR_BACKEND_PORT;
 use command_group::CommandGroup;
 use std::process::Command;
 use std::sync::mpsc::Receiver;
 use std::thread;
 use tauri::api::process::Command as TauriCommand;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, Runtime};
 
-pub fn initialize_etvr_backend(app: AppHandle, receiver: Receiver<()>) {
+pub fn initialize_etvr_backend<R: Runtime>(app: AppHandle<R>, receiver: Receiver<()>) {
   let sidecar_handle_result = TauriCommand::new_sidecar("ETVR");
   match sidecar_handle_result {
     Ok(handle) => {
@@ -24,10 +25,18 @@ pub fn initialize_etvr_backend(app: AppHandle, receiver: Receiver<()>) {
 
 fn spawn_backend(sidecar_handle: TauriCommand, receiver: Receiver<()>) {
   let mut group = Command::from(sidecar_handle)
+    .args(["--port", ETVR_BACKEND_PORT])
     .group_spawn()
     .expect("Failed to spawn ETVR backend");
 
   log::info!("ETVR backend spawned");
+
+  // TODO this is fine for a happy-path scenario, we need a way to
+  // we'll also need to handle situations where the user quits forcefully
+  // or the app gets somehow killed
+  // something like a daemon process holding a socket to ETVR and a PID of the backend
+  // that once the socket gets closed - kills the backend and terminates, could work
+
   thread::spawn(move || loop {
     let signal = receiver.recv();
     match signal {

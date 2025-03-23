@@ -1,15 +1,21 @@
-use crate::state::AppState;
 use std::sync::mpsc::SendError;
-use tauri::Manager;
+use tauri::{AppHandle, Manager, Runtime};
+use crate::constants::{ETVR_BACKEND_ADDRESS, ETVR_BACKEND_PORT};
+use crate::state::AppState;
 
 #[tauri::command(async)]
-pub async fn shutdown_etvr_backend(app_handle: tauri::AppHandle) -> Result<(), String> {
+pub async fn shutdown_etvr_backend<R: Runtime>(app_handle: AppHandle<R>) -> Result<(), String> {
   // requesting shutdown will immediately kill the backend so we can safely ignore the result here
   // but for some reason the process will still be somewhat alive, a zombie
   // we gotta kill it.
 
   // TODO change the port, random it get something bigger, 8000 is not good enough
-  let _ = reqwest::get("http://127.0.0.1:8000/etvr/shutdown").await;
+  let _ = reqwest::get(format!(
+    "http://{}:{}/etvr/shutdown",
+    ETVR_BACKEND_ADDRESS, ETVR_BACKEND_PORT
+  ))
+  .await;
+
   let app_state = app_handle.state::<AppState>();
 
   log::info!("ETVR Backend shutdown successfully");

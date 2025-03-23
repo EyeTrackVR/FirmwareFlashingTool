@@ -3,7 +3,6 @@
   windows_subsystem = "windows"
 )]
 
-use std::sync::mpsc::{channel, Sender};
 use std::sync::Mutex;
 use std::time::Duration;
 
@@ -16,11 +15,6 @@ use tauri::{self, ipc::RemoteDomainAccessScope, Manager, RunEvent, WindowEvent};
 
 // use custom modules
 mod modules;
-mod state;
-
-use crate::state::AppState;
-use modules::etvr_backend_client;
-use modules::init_etvr_backend;
 use modules::menu;
 use modules::tauri_commands;
 
@@ -58,7 +52,6 @@ async fn main() -> tauri::Result<()> {
       tauri_commands::unzip_archive,
       tauri_commands::handle_save_window_state,
       tauri_commands::handle_load_window_state,
-      etvr_backend_client::shutdown_etvr_backend,
     ])
     // allow only one instance and propagate args and cwd to existing instance
     .plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
@@ -77,6 +70,7 @@ async fn main() -> tauri::Result<()> {
     // save window position and size between sessions
     .plugin(tauri_plugin_window_state::Builder::default().build())
     .plugin(tauri_plugin_esp::init())
+    .plugin(tauri_plugin_etvr_backend::init())
     .setup(move |app| {
       // TODO: Implement the Updater
       //#[cfg(feature = "updater")]
@@ -136,12 +130,6 @@ async fn main() -> tauri::Result<()> {
     .on_system_tray_event(menu::handle_menu_event)
     .build(tauri::generate_context!())?;
 
-  let (tx, rx) = channel::<()>();
-  app.manage(AppState {
-    sidecar_sender: tx,
-  });
-
-  init_etvr_backend::initialize_etvr_backend(app.handle(), rx);
   app.run(move |_app, event| match event {
     RunEvent::Ready => {}
     _ => {}

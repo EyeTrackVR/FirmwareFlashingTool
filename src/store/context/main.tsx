@@ -1,4 +1,3 @@
-import { exit } from '@tauri-apps/api/process'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
@@ -6,7 +5,6 @@ import { useEventListener } from 'solidjs-use'
 import { attachConsole } from 'tauri-plugin-log-api'
 import type { Context } from '@static/types'
 import type { UnlistenFn } from '@tauri-apps/api/event'
-import { ExitCodes } from '@src/static/types/enums'
 import { usePersistentStore } from '@src/store/tauriStore'
 
 interface AppContextMain {
@@ -30,7 +28,7 @@ export const AppContextMainProvider: Component<Context> = (props) => {
             const { save } = usePersistentStore()
             await save()
 
-            await invoke('shutdown_etvr_backend')
+            await invoke('plugin:etvr_backend|shutdown_etvr_backend')
         }
         await appWindow.close()
     }

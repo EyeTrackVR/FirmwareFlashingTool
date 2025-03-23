@@ -1397,7 +1397,6 @@ dependencies = [
 name = "firmware_flashing_tool"
 version = "1.6.0"
 dependencies = [
- "command-group",
  "dialoguer",
  "log",
  "reqwest 0.11.27",
@@ -1407,6 +1406,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-esp",
+ "tauri-plugin-etvr-backend",
  "tauri-plugin-log",
  "tauri-plugin-request-client",
  "tauri-plugin-single-instance",
@@ -4911,6 +4911,16 @@ dependencies = [
  "serialport",
  "tauri",
  "thiserror",
+]
+
+[[package]]
+name = "tauri-plugin-etvr-backend"
+version = "0.1.0"
+dependencies = [
+ "command-group",
+ "log",
+ "reqwest 0.11.27",
+ "tauri",
 ]
 
 [[package]]

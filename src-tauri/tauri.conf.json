@@ -86,7 +86,8 @@
         "scope": [
           {
             "name": "backend_bin/ETVR",
-            "sidecar": true
+            "sidecar": true,
+            "args": true
           }
         ],
         "sidecar": true
