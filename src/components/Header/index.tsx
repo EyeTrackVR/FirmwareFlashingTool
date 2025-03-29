@@ -1,57 +1,119 @@
 import { ProgressBar } from '@components/ProgressBar'
 import Typography from '@components/Typography'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { Image } from '@kobalte/core'
-import { Component } from 'solid-js'
+import { Component, Show } from 'solid-js'
 
 interface IProps {
-    onClick: () => void
-    step: { step: string; description: string; dashoffset: string; index: string }
-    currentStep: string
-    name: string
+    onClickHome?: () => void
+    onClick: (action: TITLEBAR_ACTION) => void
+    step?: { step: string; description: string; dashoffset: string; index: string }
+    docs?: boolean
+    currentStep?: string
 }
 
-const MainHeader: Component<IProps> = (props) => {
+const Header: Component<IProps> = (props) => {
     return (
-        <header class="w-full">
-            <div class="flex justify-between">
-                <div
-                    class="flex cursor-pointer"
-                    onClick={() => {
-                        props.onClick()
-                    }}>
-                    <div class="flex items-end">
-                        <div>
-                            <Image.Root>
-                                <Image.Img
-                                    src="images/logo.png"
-                                    alt="logo"
-                                    width="64px"
-                                    class="min-w-[64px]"
-                                />
-                            </Image.Root>
+        <header class="w-full" data-tauri-drag-region>
+            <div
+                class="flex flex-col w-full items-end"
+                classList={{
+                    'bg-brown-800': props.docs,
+                }}>
+                <div class="h-3" />
+                <div class="w-full flex items-center flex-row">
+                    <div class="h-6 w-6" />
+                    <div
+                        class="flex flex-row w-full items-center justify-between h-38"
+                        data-tauri-drag-region>
+                        <div
+                            class="flex flex-row items-center gap-4"
+                            onClick={() => {
+                                props.onClickHome?.()
+                            }}>
+                            <Show when={!props.docs}>
+                                <Image.Root class="select-none">
+                                    <Image.Img
+                                        src="images/logo.png"
+                                        alt="logo"
+                                        width="24px"
+                                        class="min-w-[24px] min-h-[24px]"
+                                    />
+                                </Image.Root>
+                                <Typography color="white" text="caption">
+                                    EyetrackVR
+                                </Typography>
+                            </Show>
                         </div>
-                        <Typography color="white" text="h3" class="pb-8">
-                            EyetrackVR
-                        </Typography>
+                        <div class="flex flex-row items-center">
+                            <div
+                                classList={{
+                                    'hover:bg-brown-300': props.docs,
+                                    'hover:bg-blue-800': !props.docs,
+                                }}
+                                class="w-30 h-30 flex items-center justify-center transition"
+                                onClick={() => {
+                                    props.onClick(TITLEBAR_ACTION.MINIMIZE)
+                                }}>
+                                <svg width="16px" height="16px" viewBox="0 0 24 24">
+                                    <path fill="#ffffff" d="M20 14H4v-4h16" />
+                                </svg>
+                            </div>
+                            <div
+                                classList={{
+                                    'hover:bg-brown-300': props.docs,
+                                    'hover:bg-blue-800': !props.docs,
+                                }}
+                                class="w-30 h-30 flex items-center justify-center transition"
+                                onClick={() => {
+                                    props.onClick(TITLEBAR_ACTION.MAXIMIZE)
+                                }}>
+                                <svg width="16px" height="16px" viewBox="0 0 24 24">
+                                    <path fill="#ffffff" d="M4 4h16v16H4zm2 4v10h12V8z" />
+                                </svg>
+                            </div>
+                            <div
+                                class="w-30 h-30 flex items-center justify-center hover:bg-red-100 transition"
+                                onClick={() => {
+                                    props.onClick(TITLEBAR_ACTION.CLOSE)
+                                }}>
+                                <svg width="16px" height="16px" viewBox="0 0 24 24">
+                                    <path
+                                        fill="white"
+                                        d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
+                    <div class="h-[6px] w-[6px]" />
                 </div>
-                <div class="flex flex-row justify-center items-center gap-6 min-w-[210px]">
-                    <ProgressBar
-                        currentStep={props.currentStep}
-                        dashoffset={props.step.dashoffset}
-                    />
-                    <div class="flex flex-col items-start justify-end w-full gap-4">
-                        <Typography color="white" text="captionBold">
-                            {props.step.step}
-                        </Typography>
-                        <Typography color="white" text="small">
-                            {props.step.description}
-                        </Typography>
+                <Show when={props.docs}>
+                    <div class="h-3" />
+                </Show>
+                <Show
+                    when={
+                        typeof props.step !== 'undefined' &&
+                        typeof props.currentStep !== 'undefined'
+                    }>
+                    <div class="flex flex-row justify-center items-center gap-6 min-w-[210px]">
+                        <ProgressBar
+                            currentStep={props?.currentStep ?? '0'}
+                            dashoffset={props?.step?.dashoffset ?? '0'}
+                        />
+                        <div class="flex flex-col items-start justify-end w-full gap-4">
+                            <Typography color="white" text="captionBold">
+                                {props?.step?.step ?? '0'}
+                            </Typography>
+                            <Typography color="white" text="small">
+                                {props?.step?.description ?? '--'}
+                            </Typography>
+                        </div>
                     </div>
-                </div>
+                </Show>
             </div>
         </header>
     )
 }
 
-export default MainHeader
+export default Header

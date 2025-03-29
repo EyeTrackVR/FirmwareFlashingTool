@@ -12,7 +12,7 @@ import { useAppContext } from '@store/context/app'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 import { usePersistentStore } from '@store/tauriStore'
-import { Header } from '@containers/Header'
+import { HeaderRoot } from '@containers/Header'
 
 const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
@@ -93,8 +93,10 @@ const AppRoutes: Component = () => {
             root={(data) => {
                 return (
                     <div class="flex flex-col h-full">
-                        <Header />
-                        <div class="flex h-full flex-col overflow-hidden">{data.children}</div>
+                        <HeaderRoot />
+                        <div class="flex h-full flex-col overflow-hidden px-24 pb-24">
+                            {data.children}
+                        </div>
                     </div>
                 )
             }}>
