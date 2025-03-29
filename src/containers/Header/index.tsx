@@ -9,7 +9,6 @@ import { setAbortController } from '@store/terminal/terminal'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { invoke } from '@tauri-apps/api/tauri'
-import { usePersistentStore } from '@store/tauriStore'
 
 export const HeaderRoot = () => {
     const location = useLocation()
@@ -18,21 +17,35 @@ export const HeaderRoot = () => {
     const { addNotification } = useAppNotificationsContext()
     const { activeBoard } = useAppAPIContext()
 
-    const isUSBBoard = createMemo(() => {
+    const isUSBBoardActive = createMemo(() => {
         return activeBoard().includes(usb) ? 1 : 0
     })
 
-    const step = createMemo(() => {
-        const index = stepStatus[DIRECTION[location.pathname]].index - isUSBBoard()
-        return index <= 0 ? 1 : index
+    const shouldHideStepIndicator = createMemo(() => {
+        return location.pathname === '/'
     })
+
+    const computedStepIndex = createMemo(() => {
+        if (!shouldHideStepIndicator()) {
+            const index = stepStatus[DIRECTION[location.pathname]].index - isUSBBoardActive()
+            return index <= 0 ? 1 : index
+        }
+        return 1
+    })
+
+    const formattedCurrentStep = createMemo(() => {
+        if (shouldHideStepIndicator()) return undefined
+        return `${computedStepIndex()}/${Object.values(stepStatus).length - isUSBBoardActive()}`
+    })
+
+    const stepDetails = createMemo(() => ({
+        ...stepStatus[DIRECTION[location.pathname]],
+        step: `Step ${computedStepIndex()}`,
+    }))
 
     return (
         <Header
-            step={{
-                ...stepStatus[DIRECTION[location.pathname]],
-                step: `Step ${step()}`,
-            }}
+            step={stepDetails()}
             onClick={async (action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -61,7 +74,7 @@ export const HeaderRoot = () => {
                 setAbortController()
                 navigate('/')
             }}
-            currentStep={`${step()}/${Object.values(stepStatus).length - isUSBBoard()} `}
+            currentStep={formattedCurrentStep()}
         />
     )
 }
