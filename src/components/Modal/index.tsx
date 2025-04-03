@@ -1,4 +1,5 @@
-import { Titlebar } from '@components/Titlebar'
+import Header from '@components/Header'
+
 import { type TITLEBAR_ACTION } from '@src/static/types/enums'
 import { Component, createEffect, JSX } from 'solid-js'
 
@@ -23,7 +24,9 @@ export const Modal: Component<IProps> = (props) => {
 
     return (
         <dialog id={props.id} class="modal">
-            <Titlebar onClickHeader={props.onClickHeader} />
+            <div class="fixed top-0 w-full">
+                <Header onClick={props.onClickHeader} />
+            </div>
             <div class="modal-box w-auto h-auto bg-transparent overflow-visible">
                 <div class="w-[500px] bg-black-900 p-12 rounded-12 border border-solid border-black-800 z-10">
                     {props.children}

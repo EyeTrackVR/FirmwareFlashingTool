@@ -1,16 +1,13 @@
 import { invoke } from '@tauri-apps/api/tauri'
-import { appWindow } from '@tauri-apps/api/window'
 import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
 import { useEventListener } from 'solidjs-use'
 import { attachConsole } from 'tauri-plugin-log-api'
 import type { Context } from '@static/types'
 import type { UnlistenFn } from '@tauri-apps/api/event'
-import { usePersistentStore } from '@src/store/tauriStore'
 
 interface AppContextMain {
     getDetachConsole: Accessor<Promise<UnlistenFn>>
     handleAppBoot: () => void
-    handleTitlebar: (main?: boolean) => void
 }
 
 const AppContextMain = createContext<AppContextMain>()
@@ -19,23 +16,8 @@ export const AppContextMainProvider: Component<Context> = (props) => {
 
     const getDetachConsole = createMemo(() => detachConsole)
     //#region Global Hooks
-    const handleAppExit = async (main = false) => {
-
-        await invoke('handle_save_window_state')
-        console.log('[App Close]: saved window state')
-
-        if (main) {
-            const { save } = usePersistentStore()
-            await save()
-
-            await invoke('plugin:etvr_backend|shutdown_etvr_backend')
-        }
-        await appWindow.close()
-    }
 
     const handleAppBoot = () => {
-        //const { set, get } = usePersistentStore()
-
         console.log('[App Boot]: Frontend Initialization Starting')
         useEventListener(document, 'DOMContentLoaded', () => {
             // check if the window state is saved and restore it if it is
@@ -47,29 +29,10 @@ export const AppContextMainProvider: Component<Context> = (props) => {
         //TODO: Start mdns client
     }
 
-    const handleTitlebar = (main = false) => {
-        const titlebar = document.getElementsByClassName('titlebar')
-        if (titlebar) {
-            useEventListener(document.getElementById('titlebar-minimize'), 'click', () => {
-                appWindow.minimize()
-            })
-            useEventListener(document.getElementById('titlebar-maximize'), 'click', () => {
-                appWindow.toggleMaximize()
-            })
-            useEventListener(document.getElementById('titlebar-close'), 'click', async () => {
-                await handleAppExit(main)
-            })
-        }
-    }
     //#endregion
 
     return (
-        <AppContextMain.Provider
-            value={{
-                getDetachConsole,
-                handleAppBoot,
-                handleTitlebar,
-            }}>
+        <AppContextMain.Provider value={{ getDetachConsole, handleAppBoot }}>
             {props.children}
         </AppContextMain.Provider>
     )
