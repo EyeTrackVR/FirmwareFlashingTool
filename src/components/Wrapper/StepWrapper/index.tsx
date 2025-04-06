@@ -39,7 +39,7 @@ export const StepWrapper: ParentComponent<IProps> = (props) => {
                         classList={{ 'w-2': !props.hideDots }}
                     />
                 </div>
-                <div class="flex flex-col gap-24 w-full pt-6">
+                <div class="flex flex-col gap-24 w-full pt-8">
                     <Show when={props.title && !props.error}>
                         <Typography color="white" text="body" class="text-left">
                             {props.title}

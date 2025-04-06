@@ -1,5 +1,4 @@
 import { BoardList } from '@components/Board/BoardList'
-import Button from '@components/Buttons/Button'
 import { Footer } from '@components/Footer'
 import { InputField } from '@components/Inputs/InputField'
 import Typography from '@components/Typography'
@@ -11,6 +10,7 @@ import { yupSchema } from 'solid-form-handler/yup'
 import { Accessor, Component, createMemo, Show } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
 import { boardSchema } from './schema'
+import PrimaryButton from '@components/Buttons/PrimaryButton'
 
 interface IProps {
     onClickEditBoard: (board: IBoard) => void
@@ -61,14 +61,27 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
     return (
         <div class="pt-24 w-full h-full flex flex-col">
-            <div class="flex flex-row h-full w-full max-w-[1800px] mx-auto overflow-y-auto scrollbar max-[1110px]:gap-12 min-[1111px]:gap-[64px]">
+            <div class="flex flex-row max-[1000px]:flex-col h-full w-full max-w-[1800px] mx-auto overflow-y-auto scrollbar max-[1110px]:gap-12 min-[1111px]:gap-[64px]">
+                <div class="w-full max-[1000px]:pb-48 min-[1001px]:hidden max-[1000px]:visible">
+                    <BoardList
+                        onClickOpenDocs={props.onClickOpenDocs}
+                        boards={props.boards}
+                        onDeleteBoard={(board) => {
+                            props.onClickDeleteBoard(board.id)
+                        }}
+                        onEditBoard={(board) => {
+                            formHandler.setFieldValue('editBoard', board.id)
+                            formHandler.setFieldValue('label', board.label)
+                            formHandler.setFieldValue('address', board.address)
+                        }}
+                    />
+                </div>
                 <form
                     class="flex flex-row w-full gap-12"
                     onSubmit={async (e) => {
                         e.preventDefault()
                         try {
                             await formHandler.validateForm()
-
                             const board: IBoard = {
                                 label: formHandler.getFieldValue('label'),
                                 address: formHandler.getFieldValue('address'),
@@ -156,11 +169,11 @@ const BoardImportWizard: Component<IProps> = (props) => {
                                 }>
                                 <div class="flex justify-start mt-24">
                                     <div>
-                                        <Button
-                                            label="Submit"
-                                            type={buttonType()}
-                                            isActive={isActive()}
+                                        <PrimaryButton
                                             disabled={isDisabled()}
+                                            isActive={isActive()}
+                                            type={buttonType()}
+                                            label="Submit"
                                         />
                                     </div>
                                 </div>
@@ -169,7 +182,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                     </div>
                 </form>
                 <div class="w-full">
-                    <div class="top-0 sticky w-full">
+                    <div class="top-0 sticky w-full max-[1000px]:hidden">
                         <BoardList
                             onClickOpenDocs={props.onClickOpenDocs}
                             boards={props.boards}
@@ -187,12 +200,13 @@ const BoardImportWizard: Component<IProps> = (props) => {
             </div>
             <div class="pt-12">
                 <Footer
-                    onClickSecond={props.onClickBack}
-                    secondLabel="Previous step"
+                    isPrimaryButtonDisabled={!props.boards.length}
                     primaryLabel="I Connected all my boards"
                     isPrimaryActive={!props.boards.length}
                     isButtonDisabled={!props.boards.length}
-                    isPrimaryButtonDisabled={!props.boards.length}
+                    isPrimary={props.boards.length > 0}
+                    onClickSecond={props.onClickBack}
+                    secondLabel="Previous step"
                     onClickPrimary={() => {
                         props.onClickConfirm()
                     }}

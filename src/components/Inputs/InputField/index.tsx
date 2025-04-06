@@ -31,7 +31,7 @@ export const InputField: Component<IProps> = (props) => {
                     </Show>
                 </div>
                 <input
-                    class="h-39 p-0 bg-transparent w-full rounded-6 border-solid border-1 border-black-900 placeholder-white-100 text-[14px] text-white-100 focus:border-black-800 focus:ring-purple-200"
+                    class="h-39 p-12 w-full rounded-6 border-solid border-1 bg-black-800 border-black-800 placeholder-white-100 text-[14px] text-white-100 focus:border-black-800 focus:ring-purple-200"
                     placeholder={props.placeholder}
                     onInput={(e) => props.onInput(e)}
                     value={props.value}

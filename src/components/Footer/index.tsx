@@ -14,6 +14,8 @@ export interface IProps {
     isButtonDisabled?: boolean
     isSecondButtonDisabled?: boolean
     isLoadingPrimaryButton?: boolean
+    isSecondButtonActive?: boolean
+    isPrimary?: boolean
     size?: string
     primaryType?: 'submit' | 'reset' | 'button' | undefined
     secondType?: 'submit' | 'reset' | 'button' | undefined
@@ -31,6 +33,7 @@ export const Footer: Component<IProps> = (props) => {
                     type={props.secondType}
                     label={props.secondLabel ?? ''}
                     onClick={props.onClickSecond}
+                    isPrimary={props.isSecondButtonActive}
                 />
             </Show>
             <Show when={props.onClickPrimary && !props.hidePrimaryButton}>
@@ -38,6 +41,7 @@ export const Footer: Component<IProps> = (props) => {
                     size={props.size}
                     buttonDisabled={props.isButtonDisabled}
                     disabled={props.isPrimaryButtonDisabled}
+                    isPrimary={props.isPrimary}
                     isLoadingPrimaryButton={props.isLoadingPrimaryButton}
                     isActive={!props.isPrimaryActive}
                     type={props.primaryType}

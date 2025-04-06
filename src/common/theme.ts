@@ -22,6 +22,10 @@ export const theme = {
             200: '#817DF7',
             100: '#9793FD',
         },
+        transparentPurple: {
+            200: ' #817df7b3',
+            100: '#817df780',
+        },
         grey: {
             200: '#30475e',
             100: '#7288a1',
