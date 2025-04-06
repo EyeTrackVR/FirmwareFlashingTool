@@ -1,6 +1,6 @@
 import BoardImportWizard from '@pages/BoardImportWizard'
 import { useNavigate } from '@solidjs/router'
-import { removeBoard, setBoard } from '@store/boards/boards'
+import { removeBoard, setBoard, updateBoard } from '@store/boards/boards'
 import { boards } from '@store/boards/selectors'
 import { openDocs } from '@store/terminal/actions'
 
@@ -10,8 +10,8 @@ const BoardImportWizardRoot = () => {
     return (
         <BoardImportWizard
             boards={boards()}
-            onClickAddBoard={(label, address, id) => {
-                setBoard({ label, address, id })
+            onClickAddBoard={(board) => {
+                setBoard(board)
             }}
             onClickBack={() => {
                 navigate('/')
@@ -20,7 +20,9 @@ const BoardImportWizardRoot = () => {
             onClickDeleteBoard={(id) => {
                 removeBoard(id)
             }}
-            onClickEditBoard={() => {}}
+            onClickEditBoard={(board) => {
+                updateBoard(board)
+            }}
             onClickOpenDocs={openDocs}
         />
     )

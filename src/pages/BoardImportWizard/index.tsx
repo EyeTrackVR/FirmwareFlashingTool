@@ -8,13 +8,13 @@ import { IBoard } from '@interfaces/boards/interfaces'
 import { ADD_BOARD_LIMIT } from '@src/static'
 import { useFormHandler } from 'solid-form-handler'
 import { yupSchema } from 'solid-form-handler/yup'
-import { Component, createMemo, createSignal, Show } from 'solid-js'
-import { boardSchema } from './schema'
+import { Accessor, Component, createMemo, Show } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
+import { boardSchema } from './schema'
 
 interface IProps {
-    onClickEditBoard: (id: string, label: string, address: string) => void
-    onClickAddBoard: (label: string, address: string, id: string) => void
+    onClickEditBoard: (board: IBoard) => void
+    onClickAddBoard: (board: IBoard) => void
     onClickDeleteBoard: (board: string) => void
     boards: Array<IBoard>
     onClickOpenDocs: () => void
@@ -23,10 +23,7 @@ interface IProps {
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
-    const [editBoard, setEditBoard] = createSignal<string | undefined>(undefined)
-    const formHandler = useFormHandler(
-        yupSchema(boardSchema(props.boards, typeof editBoard() !== 'undefined')),
-    )
+    const formHandler = useFormHandler(yupSchema(boardSchema))
 
     const isDisabled = createMemo(() => {
         return (
@@ -53,6 +50,10 @@ const BoardImportWizard: Component<IProps> = (props) => {
         )
     })
 
+    const editBoard: Accessor<string> = createMemo(() => {
+        return formHandler.getFieldValue('editBoard')
+    })
+
     const buttonType = createMemo(() => (!isDisabled() ? 'submit' : 'button'))
     const isLimitReached = createMemo(() =>
         props.boards.length >= ADD_BOARD_LIMIT && !editBoard() ? 'Limit reached' : undefined,
@@ -67,19 +68,19 @@ const BoardImportWizard: Component<IProps> = (props) => {
                         e.preventDefault()
                         try {
                             await formHandler.validateForm()
+
+                            const board: IBoard = {
+                                label: formHandler.getFieldValue('label'),
+                                address: formHandler.getFieldValue('address'),
+                                id: !editBoard() ? uuidV6() : editBoard(),
+                            }
+
+                            props.onClickEditBoard(board)
                             if (editBoard()) {
-                                props.onClickEditBoard(
-                                    uuidV6(),
-                                    formHandler.getFieldValue('label'),
-                                    formHandler.getFieldValue('address'),
-                                )
-                                setEditBoard(undefined)
+                                props.onClickEditBoard(board)
+                                formHandler.setFieldValue('editBoard', undefined)
                             } else {
-                                props.onClickAddBoard(
-                                    formHandler.getFieldValue('label'),
-                                    formHandler.getFieldValue('address'),
-                                    uuidV6(),
-                                )
+                                props.onClickAddBoard(board)
                             }
                             formHandler.resetForm()
                         } catch {}
@@ -92,13 +93,16 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             isCompleted={formHandler.getFieldValue('address').length > 0}>
                             <div class="flex flex-col gap-12 pb-32">
                                 <InputField
+                                    label="Enter the camera address or port number."
                                     isError={formHandler.getFieldError('address')}
                                     value={formHandler.getFieldValue('address')}
-                                    label="Enter the camera address or port number."
                                     placeholder="camera address"
                                     id="address"
                                     onInput={(event) => {
-                                        formHandler.setFieldValue('address', event.target.value)
+                                        formHandler.setFieldValue(
+                                            'address',
+                                            event.target.value.trim(),
+                                        )
                                     }}
                                 />
                                 <Typography color="red" text="caption" class="text-left h-16">
@@ -113,9 +117,9 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             isCompleted={formHandler.getFieldValue('label').length > 0}>
                             <div class="flex flex-col gap-12 pb-32">
                                 <InputField
+                                    label="What would you like to name the camera?"
                                     isError={formHandler.getFieldError('label')}
                                     value={formHandler.getFieldValue('label')}
-                                    label="What would you like to name the camera?"
                                     placeholder="camera name"
                                     id="cameraName"
                                     maxWords="16"
@@ -173,7 +177,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                                 props.onClickDeleteBoard(board.id)
                             }}
                             onEditBoard={(board) => {
-                                setEditBoard(board.id)
+                                formHandler.setFieldValue('editBoard', board.id)
                                 formHandler.setFieldValue('label', board.label)
                                 formHandler.setFieldValue('address', board.address)
                             }}

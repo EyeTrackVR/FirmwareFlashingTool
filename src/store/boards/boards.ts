@@ -31,7 +31,7 @@ export const removeBoard = (id: string) => {
 export const updateBoard = (board: IBoard) => {
     setState(
         produce((s) => {
-            s.boards = s.boards.map((item) => (item.address === board.address ? board : item))
+            s.boards = s.boards.map((item) => (item.id === board.id ? board : item))
         }),
     )
 }
