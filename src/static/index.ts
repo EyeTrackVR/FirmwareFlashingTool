@@ -1,6 +1,7 @@
 import { BOARD_TYPE, CHANNEL_TYPE, STEP_STATUS_ENUM } from './types/enums'
 import { type IChannelOptions } from '@interfaces/interfaces'
 
+export const ADD_BOARD_LIMIT = 2
 export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
 export const defaultMdnsLength = 24

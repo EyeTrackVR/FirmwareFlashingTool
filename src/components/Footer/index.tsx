@@ -11,6 +11,7 @@ export interface IProps {
     secondLabel?: string
     hidePrimaryButton?: boolean
     isPrimaryButtonDisabled?: boolean
+    isButtonDisabled?: boolean
     isSecondButtonDisabled?: boolean
     isLoadingPrimaryButton?: boolean
     size?: string
@@ -35,6 +36,7 @@ export const Footer: Component<IProps> = (props) => {
             <Show when={props.onClickPrimary && !props.hidePrimaryButton}>
                 <Button
                     size={props.size}
+                    buttonDisabled={props.isButtonDisabled}
                     disabled={props.isPrimaryButtonDisabled}
                     isLoadingPrimaryButton={props.isLoadingPrimaryButton}
                     isActive={!props.isPrimaryActive}

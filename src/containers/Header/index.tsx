@@ -11,23 +11,23 @@ import { createMemo } from 'solid-js'
 import { invoke } from '@tauri-apps/api/tauri'
 
 export const HeaderRoot = () => {
-    const location = useLocation()
-    const navigate = useNavigate()
-
     const { addNotification } = useAppNotificationsContext()
     const { activeBoard } = useAppAPIContext()
+
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const isUSBBoardActive = createMemo(() => {
         return activeBoard().includes(usb) ? 1 : 0
     })
 
     const shouldHideStepIndicator = createMemo(() => {
-        return location.pathname === '/'
+        return typeof stepStatus[DIRECTION[location.pathname]] === 'undefined'
     })
 
     const computedStepIndex = createMemo(() => {
         if (!shouldHideStepIndicator()) {
-            const index = stepStatus[DIRECTION[location.pathname]].index - isUSBBoardActive()
+            const index = stepStatus[DIRECTION[location.pathname]]?.index - isUSBBoardActive()
             return index <= 0 ? 1 : index
         }
         return 1

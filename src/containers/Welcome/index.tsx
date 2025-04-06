@@ -10,7 +10,7 @@ const WelcomeRoot = () => {
                 navigate('/configureBoard')
             }}
             onClickAddExisting={() => {
-                // coming soon
+                navigate('/boardImportWizard')
             }}
         />
     )
