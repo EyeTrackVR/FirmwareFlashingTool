@@ -7,10 +7,10 @@ const WelcomeRoot = () => {
     return (
         <Welcome
             onClickSetup={() => {
-                navigate('/configureBoard')
+                navigate('/configureBoardWizard')
             }}
             onClickAddExisting={() => {
-                // coming soon
+                navigate('/boardImportWizard')
             }}
         />
     )

@@ -203,7 +203,7 @@ export const ManageFlashFirmware = () => {
                     return
                 }
                 setAbortController()
-                navigate(isUSBBoard() ? '/configureBoard' : '/network')
+                navigate(isUSBBoard() ? '/configureBoardWizard' : '/network')
             }}
         />
     )

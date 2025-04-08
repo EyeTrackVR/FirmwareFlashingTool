@@ -96,3 +96,12 @@ export const formatDeviceName = (filename: string): string => {
         .split('-v')[0]
         .replace(/-/g, '_')
 }
+
+export const shortAddress = (text: string, size = 24) => {
+    if (text.length <= size * 2) return text
+
+    const start = text.slice(0, size)
+    const end = text.slice(-size)
+
+    return `${start}...${end}`
+}

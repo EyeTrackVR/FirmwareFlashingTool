@@ -36,8 +36,8 @@ const Header: Component<IProps> = (props) => {
                                     <Image.Img
                                         src="images/logo.png"
                                         alt="logo"
-                                        width="24px"
-                                        class="min-w-[24px] min-h-[24px]"
+                                        width="34px"
+                                        class="min-w-[34px] min-h-[34px]"
                                     />
                                 </Image.Root>
                                 <Typography color="white" text="caption">

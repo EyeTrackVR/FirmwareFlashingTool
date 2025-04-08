@@ -3,34 +3,23 @@ import { Component, Show } from 'solid-js'
 
 export interface IProps {
     type?: 'submit' | 'reset' | 'button' | undefined
-    isLoadingPrimaryButton?: boolean
     disabled?: boolean
-    size?: string
-    isActive?: boolean
-    label: string
-    isLoader?: boolean
-    isPrimary?: boolean
-    buttonDisabled?: boolean
     onClick?: () => void
+    isLoader?: boolean
+    label: string
+    isActive?: boolean
 }
 
-export const Button: Component<IProps> = (props) => {
+const PrimaryButton: Component<IProps> = (props) => {
     return (
         <button
-            disabled={props.buttonDisabled}
+            disabled={props.disabled}
             classList={{
                 'cursor-not-allowed': props.disabled,
-                [props.size!]: typeof props.size !== 'undefined',
-                'bg-black-800 border-black-800 focus-visible:border-purple-200 cursor-wait':
-                    props.isLoadingPrimaryButton,
                 'bg-purple-200 hover:bg-purple-100 border-black-800 focus-visible:border-white-100':
-                    !props.isLoadingPrimaryButton && props.isActive,
-                'bg-black-800 hover:bg-grey-200 border-black-800 focus-visible:border-purple-200':
-                    !props.isLoadingPrimaryButton && !props.isActive,
+                    props.isActive,
                 'bg-transparentPurple-100 hover:bg-transparentPurple-200 border-black-800 focus-visible:border-purple-200':
-                    !props.isLoadingPrimaryButton &&
-                    typeof props.isPrimary !== 'undefined' &&
-                    !props.isPrimary,
+                    !props.isActive,
             }}
             type={props.type}
             class="pr-32 pl-32 pt-11 pb-11 rounded-6 border-solid border-1"
@@ -53,4 +42,4 @@ export const Button: Component<IProps> = (props) => {
     )
 }
 
-export default Button
+export default PrimaryButton

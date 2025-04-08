@@ -1,6 +1,6 @@
 import { type IDropdownList } from '@interfaces/interfaces'
 import { isValidChannel } from '@interfaces/utils'
-import { BoardManagement } from '@pages/BoardManagement'
+import { ConfigureBoardWizard } from '@pages/ConfigureBoardWizard'
 import { useNavigate } from '@solidjs/router'
 import { BoardDescription, ChannelOptions, debugModes, supportedBoards, usb } from '@src/static'
 import { DebugMode } from '@src/static/types'
@@ -13,7 +13,7 @@ import { appWindow } from '@tauri-apps/api/window'
 import { Accessor, createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
 
-export const ManageBoard = () => {
+export const ConfigureBoardWizardRoot = () => {
     const navigate = useNavigate()
     const { getDebugMode, setDebugMode } = useAppContext()
     const { setOpenModal } = useAppUIContext()
@@ -69,7 +69,7 @@ export const ManageBoard = () => {
     })
 
     return (
-        <BoardManagement
+        <ConfigureBoardWizard
             boards={boards()}
             lockButton={!activeBoard() || !firmwareVersion()}
             channelMode={channelMode()}
@@ -143,4 +143,4 @@ export const ManageBoard = () => {
     )
 }
 
-export default ManageBoard
+export default ConfigureBoardWizardRoot
