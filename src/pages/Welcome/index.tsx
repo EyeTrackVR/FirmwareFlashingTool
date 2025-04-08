@@ -11,7 +11,7 @@ export interface IProps {
 const Welcome: Component<IProps> = (props) => {
     return (
         <div class="w-full h-full  flex flex-col items-center justify-center gap-32">
-            <div class="flex scale-[2.8]">
+            <div class="flex scale-[2.5]">
                 <div class="flex flex-col items-center justify-center scale-[0.42] gap-32 mb-[40px]">
                     <Image.Root class="select-none">
                         <Image.Img

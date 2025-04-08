@@ -22,7 +22,7 @@ export interface IProps {
     lockButton: boolean
 }
 
-export const BoardManagement: Component<IProps> = (props) => {
+export const ConfigureBoardWizard: Component<IProps> = (props) => {
     return (
         <div class="flex flex-col h-full w-full">
             <div class="flex h-full justify-center items-center">
@@ -54,4 +54,4 @@ export const BoardManagement: Component<IProps> = (props) => {
     )
 }
 
-export default BoardManagement
+export default ConfigureBoardWizard
