@@ -9,6 +9,7 @@ import { setAbortController } from '@store/terminal/terminal'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { invoke } from '@tauri-apps/api/tauri'
+import { boards } from '@store/boards/selectors'
 
 export const HeaderRoot = () => {
     const { addNotification } = useAppNotificationsContext()
@@ -72,7 +73,12 @@ export const HeaderRoot = () => {
                     return true
                 }
                 setAbortController()
-                navigate('/')
+
+                if (boards().length > 0) {
+                    navigate('/dashboard')
+                } else {
+                    navigate('/')
+                }
             }}
             currentStep={formattedCurrentStep()}
         />
