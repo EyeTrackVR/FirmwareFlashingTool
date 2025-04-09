@@ -149,7 +149,6 @@ export type IActivePort = {
 }
 
 export interface AppStoreAPI {
-    loader: boolean
     restAPI: IRest
     ghAPI: IGHRest
     firmwareType: string

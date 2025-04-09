@@ -40,13 +40,11 @@ interface AppAPIContext {
     setFirmwareAssets: (assets: IGHAsset) => void
     setFirmwareVersion: (version: string) => void
     setFirmwareType: (type: string) => void
-    setLoader: (loader: boolean) => void
     activeBoard: Accessor<string>
     //********************************* rest *************************************/
     getRESTStatus: Accessor<RESTStatus>
     getRESTDevice: Accessor<string>
     getRESTResponse: Accessor<object>
-    loader: Accessor<boolean>
     ssid: Accessor<string>
     apModeStatus: Accessor<boolean>
     password: Accessor<string>
@@ -112,7 +110,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
         ssid: '',
         password: '',
         firmwareType: '',
-        loader: false,
         apModeStatus: false,
         mdns: '',
         manifestPath: '',
@@ -130,13 +127,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
     //********************************* gh rest *************************************/
     //#region gh rest
 
-    const setLoader = (loader: boolean) => {
-        setState(
-            produce((s) => {
-                s.loader = loader
-            }),
-        )
-    }
     const setGHRestStatus = (status: RESTStatus) => {
         setState(
             produce((s) => {
@@ -240,7 +230,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
-    const loader = createMemo(() => apiState().loader)
     const mdns = createMemo(() => apiState().mdns)
     const channelMode = createMemo(() => apiState().channelMode)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
@@ -653,8 +642,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 doGHRequest,
                 useRequestHook,
                 useOTA,
-                loader,
-                setLoader,
                 apModeStatus,
                 setAPModeStatus,
                 channelMode,

@@ -25,13 +25,14 @@ export const DEFAULT_PORT_NAME = 'auto'
 
 const circleSize = Math.PI * (radius * 2)
 
-export const stepStatus: {
-    [key in STEP_STATUS_ENUM]: {
+export const stepStatus: Record<
+    STEP_STATUS_ENUM,
+    {
         description: string
         dashoffset: string
         index: string
     }
-} = {
+> = {
     [STEP_STATUS_ENUM.SELECT_BOARD]: {
         index: '1',
         description: 'Select board',
@@ -49,9 +50,7 @@ export const stepStatus: {
     },
 }
 
-export const BoardDescription: {
-    [key in BOARD_TYPE]: string
-} = {
+export const BoardDescription: Record<BOARD_TYPE, string> = {
     [BOARD_TYPE.BABBLE_WROOMS_S3]: 'Official Babble tracker board (wireless mode)',
     [BOARD_TYPE.BABBLE_WROOMS_S3_RELEASE]: 'Official Babble tracker board (wireless mode)',
     [BOARD_TYPE.BABBLE_USB_WROOMS_S3]: 'Official Babble tracker board (wired mode)',
@@ -70,9 +69,7 @@ export const BoardDescription: {
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
 }
 
-export const BoardConnectionMethod: {
-    [key in BOARD_TYPE]: string
-} = {
+export const BoardConnectionMethod: Record<BOARD_TYPE, string> = {
     [BOARD_TYPE.BABBLE_WROOMS_S3]: 'wireless mode',
     [BOARD_TYPE.BABBLE_WROOMS_S3_RELEASE]: 'wireless mode',
     [BOARD_TYPE.BABBLE_USB_WROOMS_S3_RELEASE]: 'wired mode',
