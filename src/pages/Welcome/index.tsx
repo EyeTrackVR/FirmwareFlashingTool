@@ -1,5 +1,4 @@
 import { Component } from 'solid-js'
-import { Image } from '@kobalte/core'
 import Typography from '@components/Typography'
 import { Button } from '@components/Buttons/Button'
 
@@ -13,14 +12,7 @@ const Welcome: Component<IProps> = (props) => {
         <div class="w-full h-full  flex flex-col items-center justify-center gap-32">
             <div class="flex scale-[2.5]">
                 <div class="flex flex-col items-center justify-center scale-[0.42] gap-32 mb-[40px]">
-                    <Image.Root class="select-none">
-                        <Image.Img
-                            src="images/logo.png"
-                            alt="logo"
-                            width="128px"
-                            class="min-w-[64px] min-h-[64px]"
-                        />
-                    </Image.Root>
+                    <img src={'images/logo.png'} class="min-w-[128px] min-h-[128px] w-64 h-64" />
                     <Typography text="h1" color="white">
                         Welcome To EyeTrackVR
                     </Typography>
