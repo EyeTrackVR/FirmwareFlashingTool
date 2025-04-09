@@ -36,7 +36,7 @@ export const ManageFlashFirmware = () => {
         setPorts,
     } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
-    const { setOpenModal, hideModal } = useAppUIContext()
+    const { setOpenModal, hideModal, setNavigationStep } = useAppUIContext()
     const navigate = useNavigate()
 
     onMount(() => {
@@ -131,6 +131,7 @@ export const ManageFlashFirmware = () => {
             firmwareVersion={`Openiris-${getFirmwareVersion()}`}
             firmwareState={flashFirmwareState().filter((el) => el?.status !== FLASH_STATUS.NONE)}
             onClickSetupWizard={() => {
+                setNavigationStep('/flashFirmware')
                 navigate('/boardImportWizard')
             }}
             onClickPort={(port) => {

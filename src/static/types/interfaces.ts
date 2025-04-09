@@ -170,6 +170,7 @@ export interface IOpenModal {
 }
 
 export interface UiStore {
+    navigationStep: string
     openModal: IOpenModal
     showNotifications?: boolean
     menuOpen?: MenuOpen | null
