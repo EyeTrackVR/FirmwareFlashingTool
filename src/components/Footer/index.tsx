@@ -1,52 +1,38 @@
 import { Button } from '@components/Buttons/Button'
+import PrimaryButton from '@components/Buttons/PrimaryButton'
 import { classNames } from '@src/utils'
 import { Component, Show } from 'solid-js'
 
 export interface IProps {
-    onClickSecond?: () => void
-    onClickPrimary?: () => void
-    isPrimaryActive?: boolean
-    isSecondActive?: boolean
-    primaryLabel?: string
-    secondLabel?: string
-    hidePrimaryButton?: boolean
+    onClickSecondaryButton?: () => void
+    onClickPrimaryButton?: () => void
+    secondaryButtonType?: 'submit' | 'reset' | 'button' | undefined
+    primaryButtonType?: 'submit' | 'reset' | 'button' | undefined
+    isSecondaryButtonActive?: boolean
     isPrimaryButtonDisabled?: boolean
-    isButtonDisabled?: boolean
-    isSecondButtonDisabled?: boolean
-    isLoadingPrimaryButton?: boolean
-    isSecondButtonActive?: boolean
-    isPrimary?: boolean
-    size?: string
-    primaryType?: 'submit' | 'reset' | 'button' | undefined
-    secondType?: 'submit' | 'reset' | 'button' | undefined
-    styles?: string
+    isPrimaryButtonActive?: boolean
+    secondaryButtonLabel?: string
+    primaryButtonLabel?: string
 }
 
 export const Footer: Component<IProps> = (props) => {
     return (
-        <footer class={classNames(props.styles, 'flex w-full justify-end gap-12')}>
-            <Show when={props.onClickSecond}>
+        <footer class={classNames('flex w-full justify-end gap-12')}>
+            <Show when={props.onClickSecondaryButton}>
                 <Button
-                    disabled={props.isSecondButtonDisabled}
-                    size={props.size}
-                    isActive={props.isSecondActive}
-                    type={props.secondType}
-                    label={props.secondLabel ?? ''}
-                    onClick={props.onClickSecond}
-                    isPrimary={props.isSecondButtonActive}
+                    isActive={props.isSecondaryButtonActive}
+                    onClick={props.onClickSecondaryButton}
+                    type={props.secondaryButtonType}
+                    label={props.secondaryButtonLabel ?? '--'}
                 />
             </Show>
-            <Show when={props.onClickPrimary && !props.hidePrimaryButton}>
-                <Button
-                    size={props.size}
-                    buttonDisabled={props.isButtonDisabled}
+            <Show when={props.onClickPrimaryButton}>
+                <PrimaryButton
                     disabled={props.isPrimaryButtonDisabled}
-                    isPrimary={props.isPrimary}
-                    isLoadingPrimaryButton={props.isLoadingPrimaryButton}
-                    isActive={!props.isPrimaryActive}
-                    type={props.primaryType}
-                    label={props.primaryLabel ?? ''}
-                    onClick={props.onClickPrimary}
+                    type={props.primaryButtonType}
+                    isActive={props.isPrimaryButtonActive}
+                    onClick={props.onClickPrimaryButton}
+                    label={props.primaryButtonLabel ?? '--'}
                 />
             </Show>
         </footer>

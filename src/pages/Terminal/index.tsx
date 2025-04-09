@@ -15,6 +15,7 @@ export interface IProps {
     onClickInstallOpenIris: () => void
     onClickUpdateNetwork: () => void
     onClickDownloadLogs: () => void
+    onClickSetupWizard: () => void
     onClickOpenDocs: () => void
     onClickGetLogs: () => void
     onClickAPMode: () => void
@@ -66,7 +67,7 @@ const Terminal: Component<IProps> = (props) => {
     )
 
     return (
-        <div class="flex flex-col justify-between h-full gap-12 pt-24">
+        <div class="flex flex-col justify-between h-full gap-12 pt-24 w-full px-24">
             <div class="flex h-full justify-center items-center overflow-hidden">
                 <div class="max-w-[1800px] h-full w-full bg-black-900 p-12 flex flex-col gap-12 rounded-12 border-solid border-1 border-black-800">
                     <div class="flex flex-col gap-12">
@@ -199,15 +200,20 @@ const Terminal: Component<IProps> = (props) => {
                     </div>
                 </div>
             </div>
-            <Footer
-                isPrimaryButtonDisabled={props.isActiveProcess}
-                onClickSecond={() => {
-                    setOpen({})
-                    setHover({})
-                    props.onClickBack()
-                }}
-                secondLabel="Back"
-            />
+            <div class="pb-24">
+                <Footer
+                    isPrimaryButtonActive={!props.isActiveProcess}
+                    isSecondaryButtonActive={props.isActiveProcess}
+                    onClickPrimaryButton={props.onClickSetupWizard}
+                    primaryButtonLabel="Setup wizard"
+                    secondaryButtonLabel="Back"
+                    onClickSecondaryButton={() => {
+                        setOpen({})
+                        setHover({})
+                        props.onClickBack()
+                    }}
+                />
+            </div>
         </div>
     )
 }

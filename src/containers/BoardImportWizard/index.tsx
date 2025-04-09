@@ -16,7 +16,9 @@ const BoardImportWizardRoot = () => {
             onClickBack={() => {
                 navigate('/')
             }}
-            onClickConfirm={() => {}}
+            onClickConfirm={() => {
+                navigate('/dashboard')
+            }}
             onClickDeleteBoard={(id) => {
                 removeBoard(id)
             }}

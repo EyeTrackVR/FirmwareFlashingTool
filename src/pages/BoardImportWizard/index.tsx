@@ -61,7 +61,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
     return (
         <div class="pt-24 w-full h-full flex flex-col">
-            <div class="flex flex-row max-[1000px]:flex-col h-full w-full max-w-[1800px] mx-auto overflow-y-auto scrollbar max-[1110px]:gap-12 min-[1111px]:gap-[64px]">
+            <div class="flex flex-row max-[1000px]:flex-col h-full w-full max-w-[1800px] mx-auto overflow-y-auto scrollbar max-[1110px]:gap-12 min-[1111px]:gap-[64px] px-24 ">
                 <div class="w-full max-[1000px]:pb-48 min-[1001px]:hidden max-[1000px]:visible">
                     <BoardList
                         onClickOpenDocs={props.onClickOpenDocs}
@@ -198,18 +198,14 @@ const BoardImportWizard: Component<IProps> = (props) => {
                     </div>
                 </div>
             </div>
-            <div class="pt-12">
+            <div class="pt-12 px-24 pb-24">
                 <Footer
+                    onClickPrimaryButton={props.onClickConfirm}
+                    onClickSecondaryButton={props.onClickBack}
+                    primaryButtonLabel="I Connected all my boards"
+                    secondaryButtonLabel="Previous step"
+                    isPrimaryButtonActive={props.boards.length > 0}
                     isPrimaryButtonDisabled={!props.boards.length}
-                    primaryLabel="I Connected all my boards"
-                    isPrimaryActive={!props.boards.length}
-                    isButtonDisabled={!props.boards.length}
-                    isPrimary={props.boards.length > 0}
-                    onClickSecond={props.onClickBack}
-                    secondLabel="Previous step"
-                    onClickPrimary={() => {
-                        props.onClickConfirm()
-                    }}
                 />
             </div>
         </div>

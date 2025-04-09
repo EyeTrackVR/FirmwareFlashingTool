@@ -71,7 +71,8 @@ export const ConfigureBoardWizardRoot = () => {
     return (
         <ConfigureBoardWizard
             boards={boards()}
-            lockButton={!activeBoard() || !firmwareVersion()}
+            onClickBack={() => navigate('/')}
+            lockButton={!(!activeBoard() || !firmwareVersion())}
             channelMode={channelMode()}
             channelOptions={Object.values(ChannelOptions)}
             debugMode={debugMode()}

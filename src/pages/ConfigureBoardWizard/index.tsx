@@ -12,6 +12,7 @@ export interface IProps {
     onClickOpenModal: (id: string) => void
     onSubmit: (board: string) => void
     onClickConfirm: () => void
+    onClickBack: () => void
     boards: IDropdownList[]
     channelOptions: IDropdownList[]
     firmwareVersion: string
@@ -24,7 +25,7 @@ export interface IProps {
 
 export const ConfigureBoardWizard: Component<IProps> = (props) => {
     return (
-        <div class="flex flex-col h-full w-full">
+        <div class="flex flex-col h-full w-full px-24">
             <div class="flex h-full justify-center items-center">
                 <div class="flex flex-col gap-10 justify-start">
                     <Devtools
@@ -45,11 +46,15 @@ export const ConfigureBoardWizard: Component<IProps> = (props) => {
                     />
                 </div>
             </div>
-            <Footer
-                onClickPrimary={props.onClickConfirm}
-                isPrimaryActive={props.lockButton}
-                primaryLabel="Confirm"
-            />
+            <div class="pb-24">
+                <Footer
+                    onClickPrimaryButton={props.onClickConfirm}
+                    onClickSecondaryButton={props.onClickBack}
+                    isPrimaryButtonActive={props.lockButton}
+                    secondaryButtonLabel="Back"
+                    primaryButtonLabel="Confirm"
+                />
+            </div>
         </div>
     )
 }

@@ -8,8 +8,8 @@ interface IProps {
     onClickHome?: () => void
     onClick: (action: TITLEBAR_ACTION) => void
     step?: { step: string; description: string; dashoffset: string; index: string }
-    docs?: boolean
     currentStep?: string
+    docs?: boolean
 }
 
 const Header: Component<IProps> = (props) => {
@@ -20,11 +20,10 @@ const Header: Component<IProps> = (props) => {
                 classList={{
                     'bg-brown-800': props.docs,
                 }}>
-                <div class="h-3" />
+                <div class="h-8" />
                 <div class="w-full flex items-center flex-row">
-                    <div class="h-6 w-6" />
                     <div
-                        class="flex flex-row w-full items-center justify-between h-38"
+                        class="flex flex-row w-full items-center justify-between h-38 px-8"
                         data-tauri-drag-region>
                         <div
                             class="flex flex-row items-center gap-4"
@@ -86,7 +85,6 @@ const Header: Component<IProps> = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div class="h-[6px] w-[6px]" />
                 </div>
                 <Show when={props.docs}>
                     <div class="h-3" />
@@ -96,7 +94,7 @@ const Header: Component<IProps> = (props) => {
                         typeof props.step !== 'undefined' &&
                         typeof props.currentStep !== 'undefined'
                     }>
-                    <div class="flex flex-row justify-center items-center gap-6 min-w-[210px]">
+                    <div class="flex flex-row justify-center items-center gap-6 min-w-[210px] pr-24">
                         <ProgressBar
                             currentStep={props?.currentStep ?? '0'}
                             dashoffset={props?.step?.dashoffset ?? '0'}
