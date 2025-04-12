@@ -9,7 +9,7 @@ import { setAbortController } from '@store/terminal/terminal'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { invoke } from '@tauri-apps/api/tauri'
-import { boards } from '@store/boards/selectors'
+import { getBoardsCount } from '@store/boards/selectors'
 import { openDocs } from '@store/terminal/actions'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
@@ -81,7 +81,7 @@ export const HeaderRoot = () => {
                 }
                 setAbortController()
 
-                if (boards().length > 0) {
+                if (getBoardsCount() > 0) {
                     navigate('/dashboard')
                 } else {
                     navigate('/')

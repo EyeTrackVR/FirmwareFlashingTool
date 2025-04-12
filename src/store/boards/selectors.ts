@@ -6,6 +6,8 @@ import { IBoard } from '@interfaces/boards/interfaces'
 import { v6 as uuidV6 } from 'uuid'
 export const { boards } = createStoreSelectors(terminalState)
 
+export const getBoardsCount = createMemo(() => boards().length)
+
 export const getBoards: Accessor<Record<TRACKER_POSITION, IBoard>> = createMemo(() => {
     const data: Record<TRACKER_POSITION, IBoard> = {
         [TRACKER_POSITION.LEFT_TRACKER]: {
