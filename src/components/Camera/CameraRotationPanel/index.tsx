@@ -3,7 +3,7 @@ import PlusButton from '@components/Buttons/PlusButton'
 import Typography from '@components/Typography'
 import theme from '@src/common/theme'
 import { IoCamera } from 'solid-icons/io'
-import { Component, createSignal } from 'solid-js'
+import { Component, createEffect, createSignal } from 'solid-js'
 import RangeSlider from '@components/Inputs/RangeSlider'
 
 export interface IProps {
@@ -14,6 +14,10 @@ const CameraRotationPanel: Component<IProps> = (props) => {
     const [rotation, setRotation] = createSignal(0)
     const MIN_RANGE = 0
     const MAX_RANGE = 360
+
+    createEffect(() => {
+        props.onChangeRotation(rotation())
+    })
 
     return (
         <div class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 min-[1001px]:max-w-[600px] w-full">
@@ -39,7 +43,6 @@ const CameraRotationPanel: Component<IProps> = (props) => {
                     <MinusButton
                         onClick={() => {
                             setRotation((prev) => Math.max(MIN_RANGE, prev - 1))
-                            props.onChangeRotation(rotation())
                         }}
                     />
                     <RangeSlider
@@ -48,13 +51,11 @@ const CameraRotationPanel: Component<IProps> = (props) => {
                         value={rotation()}
                         onChange={(value) => {
                             setRotation(value)
-                            props.onChangeRotation(value)
                         }}
                     />
                     <PlusButton
                         onClick={() => {
                             setRotation((prev) => Math.min(MAX_RANGE, prev + 1))
-                            props.onChangeRotation(rotation())
                         }}
                     />
                 </div>
