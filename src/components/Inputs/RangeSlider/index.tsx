@@ -64,7 +64,7 @@ export const RangeSlider: Component<IProps> = (props) => {
                 max={props.max}
                 value={props.value}
                 onInput={(e) => updateValue(parseInt(e.target.value))}
-                class="w-full h-40 appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[45px] [&::-webkit-slider-thumb]:h-9 [&::-webkit-slider-thumb]:rounded [&::-webkit-slider-thumb]:opacity-0 [&::-webkit-slider-thumb]:bg-[#9092ff] [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:mt-[-16px] [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:top-2 [&::-moz-range-thumb]:w-[45px] [&::-moz-range-thumb]:h-9 [&::-moz-range-thumb]:rounded [&::-moz-range-thumb]:bg-[#9092ff] [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:border-none [&::-ms-thumb]:w-[45px] [&::-ms-thumb]:h-9 [&::-ms-thumb]:rounded [&::-ms-thumb]:bg-[#9092ff] [&::-ms-thumb]:cursor-grab hover:cursor-grab focus-visible:outline-offset-[15px] focus-visible:outline-transparent"
+                class="w-full h-40 appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[45px] [&::-webkit-slider-thumb]:h-[32px] [&::-webkit-slider-thumb]:rounded [&::-webkit-slider-thumb]:opacity-0 [&::-webkit-slider-thumb]:bg-[#9092ff] [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:mt-[-16px] [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:top-[8px] [&::-moz-range-thumb]:w-[25px] [&::-moz-range-thumb]:h-[45px] [&::-moz-range-thumb]:rounded [&::-moz-range-thumb]:bg-[#9092ff] [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:border-none [&::-ms-thumb]:w-[45px] [&::-ms-thumb]:h-[45px] [&::-ms-thumb]:rounded [&::-ms-thumb]:bg-[#9092ff] [&::-ms-thumb]:cursor-grab hover:cursor-grab focus-visible:outline-offset-[15px] focus-visible:outline-transparent"
             />
             <div
                 class="h-40 w-full absolute bottom-0 pointer-events-none z-[5] overflow-hidden rounded-6"
@@ -81,7 +81,7 @@ export const RangeSlider: Component<IProps> = (props) => {
                         style={{ width: leftFillWidth() }}
                     />
                     <div
-                        class="rounded-4 w-[45px] h-[80%] absolute top-1/2 left-1/2 flex justify-center items-center bg-purple-300 z-[5] -translate-x-1/2 -translate-y-1/2"
+                        class="rounded-4 w-[45px] h-[32px] absolute top-1/2 left-1/2 flex justify-center items-center bg-purple-300 z-[5] -translate-x-1/2 -translate-y-1/2"
                         onClick={() => {}}>
                         <Typography color="white" text="caption">
                             {props.value}
