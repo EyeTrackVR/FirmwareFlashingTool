@@ -149,7 +149,6 @@ export type IActivePort = {
 }
 
 export interface AppStoreAPI {
-    loader: boolean
     restAPI: IRest
     ghAPI: IGHRest
     firmwareType: string
@@ -171,6 +170,7 @@ export interface IOpenModal {
 }
 
 export interface UiStore {
+    navigationStep: string
     openModal: IOpenModal
     showNotifications?: boolean
     menuOpen?: MenuOpen | null

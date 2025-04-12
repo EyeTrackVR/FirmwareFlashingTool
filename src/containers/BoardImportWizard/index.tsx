@@ -1,27 +1,27 @@
 import BoardImportWizard from '@pages/BoardImportWizard'
 import { useNavigate } from '@solidjs/router'
-import { removeBoard, setBoard, updateBoard } from '@store/boards/boards'
+import { setBoards } from '@store/boards/boards'
 import { boards } from '@store/boards/selectors'
+import { useAppUIContext } from '@store/context/ui'
 import { openDocs } from '@store/terminal/actions'
 
 const BoardImportWizardRoot = () => {
+    const { navigationStep } = useAppUIContext()
     const navigate = useNavigate()
 
     return (
         <BoardImportWizard
             boards={boards()}
-            onClickAddBoard={(board) => {
-                setBoard(board)
+            onClickAddBoards={(boards) => {
+                setBoards(boards)
+                navigate('/dashboard')
             }}
             onClickBack={() => {
+                if (navigationStep() === '/flashFirmware') {
+                    navigate('/flashFirmware')
+                    return
+                }
                 navigate('/')
-            }}
-            onClickConfirm={() => {}}
-            onClickDeleteBoard={(id) => {
-                removeBoard(id)
-            }}
-            onClickEditBoard={(board) => {
-                updateBoard(board)
             }}
             onClickOpenDocs={openDocs}
         />

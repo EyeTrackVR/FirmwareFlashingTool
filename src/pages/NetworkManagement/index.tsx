@@ -5,7 +5,6 @@ import { SelectNetwork } from '@components/SelectNetwork'
 export interface IProps {
     onClickSkip: () => void
     onSubmit: (ssid: string, password: string, mdns: string) => void
-    isLoading: boolean
     ssid: string
     mdns: string
     password: string
@@ -16,7 +15,7 @@ export const NetworkManagement: Component<IProps> = (props) => {
     const [password, setPassword] = createSignal('')
     const [mdns, setMdns] = createSignal('')
 
-    const isNotActive = createMemo(() => !ssid() || !password())
+    const isActive = createMemo(() => !ssid() || !password())
 
     onMount(() => {
         setSSID(props.ssid)
@@ -25,7 +24,7 @@ export const NetworkManagement: Component<IProps> = (props) => {
     })
 
     return (
-        <div class="flex flex-grow">
+        <div class="flex flex-grow px-24">
             <div class="flex flex-col w-full">
                 <div class="flex flex-col h-full justify-center items-center">
                     <SelectNetwork
@@ -40,18 +39,18 @@ export const NetworkManagement: Component<IProps> = (props) => {
                         }}
                     />
                 </div>
-                <Footer
-                    isLoadingPrimaryButton={props.isLoading}
-                    onClickSecond={props.onClickSkip}
-                    onClickPrimary={() => {
-                        if (isNotActive()) return
-                        props.onSubmit(ssid(), password(), mdns())
-                    }}
-                    isPrimaryActive={isNotActive()}
-                    isSecondActive={false}
-                    primaryLabel="Confirm"
-                    secondLabel="Select board"
-                />
+                <div class="pb-24">
+                    <Footer
+                        onClickPrimaryButton={() => {
+                            if (isActive()) return
+                            props.onSubmit(ssid(), password(), mdns())
+                        }}
+                        onClickSecondaryButton={props.onClickSkip}
+                        isPrimaryButtonActive={!isActive()}
+                        secondaryButtonLabel="Back"
+                        primaryButtonLabel="Confirm"
+                    />
+                </div>
             </div>
         </div>
     )

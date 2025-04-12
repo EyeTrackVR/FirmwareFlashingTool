@@ -25,6 +25,7 @@ export const typography = cva('not-italic select-none', {
             red: 'text-red-100',
             purple: 'text-purple-100',
             lightGrey: 'text-grey-100',
+            green: 'text-green-200',
         },
         nowrap: {
             true: 'whitespace-nowrap',

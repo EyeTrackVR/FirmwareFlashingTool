@@ -34,11 +34,11 @@ const BeforeSelectBoard: Component<IProps> = (props) => {
                     </Typography>
                 </div>
                 <Footer
-                    secondLabel="Cancel"
-                    primaryLabel="Continue"
-                    styles="!justify-end"
-                    onClickPrimary={props.onClickConfirmBoard}
-                    onClickSecond={props.onClickClose}
+                    onClickPrimaryButton={props.onClickConfirmBoard}
+                    onClickSecondaryButton={props.onClickClose}
+                    isPrimaryButtonActive={true}
+                    primaryButtonLabel="Continue"
+                    secondaryButtonLabel="Cancel"
                 />
             </div>
         </Modal>

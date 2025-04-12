@@ -1,61 +1,53 @@
 import Typography from '@components/Typography'
-import { ParentComponent, Show } from 'solid-js'
+import { classNames } from '@src/utils'
+import { IoCheckmarkSharp } from 'solid-icons/io'
+import { Component, createMemo, Show } from 'solid-js'
 
 export interface IProps {
-    stepNumber: string
-    title?: string
-    description?: string
-    isCompleted: boolean
-    error?: string
+    description: string
+    isActive: boolean
     hideDots?: boolean
+    step: string
+    label: string
 }
 
-export const StepWrapper: ParentComponent<IProps> = (props) => {
+const StepWrapper: Component<IProps> = (props) => {
+    const isHideDots = createMemo(() => {
+        return typeof props.hideDots !== 'undefined' || props.hideDots
+    })
+
     return (
-        <div class="flex flex-col items-left">
-            <div class="flex gap-12">
-                <div
-                    class="w-16 h-16 border-2 rounded-100 mt-auto mb-auto bottom-0"
-                    classList={{
-                        'border-purple-300 bg-purple-300': props.isCompleted,
-                    }}
-                />
-                <Show
-                    when={!props.error}
-                    fallback={
-                        <Typography color="red" text="body">
-                            {props.error}
-                        </Typography>
-                    }>
-                    <Typography color="purple" text="body">
-                        Step {props.stepNumber}
-                    </Typography>
-                </Show>
+        <div class="flex gap-12 h-full  justify-end">
+            <div class="flex flex-col items-end">
+                <Typography color="white" text="caption" nowrap>
+                    {props.label}
+                </Typography>
+                <Typography color="white" text="small" nowrap>
+                    {props.description}
+                </Typography>
             </div>
-            <div class="flex gap-12 w-full">
-                <div class="min-w-[16px] max-w-[16px] flex justify-center pb-2">
-                    <div
-                        class="h-full bg-gradient-to-b from-transparent via-transparent from  to-white-100 bg-[length:100%_15px] bg-repeat-y"
-                        classList={{ 'w-2': !props.hideDots }}
-                    />
-                </div>
-                <div class="flex flex-col gap-24 w-full pt-8">
-                    <Show when={props.title && !props.error}>
-                        <Typography color="white" text="body" class="text-left">
-                            {props.title}
-                        </Typography>
+            <div class={classNames(!isHideDots() ? 'flex flex-col items-center' : '')}>
+                <div
+                    class="min-w-[24px] max-w-[24px] w-24 min-h-[24px] max-h-[24px] flex items-center justify-center border-2 rounded-100 mt-auto mb-auto bottom-0 "
+                    classList={{
+                        'bg-purple-200 border-purple-200': props.isActive,
+                    }}>
+                    <Show
+                        when={props.isActive}
+                        fallback={
+                            <Typography color="white" text="small" nowrap>
+                                {props.step}
+                            </Typography>
+                        }>
+                        <IoCheckmarkSharp color="white" />
                     </Show>
-                    <Show when={props.description}>
-                        <Typography
-                            color="white"
-                            text="caption"
-                            class="leading-[18px] text-left max-w-[700px]">
-                            {props.description}
-                        </Typography>
-                    </Show>
-                    {props.children}
                 </div>
+                <Show when={!isHideDots()}>
+                    <div class="h-full bg-gradient-to-b from-transparent via-transparent from w-2  to-white-100 bg-[length:100%_15px] bg-repeat-y" />
+                </Show>
             </div>
         </div>
     )
 }
+
+export default StepWrapper

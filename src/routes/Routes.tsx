@@ -1,7 +1,7 @@
-import { Router } from '@solidjs/router'
+import { Router, useNavigate } from '@solidjs/router'
 
 import { isEqual } from 'lodash'
-import { createEffect, onMount, type Component } from 'solid-js'
+import { createEffect, onMount, Show, type Component } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
@@ -13,6 +13,7 @@ import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 import { usePersistentStore } from '@store/tauriStore'
 import { HeaderRoot } from '@containers/Header'
+import Sidebar from '@components/Sidebar'
 
 const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
@@ -91,10 +92,22 @@ const AppRoutes: Component = () => {
     return (
         <Router
             root={(data) => {
+                const navigate = useNavigate()
                 return (
                     <div class="flex flex-col h-full">
                         <HeaderRoot />
-                        <div class="flex h-full flex-col overflow-hidden px-24 pb-24">
+                        <div class="flex h-full flex-row overflow-hidden">
+                            <Show
+                                when={['/dashboard', '/settings', '/advancedSettings'].includes(
+                                    data.location.pathname,
+                                )}>
+                                <Sidebar
+                                    navigation={data.location.pathname}
+                                    onClick={(route) => {
+                                        navigate(route)
+                                    }}
+                                />
+                            </Show>
                             {data.children}
                         </div>
                     </div>

@@ -10,9 +10,9 @@ import {
     updateFirmwareState,
 } from './terminal'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
-import { espApi } from '@src/esp/api'
 import { logs as logsDescription } from '@src/static/ui/logs'
 import { trimLogsByTextLength } from '@src/utils'
+import { espApi } from '@src/Services/esp'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()

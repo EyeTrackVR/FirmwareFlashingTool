@@ -12,7 +12,9 @@ interface AppUIContext {
     hideModal: Accessor<boolean>
     setOpenModal: (data: IOpenModal) => void
     setMenu: (menuOpen: MenuOpen | null) => void
+    setNavigationStep: (step: string) => void
     setContextMenuAnchor: (id: string) => void
+    navigationStep: Accessor<string>
     setHideModal: () => void
 }
 
@@ -26,6 +28,7 @@ export const AppUIProvider: Component<Context> = (props) => {
         showNotifications: true,
         menuOpen: null,
         hideModal: false,
+        navigationStep: '',
     }
 
     const [state, setState] = createStore<UiStore>(defaultState)
@@ -65,13 +68,21 @@ export const AppUIProvider: Component<Context> = (props) => {
         )
     }
 
-    const uiState = createMemo(() => state)
+    const setNavigationStep = (step: string) => {
+        setState(
+            produce((s) => {
+                s.navigationStep = step
+            }),
+        )
+    }
 
+    const uiState = createMemo(() => state)
     const modal = createMemo(() => uiState().openModal)
     const showNotifications = createMemo(() => uiState().showNotifications)
     const menuOpenStatus = createMemo(() => uiState().menuOpen)
     const getContextAnchor = createMemo(() => uiState().contextAnchor)
     const hideModal = createMemo(() => uiState().hideModal)
+    const navigationStep = createMemo(() => uiState().navigationStep)
 
     return (
         <AppUIContext.Provider
@@ -83,6 +94,8 @@ export const AppUIProvider: Component<Context> = (props) => {
                 setOpenModal,
                 setMenu,
                 setContextMenuAnchor,
+                setNavigationStep,
+                navigationStep,
                 hideModal,
                 setHideModal,
             }}>

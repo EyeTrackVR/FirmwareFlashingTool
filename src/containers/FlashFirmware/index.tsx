@@ -2,7 +2,7 @@ import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
-import { espApi, UsbSerialPortInfo } from '@src/esp/api'
+import { espApi, UsbSerialPortInfo } from '@src/Services/esp'
 import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
@@ -36,7 +36,7 @@ export const ManageFlashFirmware = () => {
         setPorts,
     } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
-    const { setOpenModal, hideModal } = useAppUIContext()
+    const { setOpenModal, hideModal, setNavigationStep } = useAppUIContext()
     const navigate = useNavigate()
 
     onMount(() => {
@@ -130,6 +130,10 @@ export const ManageFlashFirmware = () => {
             onClickOpenDocs={openDocs}
             firmwareVersion={`Openiris-${getFirmwareVersion()}`}
             firmwareState={flashFirmwareState().filter((el) => el?.status !== FLASH_STATUS.NONE)}
+            onClickSetupWizard={() => {
+                setNavigationStep('/flashFirmware')
+                navigate('/boardImportWizard')
+            }}
             onClickPort={(port) => {
                 setActivePortName(port, false)
                 const elem: Element | null = document.activeElement

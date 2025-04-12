@@ -1,18 +1,5 @@
 //********************************* UI *************************************/
 
-export enum POPOVER_ID {
-    GRIP = 'grip-popover',
-    LIST = 'list-popover',
-    TRACKER_MANAGER = 'tracker-manager-popover',
-    SETTINGS_POPOVER = 'settings-popover',
-}
-
-export enum ANIMATION_MODE {
-    GRIP = 'grip-popover',
-    LIST = 'list-popover',
-    NONE = 'NONE',
-}
-
 export enum TITLEBAR_ACTION {
     MINIMIZE = 'minimize',
     MAXIMIZE = 'maximize',
@@ -45,12 +32,6 @@ export enum RANGE_INPUT_FORMAT_APP_SETTINGS {
 }
 
 //********************************* Network and App *************************************/
-
-export enum ExitCodes {
-    USER_EXIT = 0,
-    ERROR = 1,
-    ERROR_UNKNOWN = 2,
-}
 
 export enum RESTStatus {
     ACTIVE = 'ACTIVE',
