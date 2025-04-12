@@ -31,6 +31,7 @@ export const theme = {
             100: '#7288a1',
         },
         green: {
+            200: '#50e897',
             100: '#92FA81',
         },
         yellow: {
@@ -44,10 +45,14 @@ export const theme = {
         },
         blue: {
             800: '#03233a',
+            500: '#2C435B',
             400: '#354473',
             300: '#2B375E',
             200: '#526D82',
             100: '#4F6B87',
+        },
+        transparentGreen: {
+            200: '#50e89733',
         },
         transparent: {
             300: '#9092FF80',
@@ -101,6 +106,7 @@ export const theme = {
         35: '35px',
         38: '38px',
         39: '39px',
+        40: '40px',
         48: '48px',
         64: '64px',
         70: '70px',
@@ -108,6 +114,7 @@ export const theme = {
         85: '85px',
         96: '96px',
         100: '100px',
+        full: '100%',
     },
 }
 

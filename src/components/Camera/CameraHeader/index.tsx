@@ -1,11 +1,13 @@
 import Typography from '@components/Typography'
-import { CAMERA_STATUS } from '@interfaces/boards/enums'
 import { Component } from 'solid-js'
-import CameraStatus from '../CameraStatus'
+import CameraStatus from '../../ConnectionStatus'
 import { shortAddress } from '@src/utils'
+import { IoCamera } from 'solid-icons/io'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import theme from '@src/common/theme'
 
 export interface IProps {
-    cameraStatus: CAMERA_STATUS
+    cameraStatus: CONNECTION_STATUS
     address: string
     label: string
 }
@@ -13,15 +15,22 @@ export interface IProps {
 const CameraHeader: Component<IProps> = (props) => {
     return (
         <div class="flex flex-col items-start gap-8">
-            <div class="flex flex-row items-center justify-between w-full">
-                <Typography color="white" text="body">
-                    {props.label}
-                </Typography>
+            <div class="flex items-start justify-between w-full">
+                <div class="flex gap-12 justify-center">
+                    <div class="bg-purple-300 rounded-md flex p-6 rounded-6">
+                        <IoCamera size={24} color={theme.colors.white[100]} />
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <Typography color="white" text="body">
+                            {props.label}
+                        </Typography>
+                        <Typography color="white" text="small">
+                            {shortAddress(props.address, 24)}
+                        </Typography>
+                    </div>
+                </div>
                 <CameraStatus status={props.cameraStatus} />
             </div>
-            <Typography color="white" text="small">
-                {shortAddress(props.address, 24)}
-            </Typography>
         </div>
     )
 }

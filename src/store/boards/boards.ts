@@ -20,6 +20,14 @@ export const setBoard = (board: IBoard) => {
     )
 }
 
+export const setBoards = (boards: IBoard[]) => {
+    setState(
+        produce((s) => {
+            s.boards = boards
+        }),
+    )
+}
+
 export const removeBoard = (id: string) => {
     setState(
         produce((s) => {

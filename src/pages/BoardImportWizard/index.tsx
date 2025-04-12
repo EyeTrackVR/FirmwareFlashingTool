@@ -1,212 +1,304 @@
-import { BoardList } from '@components/Board/BoardList'
 import { Footer } from '@components/Footer'
 import { InputField } from '@components/Inputs/InputField'
 import Typography from '@components/Typography'
-import { StepWrapper } from '@components/Wrapper/StepWrapper'
+import StepWrapper from '@components/Wrapper/StepWrapper'
+import { TRACKER_POSITION } from '@interfaces/boards/enums'
 import { IBoard } from '@interfaces/boards/interfaces'
-import { ADD_BOARD_LIMIT } from '@src/static'
 import { useFormHandler } from 'solid-form-handler'
 import { yupSchema } from 'solid-form-handler/yup'
-import { Accessor, Component, createMemo, Show } from 'solid-js'
+import { Accessor, Component, createMemo, createSignal, Match, Switch } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
 import { boardSchema } from './schema'
-import PrimaryButton from '@components/Buttons/PrimaryButton'
+
+export enum SETUP_BOARD {
+    SETUP_LEFT_CAMERA = 'SETUP_LEFT_CAMERA',
+    SETUP_RIGHT_CAMERA = 'SETUP_RIGHT_CAMERA',
+    CHECK_CONNECTION = 'CHECK_CONNECTION',
+}
 
 interface IProps {
-    onClickEditBoard: (board: IBoard) => void
-    onClickAddBoard: (board: IBoard) => void
-    onClickDeleteBoard: (board: string) => void
-    boards: Array<IBoard>
+    onClickAddBoards: (board: IBoard[]) => void
     onClickOpenDocs: () => void
-    onClickConfirm: () => void
     onClickBack: () => void
+    boards: Array<IBoard>
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
+    const [calibrationCompleted, setCalibrationCompleted] = createSignal<boolean>(true) // coming soon
+    const [step, setStep] = createSignal<SETUP_BOARD>(SETUP_BOARD.SETUP_LEFT_CAMERA)
+    const [rightBoard, setRightBoard] = createSignal<IBoard | undefined>(undefined)
+    const [leftBoard, setLeftBoard] = createSignal<IBoard | undefined>(undefined)
+    const [stepIndex, setStepIndex] = createSignal<number>(0)
     const formHandler = useFormHandler(yupSchema(boardSchema))
 
-    const isDisabled = createMemo(() => {
-        return (
-            !formHandler.getFieldValue('address').length ||
-            !formHandler.getFieldValue('label').length ||
-            formHandler.getFormErrors().length > 0
-        )
+    const progressbarStep: Accessor<Record<SETUP_BOARD, number>> = createMemo(() => {
+        return {
+            [SETUP_BOARD.SETUP_LEFT_CAMERA]: 1,
+            [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 2,
+            [SETUP_BOARD.CHECK_CONNECTION]: 3,
+        }
     })
 
-    const isActive = createMemo(() => {
-        return (
-            formHandler.getFieldValue('label').length > 0 &&
-            formHandler.getFieldValue('address').length > 0 &&
-            !formHandler.getFormErrors().length
-        )
+    const buttonLabel: Accessor<Record<SETUP_BOARD, string>> = createMemo(() => {
+        return {
+            [SETUP_BOARD.SETUP_LEFT_CAMERA]: 'Setup left board',
+            [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 'Setup right board',
+            [SETUP_BOARD.CHECK_CONNECTION]: 'I Connected all my boards',
+        }
     })
 
-    const isCompleted = createMemo(() => {
-        return (
-            formHandler.getFieldValue('label').length > 0 &&
-            formHandler.getFieldValue('address').length > 0 &&
-            !formHandler.getFormErrors().length &&
-            props.boards.length < ADD_BOARD_LIMIT
-        )
-    })
-
-    const editBoard: Accessor<string> = createMemo(() => {
-        return formHandler.getFieldValue('editBoard')
-    })
-
-    const buttonType = createMemo(() => (!isDisabled() ? 'submit' : 'button'))
-    const isLimitReached = createMemo(() =>
-        props.boards.length >= ADD_BOARD_LIMIT && !editBoard() ? 'Limit reached' : undefined,
+    const trackerPosition: Accessor<Record<SETUP_BOARD, TRACKER_POSITION | undefined>> = createMemo(
+        () => ({
+            [SETUP_BOARD.SETUP_LEFT_CAMERA]: TRACKER_POSITION.LEFT_TRACKER,
+            [SETUP_BOARD.SETUP_RIGHT_CAMERA]: TRACKER_POSITION.RIGHT_TRACKER,
+            [SETUP_BOARD.CHECK_CONNECTION]: undefined,
+        }),
     )
 
-    return (
-        <div class="pt-24 w-full h-full flex flex-col">
-            <div class="flex flex-row max-[1000px]:flex-col h-full w-full max-w-[1800px] mx-auto overflow-y-auto scrollbar max-[1110px]:gap-12 min-[1111px]:gap-[64px] px-24 ">
-                <div class="w-full max-[1000px]:pb-48 min-[1001px]:hidden max-[1000px]:visible">
-                    <BoardList
-                        onClickOpenDocs={props.onClickOpenDocs}
-                        boards={props.boards}
-                        onDeleteBoard={(board) => {
-                            props.onClickDeleteBoard(board.id)
-                        }}
-                        onEditBoard={(board) => {
-                            formHandler.setFieldValue('editBoard', board.id)
-                            formHandler.setFieldValue('label', board.label)
-                            formHandler.setFieldValue('address', board.address)
-                        }}
-                    />
-                </div>
-                <form
-                    class="flex flex-row w-full gap-12"
-                    onSubmit={async (e) => {
-                        e.preventDefault()
-                        try {
-                            await formHandler.validateForm()
-                            const board: IBoard = {
-                                label: formHandler.getFieldValue('label'),
-                                address: formHandler.getFieldValue('address'),
-                                id: !editBoard() ? uuidV6() : editBoard(),
-                            }
+    const setNextStep = () => {
+        const steps = Object.keys(progressbarStep()) as unknown as SETUP_BOARD[]
+        const currentStep: SETUP_BOARD | undefined = steps[stepIndex() + 1]
+        if (!currentStep) return
+        setStepIndex(stepIndex() + 1)
+        setStep(currentStep)
+    }
 
-                            props.onClickEditBoard(board)
-                            if (editBoard()) {
-                                props.onClickEditBoard(board)
-                                formHandler.setFieldValue('editBoard', undefined)
-                            } else {
-                                props.onClickAddBoard(board)
-                            }
-                            formHandler.resetForm()
-                        } catch {}
-                    }}>
-                    <div class="flex flex-col w-full">
+    const loadBoardState = (step: SETUP_BOARD) => {
+        switch (step) {
+            case SETUP_BOARD.SETUP_LEFT_CAMERA: {
+                if (typeof leftBoard() !== 'undefined') {
+                    formHandler.setFieldValue('address', leftBoard()?.address ?? '')
+                    formHandler.setFieldValue('label', leftBoard()?.label ?? '')
+                }
+                break
+            }
+            case SETUP_BOARD.SETUP_RIGHT_CAMERA: {
+                if (typeof rightBoard() !== 'undefined') {
+                    formHandler.setFieldValue('address', rightBoard()?.address ?? '')
+                    formHandler.setFieldValue('label', rightBoard()?.label ?? '')
+                }
+                break
+            }
+            default:
+                break
+        }
+    }
+
+    const cameraLabelDescription = createMemo(() => {
+        switch (step()) {
+            case SETUP_BOARD.SETUP_LEFT_CAMERA:
+                return 'Setup left board'
+            case SETUP_BOARD.SETUP_RIGHT_CAMERA:
+                return 'Setup right board'
+            default:
+                return ''
+        }
+    })
+
+    return (
+        <div class="pt-24 w-full h-full flex flex-col justify-start items-center px-24">
+            <div class="w-full h-full flex flex-col justify-center items-center relative bottom-[30px]">
+                <div class="flex flex-row min-[900px]:gap-64 gap-12 w-full justify-center">
+                    <div class="flex flex-col h-full gap-6 min-h-[400px]">
                         <StepWrapper
-                            stepNumber="01"
-                            title="Add camera address or port"
-                            description="Enter the camera's IP address or port number to connect it to the system. Ensure the address or port is correct for successful communication."
-                            isCompleted={formHandler.getFieldValue('address').length > 0}>
-                            <div class="flex flex-col gap-12 pb-32">
-                                <InputField
-                                    label="Enter the camera address or port number."
-                                    isError={formHandler.getFieldError('address')}
-                                    value={formHandler.getFieldValue('address')}
-                                    placeholder="camera address"
-                                    id="address"
-                                    onInput={(event) => {
-                                        formHandler.setFieldValue(
-                                            'address',
-                                            event.target.value.trim(),
-                                        )
-                                    }}
-                                />
-                                <Typography color="red" text="caption" class="text-left h-16">
-                                    {formHandler.getFieldError('address')}
-                                </Typography>
-                            </div>
-                        </StepWrapper>
+                            isActive={stepIndex() > 0}
+                            label="Setup left board"
+                            description="Enter left board details"
+                            step="1"
+                        />
                         <StepWrapper
-                            stepNumber="02"
-                            title="Add camera name"
-                            description="Choose a name for the camera that will help you easily recognize it within the system. This name should be unique and descriptive for better identification."
-                            isCompleted={formHandler.getFieldValue('label').length > 0}>
-                            <div class="flex flex-col gap-12 pb-32">
-                                <InputField
-                                    label="What would you like to name the camera?"
-                                    isError={formHandler.getFieldError('label')}
-                                    value={formHandler.getFieldValue('label')}
-                                    placeholder="camera name"
-                                    id="cameraName"
-                                    maxWords="16"
-                                    onInput={(event) => {
-                                        const value = event.target.value
-                                        if (value.length > 16) {
-                                            event.target.value = formHandler.getFieldValue('label')
-                                            return
-                                        }
-                                        formHandler.setFieldValue('label', value)
-                                    }}
-                                />
-                                <Typography color="red" text="caption" class="text-left h-16">
-                                    {formHandler.getFieldError('label')}
-                                </Typography>
-                            </div>
-                        </StepWrapper>
+                            isActive={stepIndex() > 1}
+                            label="Setup right board"
+                            description="Enter right board details"
+                            step="2"
+                        />
                         <StepWrapper
-                            stepNumber="03"
+                            isActive={calibrationCompleted()}
+                            label="check board connection"
+                            description="validate board connection"
                             hideDots
-                            error={isLimitReached()}
-                            isCompleted={isCompleted()}>
-                            <Show
-                                when={props.boards.length < ADD_BOARD_LIMIT || editBoard()}
-                                fallback={
-                                    <Typography
-                                        color="white"
-                                        text="caption"
-                                        class="text-left mt-24">
-                                        You can add up to two boards in total. Once you've reached
-                                        the limit of two, you'll need to remove one if you want to
-                                        add a new board.
-                                    </Typography>
-                                }>
-                                <div class="flex justify-start mt-24">
-                                    <div>
-                                        <PrimaryButton
-                                            disabled={isDisabled()}
-                                            isActive={isActive()}
-                                            type={buttonType()}
-                                            label="Submit"
-                                        />
-                                    </div>
-                                </div>
-                            </Show>
-                        </StepWrapper>
-                    </div>
-                </form>
-                <div class="w-full">
-                    <div class="top-0 sticky w-full max-[1000px]:hidden">
-                        <BoardList
-                            onClickOpenDocs={props.onClickOpenDocs}
-                            boards={props.boards}
-                            onDeleteBoard={(board) => {
-                                props.onClickDeleteBoard(board.id)
-                            }}
-                            onEditBoard={(board) => {
-                                formHandler.setFieldValue('editBoard', board.id)
-                                formHandler.setFieldValue('label', board.label)
-                                formHandler.setFieldValue('address', board.address)
-                            }}
+                            step="3"
                         />
                     </div>
+                    <form
+                        class="flex flex-col gap-64 items-start w-full justify-between max-w-[700px]"
+                        onSubmit={async (e) => {
+                            e.preventDefault()
+                            const tracker = trackerPosition()[step()]
+                            if (!tracker) return
+                            try {
+                                await formHandler.validateForm()
+                                const board: IBoard = {
+                                    label: formHandler.getFieldValue('label'),
+                                    address: formHandler.getFieldValue('address'),
+                                    TrackerPosition: tracker,
+                                    id: uuidV6(),
+                                }
+                                switch (step()) {
+                                    case SETUP_BOARD.SETUP_LEFT_CAMERA:
+                                        setLeftBoard(board)
+                                        break
+                                    case SETUP_BOARD.SETUP_RIGHT_CAMERA:
+                                        setRightBoard(board)
+                                        break
+                                    default:
+                                        break
+                                }
+                                formHandler.resetForm()
+                                setNextStep()
+                                loadBoardState(step())
+                            } catch {}
+                        }}>
+                        <Switch>
+                            <Match when={step() !== SETUP_BOARD.CHECK_CONNECTION}>
+                                <div class="flex flex-col gap-24 items-start w-full">
+                                    <Typography color="lightGrey" text="h3">
+                                        {cameraLabelDescription()}
+                                    </Typography>
+                                    <div class="flex flex-col gap-24 items-start w-full">
+                                        <div class="flex flex-col gap-12 text-left">
+                                            <Typography color="white" text="caption">
+                                                Add camera name
+                                            </Typography>
+                                            <Typography
+                                                color="white"
+                                                text="caption"
+                                                class="text-left">
+                                                Choose a name for the camera that will help you
+                                                easily recognize it within the system. This name
+                                                should be unique and descriptive for better
+                                                identification.
+                                            </Typography>
+                                        </div>
+                                        <div class="w-full flex flex-col gap-6">
+                                            <InputField
+                                                label="What would you like to name the camera?"
+                                                isError={formHandler.getFieldError('label')}
+                                                value={formHandler.getFieldValue('label')}
+                                                placeholder="camera name"
+                                                id="cameraName"
+                                                maxWords="16"
+                                                onInput={(event) => {
+                                                    const value = event.target.value
+                                                    if (value.length > 16) {
+                                                        event.target.value =
+                                                            formHandler.getFieldValue('label')
+                                                        return
+                                                    }
+                                                    formHandler.setFieldValue('label', value.trim())
+                                                }}
+                                            />
+                                            <div class="h-16">
+                                                <Typography
+                                                    color="red"
+                                                    text="caption"
+                                                    class="text-left">
+                                                    {formHandler.getFieldError('label')}
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-24 items-start w-full">
+                                        <div class="flex flex-col gap-12 text-left">
+                                            <Typography color="white" text="caption">
+                                                Add camera name
+                                            </Typography>
+                                            <Typography
+                                                color="white"
+                                                text="caption"
+                                                class="text-left">
+                                                Choose a name for the camera that will help you
+                                                easily recognize it within the system. This name
+                                                should be unique and descriptive for better
+                                                identification.
+                                            </Typography>
+                                        </div>
+                                        <div class="w-full flex flex-col gap-6">
+                                            <InputField
+                                                label="Enter the camera address or port number."
+                                                isError={formHandler.getFieldError('address')}
+                                                value={formHandler.getFieldValue('address')}
+                                                placeholder="camera address"
+                                                id="address"
+                                                onInput={(event) => {
+                                                    formHandler.setFieldValue(
+                                                        'address',
+                                                        event.target.value.trim(),
+                                                    )
+                                                }}
+                                            />
+                                            <div class="h-16">
+                                                <Typography
+                                                    color="red"
+                                                    text="caption"
+                                                    class="text-left">
+                                                    {formHandler.getFieldError('address')}
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Match>
+                            <Match when={step() === SETUP_BOARD.CHECK_CONNECTION}>
+                                <div class="flex flex-col gap-24 items-start w-full">
+                                    <div class="flex flex-col gap-24 items-start w-full">
+                                        <Typography color="white" text="caption">
+                                            Check camera calibration
+                                        </Typography>
+                                        <Typography color="white" text="caption" class="text-left">
+                                            Coming Soon
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </Match>
+                        </Switch>
+                        <Footer
+                            onClickPrimaryButton={() => {
+                                const leftTracker = leftBoard()
+                                const rightTracker = rightBoard()
+                                if (
+                                    step() === SETUP_BOARD.CHECK_CONNECTION &&
+                                    calibrationCompleted() &&
+                                    typeof leftTracker !== 'undefined' &&
+                                    typeof rightTracker !== 'undefined'
+                                ) {
+                                    props.onClickAddBoards([leftTracker, rightTracker])
+                                }
+                            }}
+                            onClickSecondaryButton={() => {
+                                const steps = Object.keys(
+                                    progressbarStep(),
+                                ) as unknown as SETUP_BOARD[]
+                                const previousStep: SETUP_BOARD | undefined = steps[stepIndex() - 1]
+                                if (!previousStep) {
+                                    props.onClickBack()
+                                    return
+                                }
+                                loadBoardState(previousStep)
+                                setStepIndex(stepIndex() - 1)
+                                setStep(previousStep)
+                            }}
+                            primaryButtonLabel={buttonLabel()?.[step()] ?? 'Next step'}
+                            secondaryButtonLabel="Previous step"
+                            secondaryButtonType="button"
+                            primaryButtonType="submit"
+                            isPrimaryButtonActive={
+                                (step() !== SETUP_BOARD.CHECK_CONNECTION &&
+                                    formHandler.getFieldValue('label').length > 0 &&
+                                    formHandler.getFieldValue('address').length > 0 &&
+                                    !formHandler.getFormErrors().length) ||
+                                (step() === SETUP_BOARD.CHECK_CONNECTION && calibrationCompleted())
+                            }
+                            isPrimaryButtonDisabled={
+                                (step() !== SETUP_BOARD.CHECK_CONNECTION &&
+                                    (!formHandler.getFieldValue('address').length ||
+                                        !formHandler.getFieldValue('label').length ||
+                                        formHandler.getFormErrors().length > 0)) ||
+                                (step() === SETUP_BOARD.CHECK_CONNECTION && !calibrationCompleted())
+                            }
+                        />
+                    </form>
                 </div>
-            </div>
-            <div class="pt-12 px-24 pb-24">
-                <Footer
-                    onClickPrimaryButton={props.onClickConfirm}
-                    onClickSecondaryButton={props.onClickBack}
-                    primaryButtonLabel="I Connected all my boards"
-                    secondaryButtonLabel="Previous step"
-                    isPrimaryButtonActive={props.boards.length > 0}
-                    isPrimaryButtonDisabled={!props.boards.length}
-                />
             </div>
         </div>
     )

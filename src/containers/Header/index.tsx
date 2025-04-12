@@ -10,6 +10,8 @@ import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 import { invoke } from '@tauri-apps/api/tauri'
 import { boards } from '@store/boards/selectors'
+import { openDocs } from '@store/terminal/actions'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
 export const HeaderRoot = () => {
     const { addNotification } = useAppNotificationsContext()
@@ -46,7 +48,12 @@ export const HeaderRoot = () => {
 
     return (
         <Header
+            appVersion={'1.7.0'}
+            connectionStatus={CONNECTION_STATUS.CONNECTED}
             step={stepDetails()}
+            onClickDocs={() => {
+                openDocs()
+            }}
             onClick={async (action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

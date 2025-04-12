@@ -1,8 +1,7 @@
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { Component } from 'solid-js'
-import CameraHeader from '../CameraHeader'
 import Camera from '../Camera'
-import CameraStatus from '../CameraStatus'
-import { CAMERA_STATUS } from '@interfaces/boards/enums'
+import CameraHeader from '../CameraHeader'
 
 export interface IProps {
     label: string
@@ -15,7 +14,7 @@ const CameraPanel: Component<IProps> = (props) => {
             <CameraHeader
                 label={props.label}
                 address={props.address}
-                cameraStatus={CAMERA_STATUS.IN_ACTIVE}
+                cameraStatus={CONNECTION_STATUS.IN_ACTIVE}
             />
             <div class="w-full flex justify-center">
                 <Camera />

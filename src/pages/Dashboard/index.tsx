@@ -1,44 +1,47 @@
 import CameraPanel from '@components/Camera/CameraPanel'
+import CameraRotationPanel from '@components/Camera/CameraRotationPanel'
 import DashboardHeader from '@components/DashboardHeader'
+import { TRACKER_POSITION } from '@interfaces/boards/enums'
 import { IBoard } from '@interfaces/boards/interfaces'
-import { Component, createMemo } from 'solid-js'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClickAdvancedSettings: () => void
     onClickRecalibrate: () => void
     onClickRecenter: () => void
-    boards: IBoard[]
+    onRotateCamera: (value: number, tracker: TRACKER_POSITION) => void
+    boards: Record<TRACKER_POSITION, IBoard>
 }
 
 const Dashboard: Component<IProps> = (props) => {
-    const rightCamera = createMemo(() => {
-        const camera = props.boards[0]
-
-        if (!camera) {
-            return { label: 'Right camera', address: '----' }
-        }
-        return camera
-    })
-
-    const leftCamera = createMemo(() => {
-        const camera = props.boards[1]
-
-        if (!camera) {
-            return { label: 'Left camera', address: '----' }
-        }
-        return camera
-    })
-
     return (
-        <div class="flex w-full flex-col pt-8 pr-24 pb-8 gap-12">
-            <DashboardHeader
-                onClickAdvancedSettings={props.onClickAdvancedSettings}
-                onClickRecalibrate={props.onClickRecalibrate}
-                onClickRecenter={props.onClickRecenter}
-            />
-            <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col">
-                <CameraPanel {...rightCamera()} />
-                <CameraPanel {...leftCamera()} />
+        <div class="flex flex-col h-full w-full pt-8 pb-12 gap-12 ">
+            <div class="pr-24">
+                <DashboardHeader
+                    onClickAdvancedSettings={props.onClickAdvancedSettings}
+                    onClickRecalibrate={props.onClickRecalibrate}
+                    onClickRecenter={props.onClickRecenter}
+                />
+            </div>
+            <div class="flex-1 w-full flex flex-col items-center overflow-y-auto scrollbar pr-24">
+                <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col w-full max-w-[1800px] ">
+                    <div class="flex flex-col gap-12">
+                        <CameraPanel {...props.boards[TRACKER_POSITION.LEFT_TRACKER]} />
+                        <CameraRotationPanel
+                            onChangeRotation={(value) => {
+                                props.onRotateCamera(value, TRACKER_POSITION.LEFT_TRACKER)
+                            }}
+                        />
+                    </div>
+                    <div class="flex flex-col gap-12">
+                        <CameraPanel {...props.boards[TRACKER_POSITION.RIGHT_TRACKER]} />
+                        <CameraRotationPanel
+                            onChangeRotation={(value) => {
+                                props.onRotateCamera(value, TRACKER_POSITION.RIGHT_TRACKER)
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )

@@ -26,7 +26,7 @@ export const Footer: Component<IProps> = (props) => {
                     label={props.secondaryButtonLabel ?? '--'}
                 />
             </Show>
-            <Show when={props.onClickPrimaryButton}>
+            <Show when={props.onClickPrimaryButton || props.primaryButtonType === 'submit'}>
                 <PrimaryButton
                     disabled={props.isPrimaryButtonDisabled}
                     type={props.primaryButtonType}

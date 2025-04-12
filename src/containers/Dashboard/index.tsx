@@ -1,12 +1,15 @@
 import Dashboard from '@pages/Dashboard'
 import { useNavigate } from '@solidjs/router'
-import { boards } from '@store/boards/selectors'
+import { getBoards } from '@store/boards/selectors'
 const DashboardRoot = () => {
     const navigate = useNavigate()
 
     return (
         <Dashboard
-            boards={boards()}
+            boards={getBoards()}
+            onRotateCamera={(value, tracker) => {
+                //
+            }}
             onClickAdvancedSettings={() => {
                 navigate('/advancedSettings')
             }}
