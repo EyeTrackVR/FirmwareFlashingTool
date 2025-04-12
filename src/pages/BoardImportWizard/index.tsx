@@ -181,10 +181,6 @@ const BoardImportWizard: Component<IProps> = (props) => {
         } catch {}
     }
 
-    createEffect(() => {
-        console.log(leftBoard(), rightBoard())
-    })
-
     return (
         <div class="pt-24 w-full h-full flex flex-col justify-start items-center px-24">
             <div class="w-full h-full flex flex-col justify-center items-center relative bottom-[30px]">
@@ -323,11 +319,11 @@ const BoardImportWizard: Component<IProps> = (props) => {
                                     const rightTracker = rightBoard()
                                     if (
                                         step() === SETUP_BOARD.CHECK_CONNECTION &&
-                                        calibrationCompleted() &&
-                                        typeof leftTracker !== 'undefined' &&
-                                        typeof rightTracker !== 'undefined'
+                                        calibrationCompleted()
                                     ) {
-                                        props.onClickAddBoards([leftTracker, rightTracker])
+                                        props.onClickAddBoards(
+                                            [leftTracker, rightTracker].filter((board) => !!board),
+                                        )
                                     }
                                 }}
                                 hidePrimaryButton={hidePrimaryButton()}
