@@ -14,7 +14,7 @@ const CameraPanel: Component<IProps> = (props) => {
             <CameraHeader
                 label={props.label}
                 address={props.address}
-                cameraStatus={CONNECTION_STATUS.IN_ACTIVE}
+                cameraStatus={CONNECTION_STATUS.INACTIVE}
             />
             <div class="w-full flex justify-center">
                 <Camera />

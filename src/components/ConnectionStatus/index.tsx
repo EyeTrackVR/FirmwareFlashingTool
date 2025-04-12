@@ -17,7 +17,7 @@ const ConnectionStatus: Component<IProps> = (props) => {
                 return 'bg-red-100'
             case CONNECTION_STATUS.CONNECTING:
                 return 'bg-yellow-100'
-            case CONNECTION_STATUS.IN_ACTIVE:
+            case CONNECTION_STATUS.INACTIVE:
                 return 'bg-grey-100'
             default:
                 return 'bg-grey-100'
