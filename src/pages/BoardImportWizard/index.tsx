@@ -6,9 +6,19 @@ import { TRACKER_POSITION } from '@interfaces/boards/enums'
 import { IBoard } from '@interfaces/boards/interfaces'
 import { useFormHandler } from 'solid-form-handler'
 import { yupSchema } from 'solid-form-handler/yup'
-import { Accessor, Component, createMemo, createSignal, Match, Switch } from 'solid-js'
+import {
+    Accessor,
+    Component,
+    createEffect,
+    createMemo,
+    createSignal,
+    Match,
+    Show,
+    Switch,
+} from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
 import { boardSchema } from './schema'
+import Button from '@components/Buttons/Button'
 
 export enum SETUP_BOARD {
     SETUP_LEFT_CAMERA = 'SETUP_LEFT_CAMERA',
@@ -26,63 +36,33 @@ interface IProps {
 const BoardImportWizard: Component<IProps> = (props) => {
     const [calibrationCompleted, setCalibrationCompleted] = createSignal<boolean>(true) // coming soon
     const [step, setStep] = createSignal<SETUP_BOARD>(SETUP_BOARD.SETUP_LEFT_CAMERA)
-    const [rightBoard, setRightBoard] = createSignal<IBoard | undefined>(undefined)
-    const [leftBoard, setLeftBoard] = createSignal<IBoard | undefined>(undefined)
     const [stepIndex, setStepIndex] = createSignal<number>(0)
+    const [leftBoard, setLeftBoard] = createSignal<IBoard | undefined>(undefined)
+    const [rightBoard, setRightBoard] = createSignal<IBoard | undefined>(undefined)
     const formHandler = useFormHandler(yupSchema(boardSchema))
 
-    const progressbarStep: Accessor<Record<SETUP_BOARD, number>> = createMemo(() => {
-        return {
-            [SETUP_BOARD.SETUP_LEFT_CAMERA]: 1,
-            [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 2,
-            [SETUP_BOARD.CHECK_CONNECTION]: 3,
-        }
-    })
+    const progressbarStep = createMemo(() => ({
+        [SETUP_BOARD.SETUP_LEFT_CAMERA]: 1,
+        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 2,
+        [SETUP_BOARD.CHECK_CONNECTION]: 3,
+    }))
 
-    const buttonLabel: Accessor<Record<SETUP_BOARD, string>> = createMemo(() => {
-        return {
-            [SETUP_BOARD.SETUP_LEFT_CAMERA]: 'Setup left board',
-            [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 'Setup right board',
-            [SETUP_BOARD.CHECK_CONNECTION]: 'I Connected all my boards',
-        }
-    })
+    const buttonLabel = createMemo(() => ({
+        [SETUP_BOARD.SETUP_LEFT_CAMERA]: 'Setup left board',
+        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 'Setup right board',
+        [SETUP_BOARD.CHECK_CONNECTION]: 'I Connected all my boards',
+    }))
 
-    const trackerPosition: Accessor<Record<SETUP_BOARD, TRACKER_POSITION | undefined>> = createMemo(
-        () => ({
-            [SETUP_BOARD.SETUP_LEFT_CAMERA]: TRACKER_POSITION.LEFT_TRACKER,
-            [SETUP_BOARD.SETUP_RIGHT_CAMERA]: TRACKER_POSITION.RIGHT_TRACKER,
-            [SETUP_BOARD.CHECK_CONNECTION]: undefined,
-        }),
-    )
+    const trackerPosition = createMemo(() => ({
+        [SETUP_BOARD.SETUP_LEFT_CAMERA]: TRACKER_POSITION.LEFT_TRACKER,
+        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: TRACKER_POSITION.RIGHT_TRACKER,
+        [SETUP_BOARD.CHECK_CONNECTION]: undefined,
+    }))
 
-    const setNextStep = () => {
-        const steps = Object.keys(progressbarStep()) as unknown as SETUP_BOARD[]
-        const currentStep: SETUP_BOARD | undefined = steps[stepIndex() + 1]
-        if (!currentStep) return
-        setStepIndex(stepIndex() + 1)
-        setStep(currentStep)
-    }
-
-    const loadBoardState = (step: SETUP_BOARD) => {
-        switch (step) {
-            case SETUP_BOARD.SETUP_LEFT_CAMERA: {
-                if (typeof leftBoard() !== 'undefined') {
-                    formHandler.setFieldValue('address', leftBoard()?.address ?? '')
-                    formHandler.setFieldValue('label', leftBoard()?.label ?? '')
-                }
-                break
-            }
-            case SETUP_BOARD.SETUP_RIGHT_CAMERA: {
-                if (typeof rightBoard() !== 'undefined') {
-                    formHandler.setFieldValue('address', rightBoard()?.address ?? '')
-                    formHandler.setFieldValue('label', rightBoard()?.label ?? '')
-                }
-                break
-            }
-            default:
-                break
-        }
-    }
+    const trackerData = createMemo(() => ({
+        [SETUP_BOARD.SETUP_LEFT_CAMERA]: leftBoard(),
+        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: rightBoard(),
+    }))
 
     const cameraLabelDescription = createMemo(() => {
         switch (step()) {
@@ -93,6 +73,116 @@ const BoardImportWizard: Component<IProps> = (props) => {
             default:
                 return ''
         }
+    })
+
+    const hidePrimaryButton = createMemo(() => {
+        const tracker = trackerData()[step()]
+        return (
+            step() !== SETUP_BOARD.CHECK_CONNECTION &&
+            !formHandler.getFieldValue('address').length &&
+            !formHandler.getFieldValue('label').length &&
+            !formHandler.getFormErrors().length &&
+            !tracker
+        )
+    })
+
+    const isPrimaryButtonActive = createMemo(() => {
+        return (
+            (step() !== SETUP_BOARD.CHECK_CONNECTION &&
+                formHandler.getFieldValue('label').length > 0 &&
+                formHandler.getFieldValue('address').length > 0 &&
+                !formHandler.getFormErrors().length) ||
+            (step() === SETUP_BOARD.CHECK_CONNECTION && calibrationCompleted())
+        )
+    })
+
+    const isPrimaryButtonDisabled = createMemo(() => {
+        return (
+            (step() !== SETUP_BOARD.CHECK_CONNECTION &&
+                (!formHandler.getFieldValue('address').length ||
+                    !formHandler.getFieldValue('label').length ||
+                    formHandler.getFormErrors().length > 0)) ||
+            (step() === SETUP_BOARD.CHECK_CONNECTION && !calibrationCompleted())
+        )
+    })
+
+    const setNextStep = () => {
+        const steps = Object.keys(progressbarStep()) as unknown as SETUP_BOARD[]
+        const currentStep: SETUP_BOARD | undefined = steps[stepIndex() + 1]
+        if (!currentStep) return
+        setStepIndex(stepIndex() + 1)
+        setStep(currentStep)
+    }
+
+    const setPreviousStep = () => {
+        const steps = Object.keys(progressbarStep()) as unknown as SETUP_BOARD[]
+        const previousStep: SETUP_BOARD | undefined = steps[stepIndex() - 1]
+        if (!previousStep) {
+            props.onClickBack()
+            return
+        }
+        loadBoardState(previousStep)
+        setStepIndex(stepIndex() - 1)
+        setStep(previousStep)
+    }
+
+    const loadBoardState = (step: SETUP_BOARD) => {
+        switch (step) {
+            case SETUP_BOARD.SETUP_LEFT_CAMERA: {
+                if (typeof leftBoard() !== 'undefined') {
+                    formHandler.setFieldValue('address', leftBoard()?.address ?? '')
+                    formHandler.setFieldValue('label', leftBoard()?.label ?? '')
+                } else {
+                    formHandler.resetForm()
+                }
+                break
+            }
+            case SETUP_BOARD.SETUP_RIGHT_CAMERA: {
+                if (typeof rightBoard() !== 'undefined') {
+                    formHandler.setFieldValue('address', rightBoard()?.address ?? '')
+                    formHandler.setFieldValue('label', rightBoard()?.label ?? '')
+                } else {
+                    formHandler.resetForm()
+                }
+                break
+            }
+            default:
+                break
+        }
+    }
+
+    const handleFormSubmit = async (e: Event) => {
+        e.preventDefault()
+        const tracker = trackerPosition()[step()]
+        if (!tracker) return
+        try {
+            await formHandler.validateForm()
+            const board: IBoard = {
+                label: formHandler.getFieldValue('label'),
+                address: formHandler.getFieldValue('address'),
+                TrackerPosition: tracker,
+                id: uuidV6(),
+            }
+
+            switch (step()) {
+                case SETUP_BOARD.SETUP_LEFT_CAMERA:
+                    setLeftBoard(board)
+                    break
+                case SETUP_BOARD.SETUP_RIGHT_CAMERA:
+                    setRightBoard(board)
+                    break
+                default:
+                    break
+            }
+
+            formHandler.resetForm()
+            setNextStep()
+            loadBoardState(step())
+        } catch {}
+    }
+
+    createEffect(() => {
+        console.log(leftBoard(), rightBoard())
     })
 
     return (
@@ -122,33 +212,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                     </div>
                     <form
                         class="flex flex-col gap-64 items-start w-full justify-between max-w-[700px]"
-                        onSubmit={async (e) => {
-                            e.preventDefault()
-                            const tracker = trackerPosition()[step()]
-                            if (!tracker) return
-                            try {
-                                await formHandler.validateForm()
-                                const board: IBoard = {
-                                    label: formHandler.getFieldValue('label'),
-                                    address: formHandler.getFieldValue('address'),
-                                    TrackerPosition: tracker,
-                                    id: uuidV6(),
-                                }
-                                switch (step()) {
-                                    case SETUP_BOARD.SETUP_LEFT_CAMERA:
-                                        setLeftBoard(board)
-                                        break
-                                    case SETUP_BOARD.SETUP_RIGHT_CAMERA:
-                                        setRightBoard(board)
-                                        break
-                                    default:
-                                        break
-                                }
-                                formHandler.resetForm()
-                                setNextStep()
-                                loadBoardState(step())
-                            } catch {}
-                        }}>
+                        onSubmit={handleFormSubmit}>
                         <Switch>
                             <Match when={step() !== SETUP_BOARD.CHECK_CONNECTION}>
                                 <div class="flex flex-col gap-24 items-start w-full">
@@ -207,10 +271,10 @@ const BoardImportWizard: Component<IProps> = (props) => {
                                                 color="white"
                                                 text="caption"
                                                 class="text-left">
-                                                Choose a name for the camera that will help you
-                                                easily recognize it within the system. This name
-                                                should be unique and descriptive for better
-                                                identification.
+                                                Enter the unique address or port number that
+                                                identifies this camera on your network. This
+                                                information is necessary for establishing a
+                                                connection.
                                             </Typography>
                                         </div>
                                         <div class="w-full flex flex-col gap-6">
@@ -252,51 +316,40 @@ const BoardImportWizard: Component<IProps> = (props) => {
                                 </div>
                             </Match>
                         </Switch>
-                        <Footer
-                            onClickPrimaryButton={() => {
-                                const leftTracker = leftBoard()
-                                const rightTracker = rightBoard()
-                                if (
-                                    step() === SETUP_BOARD.CHECK_CONNECTION &&
-                                    calibrationCompleted() &&
-                                    typeof leftTracker !== 'undefined' &&
-                                    typeof rightTracker !== 'undefined'
-                                ) {
-                                    props.onClickAddBoards([leftTracker, rightTracker])
-                                }
-                            }}
-                            onClickSecondaryButton={() => {
-                                const steps = Object.keys(
-                                    progressbarStep(),
-                                ) as unknown as SETUP_BOARD[]
-                                const previousStep: SETUP_BOARD | undefined = steps[stepIndex() - 1]
-                                if (!previousStep) {
-                                    props.onClickBack()
-                                    return
-                                }
-                                loadBoardState(previousStep)
-                                setStepIndex(stepIndex() - 1)
-                                setStep(previousStep)
-                            }}
-                            primaryButtonLabel={buttonLabel()?.[step()] ?? 'Next step'}
-                            secondaryButtonLabel="Previous step"
-                            secondaryButtonType="button"
-                            primaryButtonType="submit"
-                            isPrimaryButtonActive={
-                                (step() !== SETUP_BOARD.CHECK_CONNECTION &&
-                                    formHandler.getFieldValue('label').length > 0 &&
-                                    formHandler.getFieldValue('address').length > 0 &&
-                                    !formHandler.getFormErrors().length) ||
-                                (step() === SETUP_BOARD.CHECK_CONNECTION && calibrationCompleted())
-                            }
-                            isPrimaryButtonDisabled={
-                                (step() !== SETUP_BOARD.CHECK_CONNECTION &&
-                                    (!formHandler.getFieldValue('address').length ||
-                                        !formHandler.getFieldValue('label').length ||
-                                        formHandler.getFormErrors().length > 0)) ||
-                                (step() === SETUP_BOARD.CHECK_CONNECTION && !calibrationCompleted())
-                            }
-                        />
+                        <div class="flex flex-row justify-end items-end w-full gap-12">
+                            <Footer
+                                onClickPrimaryButton={() => {
+                                    const leftTracker = leftBoard()
+                                    const rightTracker = rightBoard()
+                                    if (
+                                        step() === SETUP_BOARD.CHECK_CONNECTION &&
+                                        calibrationCompleted() &&
+                                        typeof leftTracker !== 'undefined' &&
+                                        typeof rightTracker !== 'undefined'
+                                    ) {
+                                        props.onClickAddBoards([leftTracker, rightTracker])
+                                    }
+                                }}
+                                hidePrimaryButton={hidePrimaryButton()}
+                                onClickSecondaryButton={setPreviousStep}
+                                primaryButtonLabel={buttonLabel()[step()] ?? 'Next step'}
+                                secondaryButtonLabel="Previous step"
+                                secondaryButtonType="button"
+                                primaryButtonType={hidePrimaryButton() ? 'button' : 'submit'}
+                                isPrimaryButtonActive={isPrimaryButtonActive()}
+                                isPrimaryButtonDisabled={isPrimaryButtonDisabled()}
+                            />
+                            <Show when={hidePrimaryButton()}>
+                                <Button
+                                    label="Skip step"
+                                    type="button"
+                                    onClick={() => {
+                                        setNextStep()
+                                        loadBoardState(step())
+                                    }}
+                                />
+                            </Show>
+                        </div>
                     </form>
                 </div>
             </div>

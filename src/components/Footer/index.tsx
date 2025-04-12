@@ -13,6 +13,7 @@ export interface IProps {
     isPrimaryButtonActive?: boolean
     secondaryButtonLabel?: string
     primaryButtonLabel?: string
+    hidePrimaryButton?: boolean
 }
 
 export const Footer: Component<IProps> = (props) => {
@@ -26,7 +27,7 @@ export const Footer: Component<IProps> = (props) => {
                     label={props.secondaryButtonLabel ?? '--'}
                 />
             </Show>
-            <Show when={props.onClickPrimaryButton || props.primaryButtonType === 'submit'}>
+            <Show when={props.onClickPrimaryButton && !props.hidePrimaryButton}>
                 <PrimaryButton
                     disabled={props.isPrimaryButtonDisabled}
                     type={props.primaryButtonType}
