@@ -1,10 +1,11 @@
-import { Accessor, createMemo } from 'solid-js'
-import { terminalState } from './boards'
-import { createStoreSelectors } from '@store/utils'
 import { TRACKER_POSITION } from '@interfaces/boards/enums'
 import { IBoard } from '@interfaces/boards/interfaces'
+import { createStoreSelectors } from '@store/utils'
+import { Accessor, createMemo } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
-export const { boards } = createStoreSelectors(terminalState)
+import { boardState } from './boards'
+
+export const { boards } = createStoreSelectors(boardState)
 
 export const getBoardsCount = createMemo(() => boards().length)
 

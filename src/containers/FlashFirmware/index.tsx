@@ -7,7 +7,6 @@ import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
 import { getFirmwareLogs, installOpenIris, openDocs } from '@store/terminal/actions'
 import {
     detailedLogs,
@@ -22,6 +21,8 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { hideModal } from '@store/ui/selectors'
+import { setNavigationStep, setOpenModal } from '@store/ui/ui'
 import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 
 export const ManageFlashFirmware = () => {
@@ -36,7 +37,6 @@ export const ManageFlashFirmware = () => {
         setPorts,
     } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
-    const { setOpenModal, hideModal, setNavigationStep } = useAppUIContext()
     const navigate = useNavigate()
 
     onMount(() => {

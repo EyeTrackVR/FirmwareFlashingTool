@@ -5,6 +5,7 @@ import Header from '@components/Header'
 import ModalHeader from '@components/ModalHeader'
 import { type CHANNEL_TYPE, type TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { IEventType } from '@interfaces/types'
 import theme from '@src/common/theme'
 import { debugModalId } from '@src/static'
@@ -16,9 +17,12 @@ export interface IProps {
     onClickSetChannelMode: (data: string) => void
     setDebugMode: (debugMode: string) => void
     onClickOpenModal: (id: string) => void
+    onClickDocs: () => void
+    connectionStatus: CONNECTION_STATUS
     channelOptions: IDropdownList[]
     debugModes: IDropdownList[]
     channelMode: CHANNEL_TYPE
+    appVersion: string
     debugMode: string
 }
 
@@ -42,7 +46,12 @@ export const Devtools: Component<IProps> = (props) => {
             </button>
             <dialog id={debugModalId} class="modal">
                 <div class="fixed top-0 w-full">
-                    <Header onClick={props.onClickHeader} />
+                    <Header
+                        onClick={props.onClickHeader}
+                        appVersion={props.appVersion}
+                        connectionStatus={props.connectionStatus}
+                        onClickDocs={props.onClickDocs}
+                    />
                 </div>
                 <div class="modal-box overflow-visible flex items-center w-auto h-auto p-10 bg-transparent flex-col">
                     <div class="w-[350px] bg-black-900 p-12 rounded-12 border border-solid border-black-800 z-10 gap-6 flex flex-col">

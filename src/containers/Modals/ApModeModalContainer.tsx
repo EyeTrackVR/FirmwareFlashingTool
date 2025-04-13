@@ -2,14 +2,14 @@ import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enum
 import ApModeModal from '@pages/Modals/ApModeModal'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { openModal, serverStatus } from '@store/ui/selectors'
+import { setOpenModal } from '@store/ui/ui'
 import { listen } from '@tauri-apps/api/event'
 import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 
 const ApModeContainer = () => {
-    const { modal, setOpenModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
     const { ssid, password, useRequestHook } = useAppAPIContext()
     const [response, setResponse] = createSignal<object>()
@@ -68,14 +68,16 @@ const ApModeContainer = () => {
     }
 
     createEffect(() => {
-        if (modal().type === MODAL_TYPE.AP_MODE) {
+        if (openModal().type === MODAL_TYPE.AP_MODE) {
             listenToResponse().catch(console.error)
         }
     })
 
     return (
         <ApModeModal
-            isActive={modal().type === MODAL_TYPE.AP_MODE}
+            appVersion="1.7.0"
+            connectionStatus={serverStatus()}
+            isActive={openModal().type === MODAL_TYPE.AP_MODE}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -108,3 +110,6 @@ const ApModeContainer = () => {
 }
 
 export default ApModeContainer
+function modal() {
+    throw new Error('Function not implemented.')
+}

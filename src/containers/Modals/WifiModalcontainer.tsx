@@ -4,14 +4,14 @@ import { type Command, espApi } from '@src/Services/esp'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { openModal, serverStatus } from '@store/ui/selectors'
+import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo, createSignal } from 'solid-js'
 
 const WifiModalContainer = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
     const { mdns, ssid, password, activePort } = useAppAPIContext()
-    const { modal, setOpenModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
 
     const config = createMemo<Command[]>(() => {
@@ -49,8 +49,10 @@ const WifiModalContainer = () => {
 
     return (
         <WifiModal
+            appVersion="1.7.0"
+            connectionStatus={serverStatus()}
             isSending={isSending()}
-            isActive={modal().type === MODAL_TYPE.UPDATE_NETWORK}
+            isActive={openModal().type === MODAL_TYPE.UPDATE_NETWORK}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

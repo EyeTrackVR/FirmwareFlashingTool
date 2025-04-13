@@ -5,6 +5,7 @@ import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { wifiModalID } from '@src/static'
 import Typography from '@components/Typography'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -12,11 +13,15 @@ export interface IProps {
     onClick: () => void
     isActive: boolean
     isSending: boolean
+    connectionStatus: CONNECTION_STATUS
+    appVersion: string
 }
 
 const WifiModal: Component<IProps> = (props) => {
     return (
         <Modal
+            appVersion={props.appVersion}
+            connectionStatus={props.connectionStatus}
             id={wifiModalID}
             isSending={props.isSending}
             isActive={props.isActive}

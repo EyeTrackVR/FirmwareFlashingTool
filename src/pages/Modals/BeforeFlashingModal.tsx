@@ -1,17 +1,20 @@
-import { Component } from 'solid-js'
 import { Button } from '@components/Buttons/Button'
+import CheckboxButton from '@components/Buttons/Checkbox'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { beforeFlashingModalID } from '@src/static'
 import Typography from '@components/Typography'
-import CheckboxButton from '@components/Buttons/Checkbox'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { beforeFlashingModalID } from '@src/static'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickClose: () => void
     onClickInstallOpeniris: () => void
     onClickCheckbox: () => void
+    connectionStatus: CONNECTION_STATUS
+    appVersion: string
     isActive: boolean
     checked: boolean
 }
@@ -19,12 +22,14 @@ export interface IProps {
 const BeforeFlashingModal: Component<IProps> = (props) => {
     return (
         <Modal
+            appVersion={props.appVersion}
+            connectionStatus={props.connectionStatus}
             id={beforeFlashingModalID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>
             <div class="flex flex-col gap-14">
-                <ModalHeader label="Reminder!" onClick={props.onClickClose} />
+                {/* <ModalHeader label="Reminder!" onClick={props.onClickClose} /> */}
                 <div class="flex flex-col gap-14">
                     <Typography color="purple" text="h3" class="text-left">
                         Before flashing
