@@ -2,11 +2,10 @@ import BoardImportWizard from '@pages/BoardImportWizard'
 import { useNavigate } from '@solidjs/router'
 import { setBoards } from '@store/boards/boards'
 import { boards } from '@store/boards/selectors'
-import { useAppUIContext } from '@store/context/ui'
 import { openDocs } from '@store/terminal/actions'
+import { navigationStep } from '@store/ui/selectors'
 
 const BoardImportWizardRoot = () => {
-    const { navigationStep } = useAppUIContext()
     const navigate = useNavigate()
 
     return (

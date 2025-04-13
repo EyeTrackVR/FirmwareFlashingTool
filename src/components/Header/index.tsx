@@ -34,8 +34,9 @@ const Header: Component<IProps> = (props) => {
                         <div class="flex flex-row items-center gap-4">
                             <Show when={!props.docs}>
                                 <img
+                                    onClick={() => props.onClickHome?.()}
                                     src={'images/logo.png'}
-                                    class="min-w-[34px] min-h-[34px] w-[34px] h-[34px]"
+                                    class="min-w-[34px] min-h-[34px] w-[34px] h-[34px] cursor-pointer"
                                 />
                                 <Typography color="white" text="caption" nowrap>
                                     EyetrackVR
