@@ -10,14 +10,13 @@ export interface IProps {
     label: string
     isLoader?: boolean
     isPrimary?: boolean
-    buttonDisabled?: boolean
     onClick?: () => void
 }
 
 export const Button: Component<IProps> = (props) => {
     return (
         <button
-            disabled={props.buttonDisabled}
+            disabled={props.disabled}
             classList={{
                 'cursor-not-allowed': props.disabled,
                 [props.size!]: typeof props.size !== 'undefined',

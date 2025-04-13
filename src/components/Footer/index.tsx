@@ -8,6 +8,7 @@ export interface IProps {
     onClickPrimaryButton?: () => void
     secondaryButtonType?: 'submit' | 'reset' | 'button' | undefined
     primaryButtonType?: 'submit' | 'reset' | 'button' | undefined
+    isSecondaryButtonDisabled?: boolean
     isSecondaryButtonActive?: boolean
     isPrimaryButtonDisabled?: boolean
     isPrimaryButtonActive?: boolean
@@ -25,6 +26,7 @@ export const Footer: Component<IProps> = (props) => {
                     onClick={props.onClickSecondaryButton}
                     type={props.secondaryButtonType}
                     label={props.secondaryButtonLabel ?? '--'}
+                    disabled={props.isSecondaryButtonDisabled}
                 />
             </Show>
             <Show when={props.onClickPrimaryButton && !props.hidePrimaryButton}>
