@@ -11,7 +11,7 @@ const AppRoutes = lazy(() => import('@routes/Routes'))
 const App = () => {
     const { handleAppBoot } = useAppContextMain()
 
-    const listenServerStatus = () => {
+    const monitorServerStatus = async () => {
         const interval = setInterval(async () => {
             const client = getEyeTrackVrController()
             const serverStatus = await client.getServerStatus()
@@ -21,7 +21,9 @@ const App = () => {
     }
 
     onMount(() => {
-        listenServerStatus()
+        monitorServerStatus().catch(() => {
+            // TODO: add notification
+        })
         handleAppBoot()
     })
 
