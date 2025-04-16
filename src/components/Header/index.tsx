@@ -9,7 +9,7 @@ import { Component, Show } from 'solid-js'
 
 interface IProps {
     onClickHome?: () => void
-    onClickDocs?: () => void
+    onClickSettings?: () => void
     onClick: (action: TITLEBAR_ACTION) => void
     step?: { step: string; description: string; dashoffset: string; index: string }
     connectionStatus?: CONNECTION_STATUS
@@ -62,7 +62,7 @@ const Header: Component<IProps> = (props) => {
                                 <div
                                     class="w-30 h-30 flex items-center justify-center transition cursor-pointer"
                                     onClick={() => {
-                                        props.onClickDocs?.()
+                                        props.onClickSettings?.()
                                     }}>
                                     <IoSettingsSharp color={theme.colors.blue[500]} size={16} />
                                 </div>

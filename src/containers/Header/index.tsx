@@ -50,7 +50,7 @@ export const HeaderRoot = () => {
             appVersion={'1.7.0'}
             connectionStatus={serverStatus()}
             step={stepDetails()}
-            onClickDocs={() => {
+            onClickSettings={() => {
                 navigate('/settings')
             }}
             onClick={async (action: TITLEBAR_ACTION) => {

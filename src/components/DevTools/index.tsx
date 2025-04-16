@@ -17,7 +17,7 @@ export interface IProps {
     onClickSetChannelMode: (data: string) => void
     setDebugMode: (debugMode: string) => void
     onClickOpenModal: (id: string) => void
-    onClickDocs: () => void
+    onClickSettings: () => void
     connectionStatus: CONNECTION_STATUS
     channelOptions: IDropdownList[]
     debugModes: IDropdownList[]
@@ -50,7 +50,7 @@ export const Devtools: Component<IProps> = (props) => {
                         onClick={props.onClickHeader}
                         appVersion={props.appVersion}
                         connectionStatus={props.connectionStatus}
-                        onClickDocs={props.onClickDocs}
+                        onClickSettings={props.onClickSettings}
                     />
                 </div>
                 <div class="modal-box overflow-visible flex items-center w-auto h-auto p-10 bg-transparent flex-col">

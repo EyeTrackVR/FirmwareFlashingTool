@@ -9,7 +9,7 @@ import { useAppAPIContext } from '@src/store/context/api'
 import { useAppContext } from '@store/context/app'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 import { serverStatus } from '@store/ui/selectors'
-import { setOpenModal } from '@store/ui/ui'
+import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { Accessor, createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
@@ -70,7 +70,7 @@ export const ConfigureBoardWizardRoot = () => {
 
     return (
         <ConfigureBoardWizard
-            onClickDocs={() => {
+            onClickSettings={() => {
                 navigate('/settings')
             }}
             appVersion={'1.7.0'}
@@ -118,7 +118,11 @@ export const ConfigureBoardWizardRoot = () => {
 
                 if (activeBoard() === value) return
                 if (value.match(/_release/)) {
-                    setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_SELECT_BOARD, board: value })
+                    setActiveModal({
+                        open: true,
+                        type: MODAL_TYPE.BEFORE_SELECT_BOARD,
+                        board: value,
+                    })
                     return
                 }
                 setIsSoftwareDownloaded(false)

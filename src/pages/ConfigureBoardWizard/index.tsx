@@ -14,7 +14,7 @@ export interface IProps {
     onSubmit: (board: string) => void
     onClickConfirm: () => void
     onClickBack: () => void
-    onClickDocs: () => void
+    onClickSettings: () => void
     boards: IDropdownList[]
     channelOptions: IDropdownList[]
     serverStatus: CONNECTION_STATUS
@@ -43,7 +43,7 @@ export const ConfigureBoardWizard: Component<IProps> = (props) => {
                         onClickHeader={props.onClickHeader}
                         onClickOpenModal={props.onClickOpenModal}
                         onClickSetChannelMode={props.onClickSetChannelMode}
-                        onClickDocs={props.onClickDocs}
+                        onClickSettings={props.onClickSettings}
                     />
                     <SelectBoard
                         firmwareVersion={props.firmwareVersion}

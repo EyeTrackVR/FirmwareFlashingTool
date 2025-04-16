@@ -10,7 +10,7 @@ export interface IETVRConfig {
     warnings?: boolean
 }
 
-export interface IEndpoints {
+export interface IOSCEndpointsConfig {
     eyes_y: string
     left_eye_x: string
     right_eye_x: string
@@ -30,7 +30,7 @@ interface IOSCSettings {
     enable_receiving: boolean
     receiver_port: number
     vrchat_native_tracking: boolean
-    endpoints: IEndpoints
+    endpoints: IOSCEndpointsConfig
 }
 
 interface IAlgorithm {

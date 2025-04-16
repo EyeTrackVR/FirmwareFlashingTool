@@ -40,6 +40,7 @@ export class EyeTrackVrBackend {
     getRawCameraFeed(uuid: string): Promise<IFeedResponse | null> {
         return this.fetchJson<IFeedResponse | null>(`${this.url}/etvr/feed/${uuid}/camera`, 'GET')
     }
+
     getAlgorithmFeed(uuid: string): Promise<IFeedResponse | null> {
         return this.fetchJson<IFeedResponse | null>(
             `${this.url}/etvr/feed/${uuid}/algorithm`,
@@ -69,8 +70,8 @@ export class EyeTrackVrBackend {
     }
 
     // config
-    updateConfig(config?: IETVRConfig): Promise<IETVRConfigResponse> {
-        return this.fetchJson<IETVRConfigResponse, IETVRConfig>(
+    updateConfig(config?: IETVRConfig): Promise<IETVRConfigResponse | null> {
+        return this.fetchJson<IETVRConfigResponse | null, IETVRConfig>(
             `${this.url}/etvr/config`,
             'POST',
             config,
@@ -89,7 +90,7 @@ export class EyeTrackVrBackend {
         return this.fetchJson<IETVRConfigResponse>(`${this.url}/etvr/config/load`, 'GET')
     }
 
-    restartConfig(): Promise<null> {
+    resetConfig(): Promise<null> {
         return this.fetchJson<null>(`${this.url}/etvr/config/reset`, 'GET')
     }
 
@@ -101,9 +102,11 @@ export class EyeTrackVrBackend {
     getTrackersConfig(): Promise<ITracker[]> {
         return this.fetchJson<ITracker[]>(`${this.url}/etvr/config/trackers`, 'GET')
     }
+
     getTrackerConfig(uuid: string): Promise<ITracker> {
         return this.fetchJson<ITracker>(`${this.url}/etvr/config/tracker?uuid=${uuid}`, 'GET')
     }
+
     createNewTracker(config: ITracker): Promise<ITracker> {
         return this.fetchJson<ITracker, ITracker>(`${this.url}/etvr/config/tracker`, 'PUT', config)
     }
