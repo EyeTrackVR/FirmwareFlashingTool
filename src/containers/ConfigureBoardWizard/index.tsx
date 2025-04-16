@@ -7,8 +7,9 @@ import { DebugMode } from '@src/static/types'
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@src/store/context/api'
 import { useAppContext } from '@store/context/app'
-import { useAppUIContext } from '@store/context/ui'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
+import { serverStatus } from '@store/ui/selectors'
+import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { Accessor, createMemo } from 'solid-js'
 import { debug, trace } from 'tauri-plugin-log-api'
@@ -16,7 +17,6 @@ import { debug, trace } from 'tauri-plugin-log-api'
 export const ConfigureBoardWizardRoot = () => {
     const navigate = useNavigate()
     const { getDebugMode, setDebugMode } = useAppContext()
-    const { setOpenModal } = useAppUIContext()
     const {
         getFirmwareAssets,
         getFirmwareVersion,
@@ -70,6 +70,11 @@ export const ConfigureBoardWizardRoot = () => {
 
     return (
         <ConfigureBoardWizard
+            onClickSettings={() => {
+                navigate('/settings')
+            }}
+            appVersion={'1.7.0'}
+            serverStatus={serverStatus()}
             boards={boards()}
             onClickBack={() => navigate('/')}
             lockButton={!(!activeBoard() || !firmwareVersion())}
@@ -113,7 +118,11 @@ export const ConfigureBoardWizardRoot = () => {
 
                 if (activeBoard() === value) return
                 if (value.match(/_release/)) {
-                    setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_SELECT_BOARD, board: value })
+                    setActiveModal({
+                        open: true,
+                        type: MODAL_TYPE.BEFORE_SELECT_BOARD,
+                        board: value,
+                    })
                     return
                 }
                 setIsSoftwareDownloaded(false)

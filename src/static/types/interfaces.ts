@@ -9,47 +9,13 @@ import {
     FLASH_STEP,
 } from './enums'
 import type { DebugMode } from '@static/types'
-import type { WebviewWindow } from '@tauri-apps/api/window'
 import type { ToasterStore } from 'solid-headless'
 import type { JSXElement } from 'solid-js'
+import { CONNECTION_STATUS } from './services/enums'
 
 //* Utility Interfaces
 
-export interface ETVRError {
-    readonly _tag: 'ETVRError'
-    readonly error: string | number | unknown
-}
-
 //* Component Interfaces
-export interface Internal {
-    errorMsg?: string
-    error?: boolean
-}
-
-export interface Inputs {
-    input: (props?: Internal) => JSXElement
-}
-
-export interface SkeletonHandlerProps {
-    render?: boolean
-    items?: SkeletonProps[]
-    children?: JSXElement
-}
-
-export interface SkeletonProps {
-    class: string
-}
-
-export interface CardProps {
-    children?: JSXElement
-    src?: string
-    title?: string
-    subTitle?: string
-    imageAlt?: string
-    buttonElement?: JSXElement
-    background?: string
-    backgroundColor?: string
-}
 
 export interface NotificationAction {
     callbackOS(): void
@@ -60,11 +26,6 @@ export interface Notifications {
     title: string
     message: string
     type: ENotificationType
-}
-
-export interface IWindow {
-    label: string
-    window: WebviewWindow
 }
 
 export interface IEndpoint {
@@ -114,11 +75,6 @@ export interface IRestProps {
     args?: string
 }
 
-export interface MenuOpen {
-    x: number
-    y: number
-}
-
 export interface NewMenu {
     children: JSXElement
     id: string
@@ -161,21 +117,6 @@ export interface AppStoreAPI {
     manifestPath: string
     activePort: IActivePort
     ports: IDropdownList[]
-}
-
-export interface IOpenModal {
-    board?: string
-    open: boolean
-    type: MODAL_TYPE
-}
-
-export interface UiStore {
-    navigationStep: string
-    openModal: IOpenModal
-    showNotifications?: boolean
-    menuOpen?: MenuOpen | null
-    contextAnchor?: HTMLElement | null
-    hideModal: boolean
 }
 
 export interface ISignal {

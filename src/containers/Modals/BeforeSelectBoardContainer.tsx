@@ -1,17 +1,19 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeSelectBoard from '@pages/Modals/BeforeSelectBoard'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppUIContext } from '@store/context/ui'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
+import { activeModal, serverStatus } from '@store/ui/selectors'
+import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 
 const BeforeSelectBoardContainer = () => {
     const { confirmFirmwareSelection } = useAppAPIContext()
-    const { modal, setOpenModal } = useAppUIContext()
 
     return (
         <BeforeSelectBoard
-            isActive={modal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}
+            appVersion="1.7.0"
+            connectionStatus={serverStatus()}
+            isActive={activeModal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -28,15 +30,15 @@ const BeforeSelectBoardContainer = () => {
                 }
             }}
             onClickClose={() => {
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClickConfirmBoard={() => {
-                const board = modal()?.board
+                const board = activeModal()?.board
                 if (board) {
                     setIsSoftwareDownloaded(false)
                     confirmFirmwareSelection(board)
                 }
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }}
         />
     )

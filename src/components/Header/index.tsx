@@ -1,16 +1,15 @@
-import CameraStatus from '@components/ConnectionStatus'
+import ConnectionStatus from '@components/ConnectionStatus'
 import { ProgressBar } from '@components/ProgressBar'
 import Typography from '@components/Typography'
-import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { Image } from '@kobalte/core'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import theme from '@src/common/theme'
 import { IoSettingsSharp } from 'solid-icons/io'
 import { Component, Show } from 'solid-js'
 
 interface IProps {
     onClickHome?: () => void
-    onClickDocs: () => void
+    onClickSettings?: () => void
     onClick: (action: TITLEBAR_ACTION) => void
     step?: { step: string; description: string; dashoffset: string; index: string }
     connectionStatus?: CONNECTION_STATUS
@@ -34,19 +33,12 @@ const Header: Component<IProps> = (props) => {
                         data-tauri-drag-region>
                         <div class="flex flex-row items-center gap-4">
                             <Show when={!props.docs}>
-                                <Image.Root
-                                    class="select-none cursor-pointer"
-                                    onClick={() => {
-                                        props.onClickHome?.()
-                                    }}>
-                                    <Image.Img
-                                        src="images/logo.png"
-                                        alt="logo"
-                                        width="34px"
-                                        class="min-w-[34px] min-h-[34px]"
-                                    />
-                                </Image.Root>
-                                <Typography color="white" text="caption">
+                                <img
+                                    onClick={() => props.onClickHome?.()}
+                                    src={'images/logo.png'}
+                                    class="min-w-[34px] min-h-[34px] w-[34px] h-[34px] cursor-pointer"
+                                />
+                                <Typography color="white" text="caption" nowrap>
                                     EyetrackVR
                                 </Typography>
                                 <Show when={props.appVersion}>
@@ -65,12 +57,12 @@ const Header: Component<IProps> = (props) => {
                             <Show
                                 when={!props.docs || typeof props.connectionStatus !== 'undefined'}>
                                 <div class="w-30 h-30 flex items-center justify-center transition">
-                                    <CameraStatus status={props.connectionStatus!} />
+                                    <ConnectionStatus status={props.connectionStatus!} />
                                 </div>
                                 <div
                                     class="w-30 h-30 flex items-center justify-center transition cursor-pointer"
                                     onClick={() => {
-                                        props.onClickDocs()
+                                        props.onClickSettings?.()
                                     }}>
                                     <IoSettingsSharp color={theme.colors.blue[500]} size={16} />
                                 </div>

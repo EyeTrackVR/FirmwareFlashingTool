@@ -3,7 +3,6 @@ import { createStore, produce } from 'solid-js/store'
 import { attachConsole } from 'tauri-plugin-log-api'
 import { AppAPIProvider } from './api'
 import { AppNotificationProvider } from './notifications'
-import { AppUIProvider } from './ui'
 import type { AppStore } from '@src/static/types/interfaces'
 import type { Context, DebugMode } from '@static/types'
 import type { UnlistenFn } from '@tauri-apps/api/event'
@@ -45,11 +44,9 @@ export const AppProvider: Component<Context> = (props) => {
                 getDebugMode,
                 setDebugMode,
             }}>
-            <AppUIProvider>
-                <AppNotificationProvider>
-                    <AppAPIProvider>{props.children}</AppAPIProvider>
-                </AppNotificationProvider>
-            </AppUIProvider>
+            <AppNotificationProvider>
+                <AppAPIProvider>{props.children}</AppAPIProvider>
+            </AppNotificationProvider>
         </AppContext.Provider>
     )
 }

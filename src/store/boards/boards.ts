@@ -44,4 +44,4 @@ export const updateBoard = (board: IBoard) => {
     )
 }
 
-export const terminalState = createMemo(() => state)
+export const boardState = createMemo(() => state)

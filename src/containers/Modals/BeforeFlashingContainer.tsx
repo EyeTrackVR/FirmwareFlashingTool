@@ -3,7 +3,6 @@ import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
 import { usb } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
 import { installOpenIris } from '@store/terminal/actions'
 import { isActiveProcess } from '@store/terminal/selectors'
 import {
@@ -11,12 +10,13 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { hideModal, activeModal, serverStatus } from '@store/ui/selectors'
+import { setHideModal, setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 
 const BeforeFlashingContainer = () => {
     const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
-    const { modal, setOpenModal, hideModal, setHideModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
 
     const isUSBBoard = createMemo(() => {
@@ -29,8 +29,10 @@ const BeforeFlashingContainer = () => {
 
     return (
         <BeforeFlashingModal
+            appVersion="1.7.0"
+            connectionStatus={serverStatus()}
             checked={hideModal()}
-            isActive={modal().type === MODAL_TYPE.BEFORE_FLASHING}
+            isActive={activeModal().type === MODAL_TYPE.BEFORE_FLASHING}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -47,13 +49,13 @@ const BeforeFlashingContainer = () => {
                 }
             }}
             onClickClose={() => {
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClickCheckbox={() => {
                 setHideModal()
             }}
             onClickInstallOpeniris={() => {
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
                 if (isActiveProcess()) {
                     addNotification({
                         title: 'There is an active installation. Please wait.',
@@ -72,7 +74,7 @@ const BeforeFlashingContainer = () => {
                         await downloadAsset(getFirmwareType())
                     },
                     () => {
-                        setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
+                        setActiveModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
                     },
                 ).catch(() => ({}))
             }}

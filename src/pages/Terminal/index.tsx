@@ -203,8 +203,9 @@ const Terminal: Component<IProps> = (props) => {
             <div class="pb-24">
                 <Footer
                     isPrimaryButtonActive={!props.isActiveProcess}
-                    isSecondaryButtonActive={props.isActiveProcess}
                     onClickPrimaryButton={props.onClickSetupWizard}
+                    isPrimaryButtonDisabled={props.isActiveProcess}
+                    isSecondaryButtonDisabled={props.isActiveProcess}
                     primaryButtonLabel="Setup wizard"
                     secondaryButtonLabel="Back"
                     onClickSecondaryButton={() => {

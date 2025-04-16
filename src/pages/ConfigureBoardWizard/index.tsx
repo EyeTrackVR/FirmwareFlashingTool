@@ -4,6 +4,7 @@ import { Devtools } from '@components/DevTools'
 import { Footer } from '@components/Footer'
 import { type IDropdownList } from '@interfaces/interfaces'
 import { type CHANNEL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
 export interface IProps {
     onClickSetChannelMode: (data: string) => void
@@ -13,14 +14,17 @@ export interface IProps {
     onSubmit: (board: string) => void
     onClickConfirm: () => void
     onClickBack: () => void
+    onClickSettings: () => void
     boards: IDropdownList[]
     channelOptions: IDropdownList[]
+    serverStatus: CONNECTION_STATUS
     firmwareVersion: string
     debugModes: IDropdownList[]
     activeBoard: string
     channelMode: CHANNEL_TYPE
     debugMode: string
     lockButton: boolean
+    appVersion: string
 }
 
 export const ConfigureBoardWizard: Component<IProps> = (props) => {
@@ -29,6 +33,8 @@ export const ConfigureBoardWizard: Component<IProps> = (props) => {
             <div class="flex h-full justify-center items-center">
                 <div class="flex flex-col gap-10 justify-start">
                     <Devtools
+                        appVersion={props.appVersion}
+                        connectionStatus={props.serverStatus}
                         channelOptions={props.channelOptions}
                         channelMode={props.channelMode}
                         debugMode={props.debugMode}
@@ -37,6 +43,7 @@ export const ConfigureBoardWizard: Component<IProps> = (props) => {
                         onClickHeader={props.onClickHeader}
                         onClickOpenModal={props.onClickOpenModal}
                         onClickSetChannelMode={props.onClickSetChannelMode}
+                        onClickSettings={props.onClickSettings}
                     />
                     <SelectBoard
                         firmwareVersion={props.firmwareVersion}

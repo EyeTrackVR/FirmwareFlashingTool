@@ -1,21 +1,26 @@
-import { Component } from 'solid-js'
 import { Footer } from '@components/Footer'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { beforeSelectBoardModalID } from '@src/static'
 import Typography from '@components/Typography'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { beforeSelectBoardModalID } from '@src/static'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickConfirmBoard: () => void
     onClickClose: () => void
+    connectionStatus: CONNECTION_STATUS
+    appVersion: string
     isActive: boolean
 }
 
 const BeforeSelectBoard: Component<IProps> = (props) => {
     return (
         <Modal
+            appVersion={props.appVersion}
+            connectionStatus={props.connectionStatus}
             id={beforeSelectBoardModalID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}

@@ -7,7 +7,6 @@ import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
 import { getFirmwareLogs, installOpenIris, openDocs } from '@store/terminal/actions'
 import {
     detailedLogs,
@@ -22,6 +21,8 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
+import { hideModal } from '@store/ui/selectors'
+import { setNavigationStep, setActiveModal } from '@store/ui/ui'
 import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 
 export const ManageFlashFirmware = () => {
@@ -36,7 +37,6 @@ export const ManageFlashFirmware = () => {
         setPorts,
     } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
-    const { setOpenModal, hideModal, setNavigationStep } = useAppUIContext()
     const navigate = useNavigate()
 
     onMount(() => {
@@ -147,7 +147,7 @@ export const ManageFlashFirmware = () => {
                     return true
                 }
                 if (!hideModal()) {
-                    setOpenModal({ open: true, type: MODAL_TYPE.BEFORE_FLASHING })
+                    setActiveModal({ open: true, type: MODAL_TYPE.BEFORE_FLASHING })
                     return true
                 }
                 setAbortController('openiris')
@@ -160,7 +160,7 @@ export const ManageFlashFirmware = () => {
                         await downloadAsset(getFirmwareType())
                     },
                     () => {
-                        setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
+                        setActiveModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
                     },
                 ).catch(() => ({}))
             }}
@@ -190,7 +190,7 @@ export const ManageFlashFirmware = () => {
                     return
                 }
                 setAbortController()
-                setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
+                setActiveModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
             }}
             onClickAPMode={() => {
                 if (activePortName() === DEFAULT_PORT_NAME) return
@@ -199,7 +199,7 @@ export const ManageFlashFirmware = () => {
                     return
                 }
                 setAbortController()
-                setOpenModal({ open: true, type: MODAL_TYPE.AP_MODE })
+                setActiveModal({ open: true, type: MODAL_TYPE.AP_MODE })
             }}
             onClickBack={() => {
                 if (isActiveProcess()) {

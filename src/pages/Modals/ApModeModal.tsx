@@ -5,11 +5,14 @@ import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { apModalID } from '@src/static'
 import Typography from '@components/Typography'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickClose: () => void
     onClick: () => void
+    connectionStatus: CONNECTION_STATUS
+    appVersion: string
     isActive: boolean
 }
 
@@ -18,6 +21,8 @@ const ApModeModal: Component<IProps> = (props) => {
 
     return (
         <Modal
+            appVersion={props.appVersion}
+            connectionStatus={props.connectionStatus}
             id={apModalID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}

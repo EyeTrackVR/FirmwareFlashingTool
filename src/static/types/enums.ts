@@ -20,17 +20,6 @@ export enum ENotificationAction {
     NULL = 'null',
 }
 
-export enum RANGE_INPUT_FORMAT {
-    EYE_POSITION_SCALAR = 'Eye position scalar',
-    THRESHOLD = 'Threshold',
-    ROTATION = 'Rotation',
-}
-
-export enum RANGE_INPUT_FORMAT_APP_SETTINGS {
-    MIN_FREQUENCY_CUTOFF = 'Min frequency cutoff',
-    SPEED_COEFFICIENT = 'Speed coefficient',
-}
-
 //********************************* Network and App *************************************/
 
 export enum RESTStatus {

@@ -43,11 +43,3 @@ export type PersistentSettings = {
     globalNotificationsType?: ENotificationAction
     debugMode?: DebugMode
 }
-
-/**
- * @description Backend Config
- */
-export type BackendConfig = {
-    version?: number | string
-    debug?: DebugMode
-}

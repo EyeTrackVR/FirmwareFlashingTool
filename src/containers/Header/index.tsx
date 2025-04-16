@@ -2,16 +2,15 @@ import Header from '@components/Header'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { stepStatus, usb } from '@src/static'
 import { DIRECTION, ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
+import { getBoardsCount } from '@store/boards/selectors'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
+import { serverStatus } from '@store/ui/selectors'
+import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
-import { invoke } from '@tauri-apps/api/tauri'
-import { getBoardsCount } from '@store/boards/selectors'
-import { openDocs } from '@store/terminal/actions'
-import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
 export const HeaderRoot = () => {
     const { addNotification } = useAppNotificationsContext()
@@ -49,10 +48,10 @@ export const HeaderRoot = () => {
     return (
         <Header
             appVersion={'1.7.0'}
-            connectionStatus={CONNECTION_STATUS.CONNECTED}
+            connectionStatus={serverStatus()}
             step={stepDetails()}
-            onClickDocs={() => {
-                openDocs()
+            onClickSettings={() => {
+                navigate('/settings')
             }}
             onClick={async (action: TITLEBAR_ACTION) => {
                 switch (action) {

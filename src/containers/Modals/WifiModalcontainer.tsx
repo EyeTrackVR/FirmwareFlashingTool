@@ -4,14 +4,14 @@ import { type Command, espApi } from '@src/Services/esp'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
+import { activeModal, serverStatus } from '@store/ui/selectors'
+import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo, createSignal } from 'solid-js'
 
 const WifiModalContainer = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
     const { mdns, ssid, password, activePort } = useAppAPIContext()
-    const { modal, setOpenModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
 
     const config = createMemo<Command[]>(() => {
@@ -44,13 +44,15 @@ const WifiModalContainer = () => {
         notify('Sent credentials', ENotificationType.INFO)
 
         setIsSending(false)
-        setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+        setActiveModal({ open: false, type: MODAL_TYPE.NONE })
     }
 
     return (
         <WifiModal
+            appVersion="1.7.0"
+            connectionStatus={serverStatus()}
             isSending={isSending()}
-            isActive={modal().type === MODAL_TYPE.UPDATE_NETWORK}
+            isActive={activeModal().type === MODAL_TYPE.UPDATE_NETWORK}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -68,7 +70,7 @@ const WifiModalContainer = () => {
             }}
             onClickClose={() => {
                 if (isSending()) return
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClick={() => {
                 if (isSending()) return

@@ -10,7 +10,6 @@ import { ENotificationAction } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppContext } from '@store/context/app'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
 import { usePersistentStore } from '@store/tauriStore'
 import { HeaderRoot } from '@containers/Header'
 import Sidebar from '@components/Sidebar'
@@ -19,7 +18,6 @@ const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
     const { doGHRequest, channelMode } = useAppAPIContext()
     const { setDebugMode, getDebugMode } = useAppContext()
-    const { setContextMenuAnchor } = useAppUIContext()
     const {
         setEnableNotifications,
         setEnableNotificationsSounds,
@@ -31,7 +29,6 @@ const AppRoutes: Component = () => {
     } = useAppNotificationsContext()
 
     onMount(() => {
-        setContextMenuAnchor('custom-context-menu')
         //* load the app settings from the persistent store and assign to the global state
         get('settings').then((settings) => {
             if (settings) {
