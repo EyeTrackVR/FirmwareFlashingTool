@@ -10,8 +10,8 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
-import { hideModal, openModal, serverStatus } from '@store/ui/selectors'
-import { setHideModal, setOpenModal } from '@store/ui/ui'
+import { hideModal, activeModal, serverStatus } from '@store/ui/selectors'
+import { setHideModal, setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 
@@ -32,7 +32,7 @@ const BeforeFlashingContainer = () => {
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
             checked={hideModal()}
-            isActive={openModal().type === MODAL_TYPE.BEFORE_FLASHING}
+            isActive={activeModal().type === MODAL_TYPE.BEFORE_FLASHING}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -49,13 +49,13 @@ const BeforeFlashingContainer = () => {
                 }
             }}
             onClickClose={() => {
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClickCheckbox={() => {
                 setHideModal()
             }}
             onClickInstallOpeniris={() => {
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
                 if (isActiveProcess()) {
                     addNotification({
                         title: 'There is an active installation. Please wait.',
@@ -74,7 +74,7 @@ const BeforeFlashingContainer = () => {
                         await downloadAsset(getFirmwareType())
                     },
                     () => {
-                        setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
+                        setActiveModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
                     },
                 ).catch(() => ({}))
             }}

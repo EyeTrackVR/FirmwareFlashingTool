@@ -3,12 +3,12 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
-export const defaultOpenModal = {
+export const defaultActiveModal = {
     open: false,
     type: MODAL_TYPE.NONE,
 }
 
-export interface IOpenModal {
+export interface IActiveModal {
     board?: string
     open: boolean
     type: MODAL_TYPE
@@ -16,14 +16,14 @@ export interface IOpenModal {
 
 export interface IUiState {
     navigationStep: string
-    openModal: IOpenModal
+    activeModal: IActiveModal
     serverStatus: CONNECTION_STATUS
     showNotifications?: boolean
     hideModal: boolean
 }
 
 const defaultState: IUiState = {
-    openModal: defaultOpenModal,
+    activeModal: defaultActiveModal,
     serverStatus: CONNECTION_STATUS.DISCONNECTED,
     hideModal: false,
     navigationStep: '',
@@ -31,10 +31,10 @@ const defaultState: IUiState = {
 
 const [state, setState] = createStore<IUiState>(defaultState)
 
-export const setOpenModal = (data: IOpenModal) => {
+export const setActiveModal = (data: IActiveModal) => {
     setState(
         produce((s) => {
-            s.openModal = data
+            s.activeModal = data
         }),
     )
 }

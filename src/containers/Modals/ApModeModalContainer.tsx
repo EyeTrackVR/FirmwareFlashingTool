@@ -2,8 +2,8 @@ import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enum
 import ApModeModal from '@pages/Modals/ApModeModal'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
-import { openModal, serverStatus } from '@store/ui/selectors'
-import { setOpenModal } from '@store/ui/ui'
+import { activeModal, serverStatus } from '@store/ui/selectors'
+import { setActiveModal } from '@store/ui/ui'
 import { listen } from '@tauri-apps/api/event'
 import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, createSignal, onCleanup } from 'solid-js'
@@ -68,7 +68,7 @@ const ApModeContainer = () => {
     }
 
     createEffect(() => {
-        if (openModal().type === MODAL_TYPE.AP_MODE) {
+        if (activeModal().type === MODAL_TYPE.AP_MODE) {
             listenToResponse().catch(console.error)
         }
     })
@@ -77,7 +77,7 @@ const ApModeContainer = () => {
         <ApModeModal
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
-            isActive={openModal().type === MODAL_TYPE.AP_MODE}
+            isActive={activeModal().type === MODAL_TYPE.AP_MODE}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -94,7 +94,7 @@ const ApModeContainer = () => {
                 }
             }}
             onClickClose={() => {
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClick={() => {
                 configureAPConnection().catch(() => {
