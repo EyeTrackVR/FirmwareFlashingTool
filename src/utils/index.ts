@@ -105,3 +105,29 @@ export const shortAddress = (text: string, size = 24) => {
 
     return `${start}...${end}`
 }
+
+export const validateAddress = (connectionString): boolean => {
+    if (!connectionString || typeof connectionString !== 'string') {
+        return false
+    }
+
+    if (connectionString.toUpperCase().startsWith('COM')) {
+        const isValid = /^COM\d+$/i.test(connectionString)
+        return isValid
+    }
+
+    if (connectionString.startsWith('http://') || connectionString.startsWith('https://')) {
+        const ipString = connectionString.replace(/^https?:\/\//, '')
+        const parts = ipString.split('.')
+
+        if (parts.length === 4) {
+            const isValid = parts.every((part) => {
+                const num = parseInt(part, 10)
+                return !isNaN(num) && num >= 0 && num <= 255 && part === num.toString()
+            })
+            return isValid
+        }
+    }
+
+    return false
+}
