@@ -1,84 +1,103 @@
+import Button from '@components/Buttons/Button'
 import { Footer } from '@components/Footer'
 import { InputField } from '@components/Inputs/InputField'
 import Typography from '@components/Typography'
 import StepWrapper from '@components/Wrapper/StepWrapper'
 import { TRACKER_POSITION } from '@interfaces/boards/enums'
 import { IBoard } from '@interfaces/boards/interfaces'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { sleep } from '@src/utils'
 import { useFormHandler } from 'solid-form-handler'
 import { yupSchema } from 'solid-form-handler/yup'
-import {
-    Accessor,
-    Component,
-    createEffect,
-    createMemo,
-    createSignal,
-    Match,
-    Show,
-    Switch,
-} from 'solid-js'
+import { Component, createMemo, createSignal, Match, Show, Switch } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
-import { boardSchema } from './schema'
-import Button from '@components/Buttons/Button'
+import CheckCameraCalibration from './CheckCameraCalibration'
+import CheckServerStatus from './CheckServerStatus'
+import { trackerSchema } from './schema'
 
-export enum SETUP_BOARD {
+export enum SETUP_TRACKER {
     SETUP_LEFT_CAMERA = 'SETUP_LEFT_CAMERA',
     SETUP_RIGHT_CAMERA = 'SETUP_RIGHT_CAMERA',
+    CHECK_SERVER_STATUS = 'CHECK_SERVER_STATUS',
     CHECK_CONNECTION = 'CHECK_CONNECTION',
 }
 
 interface IProps {
-    onClickAddBoards: (board: IBoard[]) => void
+    onClickAddTrackers: (board: IBoard[]) => void
+    checkServerStatus: () => Promise<CONNECTION_STATUS>
+    updateTrackersConfig: (board: IBoard[]) => Promise<Record<TRACKER_POSITION, string>>
     onClickOpenDocs: () => void
     onClickBack: () => void
     boards: Array<IBoard>
+    serverStatus: CONNECTION_STATUS
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
-    const [calibrationCompleted, setCalibrationCompleted] = createSignal<boolean>(true) // coming soon
-    const [step, setStep] = createSignal<SETUP_BOARD>(SETUP_BOARD.SETUP_LEFT_CAMERA)
+    const [calibrationCompleted, setCalibrationCompleted] = createSignal<boolean>(false)
+    const [step, setStep] = createSignal<SETUP_TRACKER>(SETUP_TRACKER.SETUP_LEFT_CAMERA)
+    const [rightTracker, setRightTracker] = createSignal<IBoard | undefined>(undefined)
+    const [leftTracker, setLeftTracker] = createSignal<IBoard | undefined>(undefined)
+    const [isLoading, setIsLoading] = createSignal<boolean>(false)
     const [stepIndex, setStepIndex] = createSignal<number>(0)
-    const [leftBoard, setLeftBoard] = createSignal<IBoard | undefined>(undefined)
-    const [rightBoard, setRightBoard] = createSignal<IBoard | undefined>(undefined)
-    const formHandler = useFormHandler(yupSchema(boardSchema))
+    const [trackersStream, setTrackersStream] = createSignal<Record<TRACKER_POSITION, string>>({
+        [TRACKER_POSITION.LEFT_EYE]: '',
+        [TRACKER_POSITION.RIGHT_EYE]: '',
+    })
+    const [serverStatus, setServerStatus] = createSignal<CONNECTION_STATUS>(
+        CONNECTION_STATUS.INACTIVE,
+    )
+
+    const formHandler = useFormHandler(yupSchema(trackerSchema))
 
     const progressbarStep = createMemo(() => ({
-        [SETUP_BOARD.SETUP_LEFT_CAMERA]: 1,
-        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 2,
-        [SETUP_BOARD.CHECK_CONNECTION]: 3,
+        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: 1,
+        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: 2,
+        [SETUP_TRACKER.CHECK_SERVER_STATUS]: 3,
+        [SETUP_TRACKER.CHECK_CONNECTION]: 4,
     }))
 
     const buttonLabel = createMemo(() => ({
-        [SETUP_BOARD.SETUP_LEFT_CAMERA]: 'Setup left board',
-        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: 'Setup right board',
-        [SETUP_BOARD.CHECK_CONNECTION]: 'I Connected all my boards',
+        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: 'Setup left tracker',
+        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: 'Setup right tracker',
+        [SETUP_TRACKER.CHECK_SERVER_STATUS]: 'Establishing connection',
+        [SETUP_TRACKER.CHECK_CONNECTION]: 'I Connected all my boards',
     }))
 
     const trackerPosition = createMemo(() => ({
-        [SETUP_BOARD.SETUP_LEFT_CAMERA]: TRACKER_POSITION.LEFT_TRACKER,
-        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: TRACKER_POSITION.RIGHT_TRACKER,
-        [SETUP_BOARD.CHECK_CONNECTION]: undefined,
+        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: TRACKER_POSITION.LEFT_EYE,
+        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: TRACKER_POSITION.RIGHT_EYE,
+        [SETUP_TRACKER.CHECK_SERVER_STATUS]: undefined,
+        [SETUP_TRACKER.CHECK_CONNECTION]: undefined,
     }))
 
     const trackerData = createMemo(() => ({
-        [SETUP_BOARD.SETUP_LEFT_CAMERA]: leftBoard(),
-        [SETUP_BOARD.SETUP_RIGHT_CAMERA]: rightBoard(),
+        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: leftTracker(),
+        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: rightTracker(),
     }))
 
     const cameraLabelDescription = createMemo(() => {
         switch (step()) {
-            case SETUP_BOARD.SETUP_LEFT_CAMERA:
-                return 'Setup left board'
-            case SETUP_BOARD.SETUP_RIGHT_CAMERA:
-                return 'Setup right board'
+            case SETUP_TRACKER.SETUP_LEFT_CAMERA:
+                return 'Setup left tracker'
+            case SETUP_TRACKER.SETUP_RIGHT_CAMERA:
+                return 'Setup right tracker'
             default:
                 return ''
         }
     })
 
+    const trackers = createMemo(() => {
+        return [leftTracker(), rightTracker()].filter((tracker) => !!tracker)
+    })
+
     const hidePrimaryButton = createMemo(() => {
         const tracker = trackerData()[step()]
+        if (!trackers().length && step() === SETUP_TRACKER.SETUP_RIGHT_CAMERA) {
+            return false
+        }
+
         return (
-            step() !== SETUP_BOARD.CHECK_CONNECTION &&
+            step() !== SETUP_TRACKER.CHECK_CONNECTION &&
             !formHandler.getFieldValue('address').length &&
             !formHandler.getFieldValue('label').length &&
             !formHandler.getFormErrors().length &&
@@ -86,61 +105,41 @@ const BoardImportWizard: Component<IProps> = (props) => {
         )
     })
 
-    const isPrimaryButtonActive = createMemo(() => {
-        return (
-            (step() !== SETUP_BOARD.CHECK_CONNECTION &&
+    const isPrimaryButtonActive = createMemo(
+        () =>
+            (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 formHandler.getFieldValue('label').length > 0 &&
                 formHandler.getFieldValue('address').length > 0 &&
                 !formHandler.getFormErrors().length) ||
-            (step() === SETUP_BOARD.CHECK_CONNECTION && calibrationCompleted())
-        )
-    })
+            (step() === SETUP_TRACKER.CHECK_CONNECTION && calibrationCompleted()),
+    )
 
-    const isPrimaryButtonDisabled = createMemo(() => {
-        return (
-            (step() !== SETUP_BOARD.CHECK_CONNECTION &&
+    const isPrimaryButtonDisabled = createMemo(
+        () =>
+            (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 (!formHandler.getFieldValue('address').length ||
                     !formHandler.getFieldValue('label').length ||
                     formHandler.getFormErrors().length > 0)) ||
-            (step() === SETUP_BOARD.CHECK_CONNECTION && !calibrationCompleted())
-        )
-    })
+            (step() === SETUP_TRACKER.CHECK_CONNECTION && !calibrationCompleted()),
+    )
 
-    const setNextStep = () => {
-        const steps = Object.keys(progressbarStep()) as unknown as SETUP_BOARD[]
-        const currentStep: SETUP_BOARD | undefined = steps[stepIndex() + 1]
-        if (!currentStep) return
-        setStepIndex(stepIndex() + 1)
-        setStep(currentStep)
-    }
-
-    const setPreviousStep = () => {
-        const steps = Object.keys(progressbarStep()) as unknown as SETUP_BOARD[]
-        const previousStep: SETUP_BOARD | undefined = steps[stepIndex() - 1]
-        if (!previousStep) {
-            props.onClickBack()
-            return
-        }
-        loadBoardState(previousStep)
-        setStepIndex(stepIndex() - 1)
-        setStep(previousStep)
-    }
-
-    const loadBoardState = (step: SETUP_BOARD) => {
-        switch (step) {
-            case SETUP_BOARD.SETUP_LEFT_CAMERA: {
-                if (typeof leftBoard() !== 'undefined') {
-                    formHandler.setFieldValue('address', leftBoard()?.address ?? '')
-                    formHandler.setFieldValue('label', leftBoard()?.label ?? '')
+    const loadTrackerState = (currentStep: SETUP_TRACKER) => {
+        switch (currentStep) {
+            case SETUP_TRACKER.SETUP_LEFT_CAMERA: {
+                const tracker = leftTracker()
+                if (tracker) {
+                    formHandler.setFieldValue('address', tracker.address || '')
+                    formHandler.setFieldValue('label', tracker.label || '')
                 } else {
                     formHandler.resetForm()
                 }
                 break
             }
-            case SETUP_BOARD.SETUP_RIGHT_CAMERA: {
-                if (typeof rightBoard() !== 'undefined') {
-                    formHandler.setFieldValue('address', rightBoard()?.address ?? '')
-                    formHandler.setFieldValue('label', rightBoard()?.label ?? '')
+            case SETUP_TRACKER.SETUP_RIGHT_CAMERA: {
+                const tracker = rightTracker()
+                if (tracker) {
+                    formHandler.setFieldValue('address', tracker.address || '')
+                    formHandler.setFieldValue('label', tracker.label || '')
                 } else {
                     formHandler.resetForm()
                 }
@@ -150,26 +149,87 @@ const BoardImportWizard: Component<IProps> = (props) => {
                 break
         }
     }
+    const setupAndValidateTrackerConnections = async () => {
+        setCalibrationCompleted(false)
+        setIsLoading(true)
+        setTrackersStream({
+            [TRACKER_POSITION.RIGHT_EYE]: '',
+            [TRACKER_POSITION.LEFT_EYE]: '',
+        })
+
+        const trackersStream = await props.updateTrackersConfig(trackers())
+        setTrackersStream(trackersStream)
+
+        await establishConnection()
+        setCalibrationCompleted(true)
+        setNextStep()
+    }
+
+    const setNextStep = () => {
+        const steps = Object.keys(progressbarStep()) as unknown as SETUP_TRACKER[]
+        const step: SETUP_TRACKER | undefined = steps[stepIndex() + 1]
+        if (!step) return
+
+        if (step === SETUP_TRACKER.CHECK_SERVER_STATUS) {
+            setupAndValidateTrackerConnections().catch(() => {})
+        }
+
+        setStepIndex(stepIndex() + 1)
+        setStep(step)
+        loadTrackerState(step)
+    }
+
+    const setPreviousStep = () => {
+        const steps = Object.keys(progressbarStep()) as unknown as SETUP_TRACKER[]
+        let index = stepIndex() - 1
+
+        let previousStep: SETUP_TRACKER | undefined = steps[index]
+        if (previousStep === SETUP_TRACKER.CHECK_SERVER_STATUS) {
+            previousStep = SETUP_TRACKER.SETUP_RIGHT_CAMERA
+            index = 1
+        }
+
+        if (!previousStep) {
+            props.onClickBack()
+            return
+        }
+
+        loadTrackerState(previousStep)
+        setStepIndex(index)
+        setStep(previousStep)
+    }
+
+    const establishConnection = async () => {
+        setServerStatus(CONNECTION_STATUS.CONNECTING)
+        setIsLoading(true)
+
+        const status = await props.checkServerStatus()
+        await sleep(1000)
+
+        setServerStatus(status)
+        setIsLoading(false)
+    }
 
     const handleFormSubmit = async (e: Event) => {
         e.preventDefault()
         const tracker = trackerPosition()[step()]
         if (!tracker) return
+
         try {
             await formHandler.validateForm()
-            const board: IBoard = {
+            const trackerConfig: IBoard = {
                 label: formHandler.getFieldValue('label'),
                 address: formHandler.getFieldValue('address'),
-                TrackerPosition: tracker,
+                trackerPosition: tracker,
                 id: uuidV6(),
             }
 
             switch (step()) {
-                case SETUP_BOARD.SETUP_LEFT_CAMERA:
-                    setLeftBoard(board)
+                case SETUP_TRACKER.SETUP_LEFT_CAMERA:
+                    setLeftTracker(trackerConfig)
                     break
-                case SETUP_BOARD.SETUP_RIGHT_CAMERA:
-                    setRightBoard(board)
+                case SETUP_TRACKER.SETUP_RIGHT_CAMERA:
+                    setRightTracker(trackerConfig)
                     break
                 default:
                     break
@@ -177,7 +237,6 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
             formHandler.resetForm()
             setNextStep()
-            loadBoardState(step())
         } catch {}
     }
 
@@ -188,30 +247,41 @@ const BoardImportWizard: Component<IProps> = (props) => {
                     <div class="flex flex-col h-full gap-6 min-h-[400px]">
                         <StepWrapper
                             isActive={stepIndex() > 0}
-                            label="Setup left board"
-                            description="Enter left board details"
+                            label="Setup left tracker"
+                            description="Enter left tracker details"
                             step="1"
                         />
                         <StepWrapper
                             isActive={stepIndex() > 1}
-                            label="Setup right board"
-                            description="Enter right board details"
+                            label="Setup right tracker"
+                            description="Enter right tracker details"
                             step="2"
                         />
                         <StepWrapper
-                            isActive={calibrationCompleted()}
-                            label="check board connection"
-                            description="validate board connection"
-                            hideDots
+                            isActive={stepIndex() > 2}
+                            label="Check server connection"
+                            description="validate server status"
                             step="3"
+                        />
+
+                        <StepWrapper
+                            isActive={calibrationCompleted()}
+                            label="check tracker connection"
+                            description="validate tracker connection"
+                            hideDots
+                            step="4"
                         />
                     </div>
                     <form
                         class="flex flex-col gap-64 items-start w-full justify-between max-w-[700px]"
                         onSubmit={handleFormSubmit}>
                         <Switch>
-                            <Match when={step() !== SETUP_BOARD.CHECK_CONNECTION}>
-                                <div class="flex flex-col gap-24 items-start w-full">
+                            <Match
+                                when={
+                                    step() === SETUP_TRACKER.SETUP_LEFT_CAMERA ||
+                                    step() === SETUP_TRACKER.SETUP_RIGHT_CAMERA
+                                }>
+                                <div class="flex flex-col gap-24 items-start w-full min-h-[500px]">
                                     <Typography color="lightGrey" text="h3">
                                         {cameraLabelDescription()}
                                     </Typography>
@@ -299,36 +369,36 @@ const BoardImportWizard: Component<IProps> = (props) => {
                                     </div>
                                 </div>
                             </Match>
-                            <Match when={step() === SETUP_BOARD.CHECK_CONNECTION}>
-                                <div class="flex flex-col gap-24 items-start w-full">
-                                    <div class="flex flex-col gap-24 items-start w-full">
-                                        <Typography color="white" text="caption">
-                                            Check camera calibration
-                                        </Typography>
-                                        <Typography color="white" text="caption" class="text-left">
-                                            Coming Soon
-                                        </Typography>
-                                    </div>
-                                </div>
+                            <Match when={step() === SETUP_TRACKER.CHECK_SERVER_STATUS}>
+                                <CheckServerStatus
+                                    connectionFailed={serverStatus() === CONNECTION_STATUS.FAILED}
+                                    onClick={establishConnection}
+                                />
+                            </Match>
+                            <Match when={step() === SETUP_TRACKER.CHECK_CONNECTION}>
+                                <CheckCameraCalibration
+                                    trackerStream={trackersStream()}
+                                    rightTrackerAddress={rightTracker()?.address ?? '--'}
+                                    leftTrackerAddress={leftTracker()?.address ?? '--'}
+                                    rightTrackerLabel={rightTracker()?.label ?? '--'}
+                                    leftTrackerLabel={leftTracker()?.label ?? '--'}
+                                />
                             </Match>
                         </Switch>
                         <div class="flex flex-row justify-end items-end w-full gap-12">
                             <Footer
                                 onClickPrimaryButton={() => {
-                                    const leftTracker = leftBoard()
-                                    const rightTracker = rightBoard()
                                     if (
-                                        step() === SETUP_BOARD.CHECK_CONNECTION &&
+                                        step() === SETUP_TRACKER.CHECK_CONNECTION &&
                                         calibrationCompleted()
                                     ) {
-                                        props.onClickAddBoards(
-                                            [leftTracker, rightTracker].filter((board) => !!board),
-                                        )
+                                        props.onClickAddTrackers(trackers())
                                     }
                                 }}
                                 hidePrimaryButton={hidePrimaryButton()}
                                 onClickSecondaryButton={setPreviousStep}
                                 primaryButtonLabel={buttonLabel()[step()] ?? 'Next step'}
+                                isSecondaryButtonDisabled={isLoading()}
                                 secondaryButtonLabel="Previous step"
                                 secondaryButtonType="button"
                                 primaryButtonType={hidePrimaryButton() ? 'button' : 'submit'}
@@ -337,12 +407,10 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             />
                             <Show when={hidePrimaryButton()}>
                                 <Button
+                                    disabled={isLoading()}
                                     label="Skip step"
                                     type="button"
-                                    onClick={() => {
-                                        setNextStep()
-                                        loadBoardState(step())
-                                    }}
+                                    onClick={setNextStep}
                                 />
                             </Show>
                         </div>

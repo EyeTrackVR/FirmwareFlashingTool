@@ -3,6 +3,7 @@ import CameraRotationPanel from '@components/Camera/CameraRotationPanel'
 import DashboardHeader from '@components/DashboardHeader'
 import { TRACKER_POSITION } from '@interfaces/boards/enums'
 import { IBoard } from '@interfaces/boards/interfaces'
+import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -26,18 +27,26 @@ const Dashboard: Component<IProps> = (props) => {
             <div class="flex-1 w-full flex flex-col items-center overflow-y-auto scrollbar pr-24">
                 <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col w-full max-w-[1800px] ">
                     <div class="flex flex-col gap-12">
-                        <CameraPanel {...props.boards[TRACKER_POSITION.LEFT_TRACKER]} />
+                        <CameraPanel
+                            {...props.boards[TRACKER_POSITION.LEFT_EYE]}
+                            steamSource=""
+                            cameraStatus={CONNECTION_STATUS.INACTIVE}
+                        />
                         <CameraRotationPanel
                             onChangeRotation={(value) => {
-                                props.onRotateCamera(value, TRACKER_POSITION.LEFT_TRACKER)
+                                props.onRotateCamera(value, TRACKER_POSITION.LEFT_EYE)
                             }}
                         />
                     </div>
                     <div class="flex flex-col gap-12">
-                        <CameraPanel {...props.boards[TRACKER_POSITION.RIGHT_TRACKER]} />
+                        <CameraPanel
+                            {...props.boards[TRACKER_POSITION.RIGHT_EYE]}
+                            steamSource=""
+                            cameraStatus={CONNECTION_STATUS.INACTIVE}
+                        />
                         <CameraRotationPanel
                             onChangeRotation={(value) => {
-                                props.onRotateCamera(value, TRACKER_POSITION.RIGHT_TRACKER)
+                                props.onRotateCamera(value, TRACKER_POSITION.RIGHT_EYE)
                             }}
                         />
                     </div>
