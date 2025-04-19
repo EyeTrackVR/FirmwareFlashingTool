@@ -4,8 +4,10 @@ import Camera from '../Camera'
 import CameraHeader from '../CameraHeader'
 
 export interface IProps {
+    cameraStatus: CONNECTION_STATUS
     label: string
     address: string
+    steamSource: string
 }
 
 const CameraPanel: Component<IProps> = (props) => {
@@ -14,10 +16,10 @@ const CameraPanel: Component<IProps> = (props) => {
             <CameraHeader
                 label={props.label}
                 address={props.address}
-                cameraStatus={CONNECTION_STATUS.INACTIVE}
+                cameraStatus={props.cameraStatus}
             />
             <div class="w-full flex justify-center">
-                <Camera />
+                <Camera steamSource={props.steamSource} />
             </div>
         </div>
     )
