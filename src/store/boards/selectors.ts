@@ -11,21 +11,21 @@ export const getBoardsCount = createMemo(() => boards().length)
 
 export const getBoards: Accessor<Record<TRACKER_POSITION, IBoard>> = createMemo(() => {
     const data: Record<TRACKER_POSITION, IBoard> = {
-        [TRACKER_POSITION.LEFT_TRACKER]: {
-            TrackerPosition: TRACKER_POSITION.LEFT_TRACKER,
+        [TRACKER_POSITION.LEFT_EYE]: {
+            trackerPosition: TRACKER_POSITION.LEFT_EYE,
             label: 'Left camera',
             address: '--',
             id: uuidV6(),
         },
-        [TRACKER_POSITION.RIGHT_TRACKER]: {
-            TrackerPosition: TRACKER_POSITION.LEFT_TRACKER,
+        [TRACKER_POSITION.RIGHT_EYE]: {
+            trackerPosition: TRACKER_POSITION.LEFT_EYE,
             label: 'Right camera',
             address: '--',
             id: uuidV6(),
         },
     }
 
-    boards().forEach((board) => (data[board.TrackerPosition] = board))
+    boards().forEach((board) => (data[board.trackerPosition] = board))
 
     return data
 })
