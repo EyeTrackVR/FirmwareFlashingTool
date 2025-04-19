@@ -3,22 +3,24 @@ import {
     IETVRConfigResponse,
     IFeedResponse,
     ITracker,
+    IUpdateTracker,
 } from '@interfaces/services/interfaces'
 import { Body, HttpVerb, ResponseType } from '@tauri-apps/api/http'
 import { initializeHttpClient } from '../httpClient'
+
 export class EyeTrackVrBackend {
-    private readonly url = 'http://127.0.0.1:8855'
+    public readonly url = 'http://127.0.0.1:8855'
 
     resolveHttpClient() {
         return initializeHttpClient()
     }
 
-    async fetchJson<R, T = undefined>(url: string, method: HttpVerb, init?: T): Promise<R> {
+    async fetchJson<R, T = undefined>(url: string, method: HttpVerb, payload?: T): Promise<R> {
         const client = await this.resolveHttpClient()
         let body: Body | undefined
 
-        if (init) {
-            body = Body.json(init)
+        if (payload) {
+            body = Body.json(payload)
         }
 
         const response = await client.request<R>({
@@ -30,6 +32,10 @@ export class EyeTrackVrBackend {
         })
 
         if (!response.ok) {
+            if (response?.data && typeof response?.data === 'object' && 'detail' in response.data) {
+                throw new Error(JSON.stringify(response.data.detail))
+            }
+
             throw new Error(response.status.toString())
         }
 
@@ -107,13 +113,17 @@ export class EyeTrackVrBackend {
         return this.fetchJson<ITracker>(`${this.url}/etvr/config/tracker?uuid=${uuid}`, 'GET')
     }
 
-    createNewTracker(config: ITracker): Promise<ITracker> {
-        return this.fetchJson<ITracker, ITracker>(`${this.url}/etvr/config/tracker`, 'PUT', config)
+    createNewTracker(config: Partial<ITracker>): Promise<ITracker> {
+        return this.fetchJson<ITracker, Partial<ITracker>>(
+            `${this.url}/etvr/config/tracker`,
+            'PUT',
+            config,
+        )
     }
 
-    updateTracker(address: string, payload: unknown): Promise<unknown> {
-        return this.fetchJson<unknown, unknown>(
-            `${this.url}/etvr/config/tracker?uuid=${address}`,
+    updateTracker(uuid: string, payload: Partial<IUpdateTracker>): Promise<unknown> {
+        return this.fetchJson<string, Partial<IUpdateTracker>>(
+            `${this.url}/etvr/config/tracker?uuid=${uuid}`,
             'POST',
             payload,
         )

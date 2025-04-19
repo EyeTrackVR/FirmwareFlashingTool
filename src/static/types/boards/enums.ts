@@ -1,4 +1,4 @@
 export enum TRACKER_POSITION {
-    RIGHT_TRACKER = 'RIGHT TRACKER',
-    LEFT_TRACKER = 'LEFT TRACKER',
+    RIGHT_EYE = 'right_eye',
+    LEFT_EYE = 'left_eye',
 }

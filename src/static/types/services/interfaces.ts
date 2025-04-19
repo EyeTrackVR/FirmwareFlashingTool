@@ -73,6 +73,15 @@ export interface ITracker {
     camera: ICameraSettings
 }
 
+export interface IUpdateTracker {
+    enabled: boolean
+    name: string
+    uuid: string
+    tracker_position: string
+    algorithm: Partial<IAlgorithm>
+    camera: Partial<ICameraSettings>
+}
+
 export interface IETVRConfigResponse {
     version: number
     debug: boolean
