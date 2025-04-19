@@ -1,5 +1,6 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
+import { useNavigate } from '@solidjs/router'
 import { usb } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -18,6 +19,7 @@ import { createMemo } from 'solid-js'
 const BeforeFlashingContainer = () => {
     const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
+    const navigate = useNavigate()
 
     const isUSBBoard = createMemo(() => {
         return activeBoard().includes(usb)
@@ -33,6 +35,9 @@ const BeforeFlashingContainer = () => {
             connectionStatus={serverStatus()}
             checked={hideModal()}
             isActive={activeModal().type === MODAL_TYPE.BEFORE_FLASHING}
+            onClickSettings={() => {
+                navigate('/settings')
+            }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

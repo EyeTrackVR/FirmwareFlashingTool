@@ -1,20 +1,20 @@
 import Header from '@components/Header'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { type TITLEBAR_ACTION } from '@src/static/types/enums'
-import { Component, createEffect, JSX } from 'solid-js'
+import { Component, createEffect, JSX, ParentComponent } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickCloseModal: () => void
+    onClickSettings: () => void
     connectionStatus: CONNECTION_STATUS
-    children: JSX.Element
     isSending?: boolean
     appVersion: string
     isActive: boolean
     id: string
 }
 
-export const Modal: Component<IProps> = (props) => {
+export const Modal: ParentComponent<IProps> = (props) => {
     createEffect(() => {
         if (props.isActive) {
             const el = document.getElementById(props.id)
@@ -31,7 +31,7 @@ export const Modal: Component<IProps> = (props) => {
                     onClick={props.onClickHeader}
                     appVersion={props.appVersion}
                     connectionStatus={props.connectionStatus}
-                    onClickDocs={() => {}}
+                    onClickSettings={props.onClickSettings}
                 />
             </div>
             <div class="modal-box w-auto h-auto bg-transparent overflow-visible">

@@ -9,6 +9,7 @@ import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
+    onClickSettings: () => void
     onClickConfirmBoard: () => void
     onClickClose: () => void
     connectionStatus: CONNECTION_STATUS
@@ -19,6 +20,7 @@ export interface IProps {
 const BeforeSelectBoard: Component<IProps> = (props) => {
     return (
         <Modal
+            onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             id={beforeSelectBoardModalID}

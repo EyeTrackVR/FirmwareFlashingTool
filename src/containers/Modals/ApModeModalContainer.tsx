@@ -1,5 +1,6 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import ApModeModal from '@pages/Modals/ApModeModal'
+import { useNavigate } from '@solidjs/router'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { activeModal, serverStatus } from '@store/ui/selectors'
@@ -13,6 +14,7 @@ const ApModeContainer = () => {
     const { addNotification } = useAppNotificationsContext()
     const { ssid, password, useRequestHook } = useAppAPIContext()
     const [response, setResponse] = createSignal<object>()
+    const navigate = useNavigate()
 
     const configureAPConnection = async () => {
         addNotification({
@@ -78,6 +80,9 @@ const ApModeContainer = () => {
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
             isActive={activeModal().type === MODAL_TYPE.AP_MODE}
+            onClickSettings={() => {
+                navigate('/settings')
+            }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

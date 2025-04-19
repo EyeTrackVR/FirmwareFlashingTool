@@ -1,5 +1,6 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import WifiModal from '@pages/Modals/WifiModal'
+import { useNavigate } from '@solidjs/router'
 import { type Command, espApi } from '@src/Services/esp'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
@@ -13,6 +14,7 @@ const WifiModalContainer = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
     const { mdns, ssid, password, activePort } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
+    const navigate = useNavigate()
 
     const config = createMemo<Command[]>(() => {
         return [
@@ -53,6 +55,9 @@ const WifiModalContainer = () => {
             connectionStatus={serverStatus()}
             isSending={isSending()}
             isActive={activeModal().type === MODAL_TYPE.UPDATE_NETWORK}
+            onClickSettings={() => {
+                navigate('/settings')
+            }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
