@@ -92,6 +92,18 @@ export class EyeTrackVrController {
         }
     }
 
+    public async updateTrackersConfig() {
+        try {
+            const config = await this.getConfig()
+            const trackers = config.trackers
+            for (const tracker of trackers) {
+                this.trackers[tracker.tracker_position] = tracker
+            }
+        } catch {
+            console.log('failed to update trackers config')
+        }
+    }
+
     public async createTracker(trackerPosition: TRACKER_POSITION): Promise<ITracker> {
         const tracker = await this.api.createNewTracker({
             tracker_position: trackerPosition,
@@ -102,14 +114,6 @@ export class EyeTrackVrController {
     public async saveConfig() {
         await this.api.saveConfig()
         await this.updateConfig()
-    }
-
-    public async updateTrackerConfig(
-        trackerPosition: TRACKER_POSITION,
-        config: ITracker,
-    ): Promise<ITracker> {
-        this.trackers[trackerPosition] = config
-        return this.trackers[trackerPosition]
     }
 
     public async getTracker(trackerPosition: TRACKER_POSITION): Promise<ITracker> {
@@ -127,6 +131,7 @@ export class EyeTrackVrController {
     }
 
     public async updateBoardCameraConfigurations(boards: IBoard[]): Promise<string[]> {
+        await this.updateTrackersConfig()
         try {
             const [status, trackers] = await Promise.all([
                 this.getServerStatus(),
@@ -164,7 +169,6 @@ export class EyeTrackVrController {
                 }
 
                 await this.api.updateTracker(tracker.uuid, config)
-                this.updateTrackerConfig(board.trackerPosition, tracker)
             } catch (error) {
                 return `failed to update board ${board.address}`
             }
@@ -172,6 +176,7 @@ export class EyeTrackVrController {
 
         const update = await Promise.all(updatePromises)
         await this.saveConfig()
+        await this.updateTrackersConfig()
 
         return update.filter((status) => typeof status !== 'undefined')
     }
