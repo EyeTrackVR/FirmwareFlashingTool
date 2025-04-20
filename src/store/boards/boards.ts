@@ -1,9 +1,9 @@
-import { IBoard } from '@interfaces/boards/interfaces'
+import { ITracker } from '@interfaces/trackers/interfaces'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface IBoardState {
-    boards: IBoard[]
+    boards: ITracker[]
 }
 
 const defaultState: IBoardState = {
@@ -12,7 +12,7 @@ const defaultState: IBoardState = {
 
 const [state, setState] = createStore<IBoardState>(defaultState)
 
-export const setBoard = (board: IBoard) => {
+export const setBoard = (board: ITracker) => {
     setState(
         produce((s) => {
             s.boards.push(board)
@@ -20,7 +20,7 @@ export const setBoard = (board: IBoard) => {
     )
 }
 
-export const setBoards = (boards: IBoard[]) => {
+export const setBoards = (boards: ITracker[]) => {
     setState(
         produce((s) => {
             s.boards = boards
@@ -36,7 +36,7 @@ export const removeBoard = (id: string) => {
     )
 }
 
-export const updateBoard = (board: IBoard) => {
+export const updateBoard = (board: ITracker) => {
     setState(
         produce((s) => {
             s.boards = s.boards.map((item) => (item.id === board.id ? board : item))

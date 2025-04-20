@@ -1,6 +1,6 @@
 import { TRACKER_POSITION } from './enums'
 
-export interface IBoard {
+export interface ITracker {
     trackerPosition: TRACKER_POSITION
     address: string
     label: string

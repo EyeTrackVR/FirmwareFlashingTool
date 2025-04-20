@@ -1,5 +1,4 @@
-import { TRACKER_POSITION } from '@interfaces/boards/enums'
-import { IBoard } from '@interfaces/boards/interfaces'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import BoardImportWizard from '@pages/BoardImportWizard'
 import { useNavigate } from '@solidjs/router'
@@ -8,33 +7,34 @@ import { sleep } from '@src/utils'
 import { boards } from '@store/boards/selectors'
 import { openDocs } from '@store/terminal/actions'
 import { navigationStep, serverStatus } from '@store/ui/selectors'
+import { ITracker } from '@interfaces/trackers/interfaces'
 
 const BoardImportWizardRoot = () => {
     const navigate = useNavigate()
 
     const updateTrackersConfig = async (
-        boards: IBoard[],
+        trackers: ITracker[],
     ): Promise<Record<TRACKER_POSITION, string>> => {
         let retries = 3
         const client = getEyeTrackVrController()
 
         while (retries > 0) {
             try {
-                await client.updateBoardCameraConfigurations(boards)
-                const streams = await client.getCamerasStream(boards)
+                await client.updateTrackerCameraConfigurations(trackers)
+                const streams = await client.getTrackersStream(trackers)
                 return streams
             } catch (error) {
                 retries--
                 if (retries > 0) {
                     await sleep(500)
                 } else {
-                    const config = await client.getCamerasStream(boards)
+                    const config = await client.getTrackersStream(trackers)
                     return config
                 }
             }
         }
 
-        const config = await client.getCamerasStream(boards)
+        const config = await client.getTrackersStream(trackers)
         return config
     }
 

@@ -3,8 +3,7 @@ import { Footer } from '@components/Footer'
 import { InputField } from '@components/Inputs/InputField'
 import Typography from '@components/Typography'
 import StepWrapper from '@components/Wrapper/StepWrapper'
-import { TRACKER_POSITION } from '@interfaces/boards/enums'
-import { IBoard } from '@interfaces/boards/interfaces'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { sleep } from '@src/utils'
 import { useFormHandler } from 'solid-form-handler'
@@ -14,6 +13,7 @@ import { v6 as uuidV6 } from 'uuid'
 import CheckCameraCalibration from './CheckCameraCalibration'
 import CheckServerStatus from './CheckServerStatus'
 import { trackerSchema } from './schema'
+import { ITracker } from '@interfaces/trackers/interfaces'
 
 export enum SETUP_TRACKER {
     SETUP_LEFT_CAMERA = 'SETUP_LEFT_CAMERA',
@@ -23,20 +23,20 @@ export enum SETUP_TRACKER {
 }
 
 interface IProps {
-    onClickAddTrackers: (board: IBoard[]) => void
+    onClickAddTrackers: (board: ITracker[]) => void
     checkServerStatus: () => Promise<CONNECTION_STATUS>
-    updateTrackersConfig: (board: IBoard[]) => Promise<Record<TRACKER_POSITION, string>>
+    updateTrackersConfig: (board: ITracker[]) => Promise<Record<TRACKER_POSITION, string>>
     onClickOpenDocs: () => void
     onClickBack: () => void
-    boards: Array<IBoard>
+    boards: Array<ITracker>
     serverStatus: CONNECTION_STATUS
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
     const [calibrationCompleted, setCalibrationCompleted] = createSignal<boolean>(false)
     const [step, setStep] = createSignal<SETUP_TRACKER>(SETUP_TRACKER.SETUP_LEFT_CAMERA)
-    const [rightTracker, setRightTracker] = createSignal<IBoard | undefined>(undefined)
-    const [leftTracker, setLeftTracker] = createSignal<IBoard | undefined>(undefined)
+    const [rightTracker, setRightTracker] = createSignal<ITracker | undefined>(undefined)
+    const [leftTracker, setLeftTracker] = createSignal<ITracker | undefined>(undefined)
     const [isLoading, setIsLoading] = createSignal<boolean>(false)
     const [stepIndex, setStepIndex] = createSignal<number>(0)
     const [trackersStream, setTrackersStream] = createSignal<Record<TRACKER_POSITION, string>>({
@@ -217,7 +217,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
         try {
             await formHandler.validateForm()
-            const trackerConfig: IBoard = {
+            const trackerConfig: ITracker = {
                 label: formHandler.getFieldValue('label'),
                 address: formHandler.getFieldValue('address'),
                 trackerPosition: tracker,

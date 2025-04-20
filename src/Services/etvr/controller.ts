@@ -1,17 +1,17 @@
-import { TRACKER_POSITION } from '@interfaces/boards/enums'
-import { IBoard } from '@interfaces/boards/interfaces'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import {
     IUpdateTracker,
     type IETVRConfigResponse,
-    type ITracker,
+    type ITrackerState,
 } from '@interfaces/services/interfaces'
 import { EyeTrackVrBackend } from './api'
 import { sleep } from '@src/utils'
+import { ITracker } from '@interfaces/trackers/interfaces'
 
 export class EyeTrackVrController {
     private readonly api: EyeTrackVrBackend
-    trackers: Partial<Record<TRACKER_POSITION, ITracker | undefined>> = {}
+    trackers: Partial<Record<TRACKER_POSITION, ITrackerState | undefined>> = {}
     config: IETVRConfigResponse | undefined
 
     constructor() {
@@ -81,7 +81,7 @@ export class EyeTrackVrController {
 
     public async getTrackerConfig(
         trackerPosition: TRACKER_POSITION,
-    ): Promise<ITracker | undefined> {
+    ): Promise<ITrackerState | undefined> {
         try {
             const config = await this.getConfig()
             return config.trackers.find((tracker) => {
@@ -104,7 +104,7 @@ export class EyeTrackVrController {
         }
     }
 
-    public async createTracker(trackerPosition: TRACKER_POSITION): Promise<ITracker> {
+    public async createTracker(trackerPosition: TRACKER_POSITION): Promise<ITrackerState> {
         const tracker = await this.api.createNewTracker({
             tracker_position: trackerPosition,
         })
@@ -116,7 +116,7 @@ export class EyeTrackVrController {
         await this.updateConfig()
     }
 
-    public async getTracker(trackerPosition: TRACKER_POSITION): Promise<ITracker> {
+    public async getTracker(trackerPosition: TRACKER_POSITION): Promise<ITrackerState> {
         if (!this.trackers[trackerPosition]) {
             let config = await this.getTrackerConfig(trackerPosition)
 
@@ -130,26 +130,22 @@ export class EyeTrackVrController {
         return this.trackers[trackerPosition]
     }
 
-    public async updateBoardCameraConfigurations(boards: IBoard[]): Promise<string[]> {
+    public async updateTrackerCameraConfigurations(data: ITracker[]): Promise<string[]> {
         await this.updateTrackersConfig()
         try {
             const [status, trackers] = await Promise.all([
                 this.getServerStatus(),
-                Promise.all(boards.map((board) => this.getTracker(board.trackerPosition))),
+                Promise.all(data.map((tracker) => this.getTracker(tracker.trackerPosition))),
             ])
 
-            const hasToUpdate = boards.some((board) => {
+            const hasToUpdate = data.some((element) => {
                 const matchingTracker = trackers.find(
-                    (tracker) => tracker.tracker_position === board.trackerPosition,
+                    (tracker) => tracker.tracker_position === element.trackerPosition,
                 )
 
                 if (!matchingTracker) return true
-                return matchingTracker.camera.capture_source !== board.address
+                return matchingTracker.camera.capture_source !== element.address
             })
-
-            console.log(hasToUpdate)
-            console.log(boards)
-            console.log(trackers)
 
             if (hasToUpdate && status === CONNECTION_STATUS.CONNECTED) {
                 await this.stopServer()
@@ -159,18 +155,17 @@ export class EyeTrackVrController {
             await this.stopServer()
         }
 
-        const updatePromises = boards.map(async (board) => {
+        const updatePromises = data.map(async (tracker) => {
             try {
-                const tracker = await this.getTracker(board.trackerPosition)
-                const config: Partial<IUpdateTracker> = { name: board.label }
-
-                if (board.address !== tracker.camera.capture_source) {
-                    config.camera = { capture_source: board.address }
+                const trackerState = await this.getTracker(tracker.trackerPosition)
+                const config: Partial<IUpdateTracker> = { name: tracker.label }
+                if (tracker.address !== trackerState.camera.capture_source) {
+                    config.camera = { capture_source: tracker.address }
                 }
 
-                await this.api.updateTracker(tracker.uuid, config)
+                await this.api.updateTracker(trackerState.uuid, config)
             } catch (error) {
-                return `failed to update board ${board.address}`
+                return `failed to update tracker ${tracker.address}`
             }
         })
 
@@ -181,22 +176,22 @@ export class EyeTrackVrController {
         return update.filter((status) => typeof status !== 'undefined')
     }
 
-    public async getCamerasStream(boards: IBoard[]): Promise<Record<TRACKER_POSITION, string>> {
+    public async getTrackersStream(tracker: ITracker[]): Promise<Record<TRACKER_POSITION, string>> {
         const streams: Record<TRACKER_POSITION, string> = {
             [TRACKER_POSITION.RIGHT_EYE]: '',
             [TRACKER_POSITION.LEFT_EYE]: '',
         }
 
-        const streamPromises = boards.map(async (board) => {
-            const trackerConf = await this.getTrackerConfig(board.trackerPosition)
-            console.log(trackerConf)
-            streams[board.trackerPosition] = `${this.api.url}/etvr/feed/${trackerConf?.uuid}/camera`
-            return streams[board.trackerPosition]
+        const streamPromises = tracker.map(async (tracker) => {
+            const trackerConf = await this.getTrackerConfig(tracker.trackerPosition)
+            streams[tracker.trackerPosition] =
+                `${this.api.url}/etvr/feed/${trackerConf?.uuid}/camera`
+
+            return streams[tracker.trackerPosition]
         })
 
         try {
             await Promise.all(streamPromises)
-            console.log('got streams', streams)
             return streams
         } catch {
             return streams

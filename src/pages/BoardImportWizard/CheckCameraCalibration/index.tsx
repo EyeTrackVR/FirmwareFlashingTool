@@ -1,6 +1,6 @@
 import CameraPanel from '@components/Camera/CameraPanel'
 import Typography from '@components/Typography'
-import { TRACKER_POSITION } from '@interfaces/boards/enums'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { Component } from 'solid-js'
 

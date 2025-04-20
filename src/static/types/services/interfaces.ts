@@ -64,7 +64,7 @@ interface ICameraSettings {
     roi_h: number
 }
 
-export interface ITracker {
+export interface ITrackerState {
     enabled: boolean
     name: string
     uuid: string
@@ -87,7 +87,7 @@ export interface IETVRConfigResponse {
     debug: boolean
     affinity_mask: string
     osc: IOSCSettings
-    trackers: ITracker[]
+    trackers: ITrackerState[]
 }
 
 export interface IFeedResponse {

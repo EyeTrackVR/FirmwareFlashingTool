@@ -1,8 +1,8 @@
 import CameraPanel from '@components/Camera/CameraPanel'
 import CameraRotationPanel from '@components/Camera/CameraRotationPanel'
 import DashboardHeader from '@components/DashboardHeader'
-import { TRACKER_POSITION } from '@interfaces/boards/enums'
-import { IBoard } from '@interfaces/boards/interfaces'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
+import { ITracker } from '@interfaces/trackers/interfaces'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { Component } from 'solid-js'
 
@@ -11,7 +11,7 @@ export interface IProps {
     onClickRecalibrate: () => void
     onClickRecenter: () => void
     onRotateCamera: (value: number, tracker: TRACKER_POSITION) => void
-    boards: Record<TRACKER_POSITION, IBoard>
+    boards: Record<TRACKER_POSITION, ITracker>
 }
 
 const Dashboard: Component<IProps> = (props) => {
