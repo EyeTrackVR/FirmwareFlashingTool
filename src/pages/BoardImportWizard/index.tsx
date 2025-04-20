@@ -16,8 +16,8 @@ import { trackerSchema } from './schema'
 import { ITracker } from '@interfaces/trackers/interfaces'
 
 export enum SETUP_TRACKER {
-    SETUP_LEFT_CAMERA = 'SETUP_LEFT_CAMERA',
-    SETUP_RIGHT_CAMERA = 'SETUP_RIGHT_CAMERA',
+    SETUP_LEFT_TRACKER = 'SETUP_LEFT_TRACKER',
+    SETUP_RIGHT_TRACKER = 'SETUP_RIGHT_TRACKER',
     CHECK_SERVER_STATUS = 'CHECK_SERVER_STATUS',
     CHECK_CONNECTION = 'CHECK_CONNECTION',
 }
@@ -34,7 +34,7 @@ interface IProps {
 
 const BoardImportWizard: Component<IProps> = (props) => {
     const [calibrationCompleted, setCalibrationCompleted] = createSignal<boolean>(false)
-    const [step, setStep] = createSignal<SETUP_TRACKER>(SETUP_TRACKER.SETUP_LEFT_CAMERA)
+    const [step, setStep] = createSignal<SETUP_TRACKER>(SETUP_TRACKER.SETUP_LEFT_TRACKER)
     const [rightTracker, setRightTracker] = createSignal<ITracker | undefined>(undefined)
     const [leftTracker, setLeftTracker] = createSignal<ITracker | undefined>(undefined)
     const [isLoading, setIsLoading] = createSignal<boolean>(false)
@@ -50,36 +50,36 @@ const BoardImportWizard: Component<IProps> = (props) => {
     const formHandler = useFormHandler(yupSchema(trackerSchema))
 
     const progressbarStep = createMemo(() => ({
-        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: 1,
-        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: 2,
+        [SETUP_TRACKER.SETUP_LEFT_TRACKER]: 1,
+        [SETUP_TRACKER.SETUP_RIGHT_TRACKER]: 2,
         [SETUP_TRACKER.CHECK_SERVER_STATUS]: 3,
         [SETUP_TRACKER.CHECK_CONNECTION]: 4,
     }))
 
     const buttonLabel = createMemo(() => ({
-        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: 'Setup left tracker',
-        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: 'Setup right tracker',
+        [SETUP_TRACKER.SETUP_LEFT_TRACKER]: 'Setup left tracker',
+        [SETUP_TRACKER.SETUP_RIGHT_TRACKER]: 'Setup right tracker',
         [SETUP_TRACKER.CHECK_SERVER_STATUS]: 'Establishing connection',
         [SETUP_TRACKER.CHECK_CONNECTION]: 'I Connected all my boards',
     }))
 
     const trackerPosition = createMemo(() => ({
-        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: TRACKER_POSITION.LEFT_EYE,
-        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: TRACKER_POSITION.RIGHT_EYE,
+        [SETUP_TRACKER.SETUP_LEFT_TRACKER]: TRACKER_POSITION.LEFT_EYE,
+        [SETUP_TRACKER.SETUP_RIGHT_TRACKER]: TRACKER_POSITION.RIGHT_EYE,
         [SETUP_TRACKER.CHECK_SERVER_STATUS]: undefined,
         [SETUP_TRACKER.CHECK_CONNECTION]: undefined,
     }))
 
     const trackerData = createMemo(() => ({
-        [SETUP_TRACKER.SETUP_LEFT_CAMERA]: leftTracker(),
-        [SETUP_TRACKER.SETUP_RIGHT_CAMERA]: rightTracker(),
+        [SETUP_TRACKER.SETUP_LEFT_TRACKER]: leftTracker(),
+        [SETUP_TRACKER.SETUP_RIGHT_TRACKER]: rightTracker(),
     }))
 
     const cameraLabelDescription = createMemo(() => {
         switch (step()) {
-            case SETUP_TRACKER.SETUP_LEFT_CAMERA:
+            case SETUP_TRACKER.SETUP_LEFT_TRACKER:
                 return 'Setup left tracker'
-            case SETUP_TRACKER.SETUP_RIGHT_CAMERA:
+            case SETUP_TRACKER.SETUP_RIGHT_TRACKER:
                 return 'Setup right tracker'
             default:
                 return ''
@@ -92,7 +92,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
     const hidePrimaryButton = createMemo(() => {
         const tracker = trackerData()[step()]
-        if (!trackers().length && step() === SETUP_TRACKER.SETUP_RIGHT_CAMERA) {
+        if (!trackers().length && step() === SETUP_TRACKER.SETUP_RIGHT_TRACKER) {
             return false
         }
 
@@ -125,7 +125,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
     const loadTrackerState = (currentStep: SETUP_TRACKER) => {
         switch (currentStep) {
-            case SETUP_TRACKER.SETUP_LEFT_CAMERA: {
+            case SETUP_TRACKER.SETUP_LEFT_TRACKER: {
                 const tracker = leftTracker()
                 if (tracker) {
                     formHandler.setFieldValue('address', tracker.address || '')
@@ -135,7 +135,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                 }
                 break
             }
-            case SETUP_TRACKER.SETUP_RIGHT_CAMERA: {
+            case SETUP_TRACKER.SETUP_RIGHT_TRACKER: {
                 const tracker = rightTracker()
                 if (tracker) {
                     formHandler.setFieldValue('address', tracker.address || '')
@@ -185,7 +185,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
         let previousStep: SETUP_TRACKER | undefined = steps[index]
         if (previousStep === SETUP_TRACKER.CHECK_SERVER_STATUS) {
-            previousStep = SETUP_TRACKER.SETUP_RIGHT_CAMERA
+            previousStep = SETUP_TRACKER.SETUP_RIGHT_TRACKER
             index = 1
         }
 
@@ -225,10 +225,10 @@ const BoardImportWizard: Component<IProps> = (props) => {
             }
 
             switch (step()) {
-                case SETUP_TRACKER.SETUP_LEFT_CAMERA:
+                case SETUP_TRACKER.SETUP_LEFT_TRACKER:
                     setLeftTracker(trackerConfig)
                     break
-                case SETUP_TRACKER.SETUP_RIGHT_CAMERA:
+                case SETUP_TRACKER.SETUP_RIGHT_TRACKER:
                     setRightTracker(trackerConfig)
                     break
                 default:
@@ -278,8 +278,8 @@ const BoardImportWizard: Component<IProps> = (props) => {
                         <Switch>
                             <Match
                                 when={
-                                    step() === SETUP_TRACKER.SETUP_LEFT_CAMERA ||
-                                    step() === SETUP_TRACKER.SETUP_RIGHT_CAMERA
+                                    step() === SETUP_TRACKER.SETUP_LEFT_TRACKER ||
+                                    step() === SETUP_TRACKER.SETUP_RIGHT_TRACKER
                                 }>
                                 <div class="flex flex-col gap-24 items-start w-full min-h-[500px]">
                                     <Typography color="lightGrey" text="h3">
