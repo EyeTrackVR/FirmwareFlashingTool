@@ -1,4 +1,5 @@
 import { defaultMdnsLength, mdnsLength } from '@src/static'
+import { IP_ADDRESS_REGEX } from '@src/static/regex'
 
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
@@ -112,22 +113,8 @@ export const validateAddress = (connectionString): boolean => {
     }
 
     if (connectionString.toUpperCase().startsWith('COM')) {
-        const isValid = /^COM\d+$/i.test(connectionString)
-        return isValid
+        return /^COM\d+$/i.test(connectionString)
     }
 
-    if (connectionString.startsWith('http://') || connectionString.startsWith('https://')) {
-        const ipString = connectionString.replace(/^https?:\/\//, '')
-        const parts = ipString.split('.')
-
-        if (parts.length === 4) {
-            const isValid = parts.every((part) => {
-                const num = parseInt(part, 10)
-                return !isNaN(num) && num >= 0 && num <= 255 && part === num.toString()
-            })
-            return isValid
-        }
-    }
-
-    return false
+    return IP_ADDRESS_REGEX.test(connectionString)
 }
