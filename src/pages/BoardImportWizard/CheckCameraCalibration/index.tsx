@@ -25,7 +25,7 @@ const CheckCameraCalibration: Component<IProps> = (props) => {
                             Left camera
                         </Typography>
                         <CameraPanel
-                            steamSource={props.trackerStream[TRACKER_POSITION.LEFT_EYE]}
+                            streamSource={props.trackerStream[TRACKER_POSITION.LEFT_EYE]}
                             cameraStatus={CONNECTION_STATUS.INACTIVE}
                             label={props.leftTrackerLabel}
                             address={props.leftTrackerAddress}
@@ -36,7 +36,7 @@ const CheckCameraCalibration: Component<IProps> = (props) => {
                             right camera
                         </Typography>
                         <CameraPanel
-                            steamSource={props.trackerStream[TRACKER_POSITION.RIGHT_EYE]}
+                            streamSource={props.trackerStream[TRACKER_POSITION.RIGHT_EYE]}
                             cameraStatus={CONNECTION_STATUS.INACTIVE}
                             label={props.rightTrackerLabel}
                             address={props.rightTrackerAddress}

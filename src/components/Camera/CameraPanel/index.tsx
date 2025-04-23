@@ -7,7 +7,7 @@ export interface IProps {
     cameraStatus: CONNECTION_STATUS
     label: string
     address: string
-    steamSource: string
+    streamSource: string
 }
 
 const CameraPanel: Component<IProps> = (props) => {
@@ -19,7 +19,7 @@ const CameraPanel: Component<IProps> = (props) => {
                 cameraStatus={props.cameraStatus}
             />
             <div class="w-full flex justify-center">
-                <Camera steamSource={props.steamSource} />
+                <Camera streamSource={props.streamSource} />
             </div>
         </div>
     )

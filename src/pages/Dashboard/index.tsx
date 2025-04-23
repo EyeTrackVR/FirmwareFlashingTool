@@ -29,7 +29,7 @@ const Dashboard: Component<IProps> = (props) => {
                     <div class="flex flex-col gap-12">
                         <CameraPanel
                             {...props.boards[TRACKER_POSITION.LEFT_EYE]}
-                            steamSource=""
+                            streamSource=""
                             cameraStatus={CONNECTION_STATUS.INACTIVE}
                         />
                         <CameraRotationPanel
@@ -41,7 +41,7 @@ const Dashboard: Component<IProps> = (props) => {
                     <div class="flex flex-col gap-12">
                         <CameraPanel
                             {...props.boards[TRACKER_POSITION.RIGHT_EYE]}
-                            steamSource=""
+                            streamSource=""
                             cameraStatus={CONNECTION_STATUS.INACTIVE}
                         />
                         <CameraRotationPanel

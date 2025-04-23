@@ -2,7 +2,7 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { serverStatus } from '@store/ui/selectors' // something I'm not proud of but it works
 import { Component, createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js'
 export interface IProps {
-    steamSource: string
+    streamSource: string
     fallbackImage?: string
 }
 
@@ -18,7 +18,7 @@ const Camera: Component<IProps> = (props) => {
     let imgRef: HTMLImageElement | undefined
 
     createEffect(() => {
-        if (!props.steamSource) return
+        if (!props.streamSource) return
         const intervalId = setInterval(() => {
             setTimestamp(Date.now())
         }, 3000)
@@ -27,7 +27,7 @@ const Camera: Component<IProps> = (props) => {
     })
 
     createEffect(() => {
-        props.steamSource
+        props.streamSource
         setLoading(true)
         setError(false)
         setRetryCount(0)
@@ -36,7 +36,7 @@ const Camera: Component<IProps> = (props) => {
     const src = createMemo(() => {
         return serverStatus() === CONNECTION_STATUS.DISCONNECTED
             ? ''
-            : `${props.steamSource}?t=${timestamp()}`
+            : `${props.streamSource}?t=${timestamp()}`
     })
 
     const handleError = () => {
@@ -45,7 +45,7 @@ const Camera: Component<IProps> = (props) => {
                 const isDisconnected = serverStatus() === CONNECTION_STATUS.DISCONNECTED
                 const newSrc = isDisconnected
                     ? ''
-                    : `${props.steamSource}?retry=${retryCount()}&t=${Date.now()}`
+                    : `${props.streamSource}?retry=${retryCount()}&t=${Date.now()}`
                 imgRef && (imgRef.src = newSrc)
                 setRetryCount((c) => c + 1)
             }, RETRY_DELAY) as unknown as number
