@@ -1,4 +1,5 @@
 import { defaultMdnsLength, mdnsLength } from '@src/static'
+import { IP_ADDRESS_REGEX, UVC_REGEX } from '@src/static/regex'
 
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
@@ -104,4 +105,20 @@ export const shortAddress = (text: string, size = 24) => {
     const end = text.slice(-size)
 
     return `${start}...${end}`
+}
+
+export const validateAddress = (connectionString): boolean => {
+    if (!connectionString || typeof connectionString !== 'string') {
+        return false
+    }
+
+    if (UVC_REGEX.test(connectionString)) {
+        return true
+    }
+
+    if (connectionString.toUpperCase().startsWith('COM')) {
+        return /^COM\d+$/i.test(connectionString)
+    }
+
+    return IP_ADDRESS_REGEX.test(connectionString)
 }

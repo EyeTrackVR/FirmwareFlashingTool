@@ -64,7 +64,7 @@ interface ICameraSettings {
     roi_h: number
 }
 
-export interface ITracker {
+export interface ITrackerState {
     enabled: boolean
     name: string
     uuid: string
@@ -73,12 +73,21 @@ export interface ITracker {
     camera: ICameraSettings
 }
 
+export interface IUpdateTracker {
+    enabled: boolean
+    name: string
+    uuid: string
+    tracker_position: string
+    algorithm: Partial<IAlgorithm>
+    camera: Partial<ICameraSettings>
+}
+
 export interface IETVRConfigResponse {
     version: number
     debug: boolean
     affinity_mask: string
     osc: IOSCSettings
-    trackers: ITracker[]
+    trackers: ITrackerState[]
 }
 
 export interface IFeedResponse {

@@ -9,6 +9,7 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
+    onClickSettings: () => void
     onClickClose: () => void
     onClick: () => void
     connectionStatus: CONNECTION_STATUS
@@ -21,6 +22,7 @@ const ApModeModal: Component<IProps> = (props) => {
 
     return (
         <Modal
+            onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             id={apModalID}
