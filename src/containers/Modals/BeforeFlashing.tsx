@@ -1,5 +1,5 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
-import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
+import BeforeFlashing from '@pages/Modals/BeforeFlashing'
 import { useNavigate } from '@solidjs/router'
 import { usb } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
@@ -11,12 +11,12 @@ import {
     setAbortController,
     setProcessStatus,
 } from '@store/terminal/terminal'
-import { hideModal, activeModal, serverStatus } from '@store/ui/selectors'
-import { setHideModal, setActiveModal } from '@store/ui/ui'
+import { activeModal, hideModal, serverStatus } from '@store/ui/selectors'
+import { setActiveModal, setHideModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 
-const BeforeFlashingContainer = () => {
+const BeforeFlashingRoot = () => {
     const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
     const navigate = useNavigate()
@@ -30,7 +30,7 @@ const BeforeFlashingContainer = () => {
     })
 
     return (
-        <BeforeFlashingModal
+        <BeforeFlashing
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
             checked={hideModal()}
@@ -87,4 +87,4 @@ const BeforeFlashingContainer = () => {
     )
 }
 
-export default BeforeFlashingContainer
+export default BeforeFlashingRoot

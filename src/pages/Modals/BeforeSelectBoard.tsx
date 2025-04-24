@@ -4,7 +4,7 @@ import ModalHeader from '@components/ModalHeader'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
-import { beforeSelectBoardModalID } from '@src/static'
+import { BEFORE_SELECT_BOARD_ID } from '@src/static'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -23,7 +23,7 @@ const BeforeSelectBoard: Component<IProps> = (props) => {
             onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
-            id={beforeSelectBoardModalID}
+            id={BEFORE_SELECT_BOARD_ID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>

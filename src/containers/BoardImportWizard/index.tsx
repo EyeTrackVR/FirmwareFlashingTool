@@ -1,13 +1,12 @@
-import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
+import { ITracker } from '@interfaces/trackers/interfaces'
 import BoardImportWizard from '@pages/BoardImportWizard'
 import { useNavigate } from '@solidjs/router'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { sleep } from '@src/utils'
-import { boards } from '@store/boards/selectors'
 import { openDocs } from '@store/terminal/actions'
 import { navigationStep, serverStatus } from '@store/ui/selectors'
-import { ITracker } from '@interfaces/trackers/interfaces'
 
 const BoardImportWizardRoot = () => {
     const navigate = useNavigate()
@@ -49,9 +48,7 @@ const BoardImportWizardRoot = () => {
             checkServerStatus={checkServerStatus}
             serverStatus={serverStatus()}
             updateTrackersConfig={updateTrackersConfig}
-            boards={boards()}
-            onClickAddTrackers={(boards) => {
-                // setBoards(boards)
+            onClickAddTrackers={(trackers) => {
                 navigate('/dashboard')
             }}
             onClickBack={() => {

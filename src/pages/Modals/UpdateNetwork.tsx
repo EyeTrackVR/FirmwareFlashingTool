@@ -1,11 +1,11 @@
-import { Component } from 'solid-js'
 import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { wifiModalID } from '@src/static'
 import Typography from '@components/Typography'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { WIFI_ID } from '@src/static'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -18,13 +18,13 @@ export interface IProps {
     appVersion: string
 }
 
-const WifiModal: Component<IProps> = (props) => {
+const UpdateNetwork: Component<IProps> = (props) => {
     return (
         <Modal
             onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
-            id={wifiModalID}
+            id={WIFI_ID}
             isSending={props.isSending}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
@@ -66,4 +66,4 @@ const WifiModal: Component<IProps> = (props) => {
     )
 }
 
-export default WifiModal
+export default UpdateNetwork

@@ -4,6 +4,7 @@ import Camera from '../Camera'
 import CameraHeader from '../CameraHeader'
 
 export interface IProps {
+    onClick?: () => void
     cameraStatus: CONNECTION_STATUS
     label: string
     address: string
@@ -12,7 +13,14 @@ export interface IProps {
 
 const CameraPanel: Component<IProps> = (props) => {
     return (
-        <div class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 min-[1001px]:max-w-[600px] w-full">
+        <div
+            classList={{
+                'hover:border-purple-200 cursor-pointer': typeof props.onClick !== 'undefined',
+            }}
+            class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 min-[1001px]:max-w-[600px] w-full  "
+            onClick={() => {
+                props.onClick?.()
+            }}>
             <CameraHeader
                 label={props.label}
                 address={props.address}

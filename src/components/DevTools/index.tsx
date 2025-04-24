@@ -8,7 +8,7 @@ import { IDropdownList } from '@interfaces/interfaces'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { IEventType } from '@interfaces/types'
 import theme from '@src/common/theme'
-import { debugModalId } from '@src/static'
+import { DEBUG_MODAL_ID } from '@src/static'
 import { FaSolidGear } from 'solid-icons/fa'
 import { type Component, onMount } from 'solid-js'
 
@@ -40,11 +40,11 @@ export const Devtools: Component<IProps> = (props) => {
             <button
                 class="ml-auto flex items-center justify-center lead w-[35px] h-[35px] rounded-100 border border-solid border-black-800 bg-black-900 cursor-pointer focus-visible:border-purple-100"
                 onClick={() => {
-                    props.onClickOpenModal(debugModalId)
+                    props.onClickOpenModal(DEBUG_MODAL_ID)
                 }}>
                 <FaSolidGear size={12} fill={theme.colors.white[200]} />
             </button>
-            <dialog id={debugModalId} class="modal">
+            <dialog id={DEBUG_MODAL_ID} class="modal">
                 <div class="fixed top-0 w-full">
                     <Header
                         onClick={props.onClickHeader}

@@ -28,7 +28,6 @@ interface IProps {
     updateTrackersConfig: (board: ITracker[]) => Promise<Record<TRACKER_POSITION, string>>
     onClickOpenDocs: () => void
     onClickBack: () => void
-    boards: Array<ITracker>
     serverStatus: CONNECTION_STATUS
 }
 

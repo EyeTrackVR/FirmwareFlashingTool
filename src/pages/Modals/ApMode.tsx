@@ -3,7 +3,7 @@ import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { apModalID } from '@src/static'
+import { AP_ID } from '@src/static'
 import Typography from '@components/Typography'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 
@@ -17,7 +17,7 @@ export interface IProps {
     isActive: boolean
 }
 
-const ApModeModal: Component<IProps> = (props) => {
+const ApMode: Component<IProps> = (props) => {
     const [enableAPMode, setEnableAPMode] = createSignal(false)
 
     return (
@@ -25,7 +25,7 @@ const ApModeModal: Component<IProps> = (props) => {
             onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
-            id={apModalID}
+            id={AP_ID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>
@@ -79,4 +79,4 @@ const ApModeModal: Component<IProps> = (props) => {
     )
 }
 
-export default ApModeModal
+export default ApMode

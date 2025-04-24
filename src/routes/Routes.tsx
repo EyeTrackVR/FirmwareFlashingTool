@@ -1,7 +1,7 @@
 import { Router, useNavigate } from '@solidjs/router'
 
 import { isEqual } from 'lodash'
-import { createEffect, onMount, Show, type Component } from 'solid-js'
+import { createEffect, lazy, onMount, Show, type Component } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
@@ -13,6 +13,8 @@ import { useAppNotificationsContext } from '@store/context/notifications'
 import { usePersistentStore } from '@store/tauriStore'
 import { HeaderRoot } from '@containers/Header'
 import Sidebar from '@components/Sidebar'
+
+const Modals = lazy(() => import('@containers/Modals'))
 
 const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
@@ -93,6 +95,7 @@ const AppRoutes: Component = () => {
                 return (
                     <div class="flex flex-col h-full">
                         <HeaderRoot />
+                        <Modals />
                         <div class="flex h-full flex-row overflow-hidden">
                             <Show
                                 when={['/dashboard', '/settings', '/advancedSettings'].includes(

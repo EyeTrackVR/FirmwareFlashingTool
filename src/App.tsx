@@ -5,7 +5,6 @@ import { getEyeTrackVrController } from './Services/etvr/connection'
 import { setServerStatus } from '@store/ui/ui'
 
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
-const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
 
 const App = () => {
@@ -30,7 +29,6 @@ const App = () => {
     return (
         <Suspense>
             <AppProvider>
-                <Modals />
                 <AppRoutes />
                 <ToastNotificationWindow />
             </AppProvider>

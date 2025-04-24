@@ -2,7 +2,7 @@ import {
     IETVRConfig,
     IETVRConfigResponse,
     IFeedResponse,
-    ITracker,
+    ITrackerState,
     IUpdateTracker,
 } from '@interfaces/services/interfaces'
 import { Body, HttpVerb, ResponseType } from '@tauri-apps/api/http'
@@ -105,16 +105,16 @@ export class EyeTrackVrBackend {
         return this.fetchJson<null>(`${this.url}/etvr/config/tracker/reset?uuid=${uuid}`, 'GET')
     }
 
-    getTrackersConfig(): Promise<ITracker[]> {
-        return this.fetchJson<ITracker[]>(`${this.url}/etvr/config/trackers`, 'GET')
+    getTrackersConfig(): Promise<ITrackerState[]> {
+        return this.fetchJson<ITrackerState[]>(`${this.url}/etvr/config/trackers`, 'GET')
     }
 
-    getTrackerConfig(uuid: string): Promise<ITracker> {
-        return this.fetchJson<ITracker>(`${this.url}/etvr/config/tracker?uuid=${uuid}`, 'GET')
+    getTrackerConfig(uuid: string): Promise<ITrackerState> {
+        return this.fetchJson<ITrackerState>(`${this.url}/etvr/config/tracker?uuid=${uuid}`, 'GET')
     }
 
-    createNewTracker(config: Partial<ITracker>): Promise<ITracker> {
-        return this.fetchJson<ITracker, Partial<ITracker>>(
+    createNewTracker(config: Partial<ITrackerState>): Promise<ITrackerState> {
+        return this.fetchJson<ITrackerState, Partial<ITrackerState>>(
             `${this.url}/etvr/config/tracker`,
             'PUT',
             config,
@@ -130,7 +130,7 @@ export class EyeTrackVrBackend {
     }
 
     deleteTracker(uuid: string) {
-        return this.fetchJson<ITracker, ITracker>(
+        return this.fetchJson<ITrackerState, ITrackerState>(
             `${this.url}/etvr/config/tracker?uuid=${uuid}`,
             'DELETE',
         )
