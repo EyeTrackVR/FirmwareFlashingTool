@@ -14,7 +14,7 @@ const DashboardRoot = () => {
         <Dashboard
             trackers={getTrackers()}
             onClickTracker={(id) => {
-                //
+                navigate(`/TrackerDashboard/${id}`)
             }}
             onRotateCamera={(value, tracker) => {
                 //

@@ -1,8 +1,9 @@
-import { lazy } from 'solid-js'
 import type { RouteDefinition } from '@solidjs/router'
+import { lazy } from 'solid-js'
 
 const ConfigureBoardWizard = lazy(() => import('@containers/ConfigureBoardWizard'))
 const BoardImportWizard = lazy(() => import('@containers/BoardImportWizard'))
+const TrackerDashboard = lazy(() => import('@containers/TrackerDashboard'))
 const AdvancedSettings = lazy(() => import('@containers/AdvancedSettings'))
 const FlashFirmware = lazy(() => import('@containers/FlashFirmware'))
 const ManageNetwork = lazy(() => import('@containers/ManageNetwork'))
@@ -14,6 +15,7 @@ const Settings = lazy(() => import('@containers/Settings'))
 export const routes: RouteDefinition[] = [
     { path: '/configureBoardWizard', component: ConfigureBoardWizard },
     { path: '/boardImportWizard', component: BoardImportWizard },
+    { path: '/trackerDashboard/:id', component: TrackerDashboard },
     { path: '/advancedSettings', component: AdvancedSettings },
     { path: '/flashFirmware', component: FlashFirmware },
     { path: '/network', component: ManageNetwork },

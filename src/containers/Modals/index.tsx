@@ -1,17 +1,13 @@
 import { MODAL_TYPE } from '@interfaces/enums'
-import { createEffect, Match, Show, Switch } from 'solid-js'
+import { activeModal } from '@store/ui/selectors'
+import { Match, Show, Switch } from 'solid-js'
 import ApMode from './ApMode'
 import BeforeFlashingRoot from './BeforeFlashing'
 import BeforeSelectBoardModal from './BeforeSelectBoard'
-import UpdateNetworkRoot from './UpdateNetwork'
-import { activeModal } from '@store/ui/selectors'
 import EstablishConnection from './EstablishConnection'
+import UpdateNetworkRoot from './UpdateNetwork'
 
 export const ModalRoot = () => {
-    createEffect(() => {
-        console.log(activeModal())
-    })
-
     return (
         <Show when={activeModal().open}>
             <div class="absolute top-0 left-0">
