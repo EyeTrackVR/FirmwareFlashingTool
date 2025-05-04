@@ -29,6 +29,7 @@ interface IProps {
     onClickOpenDocs: () => void
     onClickBack: () => void
     serverStatus: CONNECTION_STATUS
+    loader: boolean
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
@@ -104,23 +105,28 @@ const BoardImportWizard: Component<IProps> = (props) => {
         )
     })
 
-    const isPrimaryButtonActive = createMemo(
-        () =>
+    const isPrimaryButtonActive = createMemo(() => {
+        if (props.loader) return false
+        return (
             (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 formHandler.getFieldValue('label').length > 0 &&
                 formHandler.getFieldValue('address').length > 0 &&
                 !formHandler.getFormErrors().length) ||
-            (step() === SETUP_TRACKER.CHECK_CONNECTION && calibrationCompleted()),
-    )
+            (step() === SETUP_TRACKER.CHECK_CONNECTION && calibrationCompleted())
+        )
+    })
 
-    const isPrimaryButtonDisabled = createMemo(
-        () =>
+    const isPrimaryButtonDisabled = createMemo(() => {
+        if (props.loader) return true
+
+        return (
             (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 (!formHandler.getFieldValue('address').length ||
                     !formHandler.getFieldValue('label').length ||
                     formHandler.getFormErrors().length > 0)) ||
-            (step() === SETUP_TRACKER.CHECK_CONNECTION && !calibrationCompleted()),
-    )
+            (step() === SETUP_TRACKER.CHECK_CONNECTION && !calibrationCompleted())
+        )
+    })
 
     const loadTrackerState = (currentStep: SETUP_TRACKER) => {
         switch (currentStep) {
@@ -406,7 +412,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             />
                             <Show when={hidePrimaryButton()}>
                                 <Button
-                                    disabled={isLoading()}
+                                    disabled={isLoading() || props.loader}
                                     label="Skip step"
                                     type="button"
                                     onClick={setNextStep}

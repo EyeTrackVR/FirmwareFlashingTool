@@ -83,7 +83,7 @@ export const HeaderRoot = () => {
                 if (getTrackersCount() > 0) {
                     navigate('/dashboard')
                 } else {
-                    navigate('/dashboard')
+                    navigate('/')
                 }
             }}
             currentStep={formattedCurrentStep()}

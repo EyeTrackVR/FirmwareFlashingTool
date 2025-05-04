@@ -5,10 +5,15 @@ import BoardImportWizard from '@pages/BoardImportWizard'
 import { useNavigate } from '@solidjs/router'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { sleep } from '@src/utils'
+import { usePersistentStore } from '@store/tauriStore'
 import { openDocs } from '@store/terminal/actions'
+import { setTrackers } from '@store/trackers/trackers'
 import { navigationStep, serverStatus } from '@store/ui/selectors'
+import { createSignal, onMount } from 'solid-js'
 
 const BoardImportWizardRoot = () => {
+    const [loader, setLoader] = createSignal(false)
+    const { get, set } = usePersistentStore()
     const navigate = useNavigate()
 
     const updateTrackersConfig = async (
@@ -43,12 +48,24 @@ const BoardImportWizardRoot = () => {
         return status
     }
 
+    onMount(() => {
+        setLoader(false)
+    })
+
     return (
         <BoardImportWizard
+            loader={loader()}
             checkServerStatus={checkServerStatus}
             serverStatus={serverStatus()}
             updateTrackersConfig={updateTrackersConfig}
-            onClickAddTrackers={(trackers) => {
+            onClickAddTrackers={async (trackers) => {
+                setLoader(true)
+                try {
+                    await set('trackers', { trackers })
+                } catch {}
+
+                setLoader(false)
+                setTrackers(trackers)
                 navigate('/dashboard')
             }}
             onClickBack={() => {

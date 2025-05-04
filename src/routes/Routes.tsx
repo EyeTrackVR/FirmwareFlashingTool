@@ -1,18 +1,20 @@
 import { Router, useNavigate } from '@solidjs/router'
 
+import Sidebar from '@components/Sidebar'
+import { HeaderRoot } from '@containers/Header'
+import { ENotificationAction } from '@src/static/types/enums'
+import type { PersistentSettings } from '@static/types'
+import { useAppAPIContext } from '@store/context/api'
+import { useAppContext } from '@store/context/app'
+import { useAppNotificationsContext } from '@store/context/notifications'
+import { usePersistentStore } from '@store/tauriStore'
+import { trackers } from '@store/trackers/selectors'
+import { setTrackers } from '@store/trackers/trackers'
 import { isEqual } from 'lodash'
 import { createEffect, lazy, onMount, Show, type Component } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
-import type { PersistentSettings } from '@static/types'
-import { ENotificationAction } from '@src/static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppContext } from '@store/context/app'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { usePersistentStore } from '@store/tauriStore'
-import { HeaderRoot } from '@containers/Header'
-import Sidebar from '@components/Sidebar'
 
 const Modals = lazy(() => import('@containers/Modals'))
 
@@ -35,16 +37,21 @@ const AppRoutes: Component = () => {
         get('settings').then((settings) => {
             if (settings) {
                 debug('loading settings')
-
                 setEnableNotifications(settings.enableNotifications)
                 setEnableNotificationsSounds(settings.enableNotificationsSounds)
                 setGlobalNotificationsType(
                     settings.globalNotificationsType ?? ENotificationAction.APP,
                 )
-
                 setDebugMode(settings.debugMode)
             }
         })
+        get('trackers').then((data) => {
+            if (data) {
+                debug('loading trackers')
+                setTrackers(data?.trackers ?? [])
+            }
+        })
+
         //* Check notification permissions
         checkPermission()
         //* Grab the github release info for OpenIris
@@ -72,6 +79,11 @@ const AppRoutes: Component = () => {
                 set('settings', createSettingsObject())
             }
         })
+        get('trackers').then((storedTrackers) => {
+            if (!isEqual(storedTrackers, { trackers: trackers() })) {
+                set('settings', { trackers: trackers() })
+            }
+        })
     }
 
     createEffect(() => {
@@ -84,6 +96,7 @@ const AppRoutes: Component = () => {
             pause()
             debug(`[Routes]: Saving Settings - ${JSON.stringify(createSettingsObject())}`)
             set('settings', createSettingsObject())
+            set('trackers', { trackers: trackers() })
             resume()
         })
     })
