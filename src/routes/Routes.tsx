@@ -10,16 +10,6 @@ const Modals = lazy(() => import('@containers/Modals'))
 
 const AppRoutes: Component = () => {
     const { doGHRequest, channelMode } = useAppAPIContext()
-    const { get } = usePersistentStore()
-
-    onMount(() => {
-        get('trackers').then((data) => {
-            if (data) {
-                setTrackers(data?.trackers ?? [])
-            }
-        })
-    })
-
     createEffect(() => {
         doGHRequest(channelMode())
     })
@@ -28,6 +18,20 @@ const AppRoutes: Component = () => {
         <Router
             root={(data) => {
                 const navigate = useNavigate()
+                const { get } = usePersistentStore()
+
+                onMount(() => {
+                    get('trackers').then((data) => {
+                        if (data) {
+                            const trackers = data?.trackers ?? []
+                            setTrackers(trackers)
+                            if (trackers.length > 0) {
+                                navigate('/dashboard')
+                            }
+                        }
+                    })
+                })
+
                 return (
                     <div class="flex flex-col h-full">
                         <HeaderRoot />
