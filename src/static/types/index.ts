@@ -1,7 +1,7 @@
 export * as O from 'fp-ts/Option'
 import type { ENotificationAction } from './enums'
 import type { JSXElement } from 'solid-js'
-import { ITracker } from './trackers/interfaces'
+import { type ITracker } from './trackers/interfaces'
 
 //********************************* Utility *************************************/
 export type Context = {

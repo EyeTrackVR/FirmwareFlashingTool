@@ -87,7 +87,11 @@ const BoardImportWizard: Component<IProps> = (props) => {
     })
 
     const trackers = createMemo(() => {
-        return [leftTracker(), rightTracker()].filter((tracker) => !!tracker)
+        const data = [leftTracker(), rightTracker()].filter((tracker) => !!tracker)
+        return data.map((data) => ({
+            ...data,
+            streamSource: trackersStream()[data.trackerPosition] ?? '',
+        }))
     })
 
     const hidePrimaryButton = createMemo(() => {
@@ -226,6 +230,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                 label: formHandler.getFieldValue('label'),
                 address: formHandler.getFieldValue('address'),
                 trackerPosition: tracker,
+                streamSource: '',
                 id: uuidV6(),
             }
 

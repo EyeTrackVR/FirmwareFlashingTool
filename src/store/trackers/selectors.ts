@@ -14,12 +14,14 @@ export const getTrackers: Accessor<Record<TRACKER_POSITION, ITracker>> = createM
         [TRACKER_POSITION.LEFT_EYE]: {
             trackerPosition: TRACKER_POSITION.LEFT_EYE,
             label: 'Left camera',
+            streamSource: '',
             address: '--',
             id: uuidV6(),
         },
         [TRACKER_POSITION.RIGHT_EYE]: {
             trackerPosition: TRACKER_POSITION.LEFT_EYE,
             label: 'Right camera',
+            streamSource: '',
             address: '--',
             id: uuidV6(),
         },

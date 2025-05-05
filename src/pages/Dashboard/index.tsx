@@ -4,7 +4,7 @@ import DashboardHeader from '@components/DashboardHeader'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
-import { Component, createMemo } from 'solid-js'
+import { Component, createEffect, createMemo } from 'solid-js'
 
 export interface IProps {
     onClickTracker: (uuid: string) => void
@@ -32,12 +32,11 @@ const Dashboard: Component<IProps> = (props) => {
                 <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col w-full max-w-[1800px] ">
                     <div class="flex flex-col gap-12">
                         <CameraPanel
+                            cameraStatus={CONNECTION_STATUS.INACTIVE}
                             onClick={() => {
                                 props.onClickTracker(leftTracker().id)
                             }}
                             {...leftTracker()}
-                            streamSource=""
-                            cameraStatus={CONNECTION_STATUS.INACTIVE}
                         />
                         <CameraRotationPanel
                             onChangeRotation={(value) => {
@@ -47,12 +46,11 @@ const Dashboard: Component<IProps> = (props) => {
                     </div>
                     <div class="flex flex-col gap-12">
                         <CameraPanel
+                            cameraStatus={CONNECTION_STATUS.INACTIVE}
                             onClick={() => {
                                 props.onClickTracker(rightTracker().id)
                             }}
                             {...rightTracker()}
-                            streamSource=""
-                            cameraStatus={CONNECTION_STATUS.INACTIVE}
                         />
                         <CameraRotationPanel
                             onChangeRotation={(value) => {

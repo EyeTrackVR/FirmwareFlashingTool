@@ -1,51 +1,23 @@
-import { CONNECTION_STATUS } from '@interfaces/services/enums'
-import { serverStatus } from '@store/ui/selectors' // something I'm not proud of but it works
-import { Component, createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js'
+import { Component, createSignal, onCleanup, Show } from 'solid-js'
 export interface IProps {
     streamSource: string
     fallbackImage?: string
 }
 
 const Camera: Component<IProps> = (props) => {
-    const [timestamp, setTimestamp] = createSignal(Date.now())
     const [retryCount, setRetryCount] = createSignal(0)
     const [loading, setLoading] = createSignal(true)
     const [error, setError] = createSignal(false)
     const RETRY_DELAY = 2000
-    const MAX_RETRIES = 3
+    const MAX_RETRIES = 10
 
     let retryTimer: number
     let imgRef: HTMLImageElement | undefined
 
-    createEffect(() => {
-        if (!props.streamSource) return
-        const intervalId = setInterval(() => {
-            setTimestamp(Date.now())
-        }, 3000)
-
-        onCleanup(() => clearInterval(intervalId))
-    })
-
-    createEffect(() => {
-        props.streamSource
-        setLoading(true)
-        setError(false)
-        setRetryCount(0)
-    })
-
-    const src = createMemo(() => {
-        return serverStatus() === CONNECTION_STATUS.DISCONNECTED
-            ? ''
-            : `${props.streamSource}?t=${timestamp()}`
-    })
-
     const handleError = () => {
         if (retryCount() < MAX_RETRIES) {
             retryTimer = setTimeout(() => {
-                const isDisconnected = serverStatus() === CONNECTION_STATUS.DISCONNECTED
-                const newSrc = isDisconnected
-                    ? ''
-                    : `${props.streamSource}?retry=${retryCount()}&t=${Date.now()}`
+                const newSrc = props.streamSource
                 imgRef && (imgRef.src = newSrc)
                 setRetryCount((c) => c + 1)
             }, RETRY_DELAY) as unknown as number
@@ -84,7 +56,7 @@ const Camera: Component<IProps> = (props) => {
             <img
                 ref={imgRef}
                 alt="Camera feed"
-                src={src()}
+                src={props.streamSource}
                 onLoad={handleLoad}
                 onError={handleError}
                 class="object-cover w-full h-full"

@@ -13,7 +13,7 @@ import { createSignal, onMount } from 'solid-js'
 
 const BoardImportWizardRoot = () => {
     const [loader, setLoader] = createSignal(false)
-    const { get, set } = usePersistentStore()
+    const { set } = usePersistentStore()
     const navigate = useNavigate()
 
     const updateTrackersConfig = async (
