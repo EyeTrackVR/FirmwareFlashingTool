@@ -228,8 +228,6 @@ export class EyeTrackVrController {
                     id: tracker.uuid,
                 })
             })
-
-            console.log(trackers, rotation)
         } catch {}
 
         return {
