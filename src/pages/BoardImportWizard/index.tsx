@@ -28,8 +28,8 @@ interface IProps {
     updateTrackersConfig: (board: ITracker[]) => Promise<Record<TRACKER_POSITION, string>>
     onClickOpenDocs: () => void
     onClickBack: () => void
-    boards: Array<ITracker>
     serverStatus: CONNECTION_STATUS
+    loader: boolean
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
@@ -87,7 +87,11 @@ const BoardImportWizard: Component<IProps> = (props) => {
     })
 
     const trackers = createMemo(() => {
-        return [leftTracker(), rightTracker()].filter((tracker) => !!tracker)
+        const data = [leftTracker(), rightTracker()].filter((tracker) => !!tracker)
+        return data.map((data) => ({
+            ...data,
+            streamSource: trackersStream()[data.trackerPosition] ?? '',
+        }))
     })
 
     const hidePrimaryButton = createMemo(() => {
@@ -105,23 +109,28 @@ const BoardImportWizard: Component<IProps> = (props) => {
         )
     })
 
-    const isPrimaryButtonActive = createMemo(
-        () =>
+    const isPrimaryButtonActive = createMemo(() => {
+        if (props.loader) return false
+        return (
             (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 formHandler.getFieldValue('label').length > 0 &&
                 formHandler.getFieldValue('address').length > 0 &&
                 !formHandler.getFormErrors().length) ||
-            (step() === SETUP_TRACKER.CHECK_CONNECTION && calibrationCompleted()),
-    )
+            (step() === SETUP_TRACKER.CHECK_CONNECTION && calibrationCompleted())
+        )
+    })
 
-    const isPrimaryButtonDisabled = createMemo(
-        () =>
+    const isPrimaryButtonDisabled = createMemo(() => {
+        if (props.loader) return true
+
+        return (
             (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 (!formHandler.getFieldValue('address').length ||
                     !formHandler.getFieldValue('label').length ||
                     formHandler.getFormErrors().length > 0)) ||
-            (step() === SETUP_TRACKER.CHECK_CONNECTION && !calibrationCompleted()),
-    )
+            (step() === SETUP_TRACKER.CHECK_CONNECTION && !calibrationCompleted())
+        )
+    })
 
     const loadTrackerState = (currentStep: SETUP_TRACKER) => {
         switch (currentStep) {
@@ -221,6 +230,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                 label: formHandler.getFieldValue('label'),
                 address: formHandler.getFieldValue('address'),
                 trackerPosition: tracker,
+                streamSource: '',
                 id: uuidV6(),
             }
 
@@ -407,7 +417,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             />
                             <Show when={hidePrimaryButton()}>
                                 <Button
-                                    disabled={isLoading()}
+                                    disabled={isLoading() || props.loader}
                                     label="Skip step"
                                     type="button"
                                     onClick={setNextStep}

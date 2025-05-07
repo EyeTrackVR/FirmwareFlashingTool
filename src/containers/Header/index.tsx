@@ -2,11 +2,11 @@ import Header from '@components/Header'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { stepStatus, usb } from '@src/static'
 import { DIRECTION, ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
-import { getBoardsCount } from '@store/boards/selectors'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
+import { getTrackersCount } from '@store/trackers/selectors'
 import { serverStatus } from '@store/ui/selectors'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
@@ -80,7 +80,7 @@ export const HeaderRoot = () => {
                 }
                 setAbortController()
 
-                if (getBoardsCount() > 0) {
+                if (getTrackersCount() > 0) {
                     navigate('/dashboard')
                 } else {
                     navigate('/')

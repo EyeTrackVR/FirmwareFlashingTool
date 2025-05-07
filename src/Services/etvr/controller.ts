@@ -62,6 +62,7 @@ export class EyeTrackVrController {
                 tries--
             }
         }
+
         return CONNECTION_STATUS.FAILED
     }
 
@@ -184,8 +185,10 @@ export class EyeTrackVrController {
 
         const streamPromises = tracker.map(async (tracker) => {
             const trackerConf = await this.getTrackerConfig(tracker.trackerPosition)
-            streams[tracker.trackerPosition] =
-                `${this.api.url}/etvr/feed/${trackerConf?.uuid}/camera`
+            if (trackerConf) {
+                streams[tracker.trackerPosition] =
+                    `${this.api.url}/etvr/feed/${trackerConf?.uuid}/camera`
+            }
 
             return streams[tracker.trackerPosition]
         })
@@ -195,6 +198,24 @@ export class EyeTrackVrController {
             return streams
         } catch {
             return streams
+        }
+    }
+
+    public async getTrackers(): Promise<ITracker[]> {
+        try {
+            const config = await this.getConfig()
+            const trackers = config.trackers.map((tracker) => {
+                return {
+                    trackerPosition: tracker.tracker_position as TRACKER_POSITION,
+                    streamSource: `${this.api.url}/etvr/feed/${tracker.uuid}/camera`,
+                    address: tracker.camera.capture_source,
+                    label: tracker.name,
+                    id: tracker.uuid,
+                }
+            })
+            return trackers
+        } catch {
+            return []
         }
     }
 }

@@ -3,14 +3,14 @@ import { Footer } from '@components/Footer'
 import { SelectNetwork } from '@components/SelectNetwork'
 
 export interface IProps {
-    onClickSkip: () => void
     onSubmit: (ssid: string, password: string, mdns: string) => void
+    onClickSkip: () => void
     ssid: string
     mdns: string
     password: string
 }
 
-export const NetworkManagement: Component<IProps> = (props) => {
+export const ManageNetwork: Component<IProps> = (props) => {
     const [ssid, setSSID] = createSignal('')
     const [password, setPassword] = createSignal('')
     const [mdns, setMdns] = createSignal('')
@@ -56,4 +56,4 @@ export const NetworkManagement: Component<IProps> = (props) => {
     )
 }
 
-export default NetworkManagement
+export default ManageNetwork

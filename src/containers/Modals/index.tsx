@@ -1,10 +1,11 @@
 import { MODAL_TYPE } from '@interfaces/enums'
-import { Match, Show, Switch } from 'solid-js'
-import ApModeContainer from './ApModeModalContainer'
-import BeforeFlashingModal from './BeforeFlashingContainer'
-import BeforeSelectBoardModal from './BeforeSelectBoardContainer'
-import WifiModal from './WifiModalcontainer'
 import { activeModal } from '@store/ui/selectors'
+import { Match, Show, Switch } from 'solid-js'
+import ApMode from './ApMode'
+import BeforeFlashingRoot from './BeforeFlashing'
+import BeforeSelectBoardModal from './BeforeSelectBoard'
+import EstablishConnection from './EstablishConnection'
+import UpdateNetworkRoot from './UpdateNetwork'
 
 export const ModalRoot = () => {
     return (
@@ -12,13 +13,16 @@ export const ModalRoot = () => {
             <div class="absolute top-0 left-0">
                 <Switch>
                     <Match when={activeModal().type === MODAL_TYPE.AP_MODE}>
-                        <ApModeContainer />
+                        <ApMode />
+                    </Match>
+                    <Match when={activeModal().type === MODAL_TYPE.ESTABLISH_CONNECTION}>
+                        <EstablishConnection />
                     </Match>
                     <Match when={activeModal().type === MODAL_TYPE.UPDATE_NETWORK}>
-                        <WifiModal />
+                        <UpdateNetworkRoot />
                     </Match>
                     <Match when={activeModal().type === MODAL_TYPE.BEFORE_FLASHING}>
-                        <BeforeFlashingModal />
+                        <BeforeFlashingRoot />
                     </Match>
                     <Match when={activeModal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}>
                         <BeforeSelectBoardModal />

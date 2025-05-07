@@ -1,6 +1,7 @@
 export * as O from 'fp-ts/Option'
 import type { ENotificationAction } from './enums'
 import type { JSXElement } from 'solid-js'
+import { type ITracker } from './trackers/interfaces'
 
 //********************************* Utility *************************************/
 export type Context = {
@@ -42,4 +43,5 @@ export type PersistentSettings = {
     enableNotifications?: boolean
     globalNotificationsType?: ENotificationAction
     debugMode?: DebugMode
+    trackers?: ITracker[]
 }

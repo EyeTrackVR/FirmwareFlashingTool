@@ -1,5 +1,5 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
-import WifiModal from '@pages/Modals/WifiModal'
+import UpdateNetwork from '@pages/Modals/UpdateNetwork'
 import { useNavigate } from '@solidjs/router'
 import { type Command, espApi } from '@src/Services/esp'
 import { DEFAULT_PORT_NAME } from '@src/static'
@@ -10,7 +10,7 @@ import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo, createSignal } from 'solid-js'
 
-const WifiModalContainer = () => {
+const UpdateNetworkRoot = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
     const { mdns, ssid, password, activePort } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
@@ -50,7 +50,7 @@ const WifiModalContainer = () => {
     }
 
     return (
-        <WifiModal
+        <UpdateNetwork
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
             isSending={isSending()}
@@ -92,4 +92,4 @@ const WifiModalContainer = () => {
     )
 }
 
-export default WifiModalContainer
+export default UpdateNetworkRoot

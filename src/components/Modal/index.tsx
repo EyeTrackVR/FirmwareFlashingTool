@@ -1,7 +1,7 @@
 import Header from '@components/Header'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { type TITLEBAR_ACTION } from '@src/static/types/enums'
-import { Component, createEffect, JSX, ParentComponent } from 'solid-js'
+import { createEffect, ParentComponent } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void

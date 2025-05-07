@@ -1,22 +1,24 @@
-import { lazy } from 'solid-js'
 import type { RouteDefinition } from '@solidjs/router'
+import { lazy } from 'solid-js'
 
 const ConfigureBoardWizard = lazy(() => import('@containers/ConfigureBoardWizard'))
 const BoardImportWizard = lazy(() => import('@containers/BoardImportWizard'))
-const NetworkConfigurator = lazy(() => import('@containers/ManageNetwork'))
+const TrackerDashboard = lazy(() => import('@containers/TrackerDashboard'))
 const AdvancedSettings = lazy(() => import('@containers/AdvancedSettings'))
 const FlashFirmware = lazy(() => import('@containers/FlashFirmware'))
-const Dashboard = lazy(() => import('@containers/Dashboard'))
+const ManageNetwork = lazy(() => import('@containers/ManageNetwork'))
 const page404 = lazy(() => import('@containers/404/[...404]'))
+const Dashboard = lazy(() => import('@containers/Dashboard'))
 const Welcome = lazy(() => import('@containers/Welcome'))
 const Settings = lazy(() => import('@containers/Settings'))
 
 export const routes: RouteDefinition[] = [
     { path: '/configureBoardWizard', component: ConfigureBoardWizard },
     { path: '/boardImportWizard', component: BoardImportWizard },
+    { path: '/trackerDashboard/:id', component: TrackerDashboard },
     { path: '/advancedSettings', component: AdvancedSettings },
     { path: '/flashFirmware', component: FlashFirmware },
-    { path: '/network', component: NetworkConfigurator },
+    { path: '/network', component: ManageNetwork },
     { path: '/dashboard', component: Dashboard },
     { path: '/settings', component: Settings },
     { path: '/', component: Welcome },

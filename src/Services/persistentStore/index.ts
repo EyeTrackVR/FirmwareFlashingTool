@@ -35,6 +35,7 @@ export const usePersistentStore = () => {
         }
 
         await persistentStore.set(key, value)
+        await persistentStore.save()
     }
 
     const reset = async () => {

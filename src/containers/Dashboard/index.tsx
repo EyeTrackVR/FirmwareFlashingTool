@@ -1,12 +1,21 @@
 import Dashboard from '@pages/Dashboard'
 import { useNavigate } from '@solidjs/router'
-import { getBoards } from '@store/boards/selectors'
+import { loadTrackersState } from '@store/trackers/actions'
+import { getTrackers } from '@store/trackers/selectors'
+import { onMount } from 'solid-js'
 const DashboardRoot = () => {
     const navigate = useNavigate()
 
+    onMount(() => {
+        loadTrackersState().catch(() => {})
+    })
+
     return (
         <Dashboard
-            boards={getBoards()}
+            trackers={getTrackers()}
+            onClickTracker={(id) => {
+                navigate(`/TrackerDashboard/${id}`)
+            }}
             onRotateCamera={(value, tracker) => {
                 //
             }}

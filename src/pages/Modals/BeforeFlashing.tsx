@@ -4,7 +4,7 @@ import { Modal } from '@components/Modal'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
-import { beforeFlashingModalID } from '@src/static'
+import { BEFORE_FLASHING_ID } from '@src/static'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -19,13 +19,13 @@ export interface IProps {
     checked: boolean
 }
 
-const BeforeFlashingModal: Component<IProps> = (props) => {
+const BeforeFlashing: Component<IProps> = (props) => {
     return (
         <Modal
             onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
-            id={beforeFlashingModalID}
+            id={BEFORE_FLASHING_ID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>
@@ -72,4 +72,4 @@ const BeforeFlashingModal: Component<IProps> = (props) => {
     )
 }
 
-export default BeforeFlashingModal
+export default BeforeFlashing

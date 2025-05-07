@@ -7,7 +7,7 @@ import { activeModal, serverStatus } from '@store/ui/selectors'
 import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 
-const BeforeSelectBoardContainer = () => {
+const BeforeSelectBoardRoot = () => {
     const { confirmFirmwareSelection } = useAppAPIContext()
     const navigate = useNavigate()
 
@@ -49,4 +49,4 @@ const BeforeSelectBoardContainer = () => {
     )
 }
 
-export default BeforeSelectBoardContainer
+export default BeforeSelectBoardRoot
