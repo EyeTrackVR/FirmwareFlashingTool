@@ -38,7 +38,7 @@ const DashboardRoot = () => {
                 type: ENotificationType.INFO,
             })
         }
-    }, 100)
+    }, 250)
 
     return (
         <Dashboard
