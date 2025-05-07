@@ -11,10 +11,10 @@ const DashboardHeader: Component<IProps> = (props) => {
     return (
         <div class="flex w-full justify-between">
             <div class="gap-12 flex flex-row">
-                <Button label="Recenter" onClick={props.onClickRecenter} />
-                <Button label="Recalibrate" onClick={props.onClickRecalibrate} />
+                <Button disabled label="Recenter" onClick={props.onClickRecenter} />
+                <Button disabled label="Recalibrate" onClick={props.onClickRecalibrate} />
             </div>
-            <Button label="Advanced settings" onClick={props.onClickAdvancedSettings} />
+            <Button disabled label="Advanced settings" onClick={props.onClickAdvancedSettings} />
         </div>
     )
 }
