@@ -1,23 +1,25 @@
 import MinusButton from '@components/Buttons/MinusButton'
 import PlusButton from '@components/Buttons/PlusButton'
+import RangeSlider from '@components/Inputs/RangeSlider'
 import Typography from '@components/Typography'
 import theme from '@src/common/theme'
 import { IoCamera } from 'solid-icons/io'
-import { Component, createEffect, createSignal } from 'solid-js'
-import RangeSlider from '@components/Inputs/RangeSlider'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onChangeRotation: (value: number) => void
+    rotation: number
 }
 
 const CameraRotationPanel: Component<IProps> = (props) => {
-    const [rotation, setRotation] = createSignal(0)
-    const MIN_RANGE = 0
     const MAX_RANGE = 360
+    const MIN_RANGE = 0
 
-    createEffect(() => {
-        props.onChangeRotation(rotation())
-    })
+    const handleRotationChange = (newValue) => {
+        if (newValue !== props.rotation) {
+            props.onChangeRotation(newValue)
+        }
+    }
 
     return (
         <div class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 min-[1001px]:max-w-[600px] w-full">
@@ -42,20 +44,20 @@ const CameraRotationPanel: Component<IProps> = (props) => {
                 <div class="flex flex-row gap-12 items-center justify-center">
                     <MinusButton
                         onClick={() => {
-                            setRotation((prev) => Math.max(MIN_RANGE, prev - 1))
+                            const newValue = Math.max(MIN_RANGE, props.rotation - 1)
+                            handleRotationChange(newValue)
                         }}
                     />
                     <RangeSlider
                         max={MAX_RANGE}
                         min={MIN_RANGE}
-                        value={rotation()}
-                        onChange={(value) => {
-                            setRotation(value)
-                        }}
+                        value={props.rotation}
+                        onChange={handleRotationChange}
                     />
                     <PlusButton
                         onClick={() => {
-                            setRotation((prev) => Math.min(MAX_RANGE, prev + 1))
+                            const newValue = Math.min(MAX_RANGE, props.rotation + 1)
+                            handleRotationChange(newValue)
                         }}
                     />
                 </div>

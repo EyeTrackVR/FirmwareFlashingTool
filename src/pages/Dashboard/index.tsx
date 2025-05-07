@@ -4,15 +4,16 @@ import DashboardHeader from '@components/DashboardHeader'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
-import { Component, createEffect, createMemo } from 'solid-js'
+import { Component, createMemo } from 'solid-js'
 
 export interface IProps {
     onClickTracker: (uuid: string) => void
     onClickAdvancedSettings: () => void
     onClickRecalibrate: () => void
     onClickRecenter: () => void
-    onRotateCamera: (value: number, tracker: TRACKER_POSITION) => void
+    onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
     trackers: Record<TRACKER_POSITION, ITracker>
+    rotation: Record<TRACKER_POSITION, number>
 }
 
 const Dashboard: Component<IProps> = (props) => {
@@ -39,8 +40,13 @@ const Dashboard: Component<IProps> = (props) => {
                             {...leftTracker()}
                         />
                         <CameraRotationPanel
+                            rotation={props.rotation[TRACKER_POSITION.LEFT_EYE]}
                             onChangeRotation={(value) => {
-                                props.onRotateCamera(value, TRACKER_POSITION.LEFT_EYE)
+                                props.onRotateCamera(
+                                    TRACKER_POSITION.LEFT_EYE,
+                                    value,
+                                    leftTracker().id,
+                                )
                             }}
                         />
                     </div>
@@ -53,8 +59,13 @@ const Dashboard: Component<IProps> = (props) => {
                             {...rightTracker()}
                         />
                         <CameraRotationPanel
+                            rotation={props.rotation[TRACKER_POSITION.RIGHT_EYE]}
                             onChangeRotation={(value) => {
-                                props.onRotateCamera(value, TRACKER_POSITION.RIGHT_EYE)
+                                props.onRotateCamera(
+                                    TRACKER_POSITION.RIGHT_EYE,
+                                    value,
+                                    rightTracker().id,
+                                )
                             }}
                         />
                     </div>

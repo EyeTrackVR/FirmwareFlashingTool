@@ -131,6 +131,10 @@ export class EyeTrackVrController {
         return this.trackers[trackerPosition]
     }
 
+    async updateTracker(uuid: string, payload: Partial<IUpdateTracker>) {
+        return this.api.updateTracker(uuid, payload)
+    }
+
     public async updateTrackerCameraConfigurations(data: ITracker[]): Promise<string[]> {
         await this.updateTrackersConfig()
         try {
@@ -201,21 +205,36 @@ export class EyeTrackVrController {
         }
     }
 
-    public async getTrackers(): Promise<ITracker[]> {
+    public async getState(): Promise<{
+        rotation: Record<TRACKER_POSITION, number>
+        trackers: ITracker[]
+    }> {
+        const trackers: ITracker[] = []
+        const rotation = {
+            [TRACKER_POSITION.LEFT_EYE]: 0,
+            [TRACKER_POSITION.RIGHT_EYE]: 0,
+        }
+
         try {
             const config = await this.getConfig()
-            const trackers = config.trackers.map((tracker) => {
-                return {
+
+            config.trackers.forEach((tracker) => {
+                rotation[tracker.tracker_position as TRACKER_POSITION] = tracker.camera.rotation
+                trackers.push({
                     trackerPosition: tracker.tracker_position as TRACKER_POSITION,
                     streamSource: `${this.api.url}/etvr/feed/${tracker.uuid}/camera`,
                     address: tracker.camera.capture_source,
                     label: tracker.name,
                     id: tracker.uuid,
-                }
+                })
             })
-            return trackers
-        } catch {
-            return []
+
+            console.log(trackers, rotation)
+        } catch {}
+
+        return {
+            trackers,
+            rotation,
         }
     }
 }
