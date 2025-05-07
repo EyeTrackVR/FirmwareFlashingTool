@@ -4,16 +4,18 @@ import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface ITrackerState {
-    trackers: ITracker[]
     rotation: Record<TRACKER_POSITION, number>
+    trackers: ITracker[]
+}
+
+export const defaultRotation: Record<TRACKER_POSITION, number> = {
+    [TRACKER_POSITION.RIGHT_EYE]: 0,
+    [TRACKER_POSITION.LEFT_EYE]: 0,
 }
 
 const defaultState: ITrackerState = {
+    rotation: defaultRotation,
     trackers: [],
-    rotation: {
-        [TRACKER_POSITION.RIGHT_EYE]: 0,
-        [TRACKER_POSITION.LEFT_EYE]: 0,
-    },
 }
 
 const [state, setState] = createStore<ITrackerState>(defaultState)

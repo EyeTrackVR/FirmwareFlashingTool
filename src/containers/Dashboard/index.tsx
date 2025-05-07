@@ -4,6 +4,7 @@ import Dashboard from '@pages/Dashboard'
 import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate } from '@solidjs/router'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
+import { usePersistentStore } from '@src/Services/persistentStore'
 import { addNotification } from '@store/notifications/actions'
 import { loadState } from '@store/trackers/actions'
 import { getTrackers, rotation } from '@store/trackers/selectors'
@@ -11,6 +12,7 @@ import { setRotation } from '@store/trackers/trackers'
 import { onMount } from 'solid-js'
 
 const DashboardRoot = () => {
+    const { set } = usePersistentStore()
     const navigate = useNavigate()
 
     onMount(() => {
@@ -19,6 +21,9 @@ const DashboardRoot = () => {
 
     const trigger = debounce(async (tracker: TRACKER_POSITION, value: number, id: string) => {
         setRotation(tracker, value)
+        try {
+            await set('rotation', { rotation: { ...rotation(), [tracker]: value } })
+        } catch {}
         try {
             const controller = getEyeTrackVrController()
             await controller.updateTracker(id, {
