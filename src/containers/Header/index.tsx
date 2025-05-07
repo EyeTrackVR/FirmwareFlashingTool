@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from '@solidjs/router'
 import { stepStatus, usb } from '@src/static'
 import { DIRECTION, ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { addNotification } from '@store/notifications/actions'
 import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 import { getTrackersCount } from '@store/trackers/selectors'
@@ -13,7 +13,6 @@ import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 
 export const HeaderRoot = () => {
-    const { addNotification } = useAppNotificationsContext()
     const { activeBoard } = useAppAPIContext()
 
     const location = useLocation()

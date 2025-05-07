@@ -22,12 +22,6 @@ export interface NotificationAction {
     callbackApp(): void
 }
 
-export interface Notifications {
-    title: string
-    message: string
-    type: ENotificationType
-}
-
 export interface IEndpoint {
     url: string
     type: RESTType
@@ -90,13 +84,6 @@ export interface ModalMenu {
 
 export interface AppStore {
     debugMode: DebugMode
-}
-
-export interface AppStoreNotifications {
-    notifications?: ToasterStore<Notifications>
-    enableNotificationsSounds: boolean
-    enableNotifications: boolean
-    globalNotificationsType: ENotificationAction
 }
 
 export type IActivePort = {

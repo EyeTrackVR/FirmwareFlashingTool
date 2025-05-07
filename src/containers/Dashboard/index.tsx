@@ -4,14 +4,13 @@ import Dashboard from '@pages/Dashboard'
 import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate } from '@solidjs/router'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { addNotification } from '@store/notifications/actions'
 import { loadState } from '@store/trackers/actions'
 import { getTrackers, rotation } from '@store/trackers/selectors'
 import { setRotation } from '@store/trackers/trackers'
 import { onMount } from 'solid-js'
 
 const DashboardRoot = () => {
-    const { addNotification } = useAppNotificationsContext()
     const navigate = useNavigate()
 
     onMount(() => {

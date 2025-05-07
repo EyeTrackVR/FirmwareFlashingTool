@@ -2,7 +2,7 @@ import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enum
 import ApMode from '@pages/Modals/ApMode'
 import { useNavigate } from '@solidjs/router'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { addNotification } from '@store/notifications/actions'
 import { activeModal, serverStatus } from '@store/ui/selectors'
 import { setActiveModal } from '@store/ui/ui'
 import { listen } from '@tauri-apps/api/event'
@@ -11,7 +11,6 @@ import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 
 const ApModeRoot = () => {
-    const { addNotification } = useAppNotificationsContext()
     const { ssid, password, useRequestHook } = useAppAPIContext()
     const [response, setResponse] = createSignal<object>()
     const navigate = useNavigate()

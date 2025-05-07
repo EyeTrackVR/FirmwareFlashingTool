@@ -4,7 +4,7 @@ import { useNavigate } from '@solidjs/router'
 import { type Command, espApi } from '@src/Services/esp'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { addNotification } from '@store/notifications/actions'
 import { activeModal, serverStatus } from '@store/ui/selectors'
 import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
@@ -13,7 +13,6 @@ import { createMemo, createSignal } from 'solid-js'
 const UpdateNetworkRoot = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
     const { mdns, ssid, password, activePort } = useAppAPIContext()
-    const { addNotification } = useAppNotificationsContext()
     const navigate = useNavigate()
 
     const config = createMemo<Command[]>(() => {

@@ -3,7 +3,7 @@ import BeforeFlashing from '@pages/Modals/BeforeFlashing'
 import { useNavigate } from '@solidjs/router'
 import { usb } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { addNotification } from '@store/notifications/actions'
 import { installOpenIris } from '@store/terminal/actions'
 import { isActiveProcess } from '@store/terminal/selectors'
 import {
@@ -18,7 +18,6 @@ import { createMemo } from 'solid-js'
 
 const BeforeFlashingRoot = () => {
     const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
-    const { addNotification } = useAppNotificationsContext()
     const navigate = useNavigate()
 
     const isUSBBoard = createMemo(() => {
