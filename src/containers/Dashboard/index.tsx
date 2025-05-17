@@ -1,24 +1,53 @@
+import { ENotificationType } from '@interfaces/enums'
+import { type TRACKER_POSITION } from '@interfaces/trackers/enums'
 import Dashboard from '@pages/Dashboard'
+import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate } from '@solidjs/router'
-import { loadTrackersState } from '@store/trackers/actions'
-import { getTrackers } from '@store/trackers/selectors'
+import { getEyeTrackVrController } from '@src/Services/etvr/connection'
+import { usePersistentStore } from '@src/Services/persistentStore'
+import { addNotification } from '@store/notifications/actions'
+import { loadState } from '@store/trackers/actions'
+import { getTrackers, rotation } from '@store/trackers/selectors'
+import { setRotation } from '@store/trackers/trackers'
 import { onMount } from 'solid-js'
+
 const DashboardRoot = () => {
+    const { set } = usePersistentStore()
     const navigate = useNavigate()
 
     onMount(() => {
-        loadTrackersState().catch(() => {})
+        loadState().catch(() => {})
     })
+
+    const trigger = debounce(async (tracker: TRACKER_POSITION, value: number, id: string) => {
+        setRotation(tracker, value)
+        try {
+            await set('rotation', { rotation: { ...rotation(), [tracker]: value } })
+        } catch {}
+        try {
+            const controller = getEyeTrackVrController()
+            await controller.updateTracker(id, {
+                camera: {
+                    rotation: value,
+                },
+            })
+        } catch {
+            addNotification({
+                title: 'Failed to rotate camera',
+                message: 'Failed to rotate camera',
+                type: ENotificationType.INFO,
+            })
+        }
+    }, 250)
 
     return (
         <Dashboard
+            rotation={rotation()}
             trackers={getTrackers()}
             onClickTracker={(id) => {
                 navigate(`/TrackerDashboard/${id}`)
             }}
-            onRotateCamera={(value, tracker) => {
-                //
-            }}
+            onRotateCamera={trigger}
             onClickAdvancedSettings={() => {
                 navigate('/advancedSettings')
             }}

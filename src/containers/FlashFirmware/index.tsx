@@ -6,7 +6,7 @@ import { espApi, UsbSerialPortInfo } from '@src/Services/esp'
 import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
+import { addNotification } from '@store/notifications/actions'
 import { getFirmwareLogs, installOpenIris, openDocs } from '@store/terminal/actions'
 import {
     detailedLogs,
@@ -36,7 +36,6 @@ export const ManageFlashFirmware = () => {
         ports,
         setPorts,
     } = useAppAPIContext()
-    const { addNotification } = useAppNotificationsContext()
     const navigate = useNavigate()
 
     onMount(() => {

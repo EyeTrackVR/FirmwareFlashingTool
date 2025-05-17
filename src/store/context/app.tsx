@@ -1,11 +1,10 @@
-import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
-import { attachConsole } from 'tauri-plugin-log-api'
-import { AppAPIProvider } from './api'
-import { AppNotificationProvider } from './notifications'
 import type { AppStore } from '@src/static/types/interfaces'
 import type { Context, DebugMode } from '@static/types'
 import type { UnlistenFn } from '@tauri-apps/api/event'
+import { Accessor, createContext, createMemo, useContext, type Component } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
+import { attachConsole } from 'tauri-plugin-log-api'
+import { AppAPIProvider } from './api'
 
 interface AppContext {
     getDetachConsole: Accessor<Promise<UnlistenFn>>
@@ -44,9 +43,7 @@ export const AppProvider: Component<Context> = (props) => {
                 getDebugMode,
                 setDebugMode,
             }}>
-            <AppNotificationProvider>
-                <AppAPIProvider>{props.children}</AppAPIProvider>
-            </AppNotificationProvider>
+            <AppAPIProvider>{props.children}</AppAPIProvider>
         </AppContext.Provider>
     )
 }

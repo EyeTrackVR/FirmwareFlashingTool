@@ -1,11 +1,12 @@
 import Sidebar from '@components/Sidebar'
 import { HeaderRoot } from '@containers/Header'
 import { Router, useNavigate } from '@solidjs/router'
-import { useAppAPIContext } from '@store/context/api'
-import { setTrackers } from '@store/trackers/trackers'
-import { createEffect, lazy, onMount, Show, type Component } from 'solid-js'
-import { routes } from '.'
 import { usePersistentStore } from '@src/Services/persistentStore'
+import { useAppAPIContext } from '@store/context/api'
+import { defaultRotation, setLoadRotation, setTrackers } from '@store/trackers/trackers'
+import { createEffect, lazy, onMount, Show, type Component } from 'solid-js'
+import { routes } from './index'
+
 const Modals = lazy(() => import('@containers/Modals'))
 
 const AppRoutes: Component = () => {
@@ -29,6 +30,9 @@ const AppRoutes: Component = () => {
                                 navigate('/dashboard')
                             }
                         }
+                    })
+                    get('rotation').then((data) => {
+                        setLoadRotation(data?.rotation ?? defaultRotation)
                     })
                 })
 

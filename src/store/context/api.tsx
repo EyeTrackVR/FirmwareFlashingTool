@@ -7,7 +7,6 @@ import { createContext, useContext, createMemo, type Component, Accessor } from 
 import { createStore, produce } from 'solid-js/store'
 import { debug, error, warn, trace } from 'tauri-plugin-log-api'
 import { download, upload } from 'tauri-plugin-upload-api'
-import { useAppNotificationsContext } from './notifications'
 import type { Context } from '@static/types'
 import {
     ENotificationType,
@@ -29,6 +28,7 @@ import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
 import { formatDeviceName } from '@src/utils'
+import { addNotification } from '@store/notifications/actions'
 
 interface AppAPIContext {
     //********************************* gh rest *************************************/
@@ -76,8 +76,6 @@ interface AppAPIContext {
 
 const AppAPIContext = createContext<AppAPIContext>()
 export const AppAPIProvider: Component<Context> = (props) => {
-    const { addNotification } = useAppNotificationsContext()
-
     // TODO: Use backend api schema to generate endpoints map and use that instead of hardcoding the endpoints
     const endpointsMap: Map<string, IEndpoint> = new Map<string, IEndpoint>([
         //* ESP Specific Endpoints */
