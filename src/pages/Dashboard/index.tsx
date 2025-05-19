@@ -21,7 +21,7 @@ const Dashboard: Component<IProps> = (props) => {
     const rightTracker = createMemo(() => props.trackers[TRACKER_POSITION.RIGHT_EYE])
 
     return (
-        <div class="flex flex-col h-full w-full pt-8 pb-12 gap-12 ">
+        <div class="flex flex-col h-full w-full pt-8 pb-12 gap-12">
             <div class="pr-24">
                 <DashboardHeader
                     onClickAdvancedSettings={props.onClickAdvancedSettings}
@@ -30,7 +30,7 @@ const Dashboard: Component<IProps> = (props) => {
                 />
             </div>
             <div class="flex-1 w-full flex flex-col items-center overflow-y-auto scrollbar pr-24">
-                <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col w-full max-w-[1800px] ">
+                <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col w-full max-w-[1800px]">
                     <div class="flex flex-col gap-12">
                         <CameraPanel
                             cameraStatus={CONNECTION_STATUS.INACTIVE}

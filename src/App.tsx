@@ -3,6 +3,8 @@ import { lazy, onCleanup, onMount, Suspense } from 'solid-js'
 import { useAppContextMain } from './store/context/main'
 import { getEyeTrackVrController } from './Services/etvr/connection'
 import { setServerStatus } from '@store/ui/ui'
+import { addNotification } from '@store/notifications/actions'
+import { ENotificationType } from '@interfaces/enums'
 
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
@@ -21,7 +23,11 @@ const App = () => {
 
     onMount(() => {
         monitorServerStatus().catch(() => {
-            // TODO: add notification
+            addNotification({
+                title: 'Failed to monitor server status',
+                message: 'Failed to monitor server status',
+                type: ENotificationType.INFO,
+            })
         })
         handleAppBoot()
     })

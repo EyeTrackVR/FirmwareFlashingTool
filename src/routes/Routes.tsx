@@ -4,7 +4,7 @@ import { Router, useNavigate } from '@solidjs/router'
 import { usePersistentStore } from '@src/Services/persistentStore'
 import { useAppAPIContext } from '@store/context/api'
 import { defaultRotation, setLoadRotation, setTrackers } from '@store/trackers/trackers'
-import { createEffect, lazy, onMount, Show, type Component } from 'solid-js'
+import { createEffect, createMemo, lazy, onMount, Show, type Component } from 'solid-js'
 import { routes } from './index'
 
 const Modals = lazy(() => import('@containers/Modals'))
@@ -36,17 +36,29 @@ const AppRoutes: Component = () => {
                     })
                 })
 
+                const path = createMemo(() => {
+                    const pathName = `/${data.location.pathname.split('/').filter((el) => !!el)[0]}`
+                    if (pathName === '/TrackerDashboard') {
+                        return '/dashboard'
+                    }
+
+                    return pathName
+                })
+
                 return (
                     <div class="flex flex-col h-full">
                         <HeaderRoot />
                         <Modals />
                         <div class="flex h-full flex-row overflow-hidden">
                             <Show
-                                when={['/dashboard', '/settings', '/advancedSettings'].includes(
-                                    data.location.pathname,
-                                )}>
+                                when={[
+                                    '/dashboard',
+                                    '/settings',
+                                    '/advancedSettings',
+                                    '/TrackerDashboard',
+                                ].includes(path())}>
                                 <Sidebar
-                                    navigation={data.location.pathname}
+                                    navigation={path()}
                                     onClick={(route) => {
                                         navigate(route)
                                     }}
