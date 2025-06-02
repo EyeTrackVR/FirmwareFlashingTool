@@ -1,10 +1,10 @@
-import { AppProvider } from '@store/context/app'
 import { lazy, onCleanup, onMount, Suspense } from 'solid-js'
 import { useAppContextMain } from './store/context/main'
 import { getEyeTrackVrController } from './Services/etvr/connection'
 import { setServerStatus } from '@store/ui/ui'
 import { addNotification } from '@store/notifications/actions'
 import { ENotificationType } from '@interfaces/enums'
+import { AppAPIProvider } from '@store/context/api'
 
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
@@ -34,10 +34,10 @@ const App = () => {
 
     return (
         <Suspense>
-            <AppProvider>
+            <AppAPIProvider>
                 <AppRoutes />
                 <ToastNotificationWindow />
-            </AppProvider>
+            </AppAPIProvider>
         </Suspense>
     )
 }

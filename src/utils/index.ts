@@ -1,4 +1,4 @@
-import { defaultMdnsLength, mdnsLength } from '@src/static'
+import { defaultMdnsLength, MDNS_LENGTH } from '@src/static'
 import { IP_ADDRESS_REGEX, UVC_REGEX } from '@src/static/regex'
 
 export const CapitalizeFirstLetter = (letter: string) => {
@@ -19,8 +19,8 @@ export const isEmpty = <T>(obj: object | Array<T>) => {
 
 export const shortMdnsAddress = (text: string) => {
     if (text.length < defaultMdnsLength) return text
-    const firstHalf = text.slice(0, mdnsLength)
-    const secondHalf = text.slice(text.length - mdnsLength, text.length)
+    const firstHalf = text.slice(0, MDNS_LENGTH)
+    const secondHalf = text.slice(text.length - MDNS_LENGTH, text.length)
     return `${firstHalf}...${secondHalf}`
 }
 

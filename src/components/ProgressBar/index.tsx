@@ -1,5 +1,5 @@
 import Typography from '@components/Typography'
-import { radius } from '@src/static'
+import { RADIUS } from '@src/static'
 import { Component } from 'solid-js'
 import './styles.css'
 
@@ -18,7 +18,7 @@ export const ProgressBar: Component<IProps> = (props) => {
             </div>
             <svg id="svg" width="60" height="60" version="1.1">
                 <circle
-                    r={radius}
+                    r={RADIUS}
                     cx="30"
                     cy="30"
                     fill="transparent"
@@ -29,7 +29,7 @@ export const ProgressBar: Component<IProps> = (props) => {
                 <circle
                     stroke-width="4"
                     id="bar"
-                    r={radius}
+                    r={RADIUS}
                     cx="30"
                     cy="30"
                     fill="transparent"

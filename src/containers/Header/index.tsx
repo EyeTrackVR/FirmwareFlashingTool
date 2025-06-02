@@ -1,7 +1,8 @@
 import Header from '@components/Header'
 import { useLocation, useNavigate } from '@solidjs/router'
-import { stepStatus, usb } from '@src/static'
+import { USB } from '@src/static'
 import { DIRECTION, ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
+import { stepStatus } from '@src/static/ui'
 import { useAppAPIContext } from '@store/context/api'
 import { addNotification } from '@store/notifications/actions'
 import { isActiveProcess } from '@store/terminal/selectors'
@@ -19,7 +20,7 @@ export const HeaderRoot = () => {
     const navigate = useNavigate()
 
     const isUSBBoardActive = createMemo(() => {
-        return activeBoard().includes(usb) ? 1 : 0
+        return activeBoard().includes(USB) ? 1 : 0
     })
 
     const shouldHideStepIndicator = createMemo(() => {

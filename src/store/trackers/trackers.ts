@@ -1,11 +1,15 @@
+import { STREAM_TOGGLE_FLIP } from '@interfaces/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
+import { ALGORITHMS } from '@src/static'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface ITrackerState {
     rotation: Record<TRACKER_POSITION, number>
     trackers: ITracker[]
+    algorithmOrder: Record<TRACKER_POSITION, string[]>
+    flipAxis: Record<STREAM_TOGGLE_FLIP, boolean>
 }
 
 export const defaultRotation: Record<TRACKER_POSITION, number> = {
@@ -13,8 +17,20 @@ export const defaultRotation: Record<TRACKER_POSITION, number> = {
     [TRACKER_POSITION.LEFT_EYE]: 0,
 }
 
+export const defaultAlgorithmOrder: Record<TRACKER_POSITION, string[]> = {
+    [TRACKER_POSITION.LEFT_EYE]: ALGORITHMS,
+    [TRACKER_POSITION.RIGHT_EYE]: ALGORITHMS,
+}
+
+export const defaultFlipAxis = {
+    [STREAM_TOGGLE_FLIP.FLIP_X_AXIS]: false,
+    [STREAM_TOGGLE_FLIP.FLIP_Y_AXIS]: false,
+}
+
 const defaultState: ITrackerState = {
+    algorithmOrder: defaultAlgorithmOrder,
     rotation: defaultRotation,
+    flipAxis: defaultFlipAxis,
     trackers: [],
 }
 
@@ -36,10 +52,26 @@ export const setLoadRotation = (rotation: Record<TRACKER_POSITION, number>) => {
     )
 }
 
+export const setAlgorithmOrder = (order: Record<TRACKER_POSITION, string[]>) => {
+    setState(
+        produce((s) => {
+            s.algorithmOrder = order
+        }),
+    )
+}
+
 export const setRotation = (tracker: TRACKER_POSITION, value: number) => {
     setState(
         produce((s) => {
             s.rotation[tracker] = value
+        }),
+    )
+}
+
+export const setFlipToggle = (action: STREAM_TOGGLE_FLIP) => {
+    setState(
+        produce((s) => {
+            s.flipAxis[action] = !s.flipAxis[action]
         }),
     )
 }

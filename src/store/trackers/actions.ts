@@ -25,3 +25,10 @@ export const loadState = async () => {
     setTrackers(state.trackers)
     setLoadRotation(state.rotation)
 }
+
+export const updateState = async () => {
+    const controller = new EyeTrackVrController()
+    const state = await controller.getState()
+    setTrackers(state.trackers)
+    setLoadRotation(state.rotation)
+}
