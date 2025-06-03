@@ -1,4 +1,5 @@
 import { ToggleButton } from '@components/Buttons/ToggleButton'
+import Camera from '@components/Camera/Camera'
 import CameraPanel from '@components/Camera/CameraPanel'
 import CameraRotationPanel from '@components/Camera/CameraRotationPanel'
 import DashboardHeader from '@components/DashboardHeader'
@@ -9,8 +10,9 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
 import theme from '@src/common/theme'
+import { Canvas, DEFAULT_CANVAS_BOX_POSITION, IBoxPosition } from '@src/Services/canvas'
 import { VsSettings } from 'solid-icons/vs'
-import { Component, createMemo } from 'solid-js'
+import { Component, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 
 export interface IProps {
     onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
@@ -28,6 +30,29 @@ export interface IProps {
 const StreamSettings: Component<IProps> = (props) => {
     const leftTracker = createMemo(() => props.trackers[TRACKER_POSITION.LEFT_EYE])
     const rightTracker = createMemo(() => props.trackers[TRACKER_POSITION.RIGHT_EYE])
+    let leftCanvas: HTMLCanvasElement | undefined
+    let rightCanvas: HTMLCanvasElement | undefined
+
+    const [leftCanvasSize, setLeftCanvasSize] = createSignal<IBoxPosition>(
+        DEFAULT_CANVAS_BOX_POSITION,
+    )
+    const [rightCanvasSize, setRightCanvasSize] = createSignal<IBoxPosition>(
+        DEFAULT_CANVAS_BOX_POSITION,
+    )
+
+    onMount(() => {
+        if (!leftCanvas) return
+        const canvasLeft = new Canvas()
+        canvasLeft.setCanvas(leftCanvas).onMouseUpComplete(setLeftCanvasSize)
+        onCleanup(() => canvasLeft.destroy())
+    })
+
+    onMount(() => {
+        if (!rightCanvas) return
+        const canvasRight = new Canvas()
+        canvasRight.setCanvas(rightCanvas).onMouseUpComplete(setRightCanvasSize)
+        onCleanup(() => canvasRight.destroy())
+    })
 
     return (
         <div class="flex flex-col h-full w-full pt-8 pb-12 gap-12">
@@ -45,8 +70,17 @@ const StreamSettings: Component<IProps> = (props) => {
                         <div class="flex flex-col gap-12">
                             <CameraPanel
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
-                                {...leftTracker()}
-                            />
+                                {...leftTracker()}>
+                                <div class="relative w-[480px] h-[480px]">
+                                    <Camera streamSource={leftTracker().streamSource} />
+                                    <canvas
+                                        class="absolute rounded-12 top-0"
+                                        ref={leftCanvas}
+                                        width={480}
+                                        height={480}
+                                    />
+                                </div>
+                            </CameraPanel>
                             <CameraRotationPanel
                                 rotation={props.rotation[TRACKER_POSITION.LEFT_EYE]}
                                 onChangeRotation={(value) => {
@@ -61,8 +95,17 @@ const StreamSettings: Component<IProps> = (props) => {
                         <div class="flex flex-col gap-12">
                             <CameraPanel
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
-                                {...rightTracker()}
-                            />
+                                {...rightTracker()}>
+                                <div class="w-[480px] h-[480px]">
+                                    <Camera streamSource={rightTracker().streamSource} />
+                                    <canvas
+                                        class="absolute top-0 rounded-12"
+                                        ref={rightCanvas}
+                                        width={480}
+                                        height={480}
+                                    />
+                                </div>
+                            </CameraPanel>
                             <CameraRotationPanel
                                 rotation={props.rotation[TRACKER_POSITION.RIGHT_EYE]}
                                 onChangeRotation={(value) => {

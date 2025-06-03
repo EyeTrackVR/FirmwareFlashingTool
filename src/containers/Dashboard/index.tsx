@@ -1,4 +1,4 @@
-import { ENotificationType, STREAM_TOGGLE_FLIP } from '@interfaces/enums'
+import { ENotificationType } from '@interfaces/enums'
 import { type TRACKER_POSITION } from '@interfaces/trackers/enums'
 import Dashboard from '@pages/Dashboard'
 import StreamSettings from '@pages/StreamSettings'

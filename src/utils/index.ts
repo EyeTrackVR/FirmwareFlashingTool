@@ -1,3 +1,4 @@
+import { CHANNEL_TYPE } from '@interfaces/enums'
 import { defaultMdnsLength, MDNS_LENGTH } from '@src/static'
 import { IP_ADDRESS_REGEX, UVC_REGEX } from '@src/static/regex'
 
@@ -121,4 +122,8 @@ export const validateAddress = (connectionString): boolean => {
     }
 
     return IP_ADDRESS_REGEX.test(connectionString)
+}
+
+export const isValidChannel = (value: string): value is CHANNEL_TYPE => {
+    return Object.values(CHANNEL_TYPE).includes(value as CHANNEL_TYPE)
 }
