@@ -8,8 +8,8 @@ import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { usePersistentStore } from '@src/Services/persistentStore'
 import { addNotification } from '@store/notifications/actions'
 import { loadState } from '@store/trackers/actions'
-import { flipAxis, getTrackers, rotation } from '@store/trackers/selectors'
-import { setFlipToggle, setRotation } from '@store/trackers/trackers'
+import { canvasBoxPositions, flipAxis, getTrackers, rotation } from '@store/trackers/selectors'
+import { setCanvasBoxPositions, setFlipToggle, setRotation } from '@store/trackers/trackers'
 import { createSignal, Match, onMount, Switch } from 'solid-js'
 
 const DashboardRoot = () => {
@@ -67,6 +67,8 @@ const DashboardRoot = () => {
             </Match>
             <Match when={isStreamSettingsActive()}>
                 <StreamSettings
+                    setCanvasBoxPositions={setCanvasBoxPositions}
+                    canvasBoxPositions={canvasBoxPositions()}
                     flipAxis={flipAxis()}
                     trackers={getTrackers()}
                     onRotateCamera={trigger}

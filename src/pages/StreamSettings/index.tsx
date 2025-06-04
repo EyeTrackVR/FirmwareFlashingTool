@@ -10,9 +10,9 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
 import theme from '@src/common/theme'
-import { Canvas, DEFAULT_CANVAS_BOX_POSITION, IBoxPosition } from '@src/Services/canvas'
+import { Canvas, IBoxPosition } from '@src/Services/canvas'
 import { VsSettings } from 'solid-icons/vs'
-import { Component, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import { Component, createMemo, onCleanup, onMount } from 'solid-js'
 
 export interface IProps {
     onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
@@ -21,9 +21,11 @@ export interface IProps {
     onClickStreamSettings: () => void
     onClickRecalibrate: () => void
     onClickRecenter: () => void
+    setCanvasBoxPositions: (boxPosition: IBoxPosition, tracker: TRACKER_POSITION) => void
     flipAxis: Record<STREAM_TOGGLE_FLIP, boolean>
     trackers: Record<TRACKER_POSITION, ITracker>
     rotation: Record<TRACKER_POSITION, number>
+    canvasBoxPositions: Record<TRACKER_POSITION, IBoxPosition>
     isStreamSettingsActive: boolean
 }
 
@@ -33,24 +35,24 @@ const StreamSettings: Component<IProps> = (props) => {
     let leftCanvas: HTMLCanvasElement | undefined
     let rightCanvas: HTMLCanvasElement | undefined
 
-    const [leftCanvasSize, setLeftCanvasSize] = createSignal<IBoxPosition>(
-        DEFAULT_CANVAS_BOX_POSITION,
-    )
-    const [rightCanvasSize, setRightCanvasSize] = createSignal<IBoxPosition>(
-        DEFAULT_CANVAS_BOX_POSITION,
-    )
-
     onMount(() => {
         if (!leftCanvas) return
+        console.log(props.canvasBoxPositions)
         const canvasLeft = new Canvas()
-        canvasLeft.setCanvas(leftCanvas).onMouseUpComplete(setLeftCanvasSize)
+        canvasLeft.setCanvas(leftCanvas).onMouseUpComplete((el) => {
+            props.setCanvasBoxPositions(el, TRACKER_POSITION.LEFT_EYE)
+        })
+        canvasLeft.setCanvasBoxPosition(props.canvasBoxPositions[TRACKER_POSITION.LEFT_EYE])
         onCleanup(() => canvasLeft.destroy())
     })
 
     onMount(() => {
         if (!rightCanvas) return
         const canvasRight = new Canvas()
-        canvasRight.setCanvas(rightCanvas).onMouseUpComplete(setRightCanvasSize)
+        canvasRight
+            .setCanvas(rightCanvas)
+            .onMouseUpComplete((el) => props.setCanvasBoxPositions(el, TRACKER_POSITION.RIGHT_EYE))
+        canvasRight.setCanvasBoxPosition(props.canvasBoxPositions[TRACKER_POSITION.RIGHT_EYE])
         onCleanup(() => canvasRight.destroy())
     })
 
@@ -66,9 +68,10 @@ const StreamSettings: Component<IProps> = (props) => {
             </div>
             <div class="flex-1 w-full flex flex-col items-center overflow-y-auto scrollbar pr-24">
                 <div class="flex flex-col max-w-[1800px] gap-12 w-full">
-                    <div class="flex flex-row gap-12 justify-center max-[1000px]:flex-col w-full">
-                        <div class="flex flex-col gap-12">
+                    <div class="flex flex-row gap-12 justify-center max-[1230px]:flex-col w-full">
+                        <div class="flex flex-col gap-12 min-[1231px]:max-w-[600px] w-full  ">
                             <CameraPanel
+                                styles="w-full!"
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...leftTracker()}>
                                 <div class="relative w-[480px] h-[480px]">
@@ -92,7 +95,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 }}
                             />
                         </div>
-                        <div class="flex flex-col gap-12">
+                        <div class="flex flex-col gap-12 min-[1231px]:max-w-[600px] w-full">
                             <CameraPanel
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...rightTracker()}>

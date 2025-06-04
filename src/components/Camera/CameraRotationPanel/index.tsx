@@ -22,7 +22,7 @@ const CameraRotationPanel: Component<IProps> = (props) => {
     }
 
     return (
-        <div class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 min-[1001px]:max-w-[600px] w-full">
+        <div class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 w-full">
             <div class="flex gap-12 items-center">
                 <div class="bg-purple-300 rounded-md flex p-6 rounded-6">
                     <IoCamera size={24} color={theme.colors.white[100]} />

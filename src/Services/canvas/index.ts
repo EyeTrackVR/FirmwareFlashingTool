@@ -16,6 +16,39 @@ export class Canvas {
 
     private onMouseUpCallback?: (boxPosition: IBoxPosition) => void
 
+    setCanvasBoxPosition(boxPosition: IBoxPosition) {
+        this.canvasBoxPosition = boxPosition
+
+        if (!this.context || !this.canvas) return
+
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
+        this.drawBox(boxPosition)
+    }
+
+    private drawBox(boxPosition: IBoxPosition) {
+        if (!this.context) return
+
+        const { x, y, width, height } = boxPosition
+
+        this.context.shadowBlur = 2
+        this.context.lineJoin = 'round'
+        this.context.lineWidth = 2
+        this.context.strokeStyle = '#9092FF'
+
+        this.context.strokeRect(x, y, width, height)
+
+        this.context.beginPath()
+        this.context.arc(x, y, 5, 0, 2 * Math.PI)
+        this.context.fillStyle = '#9092FF'
+        this.context.fill()
+
+        this.context.beginPath()
+        this.context.arc(x + width, y + height, 5, 0, 2 * Math.PI)
+        this.context.fillStyle = '#9092FF'
+        this.context.fill()
+    }
+
     constructor() {
         this.onMouseUp = this.onMouseUp.bind(this)
         this.onMouseDown = this.onMouseDown.bind(this)
@@ -54,14 +87,15 @@ export class Canvas {
         if (target.nodeName !== 'CANVAS' || !this.context || !this.canvas) return
         this.isMouseDown = false
         const { x, y } = this.getMousePosition(this.canvas, e)
+        const width = x - this.mousePosition.x
+        const height = y - this.mousePosition.y
+
+        if (Math.abs(width) === 0 || Math.abs(height) === 0) return
 
         this.context.beginPath()
         this.context.arc(x, y, 5, 0, 2 * Math.PI)
         this.context.fillStyle = '#9092FF'
         this.context.fill()
-
-        const width = x - this.mousePosition.x
-        const height = y - this.mousePosition.y
 
         this.canvasBoxPosition = { x: this.mousePosition.x, y: this.mousePosition.y, width, height }
 
@@ -93,22 +127,8 @@ export class Canvas {
 
         if (height === 0) return
 
-        //* clear canvas
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-
-        this.context.shadowBlur = 2
-        this.context.lineJoin = 'round'
-        this.context.lineWidth = 2
-        this.context.strokeStyle = '#9092FF'
-
-        //* draw the rectangle
-        this.context.strokeRect(this.mousePosition.x, this.mousePosition.y, width, height)
-
-        //* draw blue circle at mouse position
-        this.context.beginPath()
-        this.context.arc(this.mousePosition.x, this.mousePosition.y, 5, 0, 2 * Math.PI)
-        this.context.fillStyle = '#9092FF'
-        this.context.fill()
+        this.drawBox({ x: this.mousePosition.x, y: this.mousePosition.y, width, height })
     }
 
     destroy() {
