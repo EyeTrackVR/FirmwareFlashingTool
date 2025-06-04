@@ -14,6 +14,7 @@ import CheckCameraCalibration from './CheckCameraCalibration'
 import CheckServerStatus from './CheckServerStatus'
 import { trackerSchema } from './schema'
 import { ITracker } from '@interfaces/trackers/interfaces'
+import { ALGORITHMS } from '@src/static'
 
 export enum SETUP_TRACKER {
     SETUP_LEFT_TRACKER = 'SETUP_LEFT_TRACKER',
@@ -229,6 +230,8 @@ const BoardImportWizard: Component<IProps> = (props) => {
             const trackerConfig: ITracker = {
                 label: formHandler.getFieldValue('label'),
                 address: formHandler.getFieldValue('address'),
+                algorithmOrder: ALGORITHMS,
+                enabled: true,
                 trackerPosition: tracker,
                 streamSource: '',
                 id: uuidV6(),
