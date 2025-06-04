@@ -13,7 +13,7 @@ import { setCanvasBoxPositions, setFlipToggle, setRotation } from '@store/tracke
 import { createSignal, Match, onMount, Switch } from 'solid-js'
 
 const DashboardRoot = () => {
-    const [isStreamSettingsActive, setIsStreamSettingsActive] = createSignal(true)
+    const [isStreamSettingsActive, setIsStreamSettingsActive] = createSignal(false)
 
     const { set } = usePersistentStore()
     const navigate = useNavigate()
