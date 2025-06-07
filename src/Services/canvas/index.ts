@@ -71,10 +71,12 @@ export class Canvas {
         return this
     }
 
-    getMousePosition(canvas: HTMLCanvasElement, evt: MouseEvent) {
-        const rect = canvas.getBoundingClientRect()
-        const scaleX = canvas.width / rect.width
-        const scaleY = canvas.height / rect.height
+    getMousePosition(evt: MouseEvent) {
+        if (!this.canvas) return { x: 0, y: 0 }
+
+        const rect = this.canvas.getBoundingClientRect()
+        const scaleX = this.canvas.width / rect.width
+        const scaleY = this.canvas.height / rect.height
 
         return {
             x: (evt.clientX - rect.left) * scaleX,
@@ -86,7 +88,7 @@ export class Canvas {
         const target = e.target as HTMLInputElement
         if (target.nodeName !== 'CANVAS' || !this.context || !this.canvas) return
         this.isMouseDown = false
-        const { x, y } = this.getMousePosition(this.canvas, e)
+        const { x, y } = this.getMousePosition(e)
         const width = x - this.mousePosition.x
         const height = y - this.mousePosition.y
 
@@ -109,7 +111,7 @@ export class Canvas {
         if (target.nodeName !== 'CANVAS' || !this.canvas) return
 
         this.isMouseDown = true
-        this.mousePosition = this.getMousePosition(this.canvas, e)
+        this.mousePosition = this.getMousePosition(e)
     }
 
     onMouseMove(e: MouseEvent) {
@@ -120,7 +122,7 @@ export class Canvas {
 
         if (!this.isMouseDown) return
 
-        const { x, y } = this.getMousePosition(this.canvas, e)
+        const { x, y } = this.getMousePosition(e)
 
         const width = x - this.mousePosition.x
         const height = y - this.mousePosition.y

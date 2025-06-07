@@ -37,7 +37,6 @@ const StreamSettings: Component<IProps> = (props) => {
 
     onMount(() => {
         if (!leftCanvas) return
-        console.log(props.canvasBoxPositions)
         const canvasLeft = new Canvas()
         canvasLeft.setCanvas(leftCanvas).onMouseUpComplete((el) => {
             props.setCanvasBoxPositions(el, TRACKER_POSITION.LEFT_EYE)
