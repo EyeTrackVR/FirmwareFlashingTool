@@ -4,6 +4,7 @@ import { Component, Show } from 'solid-js'
 export interface IProps {
     type?: 'submit' | 'reset' | 'button' | undefined
     isLoadingPrimaryButton?: boolean
+    isDangerous?: boolean
     disabled?: boolean
     size?: string
     isActive?: boolean
@@ -24,6 +25,8 @@ export const Button: Component<IProps> = (props) => {
                     props.isLoadingPrimaryButton,
                 'bg-purple-200 hover:bg-purple-100 border-black-800 focus-visible:border-white-100':
                     !props.isLoadingPrimaryButton && props.isActive,
+                'bg-red-100 hover:bg-red-300 hover:border-red-300 border-red-100 focus-visible:border-purple-200':
+                    props.isDangerous,
                 'bg-black-800 hover:bg-grey-200 border-black-800 focus-visible:border-purple-200':
                     !props.isLoadingPrimaryButton && !props.isActive,
                 'bg-transparentPurple-100 hover:bg-transparentPurple-200 border-black-800 focus-visible:border-purple-200':

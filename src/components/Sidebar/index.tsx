@@ -41,7 +41,7 @@ const Sidebar: Component<IProps> = (props) => {
                 </For>
             </div>
             <NavItem
-                route="/settings"
+                route="/generalSettings"
                 currentRoute={props.navigation}
                 icon={IoSettingsSharp}
                 label="Settings"

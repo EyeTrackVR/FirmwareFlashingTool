@@ -6,6 +6,7 @@ import { useAppAPIContext } from '@store/context/api'
 import { defaultRotation, setLoadRotation, setTrackers } from '@store/trackers/trackers'
 import { createEffect, createMemo, lazy, onMount, Show, type Component } from 'solid-js'
 import { routes } from './index'
+import SettingsSidebar from '@components/Settings/SettingsSidebar'
 
 const Modals = lazy(() => import('@containers/Modals'))
 
@@ -52,15 +53,29 @@ const AppRoutes: Component = () => {
                         <div class="flex h-full flex-row overflow-hidden">
                             <Show
                                 when={[
-                                    '/dashboard',
-                                    '/settings',
                                     '/advancedSettings',
                                     '/TrackerDashboard',
+                                    '/dashboard',
                                 ].includes(path())}>
                                 <Sidebar
                                     navigation={path()}
                                     onClick={(route) => {
                                         navigate(route)
+                                    }}
+                                />
+                            </Show>
+                            <Show
+                                when={[
+                                    '/algorithmTrackingSettings',
+                                    '/algorithmOrderSettings',
+                                    '/generalSettings',
+                                    '/vrcftSettings',
+                                    '/oscSettings',
+                                ].includes(path())}>
+                                <SettingsSidebar
+                                    navigation={path()}
+                                    onClick={(path) => {
+                                        navigate(path)
                                     }}
                                 />
                             </Show>
