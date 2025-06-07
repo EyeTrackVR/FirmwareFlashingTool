@@ -46,4 +46,5 @@ export type PersistentSettings = {
     debugMode?: DebugMode
     trackers?: ITracker[]
     rotation?: Record<TRACKER_POSITION, number>
+    algorithmOrder?: Record<TRACKER_POSITION, string[]>
 }

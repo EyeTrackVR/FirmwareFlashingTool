@@ -42,7 +42,7 @@ const Camera: Component<IProps> = (props) => {
     })
 
     return (
-        <div class="relative w-[240px] h-[240px] bg-gray-100">
+        <div class="w-full h-full bg-gray-100">
             <Show when={loading()}>
                 <div class="absolute inset-0 flex items-center justify-center">
                     <span class="loading loading-ring w-[64px] h-[64px] bg-white-100" />

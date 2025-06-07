@@ -1,7 +1,7 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import BeforeFlashing from '@pages/Modals/BeforeFlashing'
 import { useNavigate } from '@solidjs/router'
-import { usb } from '@src/static'
+import { USB } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { addNotification } from '@store/notifications/actions'
 import { installOpenIris } from '@store/terminal/actions'
@@ -21,7 +21,7 @@ const BeforeFlashingRoot = () => {
     const navigate = useNavigate()
 
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB)
     })
 
     const activePortName = createMemo(() => {

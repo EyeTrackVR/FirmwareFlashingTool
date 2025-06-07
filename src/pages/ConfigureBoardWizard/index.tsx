@@ -9,7 +9,6 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 export interface IProps {
     onClickSetChannelMode: (data: string) => void
     onClickHeader: (action: TITLEBAR_ACTION) => void
-    setDebugMode: (debugMode: string) => void
     onClickOpenModal: (id: string) => void
     onSubmit: (board: string) => void
     onClickConfirm: () => void
@@ -19,10 +18,8 @@ export interface IProps {
     channelOptions: IDropdownList[]
     serverStatus: CONNECTION_STATUS
     firmwareVersion: string
-    debugModes: IDropdownList[]
     activeBoard: string
     channelMode: CHANNEL_TYPE
-    debugMode: string
     lockButton: boolean
     appVersion: string
 }
@@ -37,9 +34,6 @@ export const ConfigureBoardWizard: Component<IProps> = (props) => {
                         connectionStatus={props.serverStatus}
                         channelOptions={props.channelOptions}
                         channelMode={props.channelMode}
-                        debugMode={props.debugMode}
-                        debugModes={props.debugModes}
-                        setDebugMode={props.setDebugMode}
                         onClickHeader={props.onClickHeader}
                         onClickOpenModal={props.onClickOpenModal}
                         onClickSetChannelMode={props.onClickSetChannelMode}

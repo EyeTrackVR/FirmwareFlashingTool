@@ -3,6 +3,7 @@ import Typography from '@components/Typography'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { Component } from 'solid-js'
+import Camera from '@components/Camera/Camera'
 
 export interface IProps {
     trackerStream: Record<TRACKER_POSITION, string>
@@ -25,22 +26,30 @@ const CheckCameraCalibration: Component<IProps> = (props) => {
                             Left camera
                         </Typography>
                         <CameraPanel
-                            streamSource={props.trackerStream[TRACKER_POSITION.LEFT_EYE]}
                             cameraStatus={CONNECTION_STATUS.INACTIVE}
                             label={props.leftTrackerLabel}
-                            address={props.leftTrackerAddress}
-                        />
+                            address={props.leftTrackerAddress}>
+                            <div class="relative w-[240px] h-[240px]">
+                                <Camera
+                                    streamSource={props.trackerStream[TRACKER_POSITION.LEFT_EYE]}
+                                />
+                            </div>
+                        </CameraPanel>
                     </div>
                     <div class="flex flex-col gap-12">
                         <Typography color="white" text="body" class="text-left">
                             right camera
                         </Typography>
                         <CameraPanel
-                            streamSource={props.trackerStream[TRACKER_POSITION.RIGHT_EYE]}
                             cameraStatus={CONNECTION_STATUS.INACTIVE}
                             label={props.rightTrackerLabel}
-                            address={props.rightTrackerAddress}
-                        />
+                            address={props.rightTrackerAddress}>
+                            <div class="relative w-[240px] h-[240px]">
+                                <Camera
+                                    streamSource={props.trackerStream[TRACKER_POSITION.RIGHT_EYE]}
+                                />
+                            </div>
+                        </CameraPanel>
                     </div>
                 </div>
             </div>

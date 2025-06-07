@@ -15,23 +15,18 @@ import { type Component, onMount } from 'solid-js'
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickSetChannelMode: (data: string) => void
-    setDebugMode: (debugMode: string) => void
     onClickOpenModal: (id: string) => void
     onClickSettings: () => void
     connectionStatus: CONNECTION_STATUS
     channelOptions: IDropdownList[]
-    debugModes: IDropdownList[]
     channelMode: CHANNEL_TYPE
     appVersion: string
-    debugMode: string
 }
 
 export const Devtools: Component<IProps> = (props) => {
-    let debugModeTab: HTMLDivElement | undefined = undefined
     let versionTab: HTMLDivElement | undefined = undefined
 
     onMount(() => {
-        if (debugModeTab) debugModeTab.style.opacity = '0'
         if (versionTab) versionTab.style.opacity = '0'
     })
 
@@ -62,33 +57,12 @@ export const Devtools: Component<IProps> = (props) => {
                                     event.relatedTarget instanceof HTMLElement &&
                                     event.currentTarget.contains(event.relatedTarget)
                                 if (isFocusLost) return
-                                if (debugModeTab) {
-                                    debugModeTab.style.opacity = '0'
-                                    debugModeTab.style.display = 'none'
-                                }
+
                                 if (versionTab) {
                                     versionTab.style.opacity = '0'
                                     versionTab.style.display = 'none'
                                 }
                             }}>
-                            <SelectButton
-                                tabIndex={0}
-                                header="Debug mode"
-                                type="button"
-                                onClick={() => {
-                                    if (versionTab) {
-                                        versionTab.style.display = 'none'
-                                        versionTab.style.opacity = '0'
-                                    }
-                                    if (debugModeTab) {
-                                        debugModeTab.style.display = 'block'
-                                        setTimeout(() => {
-                                            debugModeTab!.style.opacity = '1'
-                                        }, 25)
-                                    }
-                                }}
-                                label={!props.debugMode ? 'Select debug mode' : props.debugMode}
-                            />
                             <SelectButton
                                 header="Firmware channel"
                                 tabIndex={1}
@@ -100,21 +74,8 @@ export const Devtools: Component<IProps> = (props) => {
                                             versionTab!.style.opacity = '1'
                                         }, 25)
                                     }
-                                    if (debugModeTab) {
-                                        debugModeTab.style.opacity = '0'
-                                        debugModeTab.style.display = 'none'
-                                    }
                                 }}
                                 label={props.channelMode}
-                            />
-                            <DropdownList
-                                activeElement={props.debugMode}
-                                data={props.debugModes}
-                                tabIndex={0}
-                                ref={(el) => (debugModeTab = el)}
-                                onClick={(data) => {
-                                    props.setDebugMode(data.label)
-                                }}
                             />
                             <DropdownList
                                 ref={(el) => (versionTab = el)}

@@ -223,7 +223,9 @@ export class EyeTrackVrController {
                 trackers.push({
                     trackerPosition: tracker.tracker_position as TRACKER_POSITION,
                     streamSource: `${this.api.url}/etvr/feed/${tracker.uuid}/camera`,
+                    algorithmOrder: tracker.algorithm.algorithm_order,
                     address: tracker.camera.capture_source,
+                    enabled: tracker.enabled,
                     label: tracker.name,
                     id: tracker.uuid,
                 })

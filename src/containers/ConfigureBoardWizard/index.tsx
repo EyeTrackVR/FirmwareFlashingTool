@@ -1,22 +1,20 @@
 import { type IDropdownList } from '@interfaces/interfaces'
-import { isValidChannel } from '@interfaces/utils'
 import { ConfigureBoardWizard } from '@pages/ConfigureBoardWizard'
 import { useNavigate } from '@solidjs/router'
-import { BoardDescription, ChannelOptions, debugModes, supportedBoards, usb } from '@src/static'
-import { DebugMode } from '@src/static/types'
+import { supportedBoards, USB } from '@src/static'
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
+import { BoardDescription, ChannelOptions } from '@src/static/ui'
 import { useAppAPIContext } from '@src/store/context/api'
-import { useAppContext } from '@store/context/app'
+import { isValidChannel } from '@src/utils'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 import { serverStatus } from '@store/ui/selectors'
 import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { Accessor, createMemo } from 'solid-js'
-import { debug, trace } from 'tauri-plugin-log-api'
+import { trace } from 'tauri-plugin-log-api'
 
 export const ConfigureBoardWizardRoot = () => {
     const navigate = useNavigate()
-    const { getDebugMode, setDebugMode } = useAppContext()
     const {
         getFirmwareAssets,
         getFirmwareVersion,
@@ -60,12 +58,8 @@ export const ConfigureBoardWizardRoot = () => {
         return getFirmwareVersion?.() ?? ''
     })
 
-    const debugMode = createMemo(() => {
-        return getDebugMode() ?? ''
-    })
-
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB)
     })
 
     return (
@@ -80,10 +74,6 @@ export const ConfigureBoardWizardRoot = () => {
             lockButton={!(!activeBoard() || !firmwareVersion())}
             channelMode={channelMode()}
             channelOptions={Object.values(ChannelOptions)}
-            debugMode={debugMode()}
-            debugModes={debugModes.map((el) => ({
-                label: el,
-            }))}
             activeBoard={activeBoard()}
             firmwareVersion={firmwareVersion()}
             onClickSetChannelMode={(label) => {
@@ -92,14 +82,6 @@ export const ConfigureBoardWizardRoot = () => {
                 }
                 const elem: Element | null = document.activeElement
                 setChannelMode(label)
-                if (elem instanceof HTMLElement) {
-                    elem?.blur()
-                }
-            }}
-            setDebugMode={(debugMode) => {
-                const elem: Element | null = document.activeElement
-                debug(debugMode)
-                setDebugMode(debugMode as DebugMode)
                 if (elem instanceof HTMLElement) {
                     elem?.blur()
                 }

@@ -1,17 +1,20 @@
 import { ENotificationType } from '@interfaces/enums'
 import { type TRACKER_POSITION } from '@interfaces/trackers/enums'
 import Dashboard from '@pages/Dashboard'
+import StreamSettings from '@pages/StreamSettings'
 import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate } from '@solidjs/router'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { usePersistentStore } from '@src/Services/persistentStore'
 import { addNotification } from '@store/notifications/actions'
 import { loadState } from '@store/trackers/actions'
-import { getTrackers, rotation } from '@store/trackers/selectors'
-import { setRotation } from '@store/trackers/trackers'
-import { onMount } from 'solid-js'
+import { canvasBoxPositions, flipAxis, getTrackers, rotation } from '@store/trackers/selectors'
+import { setCanvasBoxPositions, setFlipToggle, setRotation } from '@store/trackers/trackers'
+import { createSignal, Match, onMount, Switch } from 'solid-js'
 
 const DashboardRoot = () => {
+    const [isStreamSettingsActive, setIsStreamSettingsActive] = createSignal(false)
+
     const { set } = usePersistentStore()
     const navigate = useNavigate()
 
@@ -41,23 +44,54 @@ const DashboardRoot = () => {
     }, 250)
 
     return (
-        <Dashboard
-            rotation={rotation()}
-            trackers={getTrackers()}
-            onClickTracker={(id) => {
-                navigate(`/TrackerDashboard/${id}`)
-            }}
-            onRotateCamera={trigger}
-            onClickAdvancedSettings={() => {
-                navigate('/advancedSettings')
-            }}
-            onClickRecalibrate={() => {
-                //
-            }}
-            onClickRecenter={() => {
-                //
-            }}
-        />
+        <Switch>
+            <Match when={!isStreamSettingsActive()}>
+                <Dashboard
+                    isStreamSettingsActive={isStreamSettingsActive()}
+                    trackers={getTrackers()}
+                    onRotateCamera={trigger}
+                    rotation={rotation()}
+                    onClickAdvancedSettings={() => {
+                        navigate('/advancedSettings')
+                    }}
+                    onClickStreamSettings={() => {
+                        setIsStreamSettingsActive((prev) => !prev)
+                    }}
+                    onClickRecalibrate={() => {
+                        //
+                    }}
+                    onClickRecenter={() => {
+                        //
+                    }}
+                />
+            </Match>
+            <Match when={isStreamSettingsActive()}>
+                <StreamSettings
+                    setCanvasBoxPositions={setCanvasBoxPositions}
+                    canvasBoxPositions={canvasBoxPositions()}
+                    flipAxis={flipAxis()}
+                    trackers={getTrackers()}
+                    onRotateCamera={trigger}
+                    rotation={rotation()}
+                    onClickToggle={(action) => {
+                        setFlipToggle(action)
+                    }}
+                    onClickAdvancedSettings={() => {
+                        navigate('/advancedSettings')
+                    }}
+                    isStreamSettingsActive={isStreamSettingsActive()}
+                    onClickStreamSettings={() => {
+                        setIsStreamSettingsActive((prev) => !prev)
+                    }}
+                    onClickRecalibrate={() => {
+                        //
+                    }}
+                    onClickRecenter={() => {
+                        //
+                    }}
+                />
+            </Match>
+        </Switch>
     )
 }
 

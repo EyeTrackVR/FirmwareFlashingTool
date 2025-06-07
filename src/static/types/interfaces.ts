@@ -1,17 +1,12 @@
+import type { DebugMode } from '@static/types'
+import type { JSXElement } from 'solid-js'
 import {
     type CHANNEL_TYPE,
     type RESTStatus,
     type RESTType,
-    type MODAL_TYPE,
-    ENotificationAction,
-    ENotificationType,
     FLASH_STATUS,
     FLASH_STEP,
 } from './enums'
-import type { DebugMode } from '@static/types'
-import type { ToasterStore } from 'solid-headless'
-import type { JSXElement } from 'solid-js'
-import { CONNECTION_STATUS } from './services/enums'
 
 //* Utility Interfaces
 
@@ -63,23 +58,6 @@ export interface IGHRelease {
     prerelease?: boolean
 }
 
-export interface IRestProps {
-    endpointName: string
-    deviceName: string
-    args?: string
-}
-
-export interface NewMenu {
-    children: JSXElement
-    id: string
-}
-
-export interface ModalMenu {
-    children: JSXElement
-    title?: string
-    initialFocus?: string
-}
-
 //*  App Store Interfaces  */
 
 export interface AppStore {
@@ -111,32 +89,6 @@ export interface ISignal {
     dataTerminalReady: boolean
 }
 
-export interface INavigatorPort extends Navigator {
-    readable: {
-        locked: boolean
-        pipeThrough: (
-            data: TextDecoderStream,
-            object?: unknown,
-        ) => {
-            pipeThrough: (
-                data: TransformStream,
-                object?: unknown,
-            ) => {
-                pipeTo: (data: WritableStream, object?: unknown) => Promise<void>
-            }
-        }
-    }
-    setSignals: ({ requestToSend, dataTerminalReady }: ISignal) => Promise<void>
-    open: ({ baudRate }: { baudRate: number }) => Promise<void>
-    close: () => Promise<void>
-}
-
-export interface INavigator extends Navigator {
-    serial: {
-        requestPort: () => Promise<INavigatorPort>
-    }
-}
-
 export interface IChannelOptions {
     label: CHANNEL_TYPE
     description: string
@@ -145,24 +97,6 @@ export interface IChannelOptions {
 export interface IDropdownList {
     label: string | CHANNEL_TYPE
     description?: string
-}
-
-export interface Build {
-    chipFamily: 'ESP32' | 'ESP8266' | 'ESP32-S2' | 'ESP32-S3' | 'ESP32-C3'
-    parts: {
-        path: string
-        offset: number
-    }[]
-}
-
-export interface Manifest {
-    new_install_improv_wait_time?: number
-    new_install_prompt_erase?: boolean
-    home_assistant_domain?: string
-    funding_url?: string
-    builds: Build[]
-    version: string
-    name: string
 }
 
 export interface IFlashState {
@@ -176,4 +110,10 @@ export interface IFirmwareState {
     step: FLASH_STEP
     status: FLASH_STATUS
     label: string
+}
+
+export interface IStepStatus {
+    description: string
+    dashoffset: string
+    index: string
 }

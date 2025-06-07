@@ -3,7 +3,8 @@ import { IDropdownList } from '@interfaces/interfaces'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
 import { espApi, UsbSerialPortInfo } from '@src/Services/esp'
-import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
+import { DEFAULT_PORT_NAME, USB } from '@src/static'
+import { BoardConnectionMethod } from '@src/static/ui'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { addNotification } from '@store/notifications/actions'
@@ -97,7 +98,7 @@ export const ManageFlashFirmware = () => {
     })
 
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB)
     })
 
     const notification = createMemo(() => {

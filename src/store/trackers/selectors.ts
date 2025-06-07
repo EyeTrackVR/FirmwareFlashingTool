@@ -5,7 +5,8 @@ import { Accessor, createMemo } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
 import { trackersState } from './trackers'
 
-export const { trackers, rotation } = createStoreSelectors(trackersState)
+export const { trackers, rotation, algorithmOrder, flipAxis, canvasBoxPositions } =
+    createStoreSelectors(trackersState)
 
 export const getTrackersCount = createMemo(() => trackers().length)
 
@@ -14,15 +15,19 @@ export const getTrackers: Accessor<Record<TRACKER_POSITION, ITracker>> = createM
         [TRACKER_POSITION.LEFT_EYE]: {
             trackerPosition: TRACKER_POSITION.LEFT_EYE,
             label: 'Left camera',
+            algorithmOrder: [],
             streamSource: '',
             address: '--',
+            enabled: false,
             id: uuidV6(),
         },
         [TRACKER_POSITION.RIGHT_EYE]: {
             trackerPosition: TRACKER_POSITION.LEFT_EYE,
             label: 'Right camera',
+            algorithmOrder: [],
             streamSource: '',
             address: '--',
+            enabled: false,
             id: uuidV6(),
         },
     }
