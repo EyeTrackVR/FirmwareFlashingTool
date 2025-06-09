@@ -79,11 +79,7 @@ const AlgorithmOrderSettings = () => {
                     </div>
                 </ContextWrapper>
                 <div class="relative min-w-[240px] max-w-[240px] max-h-[240px] min-h-[240px] flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800">
-                    <Camera
-                        streamSource={
-                            'http://127.0.0.1:8855/etvr/feed/3964109a-8b57-4417-b3cc-a0a1ba12391e/camera'
-                        }
-                    />
+                    <Camera streamSource={''} />
                 </div>
             </div>
         </section>

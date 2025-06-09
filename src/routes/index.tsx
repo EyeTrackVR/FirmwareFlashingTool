@@ -3,7 +3,6 @@ import { lazy } from 'solid-js'
 
 const ConfigureBoardWizard = lazy(() => import('@containers/ConfigureBoardWizard'))
 const BoardImportWizard = lazy(() => import('@containers/BoardImportWizard'))
-const AdvancedSettings = lazy(() => import('@containers/AdvancedSettings'))
 const FlashFirmware = lazy(() => import('@containers/FlashFirmware'))
 const ManageNetwork = lazy(() => import('@containers/ManageNetwork'))
 const page404 = lazy(() => import('@containers/404/[...404]'))
@@ -20,7 +19,6 @@ const OscSettings = lazy(() => import('@containers/Settings/OscSettings'))
 export const routes: RouteDefinition[] = [
     { path: '/configureBoardWizard', component: ConfigureBoardWizard },
     { path: '/boardImportWizard', component: BoardImportWizard },
-    { path: '/advancedSettings', component: AdvancedSettings },
     { path: '/flashFirmware', component: FlashFirmware },
     { path: '/network', component: ManageNetwork },
     { path: '/dashboard', component: Dashboard },
