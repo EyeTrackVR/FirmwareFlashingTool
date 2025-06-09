@@ -11,7 +11,7 @@ export interface IProps {
 
 const ContextWrapper: ParentComponent<IProps> = (props) => {
     return (
-        <div class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 w-full">
+        <section class="flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800 w-full">
             <div class="flex gap-12 items-center w-full">
                 <div class="bg-purple-300 rounded-md flex p-6 rounded-6">
                     <props.icon size={24} color={props.iconColor} />
@@ -26,7 +26,7 @@ const ContextWrapper: ParentComponent<IProps> = (props) => {
                 </Typography>
             </div>
             {props.children}
-        </div>
+        </section>
     )
 }
 

@@ -26,7 +26,7 @@ const Sidebar: Component<IProps> = (props) => {
     })
 
     return (
-        <div class="flex flex-col justify-between pl-8 pr-24 pb-12 pt-8">
+        <section class="flex flex-col justify-between pl-8 pr-24 pb-12 pt-8">
             <div class="flex flex-col gap-12">
                 <For each={navItems()}>
                     {(item) => (
@@ -47,7 +47,7 @@ const Sidebar: Component<IProps> = (props) => {
                 label="Settings"
                 onClick={props.onClick}
             />
-        </div>
+        </section>
     )
 }
 

@@ -31,7 +31,7 @@ const SettingsSidebar: Component<IProps> = (props) => {
     ])
 
     return (
-        <div class="min-w-[280px] mr-24 mb-12 mt-8 ml-8 flex flex-col gap-24">
+        <section class="min-w-[280px] mr-24 mb-12 mt-8 ml-8 flex flex-col gap-24">
             <div class="flex h-full flex-col px-[20px] py-[20px] overflow-y-auto bg-black-900 border border-solid border-black-800 rounded-12 gap-24">
                 <Typography color="white" text="body" class="text-left">
                     Settings
@@ -54,7 +54,7 @@ const SettingsSidebar: Component<IProps> = (props) => {
                     />
                 </div>
             </div>
-        </div>
+        </section>
     )
 }
 export default SettingsSidebar
