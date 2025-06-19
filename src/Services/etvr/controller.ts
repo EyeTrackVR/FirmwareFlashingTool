@@ -1,6 +1,7 @@
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import {
+    IUpdateETVRConfig,
     IUpdateTracker,
     type IETVRConfigResponse,
     type ITrackerState,
@@ -64,6 +65,10 @@ export class EyeTrackVrController {
         }
 
         return CONNECTION_STATUS.FAILED
+    }
+
+    public async sendConfig(config: Partial<IUpdateETVRConfig>) {
+        await this.api.updateConfig(config)
     }
 
     public async updateConfig() {

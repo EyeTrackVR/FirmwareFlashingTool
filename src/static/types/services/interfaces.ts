@@ -1,15 +1,3 @@
-export interface IETVRConfig {
-    mode?: 'json' | 'python'
-    include?: string[] | number[] | object
-    exclude?: string[] | number[] | object
-    by_alias?: boolean
-    exclude_unset?: boolean
-    exclude_defaults?: boolean
-    exclude_none?: boolean
-    round_trip?: boolean
-    warnings?: boolean
-}
-
 export interface IOSCEndpointsConfig {
     eyes_y: string
     left_eye_x: string
@@ -21,7 +9,7 @@ export interface IOSCEndpointsConfig {
     right_eye_blink: string
 }
 
-interface IOSCSettings {
+export interface IOSCSettings {
     address: string
     mirror_eyes: boolean
     sync_blink: boolean
@@ -88,6 +76,26 @@ export interface IETVRConfigResponse {
     affinity_mask: string
     osc: IOSCSettings
     trackers: ITrackerState[]
+}
+
+export interface IUpdateOSCSettings {
+    address: string
+    mirror_eyes: boolean
+    sync_blink: boolean
+    enable_sending: boolean
+    sending_port: number
+    enable_receiving: boolean
+    receiver_port: number
+    vrchat_native_tracking: boolean
+    endpoints: Partial<IOSCEndpointsConfig>
+}
+
+export interface IUpdateETVRConfig {
+    version: number
+    debug: boolean
+    affinity_mask: string
+    osc: Partial<IUpdateOSCSettings>
+    trackers: Partial<IUpdateTracker>[]
 }
 
 export interface IFeedResponse {

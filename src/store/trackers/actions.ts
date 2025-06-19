@@ -3,7 +3,7 @@ import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { EyeTrackVrController } from '@src/Services/etvr/controller'
 import { sleep } from '@src/utils'
 import { setActiveModal } from '@store/ui/ui'
-import { setLoadRotation, setTrackers } from './trackers'
+import { setConfig, setLoadRotation, setTrackers } from './trackers'
 
 export const loadState = async () => {
     const controller = new EyeTrackVrController()
@@ -24,6 +24,8 @@ export const loadState = async () => {
     const state = await controller.getState()
     setTrackers(state.trackers)
     setLoadRotation(state.rotation)
+    const config = await controller.getConfig()
+    setConfig(config)
 }
 
 export const updateState = async () => {

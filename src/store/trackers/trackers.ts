@@ -1,6 +1,11 @@
 import { STREAM_TOGGLE_FLIP } from '@interfaces/enums'
+import {
+    type IETVRConfigResponse,
+    type IOSCEndpointsConfig,
+    type IOSCSettings,
+} from '@interfaces/services/interfaces'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
-import { ITracker } from '@interfaces/trackers/interfaces'
+import { type ITracker } from '@interfaces/trackers/interfaces'
 import { DEFAULT_CANVAS_BOX_POSITION, type IBoxPosition } from '@src/Services/canvas'
 import { ALGORITHMS } from '@src/static'
 import { createMemo } from 'solid-js'
@@ -12,6 +17,7 @@ export interface ITrackerState {
     algorithmOrder: Record<TRACKER_POSITION, string[]>
     flipAxis: Record<STREAM_TOGGLE_FLIP, boolean>
     canvasBoxPositions: Record<TRACKER_POSITION, IBoxPosition>
+    config: IETVRConfigResponse
 }
 
 export const defaultRotation: Record<TRACKER_POSITION, number> = {
@@ -34,12 +40,44 @@ export const defaultCanvasBoxPositions: Record<TRACKER_POSITION, IBoxPosition> =
     [TRACKER_POSITION.RIGHT_EYE]: DEFAULT_CANVAS_BOX_POSITION,
 }
 
+export const defaultEndpoints: IOSCEndpointsConfig = {
+    eyes_y: '',
+    left_eye_x: '',
+    right_eye_x: '',
+    recenter: '',
+    sync_blink: '',
+    recalibrate: '',
+    left_eye_blink: '',
+    right_eye_blink: '',
+}
+
+export const defaultOsc: IOSCSettings = {
+    address: '',
+    mirror_eyes: false,
+    sync_blink: false,
+    enable_sending: false,
+    sending_port: 0,
+    enable_receiving: false,
+    receiver_port: 0,
+    vrchat_native_tracking: false,
+    endpoints: defaultEndpoints,
+}
+
+export const DefaultConfig = {
+    version: 0,
+    debug: false,
+    affinity_mask: '',
+    osc: defaultOsc,
+    trackers: [],
+}
+
 const defaultState: ITrackerState = {
     canvasBoxPositions: defaultCanvasBoxPositions,
     algorithmOrder: defaultAlgorithmOrder,
     rotation: defaultRotation,
     flipAxis: defaultFlipAxis,
     trackers: [],
+    config: DefaultConfig,
 }
 
 const [state, setState] = createStore<ITrackerState>(defaultState)
@@ -48,6 +86,14 @@ export const setTrackers = (trackers: ITracker[]) => {
     setState(
         produce((s) => {
             s.trackers = trackers
+        }),
+    )
+}
+
+export const setConfig = (config: IETVRConfigResponse) => {
+    setState(
+        produce((s) => {
+            s.config = config
         }),
     )
 }

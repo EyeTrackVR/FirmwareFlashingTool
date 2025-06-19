@@ -1,12 +1,17 @@
 import Typography from '@components/Typography'
+import { classNames } from '@src/utils'
 import { RiArrowsArrowDownSLine } from 'solid-icons/ri'
 import { createSignal, ParentComponent, Show } from 'solid-js'
 
-const AdvancedDropdown: ParentComponent = (props) => {
-    const [show, setShow] = createSignal(false)
+export interface IProps {
+    class?: string
+}
+
+const AdvancedDropdown: ParentComponent<IProps> = (props) => {
+    const [show, setShow] = createSignal(true)
 
     return (
-        <section class="flex flex-col gap-12">
+        <section class={classNames(props.class, 'flex flex-col gap-12')}>
             <div
                 class="flex flex-row items-center gap-6 cursor-pointer"
                 onClick={() => setShow(!show())}>

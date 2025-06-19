@@ -1,16 +1,50 @@
 import AdvancedDropdown from '@components/AdvancedDropdown'
 import Button from '@components/Buttons/Button'
+import PrimaryButton from '@components/Buttons/PrimaryButton'
 import { ToggleButton } from '@components/Buttons/ToggleButton'
 import Input from '@components/Inputs/Input'
 import Typography from '@components/Typography'
 import ContextWrapper from '@components/Wrapper/ContextWrapper'
+import { OSC_SETTINGS_ENUM } from '@interfaces/Settings/enums'
+import { validateAddress } from '@src/utils'
 import { VsSettings } from 'solid-icons/vs'
+import { Component, createMemo, Show } from 'solid-js'
 
-const OscSettings = () => {
+export interface IProps {
+    toggle: Partial<Record<OSC_SETTINGS_ENUM, boolean>>
+    inputChange: Partial<Record<OSC_SETTINGS_ENUM, string>>
+    showButtons: boolean
+    onInputChange: (key: OSC_SETTINGS_ENUM, value: string) => void
+    onToggle: (key: OSC_SETTINGS_ENUM, status: boolean) => void
+    onClickReset: () => void
+    onClickUpdateSettings: () => void
+}
+
+const OscSettings: Component<IProps> = (props) => {
+    const isValidAddress = createMemo(() => {
+        const address = props.inputChange[OSC_SETTINGS_ENUM.ADDRESS]
+        if (!address) return true
+        return validateAddress(address)
+    })
+
     return (
-        <section class="w-full  pt-8 pb-12 flex flex-col gap-12">
+        <section class="relative w-full  pt-8 pb-12 flex flex-col gap-12">
+            <Show when={props.showButtons}>
+                <div class="absolute bottom-[20px] left-[50%] transform -translate-x-1/2 flex flex-row gap-24 bg-black-900 py-12 px-24 rounded-12 border border-solid border-black-800">
+                    <Button label="Cancel" isDangerous onClick={props.onClickReset} />
+                    <PrimaryButton
+                        label="Update settings"
+                        isActive
+                        onClick={props.onClickUpdateSettings}
+                    />
+                </div>
+            </Show>
             <div class="w-full flex flex-row justify-end pr-24">
-                <Button label="Reset settings to default" isDangerous />
+                <Button
+                    label="Reset settings to default"
+                    isDangerous
+                    onClick={props.onClickReset}
+                />
             </div>
             <div class="flex flex-col gap-12 overflow-y-auto scrollbar pr-24 h-full">
                 <ContextWrapper
@@ -25,46 +59,96 @@ const OscSettings = () => {
                             </Typography>
                             <div class="flex flex-row gap-24">
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton onToggle={() => {}} isToggled={false} />
+                                    <ToggleButton
+                                        onToggle={() => {
+                                            props.onToggle(
+                                                OSC_SETTINGS_ENUM.MIRROR_EYES,
+                                                !props.toggle[OSC_SETTINGS_ENUM.MIRROR_EYES],
+                                            )
+                                        }}
+                                        isToggled={
+                                            props.toggle[OSC_SETTINGS_ENUM.MIRROR_EYES] ?? false
+                                        }
+                                    />
                                     <Typography color="white" text="caption" nowrap>
                                         Mirror eyes
                                     </Typography>
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton onToggle={() => {}} isToggled={false} />
+                                    <ToggleButton
+                                        onToggle={() => {
+                                            props.onToggle(
+                                                OSC_SETTINGS_ENUM.SYNC_BLINK,
+                                                !props.toggle[OSC_SETTINGS_ENUM.SYNC_BLINK],
+                                            )
+                                        }}
+                                        isToggled={
+                                            props.toggle[OSC_SETTINGS_ENUM.SYNC_BLINK] ?? false
+                                        }
+                                    />
                                     <Typography color="white" text="caption" nowrap>
                                         sync blink
                                     </Typography>
                                 </div>
                             </div>
                         </div>
-
                         <div class="flex flex-col gap-12 items-start">
                             <Typography text="caption" color="white">
                                 Lorem ipsum
                             </Typography>
                             <div class="flex flex-row gap-24">
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton onToggle={() => {}} isToggled={false} />
+                                    <ToggleButton
+                                        onToggle={() => {
+                                            props.onToggle(
+                                                OSC_SETTINGS_ENUM.ENABLE_SENDING,
+                                                !props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING],
+                                            )
+                                        }}
+                                        isToggled={
+                                            props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING] ?? false
+                                        }
+                                    />
                                     <Typography color="white" text="caption" nowrap>
                                         Enable sending
                                     </Typography>
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton onToggle={() => {}} isToggled={false} />
+                                    <ToggleButton
+                                        onToggle={() => {
+                                            props.onToggle(
+                                                OSC_SETTINGS_ENUM.ENABLE_RECEIVING,
+                                                !props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING],
+                                            )
+                                        }}
+                                        isToggled={
+                                            props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING] ??
+                                            false
+                                        }
+                                    />
                                     <Typography color="white" text="caption" nowrap>
                                         Enable receiving
                                     </Typography>
                                 </div>
                             </div>
                         </div>
-
                         <div class="flex flex-col gap-12 items-start">
                             <Typography text="caption" color="white">
                                 Lorem ipsum
                             </Typography>
                             <div class="flex flex-row items-center gap-6">
-                                <ToggleButton onToggle={() => {}} isToggled={false} />
+                                <ToggleButton
+                                    onToggle={() => {
+                                        props.onToggle(
+                                            OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING,
+                                            !props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING],
+                                        )
+                                    }}
+                                    isToggled={
+                                        props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING] ??
+                                        false
+                                    }
+                                />
                                 <Typography color="white" text="caption" nowrap>
                                     vrchat native tracking
                                 </Typography>
@@ -73,31 +157,63 @@ const OscSettings = () => {
                     </div>
                 </ContextWrapper>
                 <div>
-                    <AdvancedDropdown>
+                    <AdvancedDropdown class="pb-[90px]">
                         <ContextWrapper
                             icon={VsSettings}
                             iconColor="white"
                             label="Address and ports"
                             description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
-                            <div class="flex flex-col gap-24">
+                            <div class="flex flex-col gap-24 pb-[48px]">
                                 <div class="flex flex-col items-start gap-6">
                                     <Typography text="caption" color="white">
                                         Network address
                                     </Typography>
-                                    <Input onChange={() => {}} placeholder="127.0.0.1" value="" />
+                                    <Input
+                                        isError={!isValidAddress()}
+                                        onChange={(value) => {
+                                            props.onInputChange(OSC_SETTINGS_ENUM.ADDRESS, value)
+                                        }}
+                                        placeholder="127.0.0.1"
+                                        value={props.inputChange[OSC_SETTINGS_ENUM.ADDRESS] ?? ''}
+                                    />
                                 </div>
                                 <div class="flex flex-row items-center gap-6 w-full">
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
                                             Sending port
                                         </Typography>
-                                        <Input onChange={() => {}} placeholder="9000" value="" />
+                                        <Input
+                                            onChange={(value) => {
+                                                props.onInputChange(
+                                                    OSC_SETTINGS_ENUM.SENDING_PORT,
+                                                    value,
+                                                )
+                                            }}
+                                            placeholder="9000"
+                                            value={
+                                                props.inputChange[OSC_SETTINGS_ENUM.SENDING_PORT] ??
+                                                ''
+                                            }
+                                        />
                                     </div>
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
                                             Receiver port
                                         </Typography>
-                                        <Input onChange={() => {}} placeholder="9001" value="" />
+                                        <Input
+                                            onChange={(value) => {
+                                                props.onInputChange(
+                                                    OSC_SETTINGS_ENUM.RECEIVER_PORT,
+                                                    value,
+                                                )
+                                            }}
+                                            placeholder="9001"
+                                            value={
+                                                props.inputChange[
+                                                    OSC_SETTINGS_ENUM.RECEIVER_PORT
+                                                ] ?? ''
+                                            }
+                                        />
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-start gap-6">
@@ -105,9 +221,11 @@ const OscSettings = () => {
                                         Eyes Y
                                     </Typography>
                                     <Input
-                                        onChange={() => {}}
+                                        onChange={(value) => {
+                                            props.onInputChange(OSC_SETTINGS_ENUM.EYES_Y, value)
+                                        }}
                                         placeholder="/avatar/parameters/EyesY"
-                                        value=""
+                                        value={props.inputChange[OSC_SETTINGS_ENUM.EYES_Y] ?? ''}
                                     />
                                 </div>
                             </div>
@@ -123,9 +241,16 @@ const OscSettings = () => {
                                         Recalibrate
                                     </Typography>
                                     <Input
-                                        onChange={() => {}}
+                                        onChange={(value) => {
+                                            props.onInputChange(
+                                                OSC_SETTINGS_ENUM.RECALIBRATE,
+                                                value,
+                                            )
+                                        }}
                                         placeholder="/avatar/parameters/etvr_recalibrate"
-                                        value=""
+                                        value={
+                                            props.inputChange[OSC_SETTINGS_ENUM.RECALIBRATE] ?? ''
+                                        }
                                     />
                                 </div>
                                 <div class="flex flex-col items-start gap-6">
@@ -133,9 +258,13 @@ const OscSettings = () => {
                                         Sync blink
                                     </Typography>
                                     <Input
-                                        onChange={() => {}}
+                                        onChange={(value) => {
+                                            props.onInputChange(OSC_SETTINGS_ENUM.SYNC_BLINK, value)
+                                        }}
                                         placeholder="/avatar/parameters/etvr_sync_blink"
-                                        value=""
+                                        value={
+                                            props.inputChange[OSC_SETTINGS_ENUM.SYNC_BLINK] ?? ''
+                                        }
                                     />
                                 </div>
                                 <div class="flex flex-col items-start gap-6">
@@ -143,9 +272,11 @@ const OscSettings = () => {
                                         Recenter
                                     </Typography>
                                     <Input
-                                        onChange={() => {}}
+                                        onChange={(value) => {
+                                            props.onInputChange(OSC_SETTINGS_ENUM.RECENTER, value)
+                                        }}
                                         placeholder="/avatar/parameters/etvr_recenter"
-                                        value=""
+                                        value={props.inputChange[OSC_SETTINGS_ENUM.RECENTER] ?? ''}
                                     />
                                 </div>
                                 <div class="flex flex-row items-center gap-6 w-full">
@@ -154,9 +285,17 @@ const OscSettings = () => {
                                             Left eye X
                                         </Typography>
                                         <Input
-                                            onChange={() => {}}
+                                            onChange={(value) => {
+                                                props.onInputChange(
+                                                    OSC_SETTINGS_ENUM.LEFT_EYE_X,
+                                                    value,
+                                                )
+                                            }}
                                             placeholder="/avatar/parameters/LeftEyeX"
-                                            value=""
+                                            value={
+                                                props.inputChange[OSC_SETTINGS_ENUM.LEFT_EYE_X] ??
+                                                ''
+                                            }
                                         />
                                     </div>
                                     <div class="flex flex-col items-start gap-6 w-full">
@@ -164,9 +303,17 @@ const OscSettings = () => {
                                             Right eye X
                                         </Typography>
                                         <Input
-                                            onChange={() => {}}
+                                            onChange={(value) => {
+                                                props.onInputChange(
+                                                    OSC_SETTINGS_ENUM.RIGHT_EYE_X,
+                                                    value,
+                                                )
+                                            }}
                                             placeholder="/avatar/parameters/RightEyeX"
-                                            value=""
+                                            value={
+                                                props.inputChange[OSC_SETTINGS_ENUM.RIGHT_EYE_X] ??
+                                                ''
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -176,9 +323,18 @@ const OscSettings = () => {
                                             Left eye blink
                                         </Typography>
                                         <Input
-                                            onChange={() => {}}
+                                            onChange={(value) => {
+                                                props.onInputChange(
+                                                    OSC_SETTINGS_ENUM.LEFT_EYE_BLINK,
+                                                    value,
+                                                )
+                                            }}
                                             placeholder="/avatar/parameters/LeftEyeLidExpandedSqueeze"
-                                            value=""
+                                            value={
+                                                props.inputChange[
+                                                    OSC_SETTINGS_ENUM.LEFT_EYE_BLINK
+                                                ] ?? ''
+                                            }
                                         />
                                     </div>
                                     <div class="flex flex-col items-start gap-6 w-full">
@@ -186,9 +342,18 @@ const OscSettings = () => {
                                             Right eye blink
                                         </Typography>
                                         <Input
-                                            onChange={() => {}}
+                                            onChange={(value) => {
+                                                props.onInputChange(
+                                                    OSC_SETTINGS_ENUM.RIGHT_EYE_BLINK,
+                                                    value,
+                                                )
+                                            }}
                                             placeholder="/avatar/parameters/RightEyeLidExpandedSqueeze"
-                                            value=""
+                                            value={
+                                                props.inputChange[
+                                                    OSC_SETTINGS_ENUM.RIGHT_EYE_BLINK
+                                                ] ?? ''
+                                            }
                                         />
                                     </div>
                                 </div>
