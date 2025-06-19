@@ -1,0 +1,11 @@
+.tooltip {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.tooltip::before {
+    z-index: 99;
+    max-width: 170px;
+    word-break: break-all;
+    padding: 12px;
+}
