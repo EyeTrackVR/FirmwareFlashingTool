@@ -74,7 +74,6 @@ const AlgorithmOrderSettingsRoot = () => {
                 // TODO: Add logic to fetch data in case something goes wrong
                 return
             }
-            console.log('run config', toggle())
             const keys = Object.fromEntries(
                 tracker.algorithm.algorithm_order.map((key) => [key, true]),
             )

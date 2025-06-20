@@ -51,7 +51,7 @@ const AlgorithmOrderSettings: Component<IProps> = (props) => {
                     disabled={props.loader}
                 />
             </div>
-            <div class="flex flex-row gap-12">
+            <div class="flex min-[1000px]:flex-row flex-col-reverse gap-12">
                 <ContextWrapper
                     icon={FaSolidCode}
                     iconColor="white"
@@ -185,8 +185,10 @@ const AlgorithmOrderSettings: Component<IProps> = (props) => {
                         </div>
                     </div>
                 </ContextWrapper>
-                <div class="relative min-w-[240px] max-w-[240px] max-h-[240px] min-h-[240px] flex flex-col gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800">
-                    <Camera streamSource={props.cameraFeed} />
+                <div class="relative flex flex-col items-center justify-center gap-24 bg-black-900 p-24 rounded-12 border border-solid border-black-800">
+                    <div class=" min-w-[240px] max-w-[240px] max-h-[240px] min-h-[240px] flex flex-col gap-24 p-24">
+                        <Camera streamSource={props.cameraFeed} />
+                    </div>
                 </div>
             </div>
         </section>

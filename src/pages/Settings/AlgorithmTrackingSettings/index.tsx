@@ -55,7 +55,7 @@ const AlgorithmTrackingSettings: Component<IProps> = (props) => {
                     label="Advanced tracking alghoritm settings"
                     description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
                     <div class="flex flex-col gap-24">
-                        <div class="flex flex-row gap-24">
+                        <div class="flex flex-row min-[850px]:gap-24 gap-12">
                             <div class="flex flex-row items-center gap-6">
                                 <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
                                     <ToggleButton
