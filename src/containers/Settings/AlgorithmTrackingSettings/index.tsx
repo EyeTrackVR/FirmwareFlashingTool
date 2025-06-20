@@ -1,5 +1,4 @@
 import { ENotificationType } from '@interfaces/enums'
-import { IUpdateTracker } from '@interfaces/services/interfaces'
 import { TRACKING_ALGORITHM_SETTINGS_ENUM } from '@interfaces/Settings/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import AlgorithmTrackingSettings from '@pages/Settings/AlgorithmTrackingSettings'
@@ -13,7 +12,6 @@ const AlgorithmTrackingSettingsRoot = () => {
     const [loader, setLoader] = createSignal(false)
     const [originalInputChange, setOriginalInputChange] = createSignal(180)
     const [inputChange, setInputChange] = createSignal(180)
-
     const [toggle, setToggle] = createSignal<
         Partial<Record<TRACKING_ALGORITHM_SETTINGS_ENUM, boolean>>
     >({})
@@ -77,7 +75,7 @@ const AlgorithmTrackingSettingsRoot = () => {
             const tracker = config()?.trackers[0]
 
             if (!tracker) {
-                // I'll have to add some sort of logic to fetch data if something will go wrong
+                // TODO: Add logic to fetch data in case something goes wrong
                 return
             }
 

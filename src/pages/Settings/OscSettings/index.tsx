@@ -190,7 +190,7 @@ const OscSettings: Component<IProps> = (props) => {
                     </div>
                 </ContextWrapper>
                 <div>
-                    <AdvancedDropdown class="pb-[90px]">
+                    <AdvancedDropdown class={props.showButtons ? 'pb-[90px]' : 'pb-[12px]'}>
                         <ContextWrapper
                             icon={VsSettings}
                             iconColor="white"

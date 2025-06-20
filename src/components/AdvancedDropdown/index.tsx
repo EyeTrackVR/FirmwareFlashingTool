@@ -8,7 +8,7 @@ export interface IProps {
 }
 
 const AdvancedDropdown: ParentComponent<IProps> = (props) => {
-    const [show, setShow] = createSignal(true)
+    const [show, setShow] = createSignal(false)
 
     return (
         <section class={classNames(props.class, 'flex flex-col gap-12')}>

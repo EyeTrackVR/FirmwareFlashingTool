@@ -23,3 +23,12 @@ export enum TRACKING_ALGORITHM_SETTINGS_ENUM {
     SKIP_AUTO_RADIUS = 'skip_auto_radius',
     SKIP_BLINK_DETECTION = 'skip_blink_detection',
 }
+
+export enum ALGORITHM_ORDER_SETTINGS {
+    LEAP = 'leap',
+    BLOB = 'blob',
+    HSRAC = 'hsrac',
+    RANSAC = 'ransac',
+    HSF = 'hsf',
+    AHSF = 'ahsf',
+}

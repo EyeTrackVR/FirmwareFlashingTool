@@ -1,4 +1,5 @@
 import Button from '@components/Buttons/Button'
+import ComingSoon from '@components/ComingSoon'
 
 const GeneralSettings = () => {
     return (
@@ -6,6 +7,7 @@ const GeneralSettings = () => {
             <div class="w-full flex flex-row justify-end ">
                 <Button label="Reset settings to default" isDangerous />
             </div>
+            <ComingSoon />
         </div>
     )
 }

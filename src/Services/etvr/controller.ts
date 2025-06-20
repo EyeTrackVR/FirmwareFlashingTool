@@ -31,6 +31,14 @@ export class EyeTrackVrController {
         return this.api.restartETVR()
     }
 
+    public getRawCameraFeed(uuid: string): string {
+        return `${this.api.url}/etvr/feed/${uuid}/camera`
+    }
+
+    public getAlgorithmFeed(uuid: string): string {
+        return `${this.api.url}/etvr/feed/${uuid}/algorithm`
+    }
+
     public async getServerStatus(): Promise<CONNECTION_STATUS> {
         try {
             const status = await this.api.serverStatus()
@@ -147,12 +155,8 @@ export class EyeTrackVrController {
         await this.updateTrackersConfig()
 
         const updatePromises = data.map(async (tracker) => {
-            try {
-                const trackerState = await this.getTracker(tracker.trackerPosition)
-                await this.api.updateTracker(trackerState.uuid, config)
-            } catch (error) {
-                return `failed to update tracker ${tracker.address}`
-            }
+            const trackerState = await this.getTracker(tracker.trackerPosition)
+            await this.api.updateTracker(trackerState.uuid, config)
         })
 
         await Promise.all(updatePromises)
@@ -245,7 +249,7 @@ export class EyeTrackVrController {
                 rotation[tracker.tracker_position as TRACKER_POSITION] = tracker.camera.rotation
                 trackers.push({
                     trackerPosition: tracker.tracker_position as TRACKER_POSITION,
-                    streamSource: `${this.api.url}/etvr/feed/${tracker.uuid}/camera`,
+                    streamSource: this.getRawCameraFeed(tracker.uuid),
                     algorithmOrder: tracker.algorithm.algorithm_order,
                     address: tracker.camera.capture_source,
                     enabled: tracker.enabled,
