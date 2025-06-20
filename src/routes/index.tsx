@@ -16,6 +16,15 @@ const AlgorithmTrackingSettings = lazy(
 const VrcftSettings = lazy(() => import('@containers/Settings/VrcftSettings'))
 const OscSettings = lazy(() => import('@containers/Settings/OscSettings'))
 
+export const DASHBOARD_ROUTES = ['/advancedSettings', '/TrackerDashboard', '/dashboard']
+export const SETTINGS_ROUTES = [
+    '/algorithmTrackingSettings',
+    '/algorithmOrderSettings',
+    '/generalSettings',
+    '/vrcftSettings',
+    '/oscSettings',
+]
+
 export const routes: RouteDefinition[] = [
     { path: '/configureBoardWizard', component: ConfigureBoardWizard },
     { path: '/boardImportWizard', component: BoardImportWizard },
