@@ -1,4 +1,3 @@
-import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import {
     IUpdateETVRConfig,
@@ -6,9 +5,10 @@ import {
     type IETVRConfigResponse,
     type ITrackerState,
 } from '@interfaces/services/interfaces'
-import { EyeTrackVrBackend } from './api'
-import { sleep } from '@src/utils'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
+import { sleep } from '@src/utils'
+import { EyeTrackVrBackend } from './api'
 
 export class EyeTrackVrController {
     private readonly api: EyeTrackVrBackend
@@ -138,6 +138,24 @@ export class EyeTrackVrController {
 
     async updateTracker(uuid: string, payload: Partial<IUpdateTracker>) {
         return this.api.updateTracker(uuid, payload)
+    }
+
+    public async updateTrackersAlgorithms(
+        data: Array<{ trackerPosition: TRACKER_POSITION; address: string }>,
+        config: Partial<IUpdateTracker>,
+    ) {
+        await this.updateTrackersConfig()
+
+        const updatePromises = data.map(async (tracker) => {
+            try {
+                const trackerState = await this.getTracker(tracker.trackerPosition)
+                await this.api.updateTracker(trackerState.uuid, config)
+            } catch (error) {
+                return `failed to update tracker ${tracker.address}`
+            }
+        })
+
+        await Promise.all(updatePromises)
     }
 
     public async updateTrackerCameraConfigurations(data: ITracker[]): Promise<string[]> {

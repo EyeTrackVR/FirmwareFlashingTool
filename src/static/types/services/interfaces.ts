@@ -21,22 +21,41 @@ export interface IOSCSettings {
     endpoints: IOSCEndpointsConfig
 }
 
-interface IAlgorithm {
+export interface IEndpoints extends IOSCEndpointsConfig {
+    address: string
+    sending_port: number
+    receiver_port: number
+}
+
+export interface IBlob {
+    threshold: number
+    minsize: number
+    maxsize: number
+}
+
+export interface ILeap {
+    blink_threshold: number
+}
+
+export interface IHsf {
+    skip_autoradius: boolean
+    skip_blink_detection: boolean
+    blink_stat_frames: number
+    default_step: Array<number>
+}
+
+export interface IAlgorithm {
     algorithm_order: string[]
-    blob: {
-        threshold: number
-        minsize: number
-        maxsize: number
-    }
-    leap: {
-        blink_threshold: number
-    }
-    hsf: {
-        skip_autoradius: boolean
-        skip_blink_detection: boolean
-        blink_stat_frames: number
-        default_step: Array<number>
-    }
+    blob: IBlob
+    leap: ILeap
+    hsf: IHsf
+}
+
+export interface IPartialAlgorithm {
+    algorithm_order: Partial<string[]>
+    blob: Partial<IBlob>
+    leap: Partial<ILeap>
+    hsf: Partial<IHsf>
 }
 
 interface ICameraSettings {
@@ -66,7 +85,7 @@ export interface IUpdateTracker {
     name: string
     uuid: string
     tracker_position: string
-    algorithm: Partial<IAlgorithm>
+    algorithm: Partial<IPartialAlgorithm>
     camera: Partial<ICameraSettings>
 }
 

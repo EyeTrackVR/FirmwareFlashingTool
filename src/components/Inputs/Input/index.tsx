@@ -10,16 +10,19 @@ interface IProps {
     autoFocus?: boolean
     autoComplete?: string
     isError?: boolean
+    disabled?: boolean
 }
 
 const Input: Component<IProps> = (props) => {
     return (
         <input
+            disabled={props.disabled}
             autocomplete={props.autoComplete}
             autofocus={props.autoFocus}
             classList={{
                 'border-red-100 focus:ring-red-100': props.isError,
                 'border-black-800': !props.isError,
+                'cursor-not-allowed': props.disabled,
             }}
             class="h-[39px] bg-black-800 w-full  rounded-6 border-solid border-1  placeholder-white-100 text-[12px] text-white-100 focus:border-black-800 focus:ring-purple-200"
             onInput={(e) => {

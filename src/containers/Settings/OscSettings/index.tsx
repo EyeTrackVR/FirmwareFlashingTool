@@ -1,15 +1,15 @@
 import { ENotificationType } from '@interfaces/enums'
-import { IOSCEndpointsConfig, IOSCSettings } from '@interfaces/services/interfaces'
+import { IEndpoints, IOSCSettings } from '@interfaces/services/interfaces'
 import { OSC_SETTINGS_ENUM } from '@interfaces/Settings/enums'
 import OscSettings from '@pages/Settings/OscSettings'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
-import { validateAddress } from '@src/utils'
 import { addNotification } from '@store/notifications/actions'
 import { config } from '@store/trackers/selectors'
 import { setConfig } from '@store/trackers/trackers'
 import { createEffect, createMemo, createSignal, on } from 'solid-js'
 
 const OscSettingsRoot = () => {
+    const [loader, setLoader] = createSignal(false)
     const [toggle, setToggle] = createSignal<Partial<Record<OSC_SETTINGS_ENUM, boolean>>>({})
     const [inputChange, setInputChange] = createSignal<Partial<Record<OSC_SETTINGS_ENUM, string>>>(
         {},
@@ -28,21 +28,9 @@ const OscSettingsRoot = () => {
 
         const inputChanged =
             Object.keys(inputChange()).some((key) => {
-                if (key === 'address') {
-                    if (!validateAddress(inputChange()[key])) {
-                        return false
-                    }
-                }
-
                 return inputChange()[key] !== originalInputChange()[key]
             }) ||
             Object.keys(originalInputChange()).some((key) => {
-                if (key === 'address') {
-                    if (!validateAddress(inputChange()[key])) {
-                        return false
-                    }
-                }
-
                 return inputChange()[key] !== originalInputChange()[key]
             })
 
@@ -50,23 +38,39 @@ const OscSettingsRoot = () => {
     })
 
     const updateConfig = async () => {
+        setLoader(true)
         try {
             const controller = getEyeTrackVrController()
+            const toggles: Partial<IOSCSettings> = Object.keys(toggle())
+                .filter((key) => originalToggle()[key] !== toggle()[key])
+                .reduce((a, b) => {
+                    a[b] = toggle()[b]
+                    return a
+                }, {})
 
-            const toggles: Partial<IOSCSettings> = Object.keys(toggle()).reduce((a, b) => {
-                a[b] = toggle()[b]
-                return a
-            }, {})
-
-            const endpoints: Partial<IOSCEndpointsConfig & { address: string }> = Object.keys(
-                inputChange(),
-            ).reduce((a, b) => {
-                a[b] = inputChange()[b]
-                return a
-            }, {})
+            const endpoints: Partial<IEndpoints> = Object.keys(inputChange())
+                .filter((key) => originalInputChange()[key] !== inputChange()[key])
+                .reduce((a, b) => {
+                    a[b] = inputChange()[b]
+                    return a
+                }, {})
 
             await controller.sendConfig({
-                osc: { ...toggles, endpoints, address: endpoints.address },
+                osc: Object.fromEntries(
+                    Object.entries({
+                        ...toggles,
+                        endpoints,
+                        receiver_port: endpoints?.receiver_port,
+                        sending_port: endpoints?.sending_port,
+                        address: endpoints?.address,
+                    }).filter(([_, v]) => v !== undefined),
+                ),
+            })
+
+            addNotification({
+                title: 'Updated config',
+                message: 'Updated config',
+                type: ENotificationType.INFO,
             })
         } catch (err) {
             addNotification({
@@ -87,11 +91,7 @@ const OscSettingsRoot = () => {
             })
         }
 
-        addNotification({
-            title: 'Updated config',
-            message: 'Updated config',
-            type: ENotificationType.INFO,
-        })
+        setLoader(false)
     }
 
     createEffect(
@@ -126,6 +126,7 @@ const OscSettingsRoot = () => {
 
     return (
         <OscSettings
+            loader={loader()}
             showButtons={hasChanges()}
             toggle={toggle()}
             inputChange={inputChange()}

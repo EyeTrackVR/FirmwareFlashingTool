@@ -6,7 +6,7 @@ import Input from '@components/Inputs/Input'
 import Typography from '@components/Typography'
 import ContextWrapper from '@components/Wrapper/ContextWrapper'
 import { OSC_SETTINGS_ENUM } from '@interfaces/Settings/enums'
-import { validateAddress } from '@src/utils'
+import { validateAddress, validatePort } from '@src/utils'
 import { VsSettings } from 'solid-icons/vs'
 import { Component, createMemo, Show } from 'solid-js'
 
@@ -14,6 +14,7 @@ export interface IProps {
     toggle: Partial<Record<OSC_SETTINGS_ENUM, boolean>>
     inputChange: Partial<Record<OSC_SETTINGS_ENUM, string>>
     showButtons: boolean
+    loader?: boolean
     onInputChange: (key: OSC_SETTINGS_ENUM, value: string) => void
     onToggle: (key: OSC_SETTINGS_ENUM, status: boolean) => void
     onClickReset: () => void
@@ -23,16 +24,42 @@ export interface IProps {
 const OscSettings: Component<IProps> = (props) => {
     const isValidAddress = createMemo(() => {
         const address = props.inputChange[OSC_SETTINGS_ENUM.ADDRESS]
-        if (!address) return true
+        if (!address) return false
         return validateAddress(address)
+    })
+
+    const isValidSendingPort = createMemo(() => {
+        const port = props.inputChange[OSC_SETTINGS_ENUM.SENDING_PORT]
+        if (!port) return false
+        return validatePort(+port)
+    })
+
+    const isValidReceiverPort = createMemo(() => {
+        const port = props.inputChange[OSC_SETTINGS_ENUM.RECEIVER_PORT]
+        if (!port) return false
+        return validatePort(+port)
+    })
+
+    const hasErrors = createMemo(
+        () => !isValidAddress() || !isValidSendingPort() || !isValidReceiverPort(),
+    )
+
+    const isValidUpdate = createMemo(() => {
+        return !hasErrors() && props.showButtons
     })
 
     return (
         <section class="relative w-full  pt-8 pb-12 flex flex-col gap-12">
-            <Show when={props.showButtons}>
+            <Show when={isValidUpdate()}>
                 <div class="absolute bottom-[20px] left-[50%] transform -translate-x-1/2 flex flex-row gap-24 bg-black-900 py-12 px-24 rounded-12 border border-solid border-black-800">
-                    <Button label="Cancel" isDangerous onClick={props.onClickReset} />
+                    <Button
+                        label="Cancel"
+                        isDangerous
+                        onClick={props.onClickReset}
+                        disabled={props.loader}
+                    />
                     <PrimaryButton
+                        disabled={props.loader}
                         label="Update settings"
                         isActive
                         onClick={props.onClickUpdateSettings}
@@ -41,6 +68,7 @@ const OscSettings: Component<IProps> = (props) => {
             </Show>
             <div class="w-full flex flex-row justify-end pr-24">
                 <Button
+                    disabled={props.loader}
                     label="Reset settings to default"
                     isDangerous
                     onClick={props.onClickReset}
@@ -60,6 +88,7 @@ const OscSettings: Component<IProps> = (props) => {
                             <div class="flex flex-row gap-24">
                                 <div class="flex flex-row items-center gap-6">
                                     <ToggleButton
+                                        disabled={props.loader}
                                         onToggle={() => {
                                             props.onToggle(
                                                 OSC_SETTINGS_ENUM.MIRROR_EYES,
@@ -76,6 +105,7 @@ const OscSettings: Component<IProps> = (props) => {
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
                                     <ToggleButton
+                                        disabled={props.loader}
                                         onToggle={() => {
                                             props.onToggle(
                                                 OSC_SETTINGS_ENUM.SYNC_BLINK,
@@ -99,6 +129,7 @@ const OscSettings: Component<IProps> = (props) => {
                             <div class="flex flex-row gap-24">
                                 <div class="flex flex-row items-center gap-6">
                                     <ToggleButton
+                                        disabled={props.loader}
                                         onToggle={() => {
                                             props.onToggle(
                                                 OSC_SETTINGS_ENUM.ENABLE_SENDING,
@@ -115,6 +146,7 @@ const OscSettings: Component<IProps> = (props) => {
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
                                     <ToggleButton
+                                        disabled={props.loader}
                                         onToggle={() => {
                                             props.onToggle(
                                                 OSC_SETTINGS_ENUM.ENABLE_RECEIVING,
@@ -138,6 +170,7 @@ const OscSettings: Component<IProps> = (props) => {
                             </Typography>
                             <div class="flex flex-row items-center gap-6">
                                 <ToggleButton
+                                    disabled={props.loader}
                                     onToggle={() => {
                                         props.onToggle(
                                             OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING,
@@ -169,6 +202,7 @@ const OscSettings: Component<IProps> = (props) => {
                                         Network address
                                     </Typography>
                                     <Input
+                                        disabled={props.loader}
                                         isError={!isValidAddress()}
                                         onChange={(value) => {
                                             props.onInputChange(OSC_SETTINGS_ENUM.ADDRESS, value)
@@ -183,6 +217,8 @@ const OscSettings: Component<IProps> = (props) => {
                                             Sending port
                                         </Typography>
                                         <Input
+                                            isError={!isValidSendingPort()}
+                                            disabled={props.loader}
                                             onChange={(value) => {
                                                 props.onInputChange(
                                                     OSC_SETTINGS_ENUM.SENDING_PORT,
@@ -201,6 +237,8 @@ const OscSettings: Component<IProps> = (props) => {
                                             Receiver port
                                         </Typography>
                                         <Input
+                                            isError={!isValidReceiverPort()}
+                                            disabled={props.loader}
                                             onChange={(value) => {
                                                 props.onInputChange(
                                                     OSC_SETTINGS_ENUM.RECEIVER_PORT,
@@ -221,6 +259,7 @@ const OscSettings: Component<IProps> = (props) => {
                                         Eyes Y
                                     </Typography>
                                     <Input
+                                        disabled={props.loader}
                                         onChange={(value) => {
                                             props.onInputChange(OSC_SETTINGS_ENUM.EYES_Y, value)
                                         }}
@@ -241,6 +280,7 @@ const OscSettings: Component<IProps> = (props) => {
                                         Recalibrate
                                     </Typography>
                                     <Input
+                                        disabled={props.loader}
                                         onChange={(value) => {
                                             props.onInputChange(
                                                 OSC_SETTINGS_ENUM.RECALIBRATE,
@@ -258,6 +298,7 @@ const OscSettings: Component<IProps> = (props) => {
                                         Sync blink
                                     </Typography>
                                     <Input
+                                        disabled={props.loader}
                                         onChange={(value) => {
                                             props.onInputChange(OSC_SETTINGS_ENUM.SYNC_BLINK, value)
                                         }}
@@ -272,6 +313,7 @@ const OscSettings: Component<IProps> = (props) => {
                                         Recenter
                                     </Typography>
                                     <Input
+                                        disabled={props.loader}
                                         onChange={(value) => {
                                             props.onInputChange(OSC_SETTINGS_ENUM.RECENTER, value)
                                         }}
@@ -285,6 +327,7 @@ const OscSettings: Component<IProps> = (props) => {
                                             Left eye X
                                         </Typography>
                                         <Input
+                                            disabled={props.loader}
                                             onChange={(value) => {
                                                 props.onInputChange(
                                                     OSC_SETTINGS_ENUM.LEFT_EYE_X,
@@ -303,6 +346,7 @@ const OscSettings: Component<IProps> = (props) => {
                                             Right eye X
                                         </Typography>
                                         <Input
+                                            disabled={props.loader}
                                             onChange={(value) => {
                                                 props.onInputChange(
                                                     OSC_SETTINGS_ENUM.RIGHT_EYE_X,
@@ -323,6 +367,7 @@ const OscSettings: Component<IProps> = (props) => {
                                             Left eye blink
                                         </Typography>
                                         <Input
+                                            disabled={props.loader}
                                             onChange={(value) => {
                                                 props.onInputChange(
                                                     OSC_SETTINGS_ENUM.LEFT_EYE_BLINK,
@@ -342,6 +387,7 @@ const OscSettings: Component<IProps> = (props) => {
                                             Right eye blink
                                         </Typography>
                                         <Input
+                                            disabled={props.loader}
                                             onChange={(value) => {
                                                 props.onInputChange(
                                                     OSC_SETTINGS_ENUM.RIGHT_EYE_BLINK,

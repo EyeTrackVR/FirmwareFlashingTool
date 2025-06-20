@@ -18,3 +18,8 @@ export enum OSC_SETTINGS_ENUM {
     LEFT_EYE_BLINK = 'left_eye_blink',
     RIGHT_EYE_BLINK = 'right_eye_blink',
 }
+
+export enum TRACKING_ALGORITHM_SETTINGS_ENUM {
+    SKIP_AUTO_RADIUS = 'skip_auto_radius',
+    SKIP_BLINK_DETECTION = 'skip_blink_detection',
+}
