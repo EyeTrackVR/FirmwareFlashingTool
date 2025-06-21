@@ -40,10 +40,6 @@ const AppRoutes: Component = () => {
 
                 const path = createMemo(() => {
                     const pathName = `/${data.location.pathname.split('/').filter((el) => !!el)[0]}`
-                    if (pathName === '/TrackerDashboard') {
-                        return '/dashboard'
-                    }
-
                     return pathName
                 })
 

@@ -12,9 +12,6 @@ export const watchUserState = () => {
 
     const path = createMemo(() => {
         const pathName = `/${location.pathname.split('/').filter((el) => !!el)[0]}`
-        if (pathName === '/TrackerDashboard') {
-            return '/dashboard'
-        }
         return pathName
     })
 
