@@ -1,8 +1,8 @@
 import {
-    IETVRConfig,
     IETVRConfigResponse,
     IFeedResponse,
     ITrackerState,
+    IUpdateETVRConfig,
     IUpdateTracker,
 } from '@interfaces/services/interfaces'
 import { Body, HttpVerb, ResponseType } from '@tauri-apps/api/http'
@@ -76,8 +76,8 @@ export class EyeTrackVrBackend {
     }
 
     // config
-    updateConfig(config?: IETVRConfig): Promise<IETVRConfigResponse | null> {
-        return this.fetchJson<IETVRConfigResponse | null, IETVRConfig>(
+    updateConfig(config: Partial<IUpdateETVRConfig>): Promise<Partial<IUpdateETVRConfig> | null> {
+        return this.fetchJson<Partial<IUpdateETVRConfig> | null, Partial<IUpdateETVRConfig>>(
             `${this.url}/etvr/config`,
             'POST',
             config,

@@ -1,5 +1,3 @@
-import type { DebugMode } from '@static/types'
-import type { JSXElement } from 'solid-js'
 import {
     type CHANNEL_TYPE,
     type RESTStatus,
@@ -60,10 +58,6 @@ export interface IGHRelease {
 
 //*  App Store Interfaces  */
 
-export interface AppStore {
-    debugMode: DebugMode
-}
-
 export type IActivePort = {
     activePortName: string
     autoSelect: boolean
@@ -82,11 +76,6 @@ export interface AppStoreAPI {
     manifestPath: string
     activePort: IActivePort
     ports: IDropdownList[]
-}
-
-export interface ISignal {
-    requestToSend: boolean
-    dataTerminalReady: boolean
 }
 
 export interface IChannelOptions {

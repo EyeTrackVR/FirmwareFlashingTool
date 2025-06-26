@@ -1,13 +1,14 @@
-import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import {
+    IUpdateETVRConfig,
     IUpdateTracker,
     type IETVRConfigResponse,
     type ITrackerState,
 } from '@interfaces/services/interfaces'
-import { EyeTrackVrBackend } from './api'
-import { sleep } from '@src/utils'
+import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import { ITracker } from '@interfaces/trackers/interfaces'
+import { sleep } from '@src/utils'
+import { EyeTrackVrBackend } from './api'
 
 export class EyeTrackVrController {
     private readonly api: EyeTrackVrBackend
@@ -28,6 +29,14 @@ export class EyeTrackVrController {
 
     public async restartServer(): Promise<null> {
         return this.api.restartETVR()
+    }
+
+    public getRawCameraFeed(uuid: string): string {
+        return `${this.api.url}/etvr/feed/${uuid}/camera`
+    }
+
+    public getAlgorithmFeed(uuid: string): string {
+        return `${this.api.url}/etvr/feed/${uuid}/algorithm`
     }
 
     public async getServerStatus(): Promise<CONNECTION_STATUS> {
@@ -64,6 +73,10 @@ export class EyeTrackVrController {
         }
 
         return CONNECTION_STATUS.FAILED
+    }
+
+    public async sendConfig(config: Partial<IUpdateETVRConfig>) {
+        await this.api.updateConfig(config)
     }
 
     public async updateConfig() {
@@ -133,6 +146,20 @@ export class EyeTrackVrController {
 
     async updateTracker(uuid: string, payload: Partial<IUpdateTracker>) {
         return this.api.updateTracker(uuid, payload)
+    }
+
+    public async updateTrackersAlgorithms(
+        data: Array<{ trackerPosition: TRACKER_POSITION; address: string }>,
+        config: Partial<IUpdateTracker>,
+    ) {
+        await this.updateTrackersConfig()
+
+        const updatePromises = data.map(async (tracker) => {
+            const trackerState = await this.getTracker(tracker.trackerPosition)
+            await this.api.updateTracker(trackerState.uuid, config)
+        })
+
+        await Promise.all(updatePromises)
     }
 
     public async updateTrackerCameraConfigurations(data: ITracker[]): Promise<string[]> {
@@ -222,7 +249,7 @@ export class EyeTrackVrController {
                 rotation[tracker.tracker_position as TRACKER_POSITION] = tracker.camera.rotation
                 trackers.push({
                     trackerPosition: tracker.tracker_position as TRACKER_POSITION,
-                    streamSource: `${this.api.url}/etvr/feed/${tracker.uuid}/camera`,
+                    streamSource: this.getRawCameraFeed(tracker.uuid),
                     algorithmOrder: tracker.algorithm.algorithm_order,
                     address: tracker.camera.capture_source,
                     enabled: tracker.enabled,

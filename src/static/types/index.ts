@@ -14,18 +14,6 @@ export type Context = {
 //********************************* Config *************************************/
 
 /**
- * @description Debug mode levels
- * @export typedef {string} DebugMode
- * @property {'off'} off
- * @property {'error'} error
- * @property {'warn'} warn
- * @property {'info'} info
- * @property {'debug'} debug
- * @property {'trace'} trace
- */
-export type DebugMode = 'off' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
-
-/**
  * @description This is the export type that is passed to the Tauri Store instance to handle persistent data within the app.
  * @export typedef {Object} PersistentSettings
  * @property {boolean} enableNotificationsSounds
@@ -43,7 +31,6 @@ export type PersistentSettings = {
     enableNotificationsSounds?: boolean
     enableNotifications?: boolean
     globalNotificationsType?: ENotificationAction
-    debugMode?: DebugMode
     trackers?: ITracker[]
     rotation?: Record<TRACKER_POSITION, number>
     algorithmOrder?: Record<TRACKER_POSITION, string[]>

@@ -1,19 +1,9 @@
-import { removeFile, readTextFile, BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
-import { getClient, ResponseType } from '@tauri-apps/api/http'
-import { appConfigDir, appDataDir, join } from '@tauri-apps/api/path'
-import { invoke } from '@tauri-apps/api/tauri'
-import { pipe } from 'fp-ts/lib/function'
-import { createContext, useContext, createMemo, type Component, Accessor } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
-import { debug, error, warn, trace } from 'tauri-plugin-log-api'
-import { download, upload } from 'tauri-plugin-upload-api'
-import type { Context } from '@static/types'
 import {
+    CHANNEL_TYPE,
     ENotificationType,
+    ESPEndpoints,
     RESTStatus,
     RESTType,
-    ESPEndpoints,
-    CHANNEL_TYPE,
 } from '@interfaces/enums'
 import {
     AppStoreAPI,
@@ -25,10 +15,20 @@ import {
 } from '@interfaces/interfaces'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { GHEndpoints } from '@src/static/endpoints'
-import { O } from '@static/types'
-import { makeRequest } from 'tauri-plugin-request-client'
 import { formatDeviceName } from '@src/utils'
+import type { Context } from '@static/types'
+import { O } from '@static/types'
 import { addNotification } from '@store/notifications/actions'
+import { BaseDirectory, readTextFile, removeFile, writeTextFile } from '@tauri-apps/api/fs'
+import { getClient, ResponseType } from '@tauri-apps/api/http'
+import { appConfigDir, appDataDir, join } from '@tauri-apps/api/path'
+import { invoke } from '@tauri-apps/api/tauri'
+import { pipe } from 'fp-ts/lib/function'
+import { Accessor, createContext, createMemo, useContext, type Component } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
+import { debug, error, trace, warn } from 'tauri-plugin-log-api'
+import { makeRequest } from 'tauri-plugin-request-client'
+import { download, upload } from 'tauri-plugin-upload-api'
 
 interface AppAPIContext {
     //********************************* gh rest *************************************/

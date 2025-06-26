@@ -19,7 +19,7 @@ export interface IProps {
 
 export const Footer: Component<IProps> = (props) => {
     return (
-        <footer class={classNames('flex w-full justify-end gap-12')}>
+        <footer class="flex w-full justify-end gap-12">
             <Show when={props.onClickSecondaryButton}>
                 <Button
                     isActive={props.isSecondaryButtonActive}

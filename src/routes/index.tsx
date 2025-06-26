@@ -9,12 +9,23 @@ const page404 = lazy(() => import('@containers/404/[...404]'))
 const Dashboard = lazy(() => import('@containers/Dashboard'))
 const Welcome = lazy(() => import('@containers/Welcome'))
 const GeneralSettings = lazy(() => import('@containers/Settings/GeneralSettings'))
-const AlgorithmOrderSettings = lazy(() => import('@containers/Settings/AlgorithmOrderSettings'))
+const AlgorithmSelectionSettings = lazy(
+    () => import('@containers/Settings/AlgorithmSelectionSettings'),
+)
 const AlgorithmTrackingSettings = lazy(
     () => import('@containers/Settings/AlgorithmTrackingSettings'),
 )
 const VrcftSettings = lazy(() => import('@containers/Settings/VrcftSettings'))
 const OscSettings = lazy(() => import('@containers/Settings/OscSettings'))
+
+export const DASHBOARD_ROUTES = ['/advancedSettings', '/dashboard']
+export const SETTINGS_ROUTES = [
+    '/algorithmTrackingSettings',
+    '/AlgorithmSelectionSettings',
+    '/generalSettings',
+    '/vrcftSettings',
+    '/oscSettings',
+]
 
 export const routes: RouteDefinition[] = [
     { path: '/configureBoardWizard', component: ConfigureBoardWizard },
@@ -22,9 +33,8 @@ export const routes: RouteDefinition[] = [
     { path: '/flashFirmware', component: FlashFirmware },
     { path: '/network', component: ManageNetwork },
     { path: '/dashboard', component: Dashboard },
-
     { path: '/algorithmTrackingSettings', component: AlgorithmTrackingSettings },
-    { path: '/algorithmOrderSettings', component: AlgorithmOrderSettings },
+    { path: '/algorithmSelectionSettings', component: AlgorithmSelectionSettings },
     { path: '/generalSettings', component: GeneralSettings },
     { path: '/vrcftSettings', component: VrcftSettings },
     { path: '/oscSettings', component: OscSettings },

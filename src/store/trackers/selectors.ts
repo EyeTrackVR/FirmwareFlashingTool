@@ -5,7 +5,7 @@ import { Accessor, createMemo } from 'solid-js'
 import { v6 as uuidV6 } from 'uuid'
 import { trackersState } from './trackers'
 
-export const { trackers, rotation, algorithmOrder, flipAxis, canvasBoxPositions } =
+export const { trackers, rotation, algorithmOrder, flipAxis, canvasBoxPositions, config } =
     createStoreSelectors(trackersState)
 
 export const getTrackersCount = createMemo(() => trackers().length)
@@ -33,6 +33,5 @@ export const getTrackers: Accessor<Record<TRACKER_POSITION, ITracker>> = createM
     }
 
     trackers().forEach((board) => (data[board.trackerPosition] = board))
-
     return data
 })

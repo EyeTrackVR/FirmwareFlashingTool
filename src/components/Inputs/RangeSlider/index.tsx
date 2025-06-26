@@ -1,6 +1,7 @@
 import Typography from '@components/Typography'
 import { Component, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 interface IProps {
+    disabled?: boolean
     onChange: (value: number) => void
     value: number
     min: number
@@ -63,7 +64,13 @@ export const RangeSlider: Component<IProps> = (props) => {
                 min={props.min}
                 max={props.max}
                 value={props.value}
-                onInput={(e) => updateValue(parseInt(e.target.value))}
+                disabled={props.disabled}
+                onInput={(e) => {
+                    updateValue(parseInt(e.target.value))
+                }}
+                classList={{
+                    '[&::-webkit-slider-thumb]:!cursor-not-allowed': props.disabled,
+                }}
                 class="w-full h-40 appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[45px] [&::-webkit-slider-thumb]:h-[32px] [&::-webkit-slider-thumb]:rounded [&::-webkit-slider-thumb]:opacity-0 [&::-webkit-slider-thumb]:bg-[#9092ff] [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:mt-[-16px] [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:top-[8px] [&::-moz-range-thumb]:w-[25px] [&::-moz-range-thumb]:h-[45px] [&::-moz-range-thumb]:rounded [&::-moz-range-thumb]:bg-[#9092ff] [&::-moz-range-thumb]:cursor-default [&::-moz-range-thumb]:border-none [&::-ms-thumb]:w-[45px] [&::-ms-thumb]:h-[45px] [&::-ms-thumb]:rounded [&::-ms-thumb]:bg-[#9092ff] [&::-ms-thumb]:cursor-default hover:cursor-default focus-visible:outline-offset-[15px] focus-visible:outline-transparent"
             />
             <div
@@ -80,9 +87,7 @@ export const RangeSlider: Component<IProps> = (props) => {
                         class="w-full h-40 absolute rounded-6 bg-black-800 right-[calc(50%+30px)]"
                         style={{ width: leftFillWidth() }}
                     />
-                    <div
-                        class="rounded-4 w-[45px] h-[32px] absolute top-1/2 left-1/2 flex justify-center items-center bg-purple-300 z-[5] -translate-x-1/2 -translate-y-1/2"
-                        onClick={() => {}}>
+                    <div class="rounded-4 w-[45px] h-[32px] absolute top-1/2 left-1/2 flex justify-center items-center bg-purple-300 z-[5] -translate-x-1/2 -translate-y-1/2">
                         <Typography color="white" text="caption">
                             {props.value}
                         </Typography>

@@ -108,7 +108,7 @@ export const shortAddress = (text: string, size = 24) => {
     return `${start}...${end}`
 }
 
-export const validateAddress = (connectionString): boolean => {
+export const validateAddress = (connectionString: unknown): boolean => {
     if (!connectionString || typeof connectionString !== 'string') {
         return false
     }
@@ -122,6 +122,10 @@ export const validateAddress = (connectionString): boolean => {
     }
 
     return IP_ADDRESS_REGEX.test(connectionString)
+}
+
+export const validatePort = (port: number): boolean => {
+    return port > 1 || port > 65535
 }
 
 export const isValidChannel = (value: string): value is CHANNEL_TYPE => {

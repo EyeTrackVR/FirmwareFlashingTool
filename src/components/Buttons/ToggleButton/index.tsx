@@ -3,15 +3,20 @@ import { Component } from 'solid-js'
 export interface IProps {
     onToggle: () => void
     isToggled: boolean
+    disabled?: boolean
 }
 
 export const ToggleButton: Component<IProps> = (props) => (
     <div
         onMouseDown={() => {
-            props.onToggle()
+            if (!props.disabled) {
+                props.onToggle()
+            }
         }}
-        class="bg-grey-300 flex items-center justify-center rounded-20 w-[48px] h-[24px] transition-all duration-200 relative z-10 cursor-pointer"
+        class="bg-grey-300 flex items-center justify-center rounded-20 w-[48px] h-[24px] transition-all duration-200 relative z-10"
         classList={{
+            'cursor-not-allowed': props.disabled,
+            'cursor-pointer': !props.disabled,
             'bg-grey-300': !props.isToggled,
             'bg-purple-300': props.isToggled,
         }}>
