@@ -11,7 +11,7 @@ import { VsSettings } from 'solid-icons/vs'
 import { Component, Show } from 'solid-js'
 
 export interface IProps {
-    showButtons?: boolean
+    updateAllowed?: boolean
     inputChange: number
     toggle: Partial<Record<TRACKING_ALGORITHM_SETTINGS_ENUM, boolean>>
     loader: boolean
@@ -24,7 +24,7 @@ export interface IProps {
 const AlgorithmTrackingSettings: Component<IProps> = (props) => {
     return (
         <section class="relative w-full pr-24 pt-8 flex flex-col gap-12">
-            <Show when={props.showButtons}>
+            <Show when={props.updateAllowed}>
                 <div class="absolute bottom-[20px] left-[50%] transform -translate-x-1/2 flex flex-row gap-24 bg-black-900 py-12 px-24 rounded-12 border border-solid border-black-800">
                     <Button
                         label="Cancel"
@@ -45,7 +45,7 @@ const AlgorithmTrackingSettings: Component<IProps> = (props) => {
                     label="Reset settings to default"
                     isDangerous
                     disabled={props.loader}
-                    onClick={props.onClickUpdateSettings}
+                    onClick={props.onClickReset}
                 />
             </div>
             <AdvancedDropdown>

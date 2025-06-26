@@ -87,7 +87,7 @@ const OscSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.INFO,
+                type: ENotificationType.ERROR,
             })
         }
 
@@ -127,7 +127,7 @@ const OscSettingsRoot = () => {
     return (
         <OscSettings
             loader={loader()}
-            showButtons={hasChanges()}
+            updateAllowed={hasChanges()}
             toggle={toggle()}
             inputChange={inputChange()}
             onClickUpdateSettings={() => {

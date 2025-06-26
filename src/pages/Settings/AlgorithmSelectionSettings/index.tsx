@@ -12,17 +12,17 @@ import { Component, createMemo, Show } from 'solid-js'
 export interface IProps {
     loader: boolean
     toggle: Partial<Record<ALGORITHM_ORDER_SETTINGS, boolean>>
-    showButtons: boolean
+    updateAllowed: boolean
     cameraFeed: string
     onToggle: (key: ALGORITHM_ORDER_SETTINGS, status: boolean) => void
     onClickReset: () => void
     onClickUpdateSettings: () => void
 }
 
-const AlgorithmOrderSettings: Component<IProps> = (props) => {
+const AlgorithmSelectionSettings: Component<IProps> = (props) => {
     const isValidUpdate = createMemo(() => {
         const hasDisabled = Object.values(props.toggle).every((value) => !value)
-        return !hasDisabled && props.showButtons
+        return !hasDisabled && props.updateAllowed
     })
 
     return (
@@ -63,44 +63,6 @@ const AlgorithmOrderSettings: Component<IProps> = (props) => {
                         </Typography>
                         <div class="flex flex-row gap-24 w-full">
                             <div class="flex flex-col gap-24 w-full">
-                                <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
-                                        <ToggleButton
-                                            disabled={props.loader}
-                                            onToggle={() => {
-                                                props.onToggle(
-                                                    ALGORITHM_ORDER_SETTINGS.LEAP,
-                                                    !props.toggle[ALGORITHM_ORDER_SETTINGS.LEAP],
-                                                )
-                                            }}
-                                            isToggled={
-                                                props.toggle[ALGORITHM_ORDER_SETTINGS.LEAP] ?? false
-                                            }
-                                        />
-                                    </Tooltip>
-                                    <Typography color="white" text="caption" nowrap>
-                                        LEAP
-                                    </Typography>
-                                </div>
-                                <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
-                                        <ToggleButton
-                                            disabled={props.loader}
-                                            onToggle={() => {
-                                                props.onToggle(
-                                                    ALGORITHM_ORDER_SETTINGS.BLOB,
-                                                    !props.toggle[ALGORITHM_ORDER_SETTINGS.BLOB],
-                                                )
-                                            }}
-                                            isToggled={
-                                                props.toggle[ALGORITHM_ORDER_SETTINGS.BLOB] ?? false
-                                            }
-                                        />
-                                    </Tooltip>
-                                    <Typography color="white" text="caption" nowrap>
-                                        BLOB
-                                    </Typography>
-                                </div>
                                 <div class="flex flex-row items-center gap-6">
                                     <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
                                         <ToggleButton
@@ -195,4 +157,4 @@ const AlgorithmOrderSettings: Component<IProps> = (props) => {
     )
 }
 
-export default AlgorithmOrderSettings
+export default AlgorithmSelectionSettings

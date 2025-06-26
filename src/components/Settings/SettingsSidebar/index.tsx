@@ -17,7 +17,7 @@ const SettingsSidebar: Component<IProps> = (props) => {
             title: 'Algorithm settings',
             items: [
                 { path: '/algorithmTrackingSettings', label: 'Tracking algorithms' },
-                { path: '/algorithmOrderSettings', label: 'Algorithms order' },
+                { path: '/AlgorithmSelectionSettings', label: 'Algorithms order' },
             ],
         },
         {

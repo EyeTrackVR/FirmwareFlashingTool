@@ -52,7 +52,7 @@ const AlgorithmTrackingSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.INFO,
+                type: ENotificationType.ERROR,
             })
         }
 
@@ -64,7 +64,7 @@ const AlgorithmTrackingSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.INFO,
+                type: ENotificationType.ERROR,
             })
         }
         setLoader(false)
@@ -110,7 +110,7 @@ const AlgorithmTrackingSettingsRoot = () => {
         <AlgorithmTrackingSettings
             loader={loader()}
             inputChange={inputChange()}
-            showButtons={hasChanges()}
+            updateAllowed={hasChanges()}
             toggle={toggle()}
             onInputChange={(value) => {
                 setInputChange(value)

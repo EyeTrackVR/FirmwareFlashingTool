@@ -125,8 +125,7 @@ export const validateAddress = (connectionString: unknown): boolean => {
 }
 
 export const validatePort = (port: number): boolean => {
-    if (port < 1 || port > 65535) return false
-    return true
+    return port > 1 || port > 65535
 }
 
 export const isValidChannel = (value: string): value is CHANNEL_TYPE => {

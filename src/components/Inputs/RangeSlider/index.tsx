@@ -64,13 +64,9 @@ export const RangeSlider: Component<IProps> = (props) => {
                 min={props.min}
                 max={props.max}
                 value={props.value}
+                disabled={props.disabled}
                 onInput={(e) => {
-                    const target = e.target as any
-                    if (props.disabled) {
-                        target.value = props.value
-                    } else {
-                        updateValue(parseInt(e.target.value))
-                    }
+                    updateValue(parseInt(e.target.value))
                 }}
                 classList={{
                     '[&::-webkit-slider-thumb]:!cursor-not-allowed': props.disabled,

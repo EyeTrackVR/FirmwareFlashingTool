@@ -13,7 +13,7 @@ import { Component, createMemo, Show } from 'solid-js'
 export interface IProps {
     toggle: Partial<Record<OSC_SETTINGS_ENUM, boolean>>
     inputChange: Partial<Record<OSC_SETTINGS_ENUM, string>>
-    showButtons: boolean
+    updateAllowed: boolean
     loader?: boolean
     onInputChange: (key: OSC_SETTINGS_ENUM, value: string) => void
     onToggle: (key: OSC_SETTINGS_ENUM, status: boolean) => void
@@ -45,7 +45,7 @@ const OscSettings: Component<IProps> = (props) => {
     )
 
     const isValidUpdate = createMemo(() => {
-        return !hasErrors() && props.showButtons
+        return !hasErrors() && props.updateAllowed
     })
 
     return (
@@ -190,7 +190,7 @@ const OscSettings: Component<IProps> = (props) => {
                     </div>
                 </ContextWrapper>
                 <div>
-                    <AdvancedDropdown class={props.showButtons ? 'pb-[90px]' : 'pb-[12px]'}>
+                    <AdvancedDropdown class={props.updateAllowed ? 'pb-[90px]' : 'pb-[12px]'}>
                         <ContextWrapper
                             icon={VsSettings}
                             iconColor="white"

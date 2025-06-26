@@ -1,14 +1,14 @@
 import { ENotificationType } from '@interfaces/enums'
 import { ALGORITHM_ORDER_SETTINGS } from '@interfaces/Settings/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
-import AlgorithmOrderSettings from '@pages/Settings/AlgorithmOrderSettings'
+import AlgorithmSelectionSettings from '@pages/Settings/AlgorithmSelectionSettings'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { addNotification } from '@store/notifications/actions'
 import { config } from '@store/trackers/selectors'
 import { setConfig } from '@store/trackers/trackers'
 import { createEffect, createMemo, createSignal, on } from 'solid-js'
 
-const AlgorithmOrderSettingsRoot = () => {
+const AlgorithmSelectionSettingsRoot = () => {
     const [loader, setLoader] = createSignal(false)
     const [cameraFeed, setCameraFeed] = createSignal('')
     const [toggle, setToggle] = createSignal<Partial<Record<ALGORITHM_ORDER_SETTINGS, boolean>>>({})
@@ -47,7 +47,7 @@ const AlgorithmOrderSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.INFO,
+                type: ENotificationType.ERROR,
             })
         }
 
@@ -59,7 +59,7 @@ const AlgorithmOrderSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.INFO,
+                type: ENotificationType.ERROR,
             })
         }
 
@@ -99,9 +99,9 @@ const AlgorithmOrderSettingsRoot = () => {
     })
 
     return (
-        <AlgorithmOrderSettings
+        <AlgorithmSelectionSettings
             cameraFeed={cameraFeed()}
-            showButtons={hasChanges()}
+            updateAllowed={hasChanges()}
             loader={loader()}
             toggle={toggle()}
             onClickReset={() => {
@@ -119,4 +119,4 @@ const AlgorithmOrderSettingsRoot = () => {
     )
 }
 
-export default AlgorithmOrderSettingsRoot
+export default AlgorithmSelectionSettingsRoot
