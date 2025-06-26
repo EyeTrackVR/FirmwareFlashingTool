@@ -25,6 +25,7 @@ export enum TRACKING_ALGORITHM_SETTINGS_ENUM {
 }
 
 export enum ALGORITHM_ORDER_SETTINGS {
+    LEAP = 'leap',
     HSRAC = 'hsrac',
     RANSAC = 'ransac',
     HSF = 'hsf',
