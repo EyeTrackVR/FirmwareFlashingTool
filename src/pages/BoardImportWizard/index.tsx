@@ -30,7 +30,6 @@ interface IProps {
     onClickOpenDocs: () => void
     onClickBack: () => void
     serverStatus: CONNECTION_STATUS
-    loader: boolean
 }
 
 const BoardImportWizard: Component<IProps> = (props) => {
@@ -111,7 +110,6 @@ const BoardImportWizard: Component<IProps> = (props) => {
     })
 
     const isPrimaryButtonActive = createMemo(() => {
-        if (props.loader) return false
         return (
             (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 formHandler.getFieldValue('label').length > 0 &&
@@ -122,8 +120,6 @@ const BoardImportWizard: Component<IProps> = (props) => {
     })
 
     const isPrimaryButtonDisabled = createMemo(() => {
-        if (props.loader) return true
-
         return (
             (step() !== SETUP_TRACKER.CHECK_CONNECTION &&
                 (!formHandler.getFieldValue('address').length ||
@@ -233,6 +229,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                 algorithmOrder: ALGORITHMS,
                 enabled: true,
                 trackerPosition: tracker,
+                rawStreamSource: '',
                 streamSource: '',
                 id: uuidV6(),
             }
@@ -420,7 +417,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             />
                             <Show when={hidePrimaryButton()}>
                                 <Button
-                                    disabled={isLoading() || props.loader}
+                                    disabled={isLoading()}
                                     label="Skip step"
                                     type="button"
                                     onClick={setNextStep}

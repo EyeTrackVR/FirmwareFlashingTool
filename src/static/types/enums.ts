@@ -122,6 +122,6 @@ export enum MODAL_TYPE {
 }
 
 export enum STREAM_TOGGLE_FLIP {
-    FLIP_X_AXIS = 'FLIP_X_AXIS',
-    FLIP_Y_AXIS = 'FLIP_Y_AXIS',
+    FLIP_X_AXIS = 'flip_x_axis',
+    FLIP_Y_AXIS = 'flip_y_axis',
 }

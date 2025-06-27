@@ -3,6 +3,7 @@ import { TRACKER_POSITION } from './enums'
 export interface ITracker {
     trackerPosition: TRACKER_POSITION
     algorithmOrder: string[]
+    rawStreamSource: string
     streamSource: string
     enabled: boolean
     address: string
