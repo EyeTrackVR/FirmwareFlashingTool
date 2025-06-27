@@ -7,7 +7,6 @@ import { ITracker } from '@interfaces/trackers/interfaces'
 import { Component, createMemo } from 'solid-js'
 
 export interface IProps {
-    onClickAdvancedSettings: () => void
     onClickStreamSettings: () => void
     onClickRecalibrate: () => void
     onClickRecenter: () => void

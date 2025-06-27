@@ -19,7 +19,6 @@ import { Component, createEffect, createMemo, onCleanup, Show } from 'solid-js'
 export interface IProps {
     onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
     onClickToggle: (action: STREAM_TOGGLE_FLIP) => void
-    onClickAdvancedSettings: () => void
     onClickUpdateSettings: () => void
     onClickStreamSettings: () => void
     onClickRecalibrate: () => void

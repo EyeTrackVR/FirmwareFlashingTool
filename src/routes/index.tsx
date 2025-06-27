@@ -18,7 +18,7 @@ const AlgorithmTrackingSettings = lazy(
 const VrcftSettings = lazy(() => import('@containers/Settings/VrcftSettings'))
 const OscSettings = lazy(() => import('@containers/Settings/OscSettings'))
 
-export const DASHBOARD_ROUTES = ['/advancedSettings', '/dashboard']
+export const DASHBOARD_ROUTES = ['/dashboard']
 export const SETTINGS_ROUTES = [
     '/algorithmTrackingSettings',
     '/AlgorithmSelectionSettings',

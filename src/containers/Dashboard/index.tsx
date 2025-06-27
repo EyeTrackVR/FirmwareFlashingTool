@@ -5,8 +5,8 @@ import Dashboard from '@pages/Dashboard'
 import StreamSettings from '@pages/StreamSettings'
 import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate } from '@solidjs/router'
-import { IBoxPosition } from '@src/Services/canvas'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
+import { box } from '@src/utils'
 import { addNotification } from '@store/notifications/actions'
 import { canvasBoxPositions, config, getTrackers } from '@store/trackers/selectors'
 import { setCanvasBoxPositions, setConfig } from '@store/trackers/trackers'
@@ -16,12 +16,12 @@ const DashboardRoot = () => {
     const navigate = useNavigate()
 
     const [loader, setLoader] = createSignal(false)
+    const [isStreamSettingsActive, setIsStreamSettingsActive] = createSignal(false)
     const [rotation, setRotation] = createSignal<Partial<Record<TRACKER_POSITION, number>>>({})
     const [toggle, setToggle] = createSignal<Partial<Record<STREAM_TOGGLE_FLIP, boolean>>>({})
     const [originalToggle, setOriginalToggle] = createSignal<
         Partial<Record<STREAM_TOGGLE_FLIP, boolean>>
     >({})
-    const [isStreamSettingsActive, setIsStreamSettingsActive] = createSignal(false)
 
     const hasChanges = createMemo(() => {
         return (
@@ -93,47 +93,6 @@ const DashboardRoot = () => {
         setLoader(false)
     }, 250)
 
-    const handleRotateCamera = (tracker: TRACKER_POSITION, value: number, id: string) => {
-        setRotation((prev) => ({ ...prev, [tracker]: value }))
-        trigger(id, { camera: { rotation: value } })
-    }
-
-    const handleToggleFlip = (action: STREAM_TOGGLE_FLIP) => {
-        setToggle((prev) => ({ ...prev, [action]: !prev[action] }))
-    }
-
-    const handleResetSettings = () => {
-        if (hasChanges()) {
-            setToggle(originalToggle())
-        }
-    }
-
-    const handleCanvasBoxPositions = (boxPosition: IBoxPosition, id: string) => {
-        const x = Math.trunc(boxPosition.x / 2)
-        const y = Math.trunc(boxPosition.y / 2)
-        const width = Math.trunc(boxPosition.width / 2)
-        const height = Math.trunc(boxPosition.height / 2)
-
-        const config = {
-            camera: {
-                roi_h: Math.round(height),
-                roi_w: Math.round(width),
-                roi_x: Math.round(x),
-                roi_y: Math.round(y),
-            },
-        }
-
-        trigger(id, config)
-    }
-
-    const toggleStreamSettings = () => {
-        setIsStreamSettingsActive((prev) => !prev)
-    }
-
-    const navigateToAdvancedSettings = () => {
-        navigate('/advancedSettings')
-    }
-
     createEffect(
         on(config, () => {
             const rotationState = {
@@ -175,8 +134,9 @@ const DashboardRoot = () => {
                 <Dashboard
                     isStreamSettingsActive={isStreamSettingsActive()}
                     trackers={getTrackers()}
-                    onClickAdvancedSettings={navigateToAdvancedSettings}
-                    onClickStreamSettings={toggleStreamSettings}
+                    onClickStreamSettings={() => {
+                        setIsStreamSettingsActive((prev) => !prev)
+                    }}
                     onClickRecalibrate={() => {}}
                     onClickRecenter={() => {}}
                 />
@@ -185,18 +145,30 @@ const DashboardRoot = () => {
                 <StreamSettings
                     loader={loader()}
                     onClickUpdateSettings={triggerUpdateSettings}
-                    onClickReset={handleResetSettings}
+                    onClickReset={() => {
+                        if (hasChanges()) {
+                            setToggle(originalToggle())
+                        }
+                    }}
                     updateAllowed={hasChanges()}
-                    setCanvasBoxPositions={handleCanvasBoxPositions}
+                    setCanvasBoxPositions={(boxPosition, id) => {
+                        trigger(id, { camera: box(boxPosition, 2) })
+                    }}
                     canvasBoxPositions={canvasBoxPositions()}
                     flipAxis={toggle()}
                     trackers={getTrackers()}
-                    onRotateCamera={handleRotateCamera}
+                    onRotateCamera={(tracker: TRACKER_POSITION, value: number, id: string) => {
+                        setRotation((prev) => ({ ...prev, [tracker]: value }))
+                        trigger(id, { camera: { rotation: value } })
+                    }}
                     rotation={rotation()}
-                    onClickToggle={handleToggleFlip}
-                    onClickAdvancedSettings={navigateToAdvancedSettings}
+                    onClickToggle={(action: STREAM_TOGGLE_FLIP) => {
+                        setToggle((prev) => ({ ...prev, [action]: !prev[action] }))
+                    }}
                     isStreamSettingsActive={isStreamSettingsActive()}
-                    onClickStreamSettings={toggleStreamSettings}
+                    onClickStreamSettings={() => {
+                        setIsStreamSettingsActive((prev) => !prev)
+                    }}
                     onClickRecalibrate={() => {}}
                     onClickRecenter={() => {}}
                 />
