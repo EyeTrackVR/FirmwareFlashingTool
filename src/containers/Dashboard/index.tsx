@@ -5,6 +5,7 @@ import Dashboard from '@pages/Dashboard'
 import StreamSettings from '@pages/StreamSettings'
 import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate } from '@solidjs/router'
+import { IBoxPosition } from '@src/Services/canvas'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { addNotification } from '@store/notifications/actions'
 import { canvasBoxPositions, config, getTrackers } from '@store/trackers/selectors'
@@ -107,7 +108,7 @@ const DashboardRoot = () => {
         }
     }
 
-    const handleCanvasBoxPositions = (boxPosition: any, id: string) => {
+    const handleCanvasBoxPositions = (boxPosition: IBoxPosition, id: string) => {
         const x = Math.trunc(boxPosition.x / 2)
         const y = Math.trunc(boxPosition.y / 2)
         const width = Math.trunc(boxPosition.width / 2)
@@ -162,7 +163,6 @@ const DashboardRoot = () => {
                     tracker.tracker_position as TRACKER_POSITION,
                 )
             })
-
             setRotation(rotationState)
             setToggle(toggleConfig)
             setOriginalToggle(toggleConfig)
@@ -181,7 +181,6 @@ const DashboardRoot = () => {
                     onClickRecenter={() => {}}
                 />
             </Match>
-
             <Match when={isStreamSettingsActive()}>
                 <StreamSettings
                     loader={loader()}

@@ -14,7 +14,7 @@ import { ITracker } from '@interfaces/trackers/interfaces'
 import theme from '@src/common/theme'
 import { Canvas, IBoxPosition } from '@src/Services/canvas'
 import { VsSettings } from 'solid-icons/vs'
-import { Component, createMemo, onCleanup, onMount, Show } from 'solid-js'
+import { Component, createEffect, createMemo, onCleanup, Show } from 'solid-js'
 
 export interface IProps {
     onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
@@ -41,7 +41,7 @@ const StreamSettings: Component<IProps> = (props) => {
     let leftCanvas: HTMLCanvasElement | undefined
     let rightCanvas: HTMLCanvasElement | undefined
 
-    onMount(() => {
+    createEffect(() => {
         if (!leftCanvas) return
         const canvasLeft = new Canvas()
         canvasLeft.setCanvas(leftCanvas).onMouseUpComplete((el) => {
@@ -51,7 +51,7 @@ const StreamSettings: Component<IProps> = (props) => {
         onCleanup(() => canvasLeft.destroy())
     })
 
-    onMount(() => {
+    createEffect(() => {
         if (!rightCanvas) return
         const canvasRight = new Canvas()
         canvasRight
