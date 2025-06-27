@@ -3,12 +3,14 @@ import { useNavigate } from '@solidjs/router'
 import { usePersistentStore } from '@src/Services/persistentStore'
 import { addNotification } from '@store/notifications/actions'
 import { setConfig } from '@store/trackers/trackers'
+import { setFirstLoadStatus } from '@store/ui/ui'
 import { onMount } from 'solid-js'
 
 export const loadPersistentStore = () => {
     const { get } = usePersistentStore()
     const navigate = useNavigate()
     onMount(async () => {
+        setFirstLoadStatus(true)
         try {
             const data = await get('trackers')
 
@@ -30,5 +32,6 @@ export const loadPersistentStore = () => {
                 type: ENotificationType.ERROR,
             })
         }
+        setFirstLoadStatus(false)
     })
 }

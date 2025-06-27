@@ -20,11 +20,13 @@ export interface IUiState {
     serverStatus: CONNECTION_STATUS
     showNotifications?: boolean
     hideModal: boolean
+    firstLoad: boolean
 }
 
 const defaultState: IUiState = {
     activeModal: defaultActiveModal,
     serverStatus: CONNECTION_STATUS.DISCONNECTED,
+    firstLoad: true,
     hideModal: false,
     navigationStep: '',
 }
@@ -43,6 +45,14 @@ export const setHideModal = () => {
     setState(
         produce((s) => {
             s.hideModal = !s.hideModal
+        }),
+    )
+}
+
+export const setFirstLoadStatus = (status: boolean) => {
+    setState(
+        produce((s) => {
+            s.firstLoad = status
         }),
     )
 }
