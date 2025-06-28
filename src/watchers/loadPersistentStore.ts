@@ -12,7 +12,7 @@ export const loadPersistentStore = () => {
     onMount(async () => {
         setFirstLoadStatus(true)
         try {
-            const data = await get('trackers')
+            const data = await get('config')
 
             if (data?.config) {
                 setConfig(data.config)
