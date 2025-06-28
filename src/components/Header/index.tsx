@@ -3,13 +3,10 @@ import { ProgressBar } from '@components/ProgressBar'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
-import theme from '@src/common/theme'
-import { IoSettingsSharp } from 'solid-icons/io'
 import { Component, Show } from 'solid-js'
 
 interface IProps {
     onClickHome?: () => void
-    onClickSettings?: () => void
     onClick: (action: TITLEBAR_ACTION) => void
     step?: { step: string; description: string; dashoffset: string; index: string }
     connectionStatus?: CONNECTION_STATUS
@@ -33,14 +30,17 @@ const Header: Component<IProps> = (props) => {
                         data-tauri-drag-region>
                         <div class="flex flex-row items-center gap-4">
                             <Show when={!props.docs}>
-                                <img
-                                    onClick={() => props.onClickHome?.()}
-                                    src={'images/logo.png'}
-                                    class="min-w-[34px] min-h-[34px] w-[34px] h-[34px] cursor-pointer"
-                                />
-                                <Typography color="white" text="caption" nowrap>
-                                    EyetrackVR
-                                </Typography>
+                                <div
+                                    class="flex items-center gap-4 cursor-pointer"
+                                    onClick={() => props.onClickHome?.()}>
+                                    <img
+                                        src={'images/logo.png'}
+                                        class="min-w-[34px] min-h-[34px] w-[34px] h-[34px]"
+                                    />
+                                    <Typography color="white" text="caption" nowrap>
+                                        EyetrackVR
+                                    </Typography>
+                                </div>
                                 <Show when={props.appVersion}>
                                     <div class="bg-transparentGreen-200 px-8 py-4 rounded-4 ml-4">
                                         <Typography
@@ -58,13 +58,6 @@ const Header: Component<IProps> = (props) => {
                                 when={!props.docs || typeof props.connectionStatus !== 'undefined'}>
                                 <div class="w-30 h-30 flex items-center justify-center transition">
                                     <ConnectionStatus status={props.connectionStatus!} />
-                                </div>
-                                <div
-                                    class="w-30 h-30 flex items-center justify-center transition cursor-pointer"
-                                    onClick={() => {
-                                        props.onClickSettings?.()
-                                    }}>
-                                    <IoSettingsSharp color={theme.colors.blue[500]} size={16} />
                                 </div>
                             </Show>
                             <div

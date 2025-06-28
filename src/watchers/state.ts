@@ -15,10 +15,10 @@ export const watchUserState = () => {
         return pathName
     })
 
+    const paths = [...DASHBOARD_ROUTES, '/generalSettings']
+
     const shouldLoadState = createMemo(() => {
-        return (
-            serverStatus() === CONNECTION_STATUS.DISCONNECTED && DASHBOARD_ROUTES.includes(path())
-        )
+        return serverStatus() === CONNECTION_STATUS.DISCONNECTED && paths.includes(path())
     })
 
     createEffect(

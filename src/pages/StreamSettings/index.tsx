@@ -99,7 +99,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...leftTracker()}>
                                 <div class="relative w-[480px] h-[480px]">
-                                    <Camera streamSource={leftTracker().rawStreamSource} />
+                                    <Camera streamSource={leftTracker().streamSource} />
                                     <canvas
                                         class="absolute rounded-12 top-0"
                                         ref={leftCanvas}
@@ -124,7 +124,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...rightTracker()}>
                                 <div class="w-[480px] h-[480px]">
-                                    <Camera streamSource={rightTracker().rawStreamSource} />
+                                    <Camera streamSource={rightTracker().streamSource} />
                                     <canvas
                                         class="absolute top-0 rounded-12"
                                         ref={rightCanvas}

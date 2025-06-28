@@ -33,14 +33,14 @@ const Dashboard: Component<IProps> = (props) => {
                     <div class="min-[1001px]:max-w-[600px] w-full">
                         <CameraPanel cameraStatus={CONNECTION_STATUS.INACTIVE} {...leftTracker()}>
                             <div class="relative w-[240px] h-[240px] ">
-                                <Camera streamSource={leftTracker().streamSource} />
+                                <Camera streamSource={leftTracker().rawStreamSource} />
                             </div>
                         </CameraPanel>
                     </div>
                     <div class="min-[1001px]:max-w-[600px] w-full">
                         <CameraPanel cameraStatus={CONNECTION_STATUS.INACTIVE} {...rightTracker()}>
                             <div class="relative w-[240px] h-[240px]">
-                                <Camera streamSource={rightTracker().streamSource} />
+                                <Camera streamSource={rightTracker().rawStreamSource} />
                             </div>
                         </CameraPanel>
                     </div>
