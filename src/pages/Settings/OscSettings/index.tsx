@@ -79,111 +79,121 @@ const OscSettings: Component<IProps> = (props) => {
                     icon={VsSettings}
                     iconColor="white"
                     label="OSC Settings"
-                    description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                    description="Configure how EyeTrackVR outputs tracking data via OSC.">
                     <div class="flex flex-col gap-24">
                         <div class="flex flex-col gap-12 items-start">
                             <Typography text="caption" color="white">
-                                Lorem ipsum
+                                Tracking Behavior
                             </Typography>
                             <div class="flex flex-row gap-24">
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton
-                                        disabled={props.loader}
-                                        onToggle={() => {
-                                            props.onToggle(
-                                                OSC_SETTINGS_ENUM.MIRROR_EYES,
-                                                !props.toggle[OSC_SETTINGS_ENUM.MIRROR_EYES],
-                                            )
-                                        }}
-                                        isToggled={
-                                            props.toggle[OSC_SETTINGS_ENUM.MIRROR_EYES] ?? false
-                                        }
-                                    />
+                                    <Tooltip description="If enabled, and tracking is poor on one eye, the other eye's tracking will be mirrored.">
+                                        <ToggleButton
+                                            disabled={props.loader}
+                                            onToggle={() => {
+                                                props.onToggle(
+                                                    OSC_SETTINGS_ENUM.MIRROR_EYES,
+                                                    !props.toggle[OSC_SETTINGS_ENUM.MIRROR_EYES],
+                                                )
+                                            }}
+                                            isToggled={
+                                                props.toggle[OSC_SETTINGS_ENUM.MIRROR_EYES] ?? false
+                                            }
+                                        />
+                                    </Tooltip>
                                     <Typography color="white" text="caption" nowrap>
-                                        Mirror eyes
+                                        Mirror Eyes
                                     </Typography>
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton
-                                        disabled={props.loader}
-                                        onToggle={() => {
-                                            props.onToggle(
-                                                OSC_SETTINGS_ENUM.SYNC_BLINK,
-                                                !props.toggle[OSC_SETTINGS_ENUM.SYNC_BLINK],
-                                            )
-                                        }}
-                                        isToggled={
-                                            props.toggle[OSC_SETTINGS_ENUM.SYNC_BLINK] ?? false
-                                        }
-                                    />
+                                    <Tooltip description="If enabled and one eye is detected blinking, it will close both eyes on the avatar.">
+                                        <ToggleButton
+                                            disabled={props.loader}
+                                            onToggle={() => {
+                                                props.onToggle(
+                                                    OSC_SETTINGS_ENUM.SYNC_BLINK,
+                                                    !props.toggle[OSC_SETTINGS_ENUM.SYNC_BLINK],
+                                                )
+                                            }}
+                                            isToggled={
+                                                props.toggle[OSC_SETTINGS_ENUM.SYNC_BLINK] ?? false
+                                            }
+                                        />
+                                    </Tooltip>
                                     <Typography color="white" text="caption" nowrap>
-                                        sync blink
+                                        Unified Blink
                                     </Typography>
                                 </div>
                             </div>
                         </div>
                         <div class="flex flex-col gap-12 items-start">
                             <Typography text="caption" color="white">
-                                Lorem ipsum
+                                OSC Toggles
                             </Typography>
                             <div class="flex flex-row gap-24">
                                 <div class="flex flex-row items-center gap-6">
-                                    <ToggleButton
-                                        disabled={props.loader}
-                                        onToggle={() => {
-                                            props.onToggle(
-                                                OSC_SETTINGS_ENUM.ENABLE_SENDING,
-                                                !props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING],
-                                            )
-                                        }}
-                                        isToggled={
-                                            props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING] ?? false
-                                        }
-                                    />
+                                    <Tooltip description="Required for EyeTrackVR to send out OSC data to applications.">
+                                        <ToggleButton
+                                            disabled={props.loader}
+                                            onToggle={() => {
+                                                props.onToggle(
+                                                    OSC_SETTINGS_ENUM.ENABLE_SENDING,
+                                                    !props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING],
+                                                )
+                                            }}
+                                            isToggled={
+                                                props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING] ?? false
+                                            }
+                                        />
+                                    </Tooltip>
                                     <Typography color="white" text="caption" nowrap>
-                                        Enable sending
+                                        Enable OSC Sending
                                     </Typography>
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
+                                    <Tooltip description="Required for EyeTrackVR to receive OSC data for things like avatar toggles for recentering or recalibrating.">
+                                        <ToggleButton
+                                            disabled={props.loader}
+                                            onToggle={() => {
+                                                props.onToggle(
+                                                    OSC_SETTINGS_ENUM.ENABLE_RECEIVING,
+                                                    !props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING],
+                                                )
+                                            }}
+                                            isToggled={
+                                                props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING] ??
+                                                false
+                                            }
+                                        />
+                                    </Tooltip>
+                                    <Typography color="white" text="caption" nowrap>
+                                        Enable OSC Receiving
+                                    </Typography>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-12 items-start">
+                            <Typography text="caption" color="white">
+                                Output Formats
+                            </Typography>
+                            <div class="flex flex-row items-center gap-6">
+                                <Tooltip description="If enabled, EyeTrackVR will send in the format required for VRChat's Native eye tracking function.">
                                     <ToggleButton
                                         disabled={props.loader}
                                         onToggle={() => {
                                             props.onToggle(
-                                                OSC_SETTINGS_ENUM.ENABLE_RECEIVING,
-                                                !props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING],
+                                                OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING,
+                                                !props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING],
                                             )
                                         }}
                                         isToggled={
-                                            props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING] ??
+                                            props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING] ??
                                             false
                                         }
                                     />
-                                    <Typography color="white" text="caption" nowrap>
-                                        Enable receiving
-                                    </Typography>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-12 items-start">
-                            <Typography text="caption" color="white">
-                                Lorem ipsum
-                            </Typography>
-                            <div class="flex flex-row items-center gap-6">
-                                <ToggleButton
-                                    disabled={props.loader}
-                                    onToggle={() => {
-                                        props.onToggle(
-                                            OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING,
-                                            !props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING],
-                                        )
-                                    }}
-                                    isToggled={
-                                        props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING] ??
-                                        false
-                                    }
-                                />
+                                </Tooltip>
                                 <Typography color="white" text="caption" nowrap>
-                                    vrchat native tracking
+                                    VRChat Native Tracking
                                 </Typography>
                             </div>
                         </div>
@@ -194,12 +204,12 @@ const OscSettings: Component<IProps> = (props) => {
                         <ContextWrapper
                             icon={VsSettings}
                             iconColor="white"
-                            label="Address and ports"
-                            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                            label="Address and Ports"
+                            description="Configure what IP address and port OSC data is sent to, and what port we receive from.">
                             <div class="flex flex-col gap-24 pb-[48px]">
                                 <div class="flex flex-col items-start gap-6">
                                     <Typography text="caption" color="white">
-                                        Network address
+                                        Network Address
                                     </Typography>
                                     <Input
                                         disabled={props.loader}
@@ -214,7 +224,7 @@ const OscSettings: Component<IProps> = (props) => {
                                 <div class="flex flex-row items-center gap-6 w-full">
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
-                                            Sending port
+                                            Sending Port
                                         </Typography>
                                         <Input
                                             isError={!isValidSendingPort()}
@@ -273,7 +283,7 @@ const OscSettings: Component<IProps> = (props) => {
                             icon={VsSettings}
                             iconColor="white"
                             label="VRCFT v1 endpoints"
-                            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                            description="Configure what OSC Address endpoints are used for VRCFT v1 data output.">
                             <div class="flex flex-col gap-24">
                                 <div class="flex flex-col items-start gap-6">
                                     <Typography text="caption" color="white">
@@ -295,7 +305,7 @@ const OscSettings: Component<IProps> = (props) => {
                                 </div>
                                 <div class="flex flex-col items-start gap-6">
                                     <Typography text="caption" color="white">
-                                        Sync blink
+                                        Sync Blink
                                     </Typography>
                                     <Input
                                         disabled={props.loader}
@@ -324,7 +334,7 @@ const OscSettings: Component<IProps> = (props) => {
                                 <div class="flex flex-row items-center gap-6 w-full">
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
-                                            Left eye X
+                                            Left Eye X
                                         </Typography>
                                         <Input
                                             disabled={props.loader}
@@ -343,7 +353,7 @@ const OscSettings: Component<IProps> = (props) => {
                                     </div>
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
-                                            Right eye X
+                                            Right Eye X
                                         </Typography>
                                         <Input
                                             disabled={props.loader}
@@ -364,7 +374,7 @@ const OscSettings: Component<IProps> = (props) => {
                                 <div class="flex flex-row items-center gap-6 w-full">
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
-                                            Left eye blink
+                                            Left Eye Blink
                                         </Typography>
                                         <Input
                                             disabled={props.loader}
@@ -384,7 +394,7 @@ const OscSettings: Component<IProps> = (props) => {
                                     </div>
                                     <div class="flex flex-col items-start gap-6 w-full">
                                         <Typography text="caption" color="white">
-                                            Right eye blink
+                                            Right Eye Blink
                                         </Typography>
                                         <Input
                                             disabled={props.loader}
