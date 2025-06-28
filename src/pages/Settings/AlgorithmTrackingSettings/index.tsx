@@ -52,36 +52,12 @@ const AlgorithmTrackingSettings: Component<IProps> = (props) => {
                 <ContextWrapper
                     icon={VsSettings}
                     iconColor="white"
-                    label="Advanced tracking alghoritm settings"
-                    description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                    label="Advanced Tracking Alghoritm Settings"
+                    description="Configure advanced, algo-specific settings.">
                     <div class="flex flex-col gap-24">
                         <div class="flex flex-row min-[850px]:gap-24 gap-12">
                             <div class="flex flex-row items-center gap-6">
-                                <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
-                                    <ToggleButton
-                                        disabled={props.loader}
-                                        onToggle={() => {
-                                            props.onToggle(
-                                                TRACKING_ALGORITHM_SETTINGS_ENUM.SKIP_AUTO_RADIUS,
-                                                !props.toggle[
-                                                    TRACKING_ALGORITHM_SETTINGS_ENUM
-                                                        .SKIP_AUTO_RADIUS
-                                                ],
-                                            )
-                                        }}
-                                        isToggled={
-                                            props.toggle[
-                                                TRACKING_ALGORITHM_SETTINGS_ENUM.SKIP_AUTO_RADIUS
-                                            ] ?? false
-                                        }
-                                    />
-                                </Tooltip>
-                                <Typography color="white" text="caption" nowrap>
-                                    Skip auto radius
-                                </Typography>
-                            </div>
-                            <div class="flex flex-row items-center gap-6">
-                                <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                                <Tooltip description="Ignore eyelid tracking and blink detection and just send a constant eye open state.">
                                     <ToggleButton
                                         disabled={props.loader}
                                         onToggle={() => {
@@ -102,7 +78,7 @@ const AlgorithmTrackingSettings: Component<IProps> = (props) => {
                                     />
                                 </Tooltip>
                                 <Typography color="white" text="caption" nowrap>
-                                    Skip Blink detection
+                                    Skip Blink Detection
                                 </Typography>
                             </div>
                         </div>
