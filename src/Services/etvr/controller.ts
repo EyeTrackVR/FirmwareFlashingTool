@@ -1,4 +1,4 @@
-import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { CAMERA_STREAM_TYPE, CONNECTION_STATUS } from '@interfaces/services/enums'
 import {
     IUpdateETVRConfig,
     IUpdateTracker,
@@ -31,8 +31,8 @@ export class EyeTrackVrController {
         return this.api.restartETVR()
     }
 
-    public getRawCameraFeed(uuid: string): string {
-        return `${this.api.url}/etvr/feed/${uuid}/camera`
+    public getRawCameraFeed(uuid: string, type: CAMERA_STREAM_TYPE): string {
+        return `${this.api.url}/etvr/feed/${uuid}/${type}`
     }
 
     public getAlgorithmFeed(uuid: string): string {
@@ -249,7 +249,11 @@ export class EyeTrackVrController {
                 rotation[tracker.tracker_position as TRACKER_POSITION] = tracker.camera.rotation
                 trackers.push({
                     trackerPosition: tracker.tracker_position as TRACKER_POSITION,
-                    streamSource: this.getRawCameraFeed(tracker.uuid),
+                    streamSource: this.getRawCameraFeed(tracker.uuid, CAMERA_STREAM_TYPE.RAW),
+                    rawStreamSource: this.getRawCameraFeed(
+                        tracker.uuid,
+                        CAMERA_STREAM_TYPE.ALGORITHM,
+                    ),
                     algorithmOrder: tracker.algorithm.algorithm_order,
                     address: tracker.camera.capture_source,
                     enabled: tracker.enabled,

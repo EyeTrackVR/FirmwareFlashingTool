@@ -1,3 +1,5 @@
+import Button from '@components/Buttons/Button'
+import PrimaryButton from '@components/Buttons/PrimaryButton'
 import { ToggleButton } from '@components/Buttons/ToggleButton'
 import Camera from '@components/Camera/Camera'
 import CameraPanel from '@components/Camera/CameraPanel'
@@ -12,21 +14,24 @@ import { ITracker } from '@interfaces/trackers/interfaces'
 import theme from '@src/common/theme'
 import { Canvas, IBoxPosition } from '@src/Services/canvas'
 import { VsSettings } from 'solid-icons/vs'
-import { Component, createMemo, onCleanup, onMount } from 'solid-js'
+import { Component, createEffect, createMemo, onCleanup, Show } from 'solid-js'
 
 export interface IProps {
     onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
     onClickToggle: (action: STREAM_TOGGLE_FLIP) => void
-    onClickAdvancedSettings: () => void
+    onClickUpdateSettings: () => void
     onClickStreamSettings: () => void
     onClickRecalibrate: () => void
     onClickRecenter: () => void
-    setCanvasBoxPositions: (boxPosition: IBoxPosition, tracker: TRACKER_POSITION) => void
-    flipAxis: Record<STREAM_TOGGLE_FLIP, boolean>
+    onClickReset: () => void
+    setCanvasBoxPositions: (boxPosition: IBoxPosition, id: string) => void
+    flipAxis: Partial<Record<STREAM_TOGGLE_FLIP, boolean>>
     trackers: Record<TRACKER_POSITION, ITracker>
-    rotation: Record<TRACKER_POSITION, number>
+    rotation: Partial<Record<TRACKER_POSITION, number>>
     canvasBoxPositions: Record<TRACKER_POSITION, IBoxPosition>
     isStreamSettingsActive: boolean
+    updateAllowed: boolean
+    loader: boolean
 }
 
 const StreamSettings: Component<IProps> = (props) => {
@@ -35,28 +40,28 @@ const StreamSettings: Component<IProps> = (props) => {
     let leftCanvas: HTMLCanvasElement | undefined
     let rightCanvas: HTMLCanvasElement | undefined
 
-    onMount(() => {
+    createEffect(() => {
         if (!leftCanvas) return
         const canvasLeft = new Canvas()
         canvasLeft.setCanvas(leftCanvas).onMouseUpComplete((el) => {
-            props.setCanvasBoxPositions(el, TRACKER_POSITION.LEFT_EYE)
+            props.setCanvasBoxPositions(el, leftTracker().id)
         })
         canvasLeft.setCanvasBoxPosition(props.canvasBoxPositions[TRACKER_POSITION.LEFT_EYE])
         onCleanup(() => canvasLeft.destroy())
     })
 
-    onMount(() => {
+    createEffect(() => {
         if (!rightCanvas) return
         const canvasRight = new Canvas()
         canvasRight
             .setCanvas(rightCanvas)
-            .onMouseUpComplete((el) => props.setCanvasBoxPositions(el, TRACKER_POSITION.RIGHT_EYE))
+            .onMouseUpComplete((el) => props.setCanvasBoxPositions(el, rightTracker().id))
         canvasRight.setCanvasBoxPosition(props.canvasBoxPositions[TRACKER_POSITION.RIGHT_EYE])
         onCleanup(() => canvasRight.destroy())
     })
 
     return (
-        <div class="flex flex-col h-full w-full pt-8 pb-12 gap-12">
+        <div class="relative flex flex-col h-full w-full pt-8 gap-12 pb-12">
             <div class="pr-24">
                 <DashboardHeader
                     isStreamSettingsActive={props.isStreamSettingsActive}
@@ -65,7 +70,27 @@ const StreamSettings: Component<IProps> = (props) => {
                     onClickRecenter={props.onClickRecenter}
                 />
             </div>
-            <div class="flex-1 w-full flex flex-col items-center overflow-y-auto scrollbar pr-24">
+            <Show when={props.updateAllowed}>
+                <div class="absolute bottom-[20px] z-[999] left-[50%] transform -translate-x-1/2 flex flex-row gap-24 bg-black-900 py-12 px-24 rounded-12 border border-solid border-black-800">
+                    <Button
+                        label="Cancel"
+                        isDangerous
+                        onClick={props.onClickReset}
+                        disabled={props.loader}
+                    />
+                    <PrimaryButton
+                        label="Update settings"
+                        isActive
+                        onClick={props.onClickUpdateSettings}
+                        disabled={props.loader}
+                    />
+                </div>
+            </Show>
+            <div
+                class="flex-1 w-full flex flex-col items-center overflow-y-auto scrollbar pr-24 "
+                classList={{
+                    'pb-[90px]': props.updateAllowed,
+                }}>
                 <div class="flex flex-col max-w-[1800px] gap-12 w-full">
                     <div class="flex flex-row gap-12 justify-center max-[1230px]:flex-col w-full">
                         <div class="flex flex-col gap-12 min-[1231px]:max-w-[600px] w-full  ">
@@ -74,7 +99,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...leftTracker()}>
                                 <div class="relative w-[480px] h-[480px]">
-                                    <Camera streamSource={leftTracker().streamSource} />
+                                    <Camera streamSource={leftTracker().rawStreamSource} />
                                     <canvas
                                         class="absolute rounded-12 top-0"
                                         ref={leftCanvas}
@@ -84,7 +109,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 </div>
                             </CameraPanel>
                             <CameraRotationPanel
-                                rotation={props.rotation[TRACKER_POSITION.LEFT_EYE]}
+                                rotation={props.rotation[TRACKER_POSITION.LEFT_EYE] ?? 0}
                                 onChangeRotation={(value) => {
                                     props.onRotateCamera(
                                         TRACKER_POSITION.LEFT_EYE,
@@ -99,7 +124,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...rightTracker()}>
                                 <div class="w-[480px] h-[480px]">
-                                    <Camera streamSource={rightTracker().streamSource} />
+                                    <Camera streamSource={rightTracker().rawStreamSource} />
                                     <canvas
                                         class="absolute top-0 rounded-12"
                                         ref={rightCanvas}
@@ -109,7 +134,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                 </div>
                             </CameraPanel>
                             <CameraRotationPanel
-                                rotation={props.rotation[TRACKER_POSITION.RIGHT_EYE]}
+                                rotation={props.rotation[TRACKER_POSITION.RIGHT_EYE] ?? 0}
                                 onChangeRotation={(value) => {
                                     props.onRotateCamera(
                                         TRACKER_POSITION.RIGHT_EYE,
@@ -132,7 +157,9 @@ const StreamSettings: Component<IProps> = (props) => {
                                         onToggle={() => {
                                             props.onClickToggle(STREAM_TOGGLE_FLIP.FLIP_X_AXIS)
                                         }}
-                                        isToggled={props.flipAxis[STREAM_TOGGLE_FLIP.FLIP_X_AXIS]}
+                                        isToggled={
+                                            props.flipAxis[STREAM_TOGGLE_FLIP.FLIP_X_AXIS] ?? false
+                                        }
                                     />
                                     <Typography color="white" text="caption" nowrap>
                                         Flip x axis
@@ -143,7 +170,9 @@ const StreamSettings: Component<IProps> = (props) => {
                                         onToggle={() => {
                                             props.onClickToggle(STREAM_TOGGLE_FLIP.FLIP_Y_AXIS)
                                         }}
-                                        isToggled={props.flipAxis[STREAM_TOGGLE_FLIP.FLIP_Y_AXIS]}
+                                        isToggled={
+                                            props.flipAxis[STREAM_TOGGLE_FLIP.FLIP_Y_AXIS] ?? false
+                                        }
                                     />
                                     <Typography color="white" text="caption" nowrap>
                                         Flip y axis

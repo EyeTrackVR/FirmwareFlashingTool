@@ -7,13 +7,10 @@ import { ITracker } from '@interfaces/trackers/interfaces'
 import { Component, createMemo } from 'solid-js'
 
 export interface IProps {
-    onRotateCamera: (tracker: TRACKER_POSITION, value: number, id: string) => void
-    onClickAdvancedSettings: () => void
     onClickStreamSettings: () => void
     onClickRecalibrate: () => void
     onClickRecenter: () => void
     trackers: Record<TRACKER_POSITION, ITracker>
-    rotation: Record<TRACKER_POSITION, number>
     isStreamSettingsActive: boolean
 }
 

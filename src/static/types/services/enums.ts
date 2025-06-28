@@ -6,3 +6,7 @@ export enum CONNECTION_STATUS {
     INACTIVE = 'INACTIVE',
     FAILED = 'FAILED',
 }
+export enum CAMERA_STREAM_TYPE {
+    RAW = 'camera',
+    ALGORITHM = 'algorithm',
+}

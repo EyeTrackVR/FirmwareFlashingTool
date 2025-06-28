@@ -1,4 +1,5 @@
 import { CHANNEL_TYPE } from '@interfaces/enums'
+import { type IBoxPosition } from '@src/Services/canvas'
 import { defaultMdnsLength, MDNS_LENGTH } from '@src/static'
 import { IP_ADDRESS_REGEX, UVC_REGEX } from '@src/static/regex'
 
@@ -130,4 +131,18 @@ export const validatePort = (port: number): boolean => {
 
 export const isValidChannel = (value: string): value is CHANNEL_TYPE => {
     return Object.values(CHANNEL_TYPE).includes(value as CHANNEL_TYPE)
+}
+
+export const box = (boxPosition: IBoxPosition, divider: number = 2) => {
+    const x = Math.trunc(boxPosition.x / divider)
+    const y = Math.trunc(boxPosition.y / divider)
+    const width = Math.trunc(boxPosition.width / divider)
+    const height = Math.trunc(boxPosition.height / divider)
+
+    return {
+        roi_h: Math.round(height),
+        roi_w: Math.round(width),
+        roi_x: Math.round(x),
+        roi_y: Math.round(y),
+    }
 }

@@ -1,5 +1,5 @@
 import { createStoreSelectors } from '@store/utils'
 import { uiState } from './ui'
 
-export const { navigationStep, activeModal, serverStatus, hideModal } =
+export const { navigationStep, activeModal, serverStatus, hideModal, firstLoad } =
     createStoreSelectors(uiState)

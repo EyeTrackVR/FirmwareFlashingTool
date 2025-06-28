@@ -58,6 +58,11 @@ export interface IPartialAlgorithm {
     hsf: Partial<IHsf>
 }
 
+export interface flipAxis {
+    flip_x_axis: boolean
+    flip_y_axis: boolean
+}
+
 interface ICameraSettings {
     capture_source: string
     rotation: number
