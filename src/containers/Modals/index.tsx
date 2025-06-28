@@ -4,6 +4,7 @@ import { Match, Show, Switch } from 'solid-js'
 import ApMode from './ApMode'
 import BeforeFlashingRoot from './BeforeFlashing'
 import BeforeSelectBoardModal from './BeforeSelectBoard'
+import CloseAppModal from './CloseApp'
 import EstablishConnection from './EstablishConnection'
 import UpdateNetworkRoot from './UpdateNetwork'
 
@@ -26,6 +27,9 @@ export const ModalRoot = () => {
                     </Match>
                     <Match when={activeModal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}>
                         <BeforeSelectBoardModal />
+                    </Match>
+                    <Match when={activeModal().type === MODAL_TYPE.CLOSE_APP}>
+                        <CloseAppModal />
                     </Match>
                 </Switch>
             </div>

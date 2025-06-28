@@ -23,7 +23,7 @@ import {
     setProcessStatus,
 } from '@store/terminal/terminal'
 import { hideModal } from '@store/ui/selectors'
-import { setNavigationStep, setActiveModal } from '@store/ui/ui'
+import { setActiveModal, setNavigationStep } from '@store/ui/ui'
 import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 
 export const ManageFlashFirmware = () => {

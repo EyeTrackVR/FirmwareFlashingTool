@@ -1,7 +1,7 @@
 import Header from '@components/Header'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { USB } from '@src/static'
-import { DIRECTION, ENotificationType, TITLEBAR_ACTION } from '@src/static/types/enums'
+import { DIRECTION, ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { stepStatus } from '@src/static/ui'
 import { useAppAPIContext } from '@store/context/api'
 import { addNotification } from '@store/notifications/actions'
@@ -9,7 +9,7 @@ import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 import { getTrackersCount } from '@store/trackers/selectors'
 import { serverStatus } from '@store/ui/selectors'
-import { invoke } from '@tauri-apps/api/tauri'
+import { setActiveModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 
@@ -62,8 +62,7 @@ export const HeaderRoot = () => {
                         appWindow.toggleMaximize()
                         break
                     case TITLEBAR_ACTION.CLOSE: {
-                        await invoke('plugin:etvr_backend|shutdown_etvr_backend')
-                        await appWindow.close()
+                        setActiveModal({ open: true, type: MODAL_TYPE.CLOSE_APP })
                     }
                     default:
                         return
@@ -79,7 +78,6 @@ export const HeaderRoot = () => {
                     return true
                 }
                 setAbortController()
-
                 if (getTrackersCount() > 0) {
                     navigate('/dashboard')
                 } else {
