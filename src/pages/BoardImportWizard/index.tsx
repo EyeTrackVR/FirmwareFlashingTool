@@ -96,7 +96,7 @@ const BoardImportWizard: Component<IProps> = (props) => {
 
     const hidePrimaryButton = createMemo(() => {
         const tracker = trackerData()[step()]
-        if (!trackers().length && step() === SETUP_TRACKER.SETUP_RIGHT_TRACKER) {
+        if (!trackers().length && step() === SETUP_TRACKER.SETUP_LEFT_TRACKER) {
             return false
         }
 
@@ -273,7 +273,6 @@ const BoardImportWizard: Component<IProps> = (props) => {
                             description="validate server status"
                             step="3"
                         />
-
                         <StepWrapper
                             isActive={calibrationCompleted()}
                             label="check tracker connection"
