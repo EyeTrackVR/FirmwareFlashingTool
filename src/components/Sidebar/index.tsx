@@ -20,7 +20,7 @@ const Sidebar: Component<IProps> = (props) => {
             {
                 route: '/',
                 icon: BiSolidExtension,
-                label: 'Setup wizard',
+                label: 'Setup',
             },
         ]
     })
