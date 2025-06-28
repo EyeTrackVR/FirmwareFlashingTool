@@ -22,7 +22,7 @@ const Welcome: Component<IProps> = (props) => {
                             isLoadingPrimaryButton={false}
                             isActive={true}
                             type="button"
-                            label="Full ETVR setup"
+                            label="Full ETVR Setup"
                             onClick={props.onClickSetup}
                         />
                         <Button
@@ -30,7 +30,7 @@ const Welcome: Component<IProps> = (props) => {
                             isLoadingPrimaryButton={false}
                             isActive={false}
                             type="button"
-                            label="Add existing trackers"
+                            label="Add Existing Trackers"
                             onClick={props.onClickAddExisting}
                         />
                     </div>

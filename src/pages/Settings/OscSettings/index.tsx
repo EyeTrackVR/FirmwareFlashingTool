@@ -69,7 +69,7 @@ const OscSettings: Component<IProps> = (props) => {
             <div class="w-full flex flex-row justify-end pr-24">
                 <Button
                     disabled={props.loader}
-                    label="Reset settings to default"
+                    label="Reset Settings to Default"
                     isDangerous
                     onClick={props.onClickReset}
                 />

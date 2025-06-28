@@ -28,13 +28,12 @@ const CameraRotationPanel: Component<IProps> = (props) => {
                     <IoCamera size={24} color={theme.colors.white[100]} />
                 </div>
                 <Typography color="white" text="body">
-                    Camera settings
+                    Camera Settings
                 </Typography>
             </div>
             <div class="text-left">
                 <Typography color="white" text="caption">
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                    doloremque laudantium.
+                    Change the rotation slider so the corners of your eye form a horizontal line.
                 </Typography>
             </div>
             <div class="flex flex-col text-left gap-6">
