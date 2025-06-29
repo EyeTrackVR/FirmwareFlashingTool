@@ -4,19 +4,17 @@ import { TRACKER_POSITION } from '@interfaces/trackers/enums'
 import Dashboard from '@pages/Dashboard'
 import StreamSettings from '@pages/StreamSettings'
 import { debounce } from '@solid-primitives/scheduled'
-import { useNavigate } from '@solidjs/router'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { box } from '@src/utils'
 import { addNotification } from '@store/notifications/actions'
 import { canvasBoxPositions, config, getTrackers } from '@store/trackers/selectors'
 import { setCanvasBoxPositions, setConfig } from '@store/trackers/trackers'
+import { isStreamSettingsActive } from '@store/ui/selectors'
+import { setIsStreamSettingsActive } from '@store/ui/ui'
 import { createEffect, createMemo, createSignal, Match, on, Switch } from 'solid-js'
 
 const DashboardRoot = () => {
-    const navigate = useNavigate()
-
     const [loader, setLoader] = createSignal(false)
-    const [isStreamSettingsActive, setIsStreamSettingsActive] = createSignal(false)
     const [rotation, setRotation] = createSignal<Partial<Record<TRACKER_POSITION, number>>>({})
     const [toggle, setToggle] = createSignal<Partial<Record<STREAM_TOGGLE_FLIP, boolean>>>({})
     const [originalToggle, setOriginalToggle] = createSignal<
@@ -135,7 +133,7 @@ const DashboardRoot = () => {
                     isStreamSettingsActive={isStreamSettingsActive()}
                     trackers={getTrackers()}
                     onClickStreamSettings={() => {
-                        setIsStreamSettingsActive((prev) => !prev)
+                        setIsStreamSettingsActive(!isStreamSettingsActive())
                     }}
                     onClickRecalibrate={() => {}}
                     onClickRecenter={() => {}}
@@ -167,7 +165,7 @@ const DashboardRoot = () => {
                     }}
                     isStreamSettingsActive={isStreamSettingsActive()}
                     onClickStreamSettings={() => {
-                        setIsStreamSettingsActive((prev) => !prev)
+                        setIsStreamSettingsActive(!isStreamSettingsActive())
                     }}
                     onClickRecalibrate={() => {}}
                     onClickRecenter={() => {}}

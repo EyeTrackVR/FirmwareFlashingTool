@@ -22,6 +22,11 @@ const Sidebar: Component<IProps> = (props) => {
                 icon: BiSolidExtension,
                 label: 'Setup',
             },
+            {
+                route: '/generalSettings',
+                icon: IoSettingsSharp,
+                label: 'Settings',
+            },
         ]
     })
 
@@ -40,13 +45,6 @@ const Sidebar: Component<IProps> = (props) => {
                     )}
                 </For>
             </div>
-            <NavItem
-                route="/generalSettings"
-                currentRoute={props.navigation}
-                icon={IoSettingsSharp}
-                label="Settings"
-                onClick={props.onClick}
-            />
         </section>
     )
 }

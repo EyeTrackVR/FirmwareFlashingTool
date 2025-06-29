@@ -19,6 +19,7 @@ export interface IUiState {
     activeModal: IActiveModal
     serverStatus: CONNECTION_STATUS
     showNotifications?: boolean
+    isStreamSettingsActive: boolean
     hideModal: boolean
     firstLoad: boolean
 }
@@ -26,6 +27,7 @@ export interface IUiState {
 const defaultState: IUiState = {
     activeModal: defaultActiveModal,
     serverStatus: CONNECTION_STATUS.DISCONNECTED,
+    isStreamSettingsActive: false,
     firstLoad: true,
     hideModal: false,
     navigationStep: '',
@@ -69,6 +71,14 @@ export const setServerStatus = (status: CONNECTION_STATUS) => {
     setState(
         produce((s) => {
             s.serverStatus = status
+        }),
+    )
+}
+
+export const setIsStreamSettingsActive = (status: boolean) => {
+    setState(
+        produce((s) => {
+            s.isStreamSettingsActive = status
         }),
     )
 }
