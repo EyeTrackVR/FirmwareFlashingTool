@@ -6,9 +6,11 @@ export interface IProps {
 
 const Tooltip: ParentComponent<IProps> = (props) => {
     return (
-        <div class="flex items-center gap-6">
-            <div class="tooltip tooltip-close tooltip-top" data-tip={props.description}>
-                <AiFillQuestionCircle size={16} class="cursor-help" />
+        <div class=" flex items-center gap-6">
+            <div class="w-[14px] h-[14px] flex items-center">
+                <div class="tooltip tooltip-close tooltip-right" data-tip={props.description}>
+                    <AiFillQuestionCircle size={16} class="cursor-help" />
+                </div>
             </div>
             <div>{props.children}</div>
         </div>

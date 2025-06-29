@@ -3,6 +3,7 @@ import Button from '@components/Buttons/Button'
 import PrimaryButton from '@components/Buttons/PrimaryButton'
 import { ToggleButton } from '@components/Buttons/ToggleButton'
 import Input from '@components/Inputs/Input'
+import Tooltip from '@components/Tooltip'
 import Typography from '@components/Typography'
 import ContextWrapper from '@components/Wrapper/ContextWrapper'
 import { OSC_SETTINGS_ENUM } from '@interfaces/Settings/enums'
@@ -130,7 +131,7 @@ const OscSettings: Component<IProps> = (props) => {
                             <Typography text="caption" color="white">
                                 OSC Toggles
                             </Typography>
-                            <div class="flex flex-row gap-24">
+                            <div class="flex gap-24 flex-wrap">
                                 <div class="flex flex-row items-center gap-6">
                                     <Tooltip description="Required for EyeTrackVR to send out OSC data to applications.">
                                         <ToggleButton
@@ -142,7 +143,8 @@ const OscSettings: Component<IProps> = (props) => {
                                                 )
                                             }}
                                             isToggled={
-                                                props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING] ?? false
+                                                props.toggle[OSC_SETTINGS_ENUM.ENABLE_SENDING] ??
+                                                false
                                             }
                                         />
                                     </Tooltip>
@@ -157,7 +159,9 @@ const OscSettings: Component<IProps> = (props) => {
                                             onToggle={() => {
                                                 props.onToggle(
                                                     OSC_SETTINGS_ENUM.ENABLE_RECEIVING,
-                                                    !props.toggle[OSC_SETTINGS_ENUM.ENABLE_RECEIVING],
+                                                    !props.toggle[
+                                                        OSC_SETTINGS_ENUM.ENABLE_RECEIVING
+                                                    ],
                                                 )
                                             }}
                                             isToggled={
@@ -183,12 +187,15 @@ const OscSettings: Component<IProps> = (props) => {
                                         onToggle={() => {
                                             props.onToggle(
                                                 OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING,
-                                                !props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING],
+                                                !props.toggle[
+                                                    OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING
+                                                ],
                                             )
                                         }}
                                         isToggled={
-                                            props.toggle[OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING] ??
-                                            false
+                                            props.toggle[
+                                                OSC_SETTINGS_ENUM.VRCHAT_NATIVE_TRACKING
+                                            ] ?? false
                                         }
                                     />
                                 </Tooltip>
