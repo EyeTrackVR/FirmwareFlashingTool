@@ -147,10 +147,10 @@ const StreamSettings: Component<IProps> = (props) => {
                     </div>
                     <div class="max-w-[1212px] w-full mx-auto">
                         <ContextWrapper
-                            label="Lorem ipsum"
+                            label="Flip Tracking"
                             icon={VsSettings}
                             iconColor={theme.colors.white[100]}
-                            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. ">
+                            description="Flip the tracking output to be correct if your camera is mirrored for some reason.">
                             <div class="flex flex-row gap-24 w-full">
                                 <div class="flex flex-row items-center gap-6">
                                     <ToggleButton
@@ -162,7 +162,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                         }
                                     />
                                     <Typography color="white" text="caption" nowrap>
-                                        Flip x axis
+                                        Flip X Axis
                                     </Typography>
                                 </div>
                                 <div class="flex flex-row items-center gap-6 ">
@@ -175,7 +175,7 @@ const StreamSettings: Component<IProps> = (props) => {
                                         }
                                     />
                                     <Typography color="white" text="caption" nowrap>
-                                        Flip y axis
+                                        Flip Y Axis
                                     </Typography>
                                 </div>
                             </div>

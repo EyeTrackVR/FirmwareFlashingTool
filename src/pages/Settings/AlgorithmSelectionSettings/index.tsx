@@ -45,7 +45,7 @@ const AlgorithmSelectionSettings: Component<IProps> = (props) => {
             </Show>
             <div class="w-full flex flex-row justify-end ">
                 <Button
-                    label="Reset settings to default"
+                    label="Reset Settings to Default"
                     isDangerous
                     onClick={props.onClickReset}
                     disabled={props.loader}
@@ -55,16 +55,16 @@ const AlgorithmSelectionSettings: Component<IProps> = (props) => {
                 <ContextWrapper
                     icon={FaSolidCode}
                     iconColor="white"
-                    label="Tracking algorithm order settings"
-                    description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                    label="Tracking algorithms"
+                    description="Enable which tracking algorithim you want to use.">
                     <div class="flex flex-col gap-12 items-start">
                         <Typography text="caption" color="white">
-                            Lorem ipsum
+                            Algorithims:
                         </Typography>
                         <div class="flex flex-row gap-24 w-full">
                             <div class="flex flex-col gap-24 w-full">
                                 <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                                    <Tooltip description="LEAP (Lightweight Eyelid And Pupil) is a lightweight machine learning algorithm that should work out of the box for most users.">
                                         <ToggleButton
                                             disabled={props.loader}
                                             onToggle={() => {
@@ -83,7 +83,7 @@ const AlgorithmSelectionSettings: Component<IProps> = (props) => {
                                     </Typography>
                                 </div>
                                 <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                                    <Tooltip description="AHSF is legacy a pupil only algorithim that may work in situations where LEAP fails or is confused.">
                                         <ToggleButton
                                             onToggle={() => {
                                                 props.onToggle(
@@ -99,32 +99,13 @@ const AlgorithmSelectionSettings: Component<IProps> = (props) => {
                                         />
                                     </Tooltip>
                                     <Typography color="white" text="caption" nowrap>
-                                        HSRAC
-                                    </Typography>
-                                </div>
-                                <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
-                                        <ToggleButton
-                                            onToggle={() => {
-                                                props.onToggle(
-                                                    ALGORITHM_ORDER_SETTINGS.AHSF,
-                                                    !props.toggle[ALGORITHM_ORDER_SETTINGS.AHSF],
-                                                )
-                                            }}
-                                            isToggled={
-                                                props.toggle[ALGORITHM_ORDER_SETTINGS.AHSF] ?? false
-                                            }
-                                            disabled={props.loader}
-                                        />
-                                    </Tooltip>
-                                    <Typography color="white" text="caption" nowrap>
                                         AHSF
                                     </Typography>
                                 </div>
                             </div>
                             <div class="flex flex-col gap-24 w-full">
                                 <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
+                                    <Tooltip description="Coming Soon.">
                                         <ToggleButton
                                             onToggle={() => {
                                                 props.onToggle(
@@ -140,26 +121,7 @@ const AlgorithmSelectionSettings: Component<IProps> = (props) => {
                                         />
                                     </Tooltip>
                                     <Typography color="white" text="caption" nowrap>
-                                        RANSAC
-                                    </Typography>
-                                </div>
-                                <div class="flex flex-row items-center gap-6">
-                                    <Tooltip description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.">
-                                        <ToggleButton
-                                            onToggle={() => {
-                                                props.onToggle(
-                                                    ALGORITHM_ORDER_SETTINGS.HSF,
-                                                    !props.toggle[ALGORITHM_ORDER_SETTINGS.HSF],
-                                                )
-                                            }}
-                                            isToggled={
-                                                props.toggle[ALGORITHM_ORDER_SETTINGS.HSF] ?? false
-                                            }
-                                            disabled={props.loader}
-                                        />
-                                    </Tooltip>
-                                    <Typography color="white" text="caption" nowrap>
-                                        HSF
+                                        EBALLS
                                     </Typography>
                                 </div>
                             </div>
