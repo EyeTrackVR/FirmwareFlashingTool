@@ -98,17 +98,25 @@ const StreamSettings: Component<IProps> = (props) => {
                                 styles="w-full!"
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...leftTracker()}>
-                                <div class="relative w-[480px] h-[480px]">
-                                    <Camera streamSource={leftTracker().streamSource} />
-                                    <canvas
-                                        class="absolute rounded-12 top-0"
-                                        ref={leftCanvas}
-                                        width={480}
-                                        height={480}
-                                    />
+                                <div class="flex flex-col gap-24 w-full">
+                                    <Typography text="caption" color="white" class="text-left">
+                                        Click and drag to select crop
+                                    </Typography>
+                                    <div class="relative w-[480px] h-[480px] mx-auto">
+                                        <Camera streamSource={leftTracker().streamSource} />
+                                        <Show when={leftTracker().address !== ''}>
+                                            <canvas
+                                                class="absolute rounded-12 top-0"
+                                                ref={leftCanvas}
+                                                width={480}
+                                                height={480}
+                                            />
+                                        </Show>
+                                    </div>
                                 </div>
                             </CameraPanel>
                             <CameraRotationPanel
+                                disabled={leftTracker().address === ''}
                                 rotation={props.rotation[TRACKER_POSITION.LEFT_EYE] ?? 0}
                                 onChangeRotation={(value) => {
                                     props.onRotateCamera(
@@ -123,17 +131,25 @@ const StreamSettings: Component<IProps> = (props) => {
                             <CameraPanel
                                 cameraStatus={CONNECTION_STATUS.INACTIVE}
                                 {...rightTracker()}>
-                                <div class="w-[480px] h-[480px]">
-                                    <Camera streamSource={rightTracker().streamSource} />
-                                    <canvas
-                                        class="absolute top-0 rounded-12"
-                                        ref={rightCanvas}
-                                        width={480}
-                                        height={480}
-                                    />
+                                <div class="flex flex-col gap-24 w-full">
+                                    <Typography text="caption" color="white" class="text-left">
+                                        Click and drag to select crop
+                                    </Typography>
+                                    <div class="w-[480px] h-[480px] mx-auto">
+                                        <Camera streamSource={rightTracker().streamSource} />
+                                        <Show when={rightTracker().address !== ''}>
+                                            <canvas
+                                                class="absolute top-0 rounded-12"
+                                                ref={rightCanvas}
+                                                width={480}
+                                                height={480}
+                                            />
+                                        </Show>
+                                    </div>
                                 </div>
                             </CameraPanel>
                             <CameraRotationPanel
+                                disabled={rightTracker().address === ''}
                                 rotation={props.rotation[TRACKER_POSITION.RIGHT_EYE] ?? 0}
                                 onChangeRotation={(value) => {
                                     props.onRotateCamera(
