@@ -59,7 +59,7 @@ const Camera: Component<IProps> = (props) => {
                 src={props.streamSource}
                 onLoad={handleLoad}
                 onError={handleError}
-                class="object-cover w-full h-full"
+                class="object-cover w-full h-full select-none pointer-events-none"
                 classList={{
                     hidden: loading() || error(),
                     'opacity-0': loading(),
