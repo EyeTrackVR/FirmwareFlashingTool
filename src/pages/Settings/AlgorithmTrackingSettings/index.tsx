@@ -42,7 +42,7 @@ const AlgorithmTrackingSettings: Component<IProps> = (props) => {
             </Show>
             <div class="w-full flex flex-row justify-end ">
                 <Button
-                    label="Reset settings to default"
+                    label="Reset Settings to Default"
                     isDangerous
                     disabled={props.loader}
                     onClick={props.onClickReset}

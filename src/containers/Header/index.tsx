@@ -9,7 +9,7 @@ import { isActiveProcess } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 import { getTrackersCount } from '@store/trackers/selectors'
 import { serverStatus } from '@store/ui/selectors'
-import { setActiveModal } from '@store/ui/ui'
+import { setActiveModal, setIsStreamSettingsActive } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createMemo } from 'solid-js'
 
@@ -76,6 +76,7 @@ export const HeaderRoot = () => {
                 }
                 setAbortController()
                 if (getTrackersCount() > 0) {
+                    setIsStreamSettingsActive(false)
                     navigate('/dashboard')
                 } else {
                     navigate('/')

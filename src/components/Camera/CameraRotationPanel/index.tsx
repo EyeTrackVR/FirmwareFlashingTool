@@ -9,6 +9,7 @@ import { Component } from 'solid-js'
 export interface IProps {
     onChangeRotation: (value: number) => void
     rotation: number
+    disabled?: boolean
 }
 
 const CameraRotationPanel: Component<IProps> = (props) => {
@@ -42,18 +43,21 @@ const CameraRotationPanel: Component<IProps> = (props) => {
                 </Typography>
                 <div class="flex flex-row gap-12 items-center justify-center">
                     <MinusButton
+                        disabled={props.disabled}
                         onClick={() => {
                             const newValue = Math.max(MIN_RANGE, props.rotation - 1)
                             handleRotationChange(newValue)
                         }}
                     />
                     <RangeSlider
+                        disabled={props.disabled}
                         max={MAX_RANGE}
                         min={MIN_RANGE}
                         value={props.rotation}
                         onChange={handleRotationChange}
                     />
                     <PlusButton
+                        disabled={props.disabled}
                         onClick={() => {
                             const newValue = Math.min(MAX_RANGE, props.rotation + 1)
                             handleRotationChange(newValue)

@@ -4,6 +4,7 @@ import { HeaderRoot } from '@containers/Header'
 import { Router, useNavigate } from '@solidjs/router'
 import { runWatchers } from '@src/watchers'
 import { useAppAPIContext } from '@store/context/api'
+import { setIsStreamSettingsActive } from '@store/ui/ui'
 import { createEffect, createMemo, lazy, onMount, Show, type Component } from 'solid-js'
 import { DASHBOARD_ROUTES, routes, SETTINGS_ROUTES } from './index'
 const Modals = lazy(() => import('@containers/Modals'))
@@ -38,6 +39,7 @@ const AppRoutes: Component = () => {
                                 <Sidebar
                                     navigation={path()}
                                     onClick={(route) => {
+                                        setIsStreamSettingsActive(false)
                                         navigate(route)
                                     }}
                                 />
