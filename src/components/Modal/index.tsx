@@ -1,12 +1,11 @@
 import Header from '@components/Header'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
-import { type TITLEBAR_ACTION } from '@src/static/types/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { createEffect, ParentComponent, Show } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickCloseModal: () => void
-    onClickSettings: () => void
     connectionStatus: CONNECTION_STATUS
     isSending?: boolean
     appVersion: string
@@ -33,7 +32,6 @@ export const Modal: ParentComponent<IProps> = (props) => {
                         onClick={props.onClickHeader}
                         appVersion={props.appVersion}
                         connectionStatus={props.connectionStatus}
-                        onClickSettings={props.onClickSettings}
                     />
                 </div>
             </Show>

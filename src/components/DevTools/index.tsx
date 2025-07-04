@@ -3,10 +3,10 @@ import Dropdown from '@components/Dropdown/Dropdown'
 import DropdownList from '@components/Dropdown/DropdownList'
 import Header from '@components/Header'
 import ModalHeader from '@components/ModalHeader'
-import { type CHANNEL_TYPE, type TITLEBAR_ACTION } from '@interfaces/enums'
-import { IDropdownList } from '@interfaces/interfaces'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { IEventType } from '@interfaces/types'
+import { CHANNEL_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import { type IDropdownList } from '@interfaces/ui/interface'
 import theme from '@src/common/theme'
 import { DEBUG_MODAL_ID } from '@src/static'
 import { FaSolidGear } from 'solid-icons/fa'
@@ -16,7 +16,6 @@ export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
     onClickSetChannelMode: (data: string) => void
     onClickOpenModal: (id: string) => void
-    onClickSettings: () => void
     connectionStatus: CONNECTION_STATUS
     channelOptions: IDropdownList[]
     channelMode: CHANNEL_TYPE
@@ -45,7 +44,6 @@ export const Devtools: Component<IProps> = (props) => {
                         onClick={props.onClickHeader}
                         appVersion={props.appVersion}
                         connectionStatus={props.connectionStatus}
-                        onClickSettings={props.onClickSettings}
                     />
                 </div>
                 <div class="modal-box overflow-visible flex items-center w-auto h-auto p-10 bg-transparent flex-col">

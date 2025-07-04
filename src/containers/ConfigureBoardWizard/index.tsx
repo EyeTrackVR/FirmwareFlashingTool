@@ -1,8 +1,8 @@
-import { type IDropdownList } from '@interfaces/interfaces'
+import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import { type IDropdownList } from '@interfaces/ui/interface'
 import { ConfigureBoardWizard } from '@pages/ConfigureBoardWizard'
 import { useNavigate } from '@solidjs/router'
 import { supportedBoards, USB } from '@src/static'
-import { MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { BoardDescription, ChannelOptions } from '@src/static/ui'
 import { useAppAPIContext } from '@src/store/context/api'
 import { isValidChannel } from '@src/utils'
@@ -64,9 +64,6 @@ export const ConfigureBoardWizardRoot = () => {
 
     return (
         <ConfigureBoardWizard
-            onClickSettings={() => {
-                navigate('/settings')
-            }}
             appVersion={'1.7.0'}
             serverStatus={serverStatus()}
             boards={boards()}

@@ -1,4 +1,4 @@
-import { CHANNEL_TYPE } from '@interfaces/enums'
+import { CHANNEL_TYPE } from '@interfaces/ui/enums'
 import { type IBoxPosition } from '@src/Services/canvas'
 import { defaultMdnsLength, MDNS_LENGTH } from '@src/static'
 import { IP_ADDRESS_REGEX, UVC_REGEX } from '@src/static/regex'

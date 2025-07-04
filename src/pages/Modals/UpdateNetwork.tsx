@@ -2,14 +2,13 @@ import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { WIFI_ID } from '@src/static'
 import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
-    onClickSettings: () => void
     onClickClose: () => void
     onClick: () => void
     isActive: boolean
@@ -21,7 +20,6 @@ export interface IProps {
 const UpdateNetwork: Component<IProps> = (props) => {
     return (
         <Modal
-            onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             id={WIFI_ID}

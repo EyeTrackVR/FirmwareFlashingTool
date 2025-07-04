@@ -1,9 +1,9 @@
-import { MODAL_TYPE } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
 import { EyeTrackVrController } from '@src/Services/etvr/controller'
 import { sleep } from '@src/utils'
 import { setActiveModal } from '@store/ui/ui'
 import { setConfig, setTrackers } from './trackers'
+import { MODAL_TYPE } from '@interfaces/ui/enums'
 
 export const loadState = async () => {
     const controller = new EyeTrackVrController()

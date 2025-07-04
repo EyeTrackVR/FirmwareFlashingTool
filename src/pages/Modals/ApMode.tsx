@@ -2,14 +2,13 @@ import { Component, createSignal, Show } from 'solid-js'
 import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { AP_ID } from '@src/static'
 import Typography from '@components/Typography'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
-    onClickSettings: () => void
     onClickClose: () => void
     onClick: () => void
     connectionStatus: CONNECTION_STATUS
@@ -22,7 +21,6 @@ const ApMode: Component<IProps> = (props) => {
 
     return (
         <Modal
-            onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             id={AP_ID}

@@ -1,5 +1,5 @@
 import Typography from '@components/Typography'
-import { ENotificationType } from '@src/static/types/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import { INotifications } from '@store/notifications/notifications'
 import { notifications } from '@store/notifications/selectors'
 import { Alert, Toast, Transition } from 'solid-headless'
@@ -36,16 +36,16 @@ const CustomToast: Component<ToastProps> = (props) => {
             <Toast class="flex justify-between items-center">
                 <Alert class="bg-black-900 flex flex-row items-center gap-6 p-12 rounded-6 max-w-[400px]">
                     <div>
-                        <Show when={props.notif.type === ENotificationType.SUCCESS}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.SUCCESS}>
                             <AiOutlineCheckCircle size={25} color="#68D391" />
                         </Show>
-                        <Show when={props.notif.type === ENotificationType.ERROR}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.ERROR}>
                             <FiAlertOctagon size={25} color="#F56565" />
                         </Show>
-                        <Show when={props.notif.type === ENotificationType.WARNING}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.WARNING}>
                             <FiAlertTriangle size={25} color="#F6E05E" />
                         </Show>
-                        <Show when={props.notif.type === ENotificationType.INFO}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.INFO}>
                             <IoAlertCircleSharp size={25} color="#90CDF4" />
                         </Show>
                     </div>

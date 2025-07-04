@@ -1,3 +1,7 @@
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/ui/enums'
+import { espApi } from '@src/Services/esp'
+import { logs as logsDescription } from '@src/static/ui/logs'
+import { trimLogsByTextLength } from '@src/utils'
 import { getCurrent, WebviewWindow } from '@tauri-apps/api/window'
 import { debug } from 'tauri-plugin-log-api'
 import { detailedLogs, firmwareState } from './selectors'
@@ -9,10 +13,6 @@ import {
     setProcessStatus,
     updateFirmwareState,
 } from './terminal'
-import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
-import { logs as logsDescription } from '@src/static/ui/logs'
-import { trimLogsByTextLength } from '@src/utils'
-import { espApi } from '@src/Services/esp'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()

@@ -1,7 +1,7 @@
 import Header from '@components/Header'
+import { DIRECTION, MODAL_TYPE, NOTIFICATION_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { USB } from '@src/static'
-import { DIRECTION, ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { stepStatus } from '@src/static/ui'
 import { useAppAPIContext } from '@store/context/api'
 import { addNotification } from '@store/notifications/actions'
@@ -70,7 +70,7 @@ export const HeaderRoot = () => {
                     addNotification({
                         title: 'There is an active installation. Please wait.',
                         message: 'There is an active installation. Please wait.',
-                        type: ENotificationType.INFO,
+                        type: NOTIFICATION_TYPE.INFO,
                     })
                     return true
                 }
@@ -86,3 +86,5 @@ export const HeaderRoot = () => {
         />
     )
 }
+
+export default HeaderRoot

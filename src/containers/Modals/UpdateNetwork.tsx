@@ -1,6 +1,5 @@
-import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
+import { MODAL_TYPE, NOTIFICATION_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import UpdateNetwork from '@pages/Modals/UpdateNetwork'
-import { useNavigate } from '@solidjs/router'
 import { type Command, espApi } from '@src/Services/esp'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
@@ -13,7 +12,6 @@ import { createMemo, createSignal } from 'solid-js'
 const UpdateNetworkRoot = () => {
     const [isSending, setIsSending] = createSignal<boolean>(false)
     const { mdns, ssid, password, activePort } = useAppAPIContext()
-    const navigate = useNavigate()
 
     const config = createMemo<Command[]>(() => {
         return [
@@ -22,7 +20,7 @@ const UpdateNetworkRoot = () => {
         ]
     })
 
-    const notify = (title: string, type: ENotificationType) => {
+    const notify = (title: string, type: NOTIFICATION_TYPE) => {
         addNotification({ title, message: title, type })
     }
 
@@ -40,9 +38,9 @@ const UpdateNetworkRoot = () => {
             return
         }
 
-        notify('sending credentials', ENotificationType.INFO)
+        notify('sending credentials', NOTIFICATION_TYPE.INFO)
         await espApi.sendCommands(activePortName(), config())
-        notify('Sent credentials', ENotificationType.INFO)
+        notify('Sent credentials', NOTIFICATION_TYPE.INFO)
 
         setIsSending(false)
         setActiveModal({ open: false, type: MODAL_TYPE.NONE })
@@ -54,9 +52,6 @@ const UpdateNetworkRoot = () => {
             connectionStatus={serverStatus()}
             isSending={isSending()}
             isActive={activeModal().type === MODAL_TYPE.UPDATE_NETWORK}
-            onClickSettings={() => {
-                navigate('/settings')
-            }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -80,9 +75,9 @@ const UpdateNetworkRoot = () => {
                 if (isSending()) return
                 onClickUpdateNetworkSettings().catch(async (err) => {
                     if (err instanceof Error) {
-                        notify(err.message, ENotificationType.ERROR)
+                        notify(err.message, NOTIFICATION_TYPE.ERROR)
                     } else {
-                        notify(err, ENotificationType.ERROR)
+                        notify(err, NOTIFICATION_TYPE.ERROR)
                     }
                     setIsSending(false)
                 })

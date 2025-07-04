@@ -1,12 +1,9 @@
-import {
-    type CHANNEL_TYPE,
-    type RESTStatus,
-    type RESTType,
-    FLASH_STATUS,
-    FLASH_STEP,
-} from './enums'
-
 //* Utility Interfaces
+
+import { RESTStatus, RESTType } from './enums'
+import { CHANNEL_TYPE } from './ui/enums'
+import { IDropdownList } from './ui/interface'
+import { IActivePort } from './ui/types'
 
 //* Component Interfaces
 
@@ -56,13 +53,6 @@ export interface IGHRelease {
     prerelease?: boolean
 }
 
-//*  App Store Interfaces  */
-
-export type IActivePort = {
-    activePortName: string
-    autoSelect: boolean
-}
-
 export interface AppStoreAPI {
     restAPI: IRest
     ghAPI: IGHRest
@@ -76,33 +66,4 @@ export interface AppStoreAPI {
     manifestPath: string
     activePort: IActivePort
     ports: IDropdownList[]
-}
-
-export interface IChannelOptions {
-    label: CHANNEL_TYPE
-    description: string
-}
-
-export interface IDropdownList {
-    label: string | CHANNEL_TYPE
-    description?: string
-}
-
-export interface IFlashState {
-    status: FLASH_STATUS
-    label: string
-    errorName?: string
-}
-
-export interface IFirmwareState {
-    errorName?: string
-    step: FLASH_STEP
-    status: FLASH_STATUS
-    label: string
-}
-
-export interface IStepStatus {
-    description: string
-    dashoffset: string
-    index: string
 }

@@ -1,4 +1,4 @@
-import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
+import { MODAL_TYPE, NOTIFICATION_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import CloseApp from '@pages/Modals/CloseApp'
 import { CLOSE_APP_ID } from '@src/static'
 import { addNotification } from '@store/notifications/actions'
@@ -22,7 +22,7 @@ const CloseAppRoot = () => {
                 addNotification({
                     title: 'Failed to close app',
                     message: 'Failed to close app',
-                    type: ENotificationType.ERROR,
+                    type: NOTIFICATION_TYPE.ERROR,
                 })
                 setActiveModal({ open: false, type: MODAL_TYPE.NONE })
             }

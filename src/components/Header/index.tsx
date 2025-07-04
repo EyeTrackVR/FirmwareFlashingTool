@@ -1,8 +1,8 @@
 import ConnectionStatus from '@components/ConnectionStatus'
 import { ProgressBar } from '@components/ProgressBar'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { Component, Show } from 'solid-js'
 
 interface IProps {

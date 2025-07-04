@@ -1,6 +1,6 @@
-import { ENotificationType } from '@interfaces/enums'
 import { TRACKING_ALGORITHM_SETTINGS_ENUM } from '@interfaces/Settings/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import AlgorithmTrackingSettings from '@pages/Settings/AlgorithmTrackingSettings'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { addNotification } from '@store/notifications/actions'
@@ -46,13 +46,13 @@ const AlgorithmTrackingSettingsRoot = () => {
             addNotification({
                 title: 'Updated config',
                 message: 'Updated config',
-                type: ENotificationType.INFO,
+                type: NOTIFICATION_TYPE.INFO,
             })
         } catch {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.ERROR,
+                type: NOTIFICATION_TYPE.ERROR,
             })
         }
 
@@ -64,7 +64,7 @@ const AlgorithmTrackingSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.ERROR,
+                type: NOTIFICATION_TYPE.ERROR,
             })
         }
         setLoader(false)

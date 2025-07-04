@@ -1,15 +1,16 @@
-import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { Button } from '@components/Buttons/Button'
-import { Footer } from '@components/Footer'
 import PortDropdown from '@components/Dropdown/PortDropdown'
+import { Footer } from '@components/Footer'
 import Firmware from '@components/Terminal/Firmware'
 import Step from '@components/Terminal/Step'
 import TerminalHeader from '@components/Terminal/TerminalHeader'
-import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
-import { IActivePort, IDropdownList, IFirmwareState } from '@interfaces/interfaces'
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/ui/enums'
+import { IDropdownList, IFirmwareState } from '@interfaces/ui/interface'
+import { IActivePort } from '@interfaces/ui/types'
 import { VirtualList } from '@pages/VirtualList'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { shortName } from '@src/utils'
+import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 
 export interface IProps {
     onClickInstallOpenIris: () => void

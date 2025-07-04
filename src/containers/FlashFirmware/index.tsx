@@ -1,5 +1,5 @@
-import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
-import { IDropdownList } from '@interfaces/interfaces'
+import { FLASH_STATUS, MODAL_TYPE, NOTIFICATION_TYPE } from '@interfaces/ui/enums'
+import { type IDropdownList } from '@interfaces/ui/interface'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
 import { espApi, UsbSerialPortInfo } from '@src/Services/esp'
@@ -26,7 +26,7 @@ import { hideModal } from '@store/ui/selectors'
 import { setActiveModal, setNavigationStep } from '@store/ui/ui'
 import { createEffect, createMemo, onCleanup, onMount } from 'solid-js'
 
-export const ManageFlashFirmware = () => {
+export const flashFirmwareRoot = () => {
     const {
         getFirmwareVersion,
         activeBoard,
@@ -79,7 +79,7 @@ export const ManageFlashFirmware = () => {
         addNotification({
             title: 'Failed to load ports',
             message: 'Failed to load ports',
-            type: ENotificationType.ERROR,
+            type: NOTIFICATION_TYPE.ERROR,
         })
     }
 
@@ -105,7 +105,7 @@ export const ManageFlashFirmware = () => {
         return {
             title: 'There is an active installation. Please wait.',
             message: 'There is an active installation. Please wait.',
-            type: ENotificationType.INFO,
+            type: NOTIFICATION_TYPE.INFO,
         }
     })
 
@@ -178,7 +178,7 @@ export const ManageFlashFirmware = () => {
                     addNotification({
                         title: 'No logs found',
                         message: 'No logs found.',
-                        type: ENotificationType.INFO,
+                        type: NOTIFICATION_TYPE.INFO,
                     })
                     return
                 }
@@ -213,4 +213,4 @@ export const ManageFlashFirmware = () => {
     )
 }
 
-export default ManageFlashFirmware
+export default flashFirmwareRoot

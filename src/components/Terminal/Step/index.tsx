@@ -1,6 +1,6 @@
 import Typography from '@components/Typography'
-import { FLASH_STATUS } from '@interfaces/enums'
-import { IFirmwareState } from '@interfaces/interfaces'
+import { FLASH_STATUS } from '@interfaces/ui/enums'
+import { IFirmwareState } from '@interfaces/ui/interface'
 import theme from '@src/common/theme'
 import { OcCheckcircle2, OcCircleslash2, OcX } from 'solid-icons/oc'
 import { RiArrowsArrowDropRightLine } from 'solid-icons/ri'
