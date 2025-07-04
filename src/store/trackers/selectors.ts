@@ -10,6 +10,10 @@ export const { trackers, algorithmOrder, canvasBoxPositions, config } =
 
 export const getTrackersCount = createMemo(() => trackers().length)
 
+export const configuredTrackersCount = createMemo(() => {
+    return config().trackers.filter((el) => el.camera.capture_source !== '').length
+})
+
 export const getTrackers: Accessor<Record<TRACKER_POSITION, ITracker>> = createMemo(() => {
     const data: Record<TRACKER_POSITION, ITracker> = {
         [TRACKER_POSITION.LEFT_EYE]: {
