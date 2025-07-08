@@ -2,14 +2,13 @@ import { Footer } from '@components/Footer'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { BEFORE_SELECT_BOARD_ID } from '@src/static'
 import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
-    onClickSettings: () => void
     onClickConfirmBoard: () => void
     onClickClose: () => void
     connectionStatus: CONNECTION_STATUS
@@ -20,7 +19,6 @@ export interface IProps {
 const BeforeSelectBoard: Component<IProps> = (props) => {
     return (
         <Modal
-            onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             id={BEFORE_SELECT_BOARD_ID}

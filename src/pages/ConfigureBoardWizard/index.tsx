@@ -1,10 +1,10 @@
-import { type Component } from 'solid-js'
 import { SelectBoard } from '@components/Board/SelectBoard'
 import { Devtools } from '@components/DevTools'
 import { Footer } from '@components/Footer'
-import { type IDropdownList } from '@interfaces/interfaces'
-import { type CHANNEL_TYPE, TITLEBAR_ACTION } from '@src/static/types/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { CHANNEL_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import { type IDropdownList } from '@interfaces/ui/interface'
+import { type Component } from 'solid-js'
 
 export interface IProps {
     onClickSetChannelMode: (data: string) => void
@@ -13,7 +13,6 @@ export interface IProps {
     onSubmit: (board: string) => void
     onClickConfirm: () => void
     onClickBack: () => void
-    onClickSettings: () => void
     boards: IDropdownList[]
     channelOptions: IDropdownList[]
     serverStatus: CONNECTION_STATUS
@@ -37,7 +36,6 @@ export const ConfigureBoardWizard: Component<IProps> = (props) => {
                         onClickHeader={props.onClickHeader}
                         onClickOpenModal={props.onClickOpenModal}
                         onClickSetChannelMode={props.onClickSetChannelMode}
-                        onClickSettings={props.onClickSettings}
                     />
                     <SelectBoard
                         firmwareVersion={props.firmwareVersion}

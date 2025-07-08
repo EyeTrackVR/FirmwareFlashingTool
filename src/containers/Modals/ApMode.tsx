@@ -1,6 +1,5 @@
-import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
+import { MODAL_TYPE, NOTIFICATION_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import ApMode from '@pages/Modals/ApMode'
-import { useNavigate } from '@solidjs/router'
 import { useAppAPIContext } from '@store/context/api'
 import { addNotification } from '@store/notifications/actions'
 import { activeModal, serverStatus } from '@store/ui/selectors'
@@ -13,13 +12,12 @@ import { debug } from 'tauri-plugin-log-api'
 const ApModeRoot = () => {
     const { ssid, password, useRequestHook } = useAppAPIContext()
     const [response, setResponse] = createSignal<object>()
-    const navigate = useNavigate()
 
     const configureAPConnection = async () => {
         addNotification({
             title: 'Making request',
             message: 'Making request',
-            type: ENotificationType.INFO,
+            type: NOTIFICATION_TYPE.INFO,
         })
         debug(`ssid: ${ssid()}`)
         debug(`pass: ${password()}`)
@@ -33,7 +31,7 @@ const ApModeRoot = () => {
                 title: 'Error',
                 message:
                     'Could not connect to device, please connect your PC to the EyeTrackVR Access Point and try again.',
-                type: ENotificationType.ERROR,
+                type: NOTIFICATION_TYPE.ERROR,
             })
             return
         }
@@ -49,7 +47,7 @@ const ApModeRoot = () => {
         addNotification({
             title: 'Success',
             message: response()!['msg'],
-            type: ENotificationType.SUCCESS,
+            type: NOTIFICATION_TYPE.SUCCESS,
         })
         await useRequestHook('save', '192.168.4.1')
     }
@@ -79,9 +77,6 @@ const ApModeRoot = () => {
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
             isActive={activeModal().type === MODAL_TYPE.AP_MODE}
-            onClickSettings={() => {
-                navigate('/settings')
-            }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -105,7 +100,7 @@ const ApModeRoot = () => {
                     addNotification({
                         title: 'AP Mode configuration failed',
                         message: 'Failed to configure AP Mode',
-                        type: ENotificationType.ERROR,
+                        type: NOTIFICATION_TYPE.ERROR,
                     })
                 })
             }}

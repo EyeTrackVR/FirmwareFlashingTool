@@ -1,7 +1,7 @@
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/ui/enums'
+import { type IFlashState } from '@interfaces/ui/interface'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
-import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
-import { type IFlashState } from '@interfaces/interfaces'
 export interface ITerminalStore {
     simulationAbortController: AbortController
     isSoftwareDownloaded: boolean

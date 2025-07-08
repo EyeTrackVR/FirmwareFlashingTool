@@ -1,18 +1,7 @@
-import {
-    CHANNEL_TYPE,
-    ENotificationType,
-    ESPEndpoints,
-    RESTStatus,
-    RESTType,
-} from '@interfaces/enums'
-import {
-    AppStoreAPI,
-    IDropdownList,
-    IEndpoint,
-    IGHAsset,
-    IGHRelease,
-    IGHResponse,
-} from '@interfaces/interfaces'
+import { ESPEndpoints, RESTStatus, RESTType } from '@interfaces/enums'
+import { AppStoreAPI, IEndpoint, IGHAsset, IGHRelease, IGHResponse } from '@interfaces/interfaces'
+import { CHANNEL_TYPE, NOTIFICATION_TYPE } from '@interfaces/ui/enums'
+import { type IDropdownList } from '@interfaces/ui/interface'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { GHEndpoints } from '@src/static/endpoints'
 import { formatDeviceName } from '@src/utils'
@@ -574,7 +563,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 addNotification({
                     title: 'Error',
                     message: response.error,
-                    type: ENotificationType.ERROR,
+                    type: NOTIFICATION_TYPE.ERROR,
                 })
                 return false
             }

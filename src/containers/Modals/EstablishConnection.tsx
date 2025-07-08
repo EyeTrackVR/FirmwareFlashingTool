@@ -1,4 +1,4 @@
-import { MODAL_TYPE } from '@interfaces/enums'
+import { MODAL_TYPE } from '@interfaces/ui/enums'
 import EstablishConnection from '@pages/Modals/EstablishConnection'
 import { ESTABLISH_CONNECTION_ID } from '@src/static'
 import { activeModal, serverStatus } from '@store/ui/selectors'

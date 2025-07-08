@@ -1,12 +1,13 @@
-import SettingsSidebar from '@components/Settings/SettingsSidebar'
-import Sidebar from '@components/Sidebar'
-import { HeaderRoot } from '@containers/Header'
 import { Router, useNavigate } from '@solidjs/router'
 import { runWatchers } from '@src/watchers'
 import { useAppAPIContext } from '@store/context/api'
 import { setIsStreamSettingsActive } from '@store/ui/ui'
 import { createEffect, createMemo, lazy, onMount, Show, type Component } from 'solid-js'
 import { DASHBOARD_ROUTES, routes, SETTINGS_ROUTES } from './index'
+
+const SettingsSidebar = lazy(() => import('@components/Settings/SettingsSidebar'))
+const HeaderRoot = lazy(() => import('@containers/Header'))
+const Sidebar = lazy(() => import('@components/Sidebar'))
 const Modals = lazy(() => import('@containers/Modals'))
 
 const AppRoutes: Component = () => {

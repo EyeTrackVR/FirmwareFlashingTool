@@ -1,4 +1,4 @@
-import { CHANNEL_TYPE } from '@interfaces/enums'
+import { CHANNEL_TYPE } from '@interfaces/ui/enums'
 
 export const GHEndpoints: Record<CHANNEL_TYPE, string> = {
     [CHANNEL_TYPE.OFFICIAL]: 'https://api.github.com/repos/EyeTrackVR/OpenIris/releases/latest',

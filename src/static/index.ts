@@ -1,4 +1,4 @@
-import { BOARD_TYPE } from './types/enums'
+import { BOARD_TYPE } from '@interfaces/ui/enums'
 
 export const ALGORITHMS: string[] = ['LEAP', 'BLOB', 'HSRAC', 'RANSAC', 'HSF', 'AHSF']
 export const ADD_BOARD_LIMIT = 2

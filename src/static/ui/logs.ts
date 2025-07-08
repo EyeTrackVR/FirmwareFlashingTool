@@ -1,5 +1,5 @@
-import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
-import { IFlashState } from '@interfaces/interfaces'
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/ui/enums'
+import { IFlashState } from '@interfaces/ui/interface'
 
 export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFlashState>> = {
     [FLASH_STEP.BOARD_CONNECTION]: {

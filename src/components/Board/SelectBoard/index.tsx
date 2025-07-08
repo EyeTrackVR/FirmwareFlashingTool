@@ -2,7 +2,7 @@ import { SelectButton } from '@components/Buttons/SelectButton'
 import Dropdown from '@components/Dropdown/Dropdown'
 import DropdownList from '@components/Dropdown/DropdownList'
 import Typography from '@components/Typography'
-import { type IDropdownList } from '@interfaces/interfaces'
+import { type IDropdownList } from '@interfaces/ui/interface'
 import { Component, Show } from 'solid-js'
 
 export interface IProps {

@@ -1,5 +1,5 @@
-import { MODAL_TYPE } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { MODAL_TYPE } from '@interfaces/ui/enums'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 

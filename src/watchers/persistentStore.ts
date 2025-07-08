@@ -1,4 +1,4 @@
-import { ENotificationType } from '@interfaces/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import { usePersistentStore } from '@src/Services/persistentStore'
 import { addNotification } from '@store/notifications/actions'
 import { config } from '@store/trackers/selectors'
@@ -16,7 +16,7 @@ export const persistentStore = () => {
                 addNotification({
                     title: 'Failed to save data to local storage',
                     message: 'Failed to save data to local storage',
-                    type: ENotificationType.ERROR,
+                    type: NOTIFICATION_TYPE.ERROR,
                 })
             }
         }),

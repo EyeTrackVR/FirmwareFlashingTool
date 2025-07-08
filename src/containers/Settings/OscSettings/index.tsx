@@ -1,6 +1,6 @@
-import { ENotificationType } from '@interfaces/enums'
 import { IEndpoints, IOSCSettings } from '@interfaces/services/interfaces'
 import { OSC_SETTINGS_ENUM } from '@interfaces/Settings/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import OscSettings from '@pages/Settings/OscSettings'
 import { getEyeTrackVrController } from '@src/Services/etvr/connection'
 import { addNotification } from '@store/notifications/actions'
@@ -70,13 +70,13 @@ const OscSettingsRoot = () => {
             addNotification({
                 title: 'Updated config',
                 message: 'Updated config',
-                type: ENotificationType.INFO,
+                type: NOTIFICATION_TYPE.INFO,
             })
         } catch (err) {
             addNotification({
                 title: 'There was a problem updating the current configuration.',
                 message: 'There was a problem updating the current configuration.',
-                type: ENotificationType.INFO,
+                type: NOTIFICATION_TYPE.INFO,
             })
         }
         try {
@@ -87,7 +87,7 @@ const OscSettingsRoot = () => {
             addNotification({
                 title: 'Failed to update config',
                 message: 'Failed to update config',
-                type: ENotificationType.ERROR,
+                type: NOTIFICATION_TYPE.ERROR,
             })
         }
 

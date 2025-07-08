@@ -1,7 +1,7 @@
 import { Modal } from '@components/Modal'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { Component } from 'solid-js'
 
 export interface IProps {
@@ -18,7 +18,6 @@ const CloseApp: Component<IProps> = (props) => {
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             onClickCloseModal={() => {}}
-            onClickSettings={() => {}}
             isActive={props.isActive}
             id={props.id}
             onClickHeader={props.onClickHeader}

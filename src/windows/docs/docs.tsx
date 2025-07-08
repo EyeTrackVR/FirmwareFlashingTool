@@ -1,11 +1,11 @@
 /* @refresh reload */
+import Header from '@components/Header'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { Router } from '@solidjs/router'
+import '@styles/docs-imports.css'
+import { appWindow } from '@tauri-apps/api/window'
 import { Suspense } from 'solid-js'
 import { render } from 'solid-js/web'
-import '@styles/docs-imports.css'
-import Header from '@components/Header'
-import { appWindow } from '@tauri-apps/api/window'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 
 const App = () => {
     return (

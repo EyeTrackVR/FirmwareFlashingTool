@@ -1,26 +1,26 @@
 import { createStore, produce } from 'solid-js/store'
 import { ToasterStore } from 'solid-headless'
-import { ENotificationAction, ENotificationType } from '@interfaces/enums'
 import { createMemo } from 'solid-js'
+import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 
 export interface INotifications {
     title: string
     message: string
-    type: ENotificationType
+    type: NOTIFICATION_TYPE
 }
 
 export interface IAppStoreNotifications {
     notifications: ToasterStore<INotifications>
     enableNotificationsSounds: boolean
     enableNotifications: boolean
-    globalNotificationsType: ENotificationAction
+    globalNotificationsType: NOTIFICATION_ACTION
 }
 
 const defaultState: IAppStoreNotifications = {
     notifications: new ToasterStore<INotifications>(),
     enableNotificationsSounds: true,
     enableNotifications: true,
-    globalNotificationsType: ENotificationAction.APP,
+    globalNotificationsType: NOTIFICATION_ACTION.APP,
 }
 
 const [state, setState] = createStore<IAppStoreNotifications>(defaultState)
@@ -41,7 +41,7 @@ export const setEnableNotifications = (flag: boolean | undefined) => {
     )
 }
 
-export const setGlobalNotificationsType = (type: ENotificationAction) => {
+export const setGlobalNotificationsType = (type: NOTIFICATION_ACTION) => {
     setState(
         produce((s) => {
             s.globalNotificationsType = type

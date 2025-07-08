@@ -1,6 +1,6 @@
 import { DefaultBoard } from '@components/Board/DefaultBoard'
 import Typography from '@components/Typography'
-import { IDropdownList } from '@interfaces/interfaces'
+import { type IDropdownList } from '@interfaces/ui/interface'
 import { classNames } from '@src/utils'
 import { Component, For, Show } from 'solid-js'
 

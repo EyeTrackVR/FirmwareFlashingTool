@@ -20,7 +20,6 @@ const EstablishConnection: Component<IProps> = (props) => {
             id={props.id}
             isSending
             onClickCloseModal={() => {}}
-            onClickSettings={() => {}}
             onClickHeader={() => {}}>
             <div class="flex flex-col gap-14">
                 <Typography color="purple" text="h3" class="text-left">

@@ -2,14 +2,13 @@ import { Button } from '@components/Buttons/Button'
 import CheckboxButton from '@components/Buttons/Checkbox'
 import { Modal } from '@components/Modal'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { BEFORE_FLASHING_ID } from '@src/static'
 import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
-    onClickSettings: () => void
     onClickClose: () => void
     onClickInstallOpeniris: () => void
     onClickCheckbox: () => void
@@ -22,7 +21,6 @@ export interface IProps {
 const BeforeFlashing: Component<IProps> = (props) => {
     return (
         <Modal
-            onClickSettings={props.onClickSettings}
             appVersion={props.appVersion}
             connectionStatus={props.connectionStatus}
             id={BEFORE_FLASHING_ID}

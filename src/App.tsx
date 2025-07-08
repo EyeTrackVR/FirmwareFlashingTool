@@ -2,7 +2,7 @@ import { lazy, onCleanup, onMount, Suspense } from 'solid-js'
 import { getEyeTrackVrController } from './Services/etvr/connection'
 import { setServerStatus } from '@store/ui/ui'
 import { addNotification } from '@store/notifications/actions'
-import { ENotificationType } from '@interfaces/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import { AppAPIProvider } from '@store/context/api'
 import { useEventListener } from 'solidjs-use'
 import { invoke } from '@tauri-apps/api/tauri'
@@ -34,7 +34,7 @@ const App = () => {
             addNotification({
                 title: 'Failed to monitor server status',
                 message: 'Failed to monitor server status',
-                type: ENotificationType.INFO,
+                type: NOTIFICATION_TYPE.INFO,
             })
         })
         handleAppBoot()

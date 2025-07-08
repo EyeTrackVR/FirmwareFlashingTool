@@ -1,5 +1,5 @@
-import { ENotificationAction } from '@interfaces/enums'
 import { NotificationAction } from '@interfaces/interfaces'
+import { NOTIFICATION_ACTION } from '@interfaces/ui/enums'
 import {
     isPermissionGranted,
     requestPermission,
@@ -32,14 +32,14 @@ export const handleSound = async (
 }
 
 export const mapNotificationCallback = (
-    type: ENotificationAction,
+    type: NOTIFICATION_ACTION,
     { callbackOS, callbackApp }: NotificationAction,
 ) => {
     /* eslint-disable */
     switch (type) {
-        case ENotificationAction.OS:
+        case NOTIFICATION_ACTION.OS:
             return callbackOS()
-        case ENotificationAction.APP:
+        case NOTIFICATION_ACTION.APP:
             return callbackApp()
     }
     /* eslint-enable */

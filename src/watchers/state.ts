@@ -1,5 +1,5 @@
-import { MODAL_TYPE } from '@interfaces/enums'
 import { CONNECTION_STATUS } from '@interfaces/services/enums'
+import { MODAL_TYPE } from '@interfaces/ui/enums'
 import { useLocation } from '@solidjs/router'
 import { DASHBOARD_ROUTES } from '@src/routes'
 import { loadState } from '@store/trackers/actions'

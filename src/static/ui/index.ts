@@ -1,5 +1,5 @@
-import { BOARD_TYPE, CHANNEL_TYPE, STEP_STATUS_ENUM } from '@interfaces/enums'
-import { type IStepStatus, type IChannelOptions } from '@interfaces/interfaces'
+import { BOARD_TYPE, CHANNEL_TYPE, STEP_STATUS_ENUM } from '@interfaces/ui/enums'
+import { IChannelOptions, IStepStatus } from '@interfaces/ui/interface'
 import { CIRCLE_SIZE } from '../index'
 
 export const BoardDescription: Record<BOARD_TYPE, string> = {

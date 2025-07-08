@@ -1,4 +1,4 @@
-import { ENotificationType } from '@interfaces/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import { useNavigate } from '@solidjs/router'
 import { usePersistentStore } from '@src/Services/persistentStore'
 import { addNotification } from '@store/notifications/actions'
@@ -29,7 +29,7 @@ export const loadPersistentStore = () => {
             addNotification({
                 title: 'Failed to save data to local storage',
                 message: 'Failed to save data to local storage',
-                type: ENotificationType.ERROR,
+                type: NOTIFICATION_TYPE.ERROR,
             })
         }
         setFirstLoadStatus(false)

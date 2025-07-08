@@ -1,6 +1,5 @@
-import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
+import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import BeforeSelectBoard from '@pages/Modals/BeforeSelectBoard'
-import { useNavigate } from '@solidjs/router'
 import { useAppAPIContext } from '@store/context/api'
 import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 import { activeModal, serverStatus } from '@store/ui/selectors'
@@ -9,16 +8,12 @@ import { appWindow } from '@tauri-apps/api/window'
 
 const BeforeSelectBoardRoot = () => {
     const { confirmFirmwareSelection } = useAppAPIContext()
-    const navigate = useNavigate()
 
     return (
         <BeforeSelectBoard
             appVersion="1.7.0"
             connectionStatus={serverStatus()}
             isActive={activeModal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}
-            onClickSettings={() => {
-                navigate('/settings')
-            }}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

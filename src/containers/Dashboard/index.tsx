@@ -1,6 +1,7 @@
-import { ENotificationType, STREAM_TOGGLE_FLIP } from '@interfaces/enums'
 import { IUpdateTracker } from '@interfaces/services/interfaces'
+import { STREAM_TOGGLE_FLIP } from '@interfaces/Settings/enums'
 import { TRACKER_POSITION } from '@interfaces/trackers/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/ui/enums'
 import Dashboard from '@pages/Dashboard'
 import StreamSettings from '@pages/StreamSettings'
 import { debounce } from '@solid-primitives/scheduled'
@@ -29,11 +30,11 @@ const DashboardRoot = () => {
     })
 
     const showErrorNotification = (title: string, message: string) => {
-        addNotification({ title, message, type: ENotificationType.ERROR })
+        addNotification({ title, message, type: NOTIFICATION_TYPE.ERROR })
     }
 
     const showInfoNotification = (title: string, message: string) => {
-        addNotification({ title, message, type: ENotificationType.INFO })
+        addNotification({ title, message, type: NOTIFICATION_TYPE.INFO })
     }
 
     const updateConfig = async () => {

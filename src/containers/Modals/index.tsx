@@ -1,4 +1,3 @@
-import { MODAL_TYPE } from '@interfaces/enums'
 import { activeModal } from '@store/ui/selectors'
 import { Match, Show, Switch } from 'solid-js'
 import ApMode from './ApMode'
@@ -7,6 +6,7 @@ import BeforeSelectBoardModal from './BeforeSelectBoard'
 import CloseAppModal from './CloseApp'
 import EstablishConnection from './EstablishConnection'
 import UpdateNetworkRoot from './UpdateNetwork'
+import { MODAL_TYPE } from '@interfaces/ui/enums'
 
 export const ModalRoot = () => {
     return (

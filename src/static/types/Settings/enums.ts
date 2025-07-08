@@ -31,3 +31,8 @@ export enum ALGORITHM_ORDER_SETTINGS {
     HSF = 'hsf',
     AHSF = 'ahsf',
 }
+
+export enum STREAM_TOGGLE_FLIP {
+    FLIP_X_AXIS = 'flip_x_axis',
+    FLIP_Y_AXIS = 'flip_y_axis',
+}
