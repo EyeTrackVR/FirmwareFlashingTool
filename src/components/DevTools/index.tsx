@@ -1,8 +1,8 @@
 import { SelectButton } from '@components/Buttons/SelectButton'
 import Dropdown from '@components/Dropdown/Dropdown'
 import DropdownList from '@components/Dropdown/DropdownList'
+import Header from '@components/Header'
 import ModalHeader from '@components/ModalHeader'
-import { Titlebar } from '@components/Titlebar'
 import { type CHANNEL_TYPE, type TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import { IEventType } from '@interfaces/types'
@@ -20,6 +20,7 @@ export interface IProps {
     debugModes: IDropdownList[]
     channelMode: CHANNEL_TYPE
     debugMode: string
+    version: string
 }
 
 export const Devtools: Component<IProps> = (props) => {
@@ -40,8 +41,10 @@ export const Devtools: Component<IProps> = (props) => {
                 }}>
                 <FaSolidGear size={12} fill={theme.colors.white[200]} />
             </button>
-            <dialog id={debugModalId} class="modal">
-                <Titlebar onClickHeader={props.onClickHeader} />
+            <dialog closedby={'closerequest'} id={debugModalId} class="modal">
+                <div class="fixed top-0 w-full">
+                    <Header onClick={props.onClickHeader} appVersion={props.version} />
+                </div>
                 <div class="modal-box overflow-visible flex items-center w-auto h-auto p-10 bg-transparent flex-col">
                     <div class="w-[350px] bg-black-900 p-12 rounded-12 border border-solid border-black-800 z-10 gap-6 flex flex-col">
                         <ModalHeader label="Dev tools" />

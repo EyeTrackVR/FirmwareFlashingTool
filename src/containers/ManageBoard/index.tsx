@@ -70,6 +70,7 @@ export const ManageBoard = () => {
 
     return (
         <BoardManagement
+            version="1.7.0"
             boards={boards()}
             lockButton={!activeBoard() || !firmwareVersion()}
             channelMode={channelMode()}

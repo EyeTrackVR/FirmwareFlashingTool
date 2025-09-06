@@ -20,6 +20,7 @@ export interface IProps {
     channelMode: CHANNEL_TYPE
     debugMode: string
     lockButton: boolean
+    version: string
 }
 
 export const BoardManagement: Component<IProps> = (props) => {
@@ -28,6 +29,7 @@ export const BoardManagement: Component<IProps> = (props) => {
             <div class="flex h-full justify-center items-center">
                 <div class="flex flex-col gap-10 justify-start">
                     <Devtools
+                        version={props.version}
                         channelOptions={props.channelOptions}
                         channelMode={props.channelMode}
                         debugMode={props.debugMode}

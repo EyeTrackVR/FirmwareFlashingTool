@@ -29,6 +29,7 @@ const BeforeFlashingContainer = () => {
 
     return (
         <BeforeFlashingModal
+            version="1.7.0"
             checked={hideModal()}
             isActive={modal().type === MODAL_TYPE.BEFORE_FLASHING}
             onClickHeader={(action: TITLEBAR_ACTION) => {

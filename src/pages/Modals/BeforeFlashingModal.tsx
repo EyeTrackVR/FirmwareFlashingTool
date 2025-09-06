@@ -14,11 +14,13 @@ export interface IProps {
     onClickCheckbox: () => void
     isActive: boolean
     checked: boolean
+    version: string
 }
 
 const BeforeFlashingModal: Component<IProps> = (props) => {
     return (
         <Modal
+            version={props.version}
             id={beforeFlashingModalID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}

@@ -75,6 +75,7 @@ const ApModeContainer = () => {
 
     return (
         <ApModeModal
+            version="1.7.0"
             isActive={modal().type === MODAL_TYPE.AP_MODE}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {

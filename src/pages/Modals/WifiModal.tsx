@@ -12,11 +12,13 @@ export interface IProps {
     onClick: () => void
     isActive: boolean
     isSending: boolean
+    version: string
 }
 
 const WifiModal: Component<IProps> = (props) => {
     return (
         <Modal
+            version={props.version}
             id={wifiModalID}
             isSending={props.isSending}
             isActive={props.isActive}
