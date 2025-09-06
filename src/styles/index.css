@@ -6,13 +6,10 @@ input[type='password']::-ms-clear {
 #root {
     text-align: center;
     background-color: transparent;
-    padding: 40px 24px 24px;
     margin: 0px;
     box-sizing: border-box;
     height: 100vh;
-    /* overflow: hidden; */
     border-radius: 0.4rem;
-    /* Clothoid Gradient */
     background: #000f1a;
 }
 

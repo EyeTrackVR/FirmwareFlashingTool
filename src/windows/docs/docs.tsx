@@ -4,6 +4,9 @@ import { onMount, Suspense } from 'solid-js'
 import { render } from 'solid-js/web'
 import { useAppContextMain, AppContextMainProvider } from '@src/store/context/main'
 import '@styles/docs-imports.css'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
+import Header from '@components/Header'
+import { appWindow } from '@tauri-apps/api/window'
 
 const App = () => {
     const { handleTitlebar } = useAppContextMain()
@@ -13,7 +16,25 @@ const App = () => {
     })
 
     return (
-        <div class="w-[100%] h-[100%]">
+        <div class="w-full h-full">
+            <Header
+                docs
+                onClick={async (action: TITLEBAR_ACTION) => {
+                    switch (action) {
+                        case TITLEBAR_ACTION.MINIMIZE:
+                            appWindow.minimize()
+                            break
+                        case TITLEBAR_ACTION.MAXIMIZE:
+                            appWindow.toggleMaximize()
+                            break
+                        case TITLEBAR_ACTION.CLOSE: {
+                            await appWindow.close()
+                        }
+                        default:
+                            return
+                    }
+                }}
+            />
             <Suspense>
                 <div class="iframe">
                     <iframe

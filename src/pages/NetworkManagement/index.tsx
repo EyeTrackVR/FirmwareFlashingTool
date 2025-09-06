@@ -25,7 +25,7 @@ export const NetworkManagement: Component<IProps> = (props) => {
     })
 
     return (
-        <div class="flex flex-grow">
+        <div class="flex flex-grow px-24">
             <div class="flex flex-col w-full">
                 <div class="flex flex-col h-full justify-center items-center">
                     <SelectNetwork
@@ -40,18 +40,20 @@ export const NetworkManagement: Component<IProps> = (props) => {
                         }}
                     />
                 </div>
-                <Footer
-                    isLoadingPrimaryButton={props.isLoading}
-                    onClickSecond={props.onClickSkip}
-                    onClickPrimary={() => {
-                        if (isNotActive()) return
-                        props.onSubmit(ssid(), password(), mdns())
-                    }}
-                    isPrimaryActive={isNotActive()}
-                    isSecondActive={false}
-                    primaryLabel="Confirm"
-                    secondLabel="Select board"
-                />
+                <div class="pb-24">
+                    <Footer
+                        isLoadingPrimaryButton={props.isLoading}
+                        onClickSecond={props.onClickSkip}
+                        onClickPrimary={() => {
+                            if (isNotActive()) return
+                            props.onSubmit(ssid(), password(), mdns())
+                        }}
+                        isPrimaryActive={isNotActive()}
+                        isSecondActive={false}
+                        primaryLabel="Confirm"
+                        secondLabel="Select board"
+                    />
+                </div>
             </div>
         </div>
     )
