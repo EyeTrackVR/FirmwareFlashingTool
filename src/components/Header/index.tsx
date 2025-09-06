@@ -1,6 +1,8 @@
+import HeaderButton from '@components/Buttons/HeaderButton'
 import { ProgressBar } from '@components/ProgressBar'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { classNames } from '@src/utils'
 import { Component, Show } from 'solid-js'
 
 interface IProps {
@@ -47,34 +49,35 @@ const Header: Component<IProps> = (props) => {
                             </Show>
                         </div>
                         <div class="flex flex-row items-center">
-                            <div
-                                classList={{
-                                    'hover:bg-brown-300': props.docs,
-                                    'hover:bg-blue-800': !props.docs,
-                                }}
-                                class="w-30 h-30 flex items-center justify-center transition"
+                            <HeaderButton
+                                class={classNames(
+                                    'w-30 h-30 flex items-center justify-center transition group',
+                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
+                                )}
                                 onClick={() => {
                                     props.onClick(TITLEBAR_ACTION.MINIMIZE)
                                 }}>
                                 <svg width="16px" height="16px" viewBox="0 0 24 24">
                                     <path fill="#ffffff" d="M20 14H4v-4h16" />
                                 </svg>
-                            </div>
-                            <div
-                                classList={{
-                                    'hover:bg-brown-300': props.docs,
-                                    'hover:bg-blue-800': !props.docs,
-                                }}
-                                class="w-30 h-30 flex items-center justify-center transition"
+                            </HeaderButton>
+                            <HeaderButton
+                                class={classNames(
+                                    'w-30 h-30 flex items-center justify-center transition group',
+                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
+                                )}
                                 onClick={() => {
                                     props.onClick(TITLEBAR_ACTION.MAXIMIZE)
                                 }}>
                                 <svg width="16px" height="16px" viewBox="0 0 24 24">
                                     <path fill="#ffffff" d="M4 4h16v16H4zm2 4v10h12V8z" />
                                 </svg>
-                            </div>
-                            <div
-                                class="w-30 h-30 flex items-center justify-center hover:bg-red-100 transition"
+                            </HeaderButton>
+                            <HeaderButton
+                                class={classNames(
+                                    'w-30 h-30 flex items-center justify-center transition group',
+                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
+                                )}
                                 onClick={() => {
                                     props.onClick(TITLEBAR_ACTION.CLOSE)
                                 }}>
@@ -84,7 +87,7 @@ const Header: Component<IProps> = (props) => {
                                         d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
                                     />
                                 </svg>
-                            </div>
+                            </HeaderButton>
                         </div>
                     </div>
                 </div>
