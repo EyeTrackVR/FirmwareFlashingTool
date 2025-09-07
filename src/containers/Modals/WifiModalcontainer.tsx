@@ -49,6 +49,7 @@ const WifiModalContainer = () => {
 
     return (
         <WifiModal
+            version="1.7.0"
             isSending={isSending()}
             isActive={modal().type === MODAL_TYPE.UPDATE_NETWORK}
             onClickHeader={(action: TITLEBAR_ACTION) => {

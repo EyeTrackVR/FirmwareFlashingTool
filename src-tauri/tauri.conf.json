@@ -80,17 +80,11 @@
         ]
       },
       "shell": {
-        "all": true,
-        "execute": true,
+        "all": false,
+        "execute": false,
         "open": ".*",
-        "scope": [
-          {
-            "name": "backend_bin/ETVR",
-            "sidecar": true,
-            "args": true
-          }
-        ],
-        "sidecar": true
+        "scope": [],
+        "sidecar": false
       },
       "window": {
         "all": false,
@@ -140,9 +134,7 @@
       "identifier": "com.eyetrackvrfft.dev",
       "longDescription": "",
       "resources": [],
-      "externalBin": [
-        "backend_bin/ETVR"
-      ],
+      "externalBin": [],
       "shortDescription": "",
       "targets": "all",
       "macOS": {

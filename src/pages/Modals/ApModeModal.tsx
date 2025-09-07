@@ -11,6 +11,7 @@ export interface IProps {
     onClickClose: () => void
     onClick: () => void
     isActive: boolean
+    version: string
 }
 
 const ApModeModal: Component<IProps> = (props) => {
@@ -19,6 +20,7 @@ const ApModeModal: Component<IProps> = (props) => {
     return (
         <Modal
             id={apModalID}
+            version={props.version}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>

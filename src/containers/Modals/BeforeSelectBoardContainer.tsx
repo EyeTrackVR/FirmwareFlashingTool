@@ -11,6 +11,7 @@ const BeforeSelectBoardContainer = () => {
 
     return (
         <BeforeSelectBoard
+            version="1.7.0"
             isActive={modal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {

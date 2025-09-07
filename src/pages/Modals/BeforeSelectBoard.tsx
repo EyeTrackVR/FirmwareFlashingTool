@@ -11,11 +11,13 @@ export interface IProps {
     onClickConfirmBoard: () => void
     onClickClose: () => void
     isActive: boolean
+    version: string
 }
 
 const BeforeSelectBoard: Component<IProps> = (props) => {
     return (
         <Modal
+            version={props.version}
             id={beforeSelectBoardModalID}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
