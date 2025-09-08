@@ -84,18 +84,6 @@ export enum ESPEndpoints {
     OTA = '/update',
 }
 
-export enum STEP_STATUS_ENUM {
-    CONFIGURE_WIFI = 'CONFIGURE_WIFI',
-    SELECT_BOARD = 'SELECT_BOARD',
-    FLASH_FIRMWARE = 'FLASH_FIRMWARE',
-}
-
-export enum DIRECTION {
-    '/' = STEP_STATUS_ENUM.SELECT_BOARD,
-    '/network' = STEP_STATUS_ENUM.CONFIGURE_WIFI,
-    '/flashFirmware' = STEP_STATUS_ENUM.FLASH_FIRMWARE,
-}
-
 export enum BOARD_TYPE {
     BABBLE_WROOMS_S3 = 'Babble_wrooms_s3',
     BABBLE_WROOMS_S3_RELEASE = 'Babble_wrooms_s3_release',
@@ -143,6 +131,8 @@ export const enum FLASH_STATUS {
 }
 
 export enum MODAL_TYPE {
+    SELECT_BOARD = 'SELECT_BOARD',
+    SELECT_PORT = 'SELECT_PORT',
     BEFORE_SELECT_BOARD = 'BEFORE_SELECT_BOARD',
     UPDATE_NETWORK = 'UPDATE_NETWORK',
     BEFORE_FLASHING = 'BEFORE_FLASHING',

@@ -117,7 +117,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         mdns: '',
         manifestPath: '',
         activePort: {
-            activePortName: DEFAULT_PORT_NAME,
+            activePortName: '',
             autoSelect: true,
         },
         ports: [],

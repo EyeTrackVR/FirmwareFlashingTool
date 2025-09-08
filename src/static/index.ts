@@ -1,5 +1,5 @@
-import { BOARD_TYPE, CHANNEL_TYPE, STEP_STATUS_ENUM } from './types/enums'
 import { type IChannelOptions } from '@interfaces/interfaces'
+import { BOARD_TYPE, CHANNEL_TYPE } from './types/enums'
 
 export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
 export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
@@ -14,6 +14,7 @@ export const logsModalID = 'logs'
 export const wifiModalID = 'wifiMode'
 export const beforeFlashingModalID = 'beforeFlashingMode'
 export const beforeSelectBoardModalID = 'BeforeSelectBoardMode'
+export const SELECT_PORT_MODAL_ID = 'SELECT_PORT_MODAL_ID'
 export const debugModalId = 'debugModal'
 export const staticMdns = 'openiristracker'
 export const DEVICE_LOST = 'The device has been lost.'
@@ -21,32 +22,6 @@ export const STREAM_IS_UNDER = 'The stream is under'
 export const SSID_MISSING = 'ssid missing'
 export const AP_IP_ADDRESS = 'AP IP address:'
 export const DEFAULT_PORT_NAME = 'auto'
-
-const circleSize = Math.PI * (radius * 2)
-
-export const stepStatus: {
-    [key in STEP_STATUS_ENUM]: {
-        description: string
-        dashoffset: string
-        index: string
-    }
-} = {
-    [STEP_STATUS_ENUM.SELECT_BOARD]: {
-        index: '1',
-        description: 'Select board',
-        dashoffset: ((105 / 100) * circleSize).toString(),
-    },
-    [STEP_STATUS_ENUM.CONFIGURE_WIFI]: {
-        index: '2',
-        description: 'Configure wifi network',
-        dashoffset: (((105 - 50) / 100) * circleSize).toString(),
-    },
-    [STEP_STATUS_ENUM.FLASH_FIRMWARE]: {
-        index: '3',
-        description: 'Flash firmware assets',
-        dashoffset: (((100 - 100) / 100) * circleSize).toString(),
-    },
-}
 
 export const BoardDescription: {
     [key in BOARD_TYPE]: string
