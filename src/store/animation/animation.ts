@@ -1,0 +1,53 @@
+import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'
+import { createMemo } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
+
+export interface IAnimationState {
+    action: ACTION
+    step: FLASH_WIZARD_STEPS
+    activeStep: FLASH_WIZARD_STEPS
+    showComponent: boolean
+}
+
+const defaultState: IAnimationState = {
+    step: FLASH_WIZARD_STEPS.INIT,
+    activeStep: FLASH_WIZARD_STEPS.INIT,
+    action: ACTION.NEXT,
+    showComponent: true,
+}
+
+const [state, setState] = createStore<IAnimationState>(defaultState)
+
+export const setStep = (step: FLASH_WIZARD_STEPS) => {
+    setState(
+        produce((s) => {
+            s.step = step
+        }),
+    )
+}
+
+export const setAction = (action: ACTION) => {
+    setState(
+        produce((s) => {
+            s.action = action
+        }),
+    )
+}
+
+export const setActiveStep = (activeStep: FLASH_WIZARD_STEPS) => {
+    setState(
+        produce((s) => {
+            s.activeStep = activeStep
+        }),
+    )
+}
+
+export const setShowComponent = (showComponent: boolean) => {
+    setState(
+        produce((s) => {
+            s.showComponent = showComponent
+        }),
+    )
+}
+
+export const animationState = createMemo(() => state)

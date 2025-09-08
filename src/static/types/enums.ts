@@ -139,3 +139,17 @@ export enum MODAL_TYPE {
     AP_MODE = 'AP_MODE',
     NONE = 'NONE',
 }
+
+export enum ACTION {
+    NEXT = 'NEXT',
+    PREV = 'PREV',
+}
+
+export enum FLASH_WIZARD_STEPS {
+    INIT = 'INIT',
+    SELECT_BOARD = 'SELECT_BOARD',
+    SELECT_PORT = 'SELECT_PORT',
+    BEFORE_PROCEEDING = 'BEFORE_PROCEEDING',
+    FLASH_PROCESS = 'FLASH_PROCESS',
+    SHOW_TERMINAL = 'SHOW_TERMINAL',
+}

@@ -17,7 +17,7 @@ export interface IProps {
     version: string
 }
 
-const BeforeFlashingModal: Component<IProps> = (props) => {
+const BeforeFlashing: Component<IProps> = (props) => {
     return (
         <Modal
             version={props.version}
@@ -56,16 +56,24 @@ const BeforeFlashingModal: Component<IProps> = (props) => {
                         checked={props.checked}
                         label="Don’t show this again"
                     />
-                    <Button
-                        type="button"
-                        isActive={true}
-                        label="Install Openiris"
-                        onClick={props.onClickInstallOpeniris}
-                    />
+                    <div>
+                        <Button
+                            type="button"
+                            isActive={true}
+                            label="Install Openiris"
+                            onClick={() => {
+                                const el = document.getElementById(beforeFlashingModalID)
+                                if (el instanceof HTMLDialogElement) {
+                                    el.close()
+                                }
+                                props.onClickInstallOpeniris()
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         </Modal>
     )
 }
 
-export default BeforeFlashingModal
+export default BeforeFlashing
