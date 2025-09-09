@@ -55,7 +55,7 @@ const SelectBoard: Component<IProps> = (props) => {
                         onChange={(e) => setSearch(e)}
                     />
                 </div>
-                <div class="gap-12 overflow-y-scroll h-[320px] flex flex-col w-full scrollbar">
+                <div class="gap-12 overflow-y-scroll h-[500px] flex flex-col w-full scrollbar">
                     <Show
                         when={filteredData().length > 0}
                         fallback={

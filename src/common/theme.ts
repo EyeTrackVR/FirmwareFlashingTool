@@ -1,4 +1,36 @@
 export const theme = {
+    keyframes: {
+        slideLeftExit: {
+            from: { transform: 'translateX(0px)', opacity: '1' },
+            to: { transform: 'translateX(-30px)', opacity: '0' },
+        },
+        slideRightEnter: {
+            from: { transform: 'translateX(30px)', opacity: '0' },
+            to: { transform: 'translateX(0px)', opacity: '1' },
+        },
+        slideRightExit: {
+            from: { transform: 'translateX(0px)', opacity: '1' },
+            to: { transform: 'translateX(30px)', opacity: '0' },
+        },
+        slideLeftEnter: {
+            from: { transform: 'translateX(-30px)', opacity: '0' },
+            to: { transform: 'translateX(0px)', opacity: '1' },
+        },
+        rotate: {
+            '0%': { transform: 'rotate(0deg)' },
+            '100%': { transform: 'rotate(360deg)' },
+        },
+    },
+    animation: {
+        'slow-rotate': 'rotate 4s linear infinite',
+        'fast-rotate': 'rotate 1s linear infinite',
+        'slow-spin': 'spin 4s linear infinite',
+        'slide-left-exit': 'slideLeftExit 130ms forwards',
+        'slide-right-enter': 'slideRightEnter 180ms forwards',
+        'slide-right-exit': 'slideRightExit 130ms forwards',
+        'slide-left-enter': 'slideLeftEnter 180ms forwards',
+    },
+
     fontSize: {
         h1: '28px',
         h2: '22px',
@@ -8,6 +40,7 @@ export const theme = {
         smallText: '12px',
         textXs: '10px',
     },
+
     colors: {
         white: {
             200: '#FFFFFFe3',
@@ -39,6 +72,9 @@ export const theme = {
         yellow: {
             100: '#E8FA81',
         },
+        lightBlue: {
+            300: '#79A0CF',
+        },
         brown: {
             '900': '#1b1b1f',
             '800': '#161618',
@@ -46,6 +82,7 @@ export const theme = {
             '300': '#2B2B2B',
         },
         blue: {
+            900: '#1F3042',
             800: '#03233a',
             500: '#2C435B',
             400: '#354473',
@@ -84,6 +121,7 @@ export const theme = {
         20: '20px',
         24: '24px',
         100: '100px',
+        full: '100px',
     },
     spacing: {
         0: '0px',

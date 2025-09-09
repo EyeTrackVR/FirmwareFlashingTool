@@ -5,7 +5,7 @@ export interface IProps {
     onClick: () => void
 }
 
-const HeaderButton: ParentComponent<IProps> = (props) => {
+const DefaultButton: ParentComponent<IProps> = (props) => {
     return (
         <button
             class={props.class}
@@ -18,4 +18,4 @@ const HeaderButton: ParentComponent<IProps> = (props) => {
     )
 }
 
-export default HeaderButton
+export default DefaultButton

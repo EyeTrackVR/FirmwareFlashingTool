@@ -1,3 +1,4 @@
+import BeforeFlashingModal from './BeforeFlashingModal'
 import SelectBoardModal from './SelectboardModal'
 import SelectPortModal from './SelectPortModal'
 
@@ -6,6 +7,7 @@ export const ModalRoot = () => {
         <>
             <SelectBoardModal />
             <SelectPortModal />
+            <BeforeFlashingModal />
         </>
     )
 }

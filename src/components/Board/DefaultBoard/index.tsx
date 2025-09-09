@@ -12,7 +12,7 @@ export const DefaultBoard: Component<IProps> = (props) => {
     return (
         <button
             classList={{
-                'hover:bg-purple-100 border-purple-200 hover:border-purple-100 bg-purple-200 focus-visible:border-white-100':
+                'hover:bg-purple-100 border-purple-200 hover:border-purple-100 bg-purple-200 focus-visible:border-white-100 duration-300 transition-colors':
                     props.isActive,
                 'hover:bg-black-800 border-black-900 focus-visible:border-purple-100':
                     !props.isActive,

@@ -16,7 +16,7 @@ export interface IProps {
 
 const PortDropdown: Component<IProps> = (props) => {
     return (
-        <Dropdown styles={classNames(props.class, 'dropdown dropdown-top')}>
+        <Dropdown styles={classNames(props.class, 'dropdown dropdown-bottom')}>
             <DropdownButton label={props.label} />
             <DropdownList
                 disableTop
