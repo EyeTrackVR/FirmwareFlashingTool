@@ -1,6 +1,6 @@
 import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
-import SelectPort from '@pages/Modals/SelectPort'
+import SelectPortModal from '@pages/Modals/SelectPortModal'
 import { espApi, UsbSerialPortInfo } from '@src/esp/api'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
@@ -8,7 +8,8 @@ import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, onCleanup } from 'solid-js'
-const SelectPortModal = () => {
+
+const SelectPortModalContainer = () => {
     const { setActivePortName, activePort, ports, setPorts } = useAppAPIContext()
     const { addNotification } = useAppNotificationsContext()
     const { modal, setOpenModal } = useAppUIContext()
@@ -55,7 +56,7 @@ const SelectPortModal = () => {
     })
 
     return (
-        <SelectPort
+        <SelectPortModal
             version="1.7.0"
             ports={ports()}
             activeBoard={activePort().activePortName}
@@ -86,4 +87,4 @@ const SelectPortModal = () => {
     )
 }
 
-export default SelectPortModal
+export default SelectPortModalContainer

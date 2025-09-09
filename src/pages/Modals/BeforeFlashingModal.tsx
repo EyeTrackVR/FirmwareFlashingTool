@@ -17,7 +17,7 @@ export interface IProps {
     version: string
 }
 
-const BeforeFlashing: Component<IProps> = (props) => {
+const BeforeFlashingModal: Component<IProps> = (props) => {
     return (
         <Modal
             version={props.version}
@@ -76,4 +76,4 @@ const BeforeFlashing: Component<IProps> = (props) => {
     )
 }
 
-export default BeforeFlashing
+export default BeforeFlashingModal

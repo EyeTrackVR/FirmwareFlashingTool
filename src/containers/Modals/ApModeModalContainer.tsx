@@ -8,7 +8,7 @@ import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 
-const ApModeContainer = () => {
+const ApModeModalContainer = () => {
     const { modal, setOpenModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
     const { ssid, password, useRequestHook } = useAppAPIContext()
@@ -108,4 +108,4 @@ const ApModeContainer = () => {
     )
 }
 
-export default ApModeContainer
+export default ApModeModalContainer

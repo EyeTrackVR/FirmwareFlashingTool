@@ -1,48 +1,55 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
-import SelectBoard from '@pages/Modals/SelectBoard'
+import SelectBoardModal from '@pages/Modals/SelectBoardModal'
+import SelectBoard from '@pages/Modals/SelectBoardModal'
 import { BoardDescription, supportedBoards } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
-import { Accessor, createMemo } from 'solid-js'
+import { Accessor, createEffect, createMemo } from 'solid-js'
 import { trace } from 'tauri-plugin-log-api'
-const SelectBoardModal = () => {
+const SelectBoardModalContainer = () => {
     const { confirmFirmwareSelection, getFirmwareAssets, activeBoard } = useAppAPIContext()
     const { modal, setOpenModal } = useAppUIContext()
 
     const boards: Accessor<IDropdownList[]> = createMemo(() => {
-        return getFirmwareAssets()
-            .map((item) => {
-                trace(`${item.name}`)
-                return {
-                    label: item.name,
-                    description: BoardDescription[item.name.replace('_release', '')] ?? '--',
-                }
-            })
-            .sort((boardA, boardB) => {
-                const boardALabel = boardA.label.replace('_release', '')
-                const boardBLabel = boardB.label.replace('_release', '')
-                const isBoardARelease = boardA.label.includes('_release')
-                const isBoardBRelease = boardB.label.includes('_release')
+        return [
+            {
+                label: 'xiaosenses3_USB',
+                description: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
+            },
+        ]
+        // return getFirmwareAssets()
+        //     .map((item) => {
+        //         trace(`${item.name}`)
+        //         return {
+        //             label: item.name,
+        //             description: BoardDescription[item.name.replace('_release', '')] ?? '--',
+        //         }
+        //     })
+        //     .sort((boardA, boardB) => {
+        //         const boardALabel = boardA.label.replace('_release', '')
+        //         const boardBLabel = boardB.label.replace('_release', '')
+        //         const isBoardARelease = boardA.label.includes('_release')
+        //         const isBoardBRelease = boardB.label.includes('_release')
 
-                const boardAIsSupported = supportedBoards.includes(boardALabel)
-                const boardBIsSupported = supportedBoards.includes(boardBLabel)
+        //         const boardAIsSupported = supportedBoards.includes(boardALabel)
+        //         const boardBIsSupported = supportedBoards.includes(boardBLabel)
 
-                if (boardAIsSupported && boardBIsSupported) {
-                    if (isBoardARelease && !isBoardBRelease) return 1
-                    if (!isBoardARelease && isBoardBRelease) return -1
-                }
+        //         if (boardAIsSupported && boardBIsSupported) {
+        //             if (isBoardARelease && !isBoardBRelease) return 1
+        //             if (!isBoardARelease && isBoardBRelease) return -1
+        //         }
 
-                if (boardAIsSupported && !boardBIsSupported) return -1
-                if (!boardAIsSupported && boardBIsSupported) return 1
+        //         if (boardAIsSupported && !boardBIsSupported) return -1
+        //         if (!boardAIsSupported && boardBIsSupported) return 1
 
-                return 0
-            })
+        //         return 0
+        //     })
     })
 
     return (
-        <SelectBoard
+        <SelectBoardModal
             version="1.7.0"
             boards={boards()}
             activeBoard={activeBoard()}
@@ -73,4 +80,4 @@ const SelectBoardModal = () => {
     )
 }
 
-export default SelectBoardModal
+export default SelectBoardModalContainer

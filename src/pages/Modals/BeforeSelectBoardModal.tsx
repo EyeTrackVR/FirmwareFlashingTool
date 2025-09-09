@@ -14,7 +14,7 @@ export interface IProps {
     version: string
 }
 
-const BeforeSelectBoard: Component<IProps> = (props) => {
+const BeforeSelectBoardModal: Component<IProps> = (props) => {
     return (
         <Modal
             version={props.version}
@@ -47,4 +47,4 @@ const BeforeSelectBoard: Component<IProps> = (props) => {
     )
 }
 
-export default BeforeSelectBoard
+export default BeforeSelectBoardModal

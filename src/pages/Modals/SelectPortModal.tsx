@@ -5,7 +5,7 @@ import ModalHeader from '@components/ModalHeader'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
-import { beforeSelectBoardModalID } from '@src/static'
+import { beforeSelectBoardModalID, SELECT_PORT_MODAL_ID } from '@src/static'
 import { BsSearch } from 'solid-icons/bs'
 import { Component, createMemo, createSignal, For, Show } from 'solid-js'
 
@@ -15,22 +15,22 @@ export interface IProps {
     onClickClose: () => void
     isActive: boolean
     version: string
-    boards: IDropdownList[]
+    ports: IDropdownList[]
     activeBoard: string
 }
 
-const SelectBoard: Component<IProps> = (props) => {
+const SelectPortModal: Component<IProps> = (props) => {
     const [search, setSearch] = createSignal('')
 
     const filteredData = createMemo(() => {
-        return props.boards.filter((el) => el.label.toLowerCase().includes(search().toLowerCase()))
+        return props.ports.filter((el) => el.label.toLowerCase().includes(search().toLowerCase()))
     })
 
     return (
         <Modal
             width="w-[350px]"
             version={props.version}
-            id={beforeSelectBoardModalID}
+            id={SELECT_PORT_MODAL_ID}
             isActive={props.isActive}
             onClickCloseModal={() => {
                 props.onClickClose()
@@ -39,7 +39,7 @@ const SelectBoard: Component<IProps> = (props) => {
             onClickHeader={props.onClickHeader}>
             <div class="flex flex-col gap-24">
                 <ModalHeader
-                    label="Select board"
+                    label="Select Port"
                     onClick={() => {
                         props.onClickClose()
                         setSearch('')
@@ -47,10 +47,10 @@ const SelectBoard: Component<IProps> = (props) => {
                 />
                 <div class="flex flex-col gap-12 items-start">
                     <Typography text="caption" color="white">
-                        Look for a board
+                        Search for a port…
                     </Typography>
                     <Input
-                        placeholder="Search board..."
+                        placeholder="Search port..."
                         value={search()}
                         onChange={(e) => setSearch(e)}
                     />
@@ -59,8 +59,11 @@ const SelectBoard: Component<IProps> = (props) => {
                     <Show
                         when={filteredData().length > 0}
                         fallback={
-                            <div class="flex items-center justify-center w-full h-full">
-                                <BsSearch class="w-64 h-64" />
+                            <div class="flex flex-row gap-12 items-center">
+                                <span class="loading loading-ring loading-md" />
+                                <Typography color="white" text="caption">
+                                    Searching for data
+                                </Typography>
                             </div>
                         }>
                         <For each={filteredData()}>
@@ -69,7 +72,7 @@ const SelectBoard: Component<IProps> = (props) => {
                                     {...data}
                                     isActive={data.label === props.activeBoard}
                                     onClick={() => {
-                                        const el = document.getElementById(beforeSelectBoardModalID)
+                                        const el = document.getElementById(SELECT_PORT_MODAL_ID)
                                         if (el instanceof HTMLDialogElement) {
                                             el.close()
                                         }
@@ -85,4 +88,4 @@ const SelectBoard: Component<IProps> = (props) => {
     )
 }
 
-export default SelectBoard
+export default SelectPortModal

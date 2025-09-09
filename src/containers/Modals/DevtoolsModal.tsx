@@ -1,18 +1,22 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
-import BeforeSelectBoardModal from '@pages/Modals/BeforeSelectBoardModal'
+import { isValidChannel } from '@interfaces/utils'
+import DevtoolsModal from '@pages/Modals/DevtoolsModal'
+import { ChannelOptions } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
-import { setIsSoftwareDownloaded } from '@store/terminal/terminal'
 import { appWindow } from '@tauri-apps/api/window'
 
-const BeforeSelectBoardContainer = () => {
-    const { confirmFirmwareSelection } = useAppAPIContext()
-    const { modal, setOpenModal } = useAppUIContext()
+const DevtoolsModalContainer = () => {
+    const { modal, setOpenModal, hideModal } = useAppUIContext()
+    const { channelMode, setChannelMode } = useAppAPIContext()
 
     return (
-        <BeforeSelectBoardModal
+        <DevtoolsModal
+            channelMode={channelMode()}
+            channelOptions={Object.values(ChannelOptions)}
             version="1.7.0"
-            isActive={modal().type === MODAL_TYPE.BEFORE_SELECT_BOARD}
+            checked={hideModal()}
+            isActive={modal().type === MODAL_TYPE.DEVTOOLS}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -31,16 +35,18 @@ const BeforeSelectBoardContainer = () => {
             onClickClose={() => {
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
-            onClickConfirmBoard={() => {
-                const board = modal()?.board
-                if (board) {
-                    setIsSoftwareDownloaded(false)
-                    confirmFirmwareSelection(board)
+            onClickSetChannelMode={(label) => {
+                if (!isValidChannel(label)) {
+                    return
                 }
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                const elem: Element | null = document.activeElement
+                setChannelMode(label)
+                if (elem instanceof HTMLElement) {
+                    elem?.blur()
+                }
             }}
         />
     )
 }
 
-export default BeforeSelectBoardContainer
+export default DevtoolsModalContainer

@@ -5,8 +5,7 @@ import {
     MODAL_TYPE,
     TITLEBAR_ACTION,
 } from '@interfaces/enums'
-import BeforeFlashing from '@pages/Modals/BeforeFlashing'
-import { usb } from '@src/static'
+import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
 import { setAction, setStep } from '@store/animation/animation'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -21,21 +20,17 @@ import {
 import { appWindow } from '@tauri-apps/api/window'
 import { batch, createMemo } from 'solid-js'
 
-const BeforeFlashingModal = () => {
-    const { downloadAsset, getFirmwareType, activeBoard, activePort } = useAppAPIContext()
+const BeforeFlashingModalContainer = () => {
+    const { downloadAsset, getFirmwareType, activePort } = useAppAPIContext()
     const { modal, setOpenModal, hideModal, setHideModal } = useAppUIContext()
     const { addNotification } = useAppNotificationsContext()
-
-    const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
-    })
 
     const activePortName = createMemo(() => {
         return activePort().activePortName
     })
 
     return (
-        <BeforeFlashing
+        <BeforeFlashingModal
             version="1.7.0"
             checked={hideModal()}
             isActive={modal().type === MODAL_TYPE.BEFORE_FLASHING}
@@ -77,19 +72,12 @@ const BeforeFlashingModal = () => {
                 setAbortController('openiris')
                 setProcessStatus(true)
                 restartFirmwareState()
-                installOpenIris(
-                    isUSBBoard(),
-                    activePortName(),
-                    async () => {
-                        await downloadAsset(getFirmwareType())
-                    },
-                    () => {
-                        setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
-                    },
-                ).catch(() => ({}))
+                installOpenIris(activePortName(), async () => {
+                    await downloadAsset(getFirmwareType())
+                }).catch(() => ({}))
             }}
         />
     )
 }
 
-export default BeforeFlashingModal
+export default BeforeFlashingModalContainer
