@@ -158,10 +158,12 @@ export interface AppStoreAPI {
     password: string
     apModeStatus: boolean
     mdns: string
+    trackerName: string
     channelMode: CHANNEL_TYPE
     manifestPath: string
     activePort: IActivePort
     ports: IDropdownList[]
+    isActivePortValid: boolean
 }
 
 export interface IOpenModal {

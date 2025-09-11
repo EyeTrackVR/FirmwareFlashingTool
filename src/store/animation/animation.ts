@@ -5,13 +5,15 @@ import { createStore, produce } from 'solid-js/store'
 export interface IAnimationState {
     action: ACTION
     step: FLASH_WIZARD_STEPS
+    prevStep: FLASH_WIZARD_STEPS
     activeStep: FLASH_WIZARD_STEPS
     showComponent: boolean
 }
 
 const defaultState: IAnimationState = {
-    step: FLASH_WIZARD_STEPS.INIT,
-    activeStep: FLASH_WIZARD_STEPS.INIT,
+    step: FLASH_WIZARD_STEPS.WIFI_CONNECTING_SUCCESS,
+    activeStep: FLASH_WIZARD_STEPS.WIFI_CONNECTING_SUCCESS,
+    prevStep: FLASH_WIZARD_STEPS.WIFI_CONNECTING_SUCCESS,
     action: ACTION.NEXT,
     showComponent: true,
 }
@@ -21,6 +23,7 @@ const [state, setState] = createStore<IAnimationState>(defaultState)
 export const setStep = (step: FLASH_WIZARD_STEPS) => {
     setState(
         produce((s) => {
+            s.prevStep = s.step
             s.step = step
         }),
     )

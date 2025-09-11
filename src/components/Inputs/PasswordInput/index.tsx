@@ -31,7 +31,7 @@ const PasswordInput: Component<IProps> = (props) => {
                     e.currentTarget.value = props.value
                 }}
                 placeholder={props.placeholder}
-                value={props.value}
+                value={!showPassword() ? props.value.slice(0, 2) : props.value}
                 type={showPassword() ? 'text' : 'password'}
             />
             <div

@@ -7,7 +7,7 @@ import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
-import { createEffect, onCleanup } from 'solid-js'
+import { createEffect, createMemo, on, onCleanup } from 'solid-js'
 
 const SelectPortModalContainer = () => {
     const { setActivePortName, activePort, ports, setPorts } = useAppAPIContext()
@@ -38,22 +38,32 @@ const SelectPortModalContainer = () => {
         setPorts(portList)
     }
 
-    createEffect(() => {
-        const interval = setInterval(() => {
-            espApi
-                .availablePorts()
-                .then(loadPorts)
-                .catch(() => {
-                    addNotification({
-                        title: 'Failed to load ports',
-                        message: 'Failed to load ports',
-                        type: ENotificationType.ERROR,
-                    })
-                })
-        }, 250)
-
-        onCleanup(() => clearInterval(interval))
+    const isModalActive = createMemo(() => {
+        return modal().type === MODAL_TYPE.SELECT_PORT
     })
+
+    createEffect(
+        on(isModalActive, (status) => {
+            const interval = setInterval(() => {
+                espApi
+                    .availablePorts()
+                    .then(loadPorts)
+                    .catch(() => {
+                        addNotification({
+                            title: 'Failed to load ports',
+                            message: 'Failed to load ports',
+                            type: ENotificationType.ERROR,
+                        })
+                    })
+            }, 250)
+
+            if (!status) {
+                clearInterval(interval)
+            }
+
+            onCleanup(() => clearInterval(interval))
+        }),
+    )
 
     return (
         <SelectPortModal

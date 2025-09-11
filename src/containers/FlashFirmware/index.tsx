@@ -149,16 +149,9 @@ export const ManageFlashFirmware = () => {
                 setAbortController('openiris')
                 setProcessStatus(true)
                 restartFirmwareState()
-                installOpenIris(
-                    isUSBBoard(),
-                    activePortName(),
-                    async () => {
-                        await downloadAsset(getFirmwareType())
-                    },
-                    () => {
-                        setOpenModal({ open: true, type: MODAL_TYPE.UPDATE_NETWORK })
-                    },
-                ).catch(() => ({}))
+                installOpenIris(activePortName(), async () => {
+                    await downloadAsset(getFirmwareType())
+                }).catch(() => ({}))
             }}
             onClickGetLogs={() => {
                 if (activePortName() === DEFAULT_PORT_NAME) return

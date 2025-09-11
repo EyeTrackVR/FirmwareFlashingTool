@@ -9,10 +9,11 @@ import {
     setProcessStatus,
     updateFirmwareState,
 } from './terminal'
-import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
+import { ACTION, FLASH_STATUS, FLASH_STEP, FLASH_WIZARD_STEPS } from '@interfaces/enums'
 import { espApi } from '@src/esp/api'
 import { logs as logsDescription } from '@src/static/ui/logs'
-import { trimLogsByTextLength } from '@src/utils'
+import { sleep, trimLogsByTextLength } from '@src/utils'
+import { setAction, setStep } from '@store/animation/animation'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()
@@ -61,6 +62,9 @@ const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<v
     try {
         await action()
     } catch (error) {
+        setAction(ACTION.NEXT)
+        setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS_FAILED)
+
         if (error instanceof Error) {
             updateState(step, FLASH_STATUS.FAILED, error)
             return
@@ -88,12 +92,7 @@ const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<v
     updateState(step, FLASH_STATUS.SUCCESS)
 }
 
-export const installOpenIris = async (
-    isUsbBoard: boolean,
-    portName: string,
-    downloadManifest: () => Promise<void>,
-    configureWifiCredentials: () => void,
-) => {
+export const installOpenIris = async (portName: string, downloadManifest: () => Promise<void>) => {
     clearLogs()
 
     try {
@@ -106,16 +105,52 @@ export const installOpenIris = async (
         })
 
         await runStep(FLASH_STEP.FLASH_FIRMWARE, async () => {
-            await espApi.flash(portName, setInstallationProgress)
+            await espApi.flash(portName, (progress) => {
+                setInstallationProgress(progress)
+                if (progress >= 100) {
+                    setAction(ACTION.NEXT)
+                    setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS_SUCCESS)
+                }
+            })
         })
     } catch {
         return
     }
 
-    if (!isUsbBoard) {
-        configureWifiCredentials()
-    }
     setProcessStatus(false)
+}
+
+export const validateUserPortConnection = async (
+    currentUserActivePort: string,
+): Promise<boolean> => {
+    await sleep(2000)
+    const CHECK_INTERVAL = 250 // ms
+    const TIMEOUT = 5000 // ms
+    const maxChecks = Math.ceil(TIMEOUT / CHECK_INTERVAL)
+    let checks = 0
+
+    return new Promise((resolve) => {
+        const interval = setInterval(async () => {
+            checks++
+
+            try {
+                const availablePorts = await espApi.availablePorts()
+                const found = availablePorts.some((port) => port.portName === currentUserActivePort)
+
+                if (found) {
+                    clearInterval(interval)
+                    resolve(true)
+                }
+            } catch (err) {
+                console.error('Error while validating port connection', err)
+            }
+
+            if (checks >= maxChecks) {
+                clearInterval(interval)
+                resolve(false)
+            }
+        }, CHECK_INTERVAL)
+    })
 }
 
 export const getFirmwareLogs = async (portName: string, signal?: AbortController) => {

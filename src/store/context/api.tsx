@@ -51,8 +51,10 @@ interface AppAPIContext {
     apModeStatus: Accessor<boolean>
     password: Accessor<string>
     mdns: Accessor<string>
+    isActivePortValid: Accessor<boolean>
     channelMode: Accessor<CHANNEL_TYPE>
     setRESTStatus: (status: RESTStatus) => void
+
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
     activePort: Accessor<{ activePortName: string; autoSelect: boolean }>
@@ -61,10 +63,13 @@ interface AppAPIContext {
     getEndpoint: (key: string) => IEndpoint
     //********************************* hooks *************************************/
     downloadAsset: (firmware: string) => Promise<void>
+    trackerName: Accessor<string>
+    setTrackerName: (trackerName) => void
     doGHRequest: (channelType: CHANNEL_TYPE) => Promise<void>
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<boolean>
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
+    setIsActivePortValid: (status: boolean) => void
     setActivePortName: (portName: string, autoSelect: boolean) => void
     setNetwork: (ssid: string, password: string, mdns: string) => void
     setChannelMode: (channel: CHANNEL_TYPE) => void
@@ -97,6 +102,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     ])
 
     const defaultState: AppStoreAPI = {
+        isActivePortValid: false,
         activeBoard: '',
         channelMode: CHANNEL_TYPE.OFFICIAL,
         restAPI: {
@@ -112,6 +118,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         ssid: '',
         password: '',
         firmwareType: '',
+        trackerName: '',
         loader: false,
         apModeStatus: false,
         mdns: '',
@@ -137,6 +144,23 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
+
+    const setTrackerName = (trackerName: string) => {
+        setState(
+            produce((s) => {
+                s.trackerName = trackerName
+            }),
+        )
+    }
+
+    const setIsActivePortValid = (isActivePortValid: boolean) => {
+        setState(
+            produce((s) => {
+                s.isActivePortValid = isActivePortValid
+            }),
+        )
+    }
+
     const setGHRestStatus = (status: RESTStatus) => {
         setState(
             produce((s) => {
@@ -240,6 +264,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
+    const trackerName = createMemo(() => apiState().trackerName)
     const loader = createMemo(() => apiState().loader)
     const mdns = createMemo(() => apiState().mdns)
     const channelMode = createMemo(() => apiState().channelMode)
@@ -271,6 +296,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     }
     const activeBoard = createMemo(() => apiState().activeBoard)
     const activePort = createMemo(() => apiState().activePort)
+    const isActivePortValid = createMemo(() => apiState().isActivePortValid)
     const getRESTStatus = createMemo(() => apiState().restAPI.status)
     const getRESTDevice = createMemo(() => apiState().restAPI.device)
     const getRESTResponse = createMemo(() => apiState().restAPI.response)
@@ -630,6 +656,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 password,
                 setNetwork,
                 setActiveBoard,
+                setIsActivePortValid,
+                isActivePortValid,
                 activeBoard,
                 activePort,
                 setActivePortName,
@@ -663,6 +691,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 saveManifestPath,
                 manifestPath,
                 confirmFirmwareSelection,
+                setTrackerName,
+                trackerName,
                 ports,
                 setPorts,
             }}>
