@@ -24,11 +24,6 @@ struct SingleInstancePayload {
   cwd: String,
 }
 
-#[derive(Clone, Serialize)]
-struct SystemTrayPayload {
-  message: String,
-}
-
 #[derive(Debug, Deserialize, Serialize)]
 struct Config {
   names: Vec<String>,

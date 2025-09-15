@@ -1,11 +1,3 @@
-use std::borrow::Cow;
-use std::io::{Read, Write};
-use std::sync::mpsc::TryRecvError;
-use std::sync::{mpsc, Mutex, PoisonError};
-use std::thread::sleep;
-use std::time::Duration;
-use std::{fs, thread};
-
 use espflash::connection::reset::{ResetAfterOperation, ResetBeforeOperation};
 use espflash::elf::RomSegment;
 use espflash::flasher::{Flasher, ProgressCallbacks};
@@ -13,6 +5,14 @@ use espflash::targets::Chip;
 use log::error;
 use serde::{Deserialize, Serialize, Serializer};
 use serialport::{FlowControl, SerialPort, SerialPortInfo, SerialPortType};
+use std::borrow::Cow;
+use std::io::Read;
+use std::io::Write;
+use std::sync::mpsc::TryRecvError;
+use std::sync::{mpsc, Arc, Mutex};
+use std::thread::sleep;
+use std::time::Duration;
+use std::{fs, thread};
 use tauri::{command, AppHandle, Runtime, State, Window};
 use thiserror::Error;
 
@@ -286,6 +286,9 @@ pub fn cancel_stream_logs(state: State<'_, Mutex<EspState>>) -> EspResult<()> {
 pub enum Command {
   SetWifi { ssid: String, password: String },
   SetMdns { hostname: String },
+  SwitchMode { mode: String },
+  GetMdnsName,
+  GetDeviceMode,
 }
 
 #[derive(Debug, Serialize)]
@@ -294,14 +297,71 @@ struct CommandsOperation {
 }
 
 #[command]
-pub fn send_commands(port_name: String, commands: Vec<Command>) -> EspResult<()> {
-  let mut serial_port = serialport::new(port_name, 115_200)
+
+pub fn send_commands(port_name: String, commands: Vec<Command>) -> Result<String, String> {
+  // Otwieramy port szeregowy
+  let serial_port = serialport::new(port_name, 115_200)
     .flow_control(FlowControl::None)
-    .open_native()?;
+    .timeout(Duration::from_millis(100))
+    .open_native()
+    .map_err(|e| e.to_string())?;
+
+  let serial_port = Arc::new(Mutex::new(serial_port));
 
   let operation = CommandsOperation { commands };
-  serial_port.write_all(serde_json::to_string(&operation)?.as_bytes())?;
-  log::debug!("{:?}", serde_json::to_string(&operation));
+  let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
 
-  Ok(())
+  {
+    let mut port = serial_port.lock().unwrap();
+    port
+      .write_all(payload.as_bytes())
+      .map_err(|e| e.to_string())?;
+    port.flush().map_err(|e| e.to_string())?;
+    log::debug!("{:?}", serde_json::to_string(&operation));
+  }
+
+  let (tx, rx) = mpsc::channel();
+  let sp = Arc::clone(&serial_port);
+
+  thread::spawn(move || {
+    thread::sleep(Duration::from_millis(500));
+
+    for _ in 0..10 {
+      let mut buffer = Vec::new();
+      {
+        let mut port = sp.lock().unwrap();
+        match port.bytes_to_read() {
+          Ok(bytes_available) if bytes_available > 0 => {
+            buffer.resize(bytes_available as usize, 0);
+            if let Err(e) = port.read_exact(&mut buffer) {
+              let _ = tx.send(Err(e.to_string()));
+              return;
+            }
+          }
+          Ok(_) => {
+            thread::sleep(Duration::from_millis(100));
+            continue;
+          }
+          Err(e) => {
+            let _ = tx.send(Err(e.to_string()));
+            return;
+          }
+        }
+      }
+
+      if !buffer.is_empty() {
+        let response = String::from_utf8_lossy(&buffer).trim().to_string();
+        let _ = tx.send(Ok(response));
+        return;
+      }
+    }
+
+    let _ = tx.send(Err("No response received after waiting".to_string()));
+  });
+
+  // Odbieramy wynik z wątku z timeoutem
+  match rx.recv_timeout(Duration::from_secs(10)) {
+    Ok(result) => result,
+    Err(_) => Err("Operation timed out".to_string()),
+  }
 }

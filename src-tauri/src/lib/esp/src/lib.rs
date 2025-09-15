@@ -9,7 +9,6 @@ use api::*;
 use crate::state::EspState;
 
 mod api;
-mod command;
 mod manifest;
 mod state;
 
