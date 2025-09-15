@@ -2,10 +2,10 @@ import Card from '@components/Card'
 import Typography from '@components/Typography'
 import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'
 import { IFirmwareState } from '@interfaces/interfaces'
+import { espApi } from '@src/esp/api'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
-import { validateUserPortConnection } from '@store/terminal/actions'
 import { firmwareState, isActiveProcess, percentageProgress } from '@store/terminal/selectors'
 import { BiRegularChip, BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
@@ -122,7 +122,8 @@ const FlashProcessWizard = () => {
                             setAction(ACTION.NEXT)
                             setStep(FLASH_WIZARD_STEPS.CHECK_PORT_CONNECTION)
                         })
-                        validateUserPortConnection(activePort().activePortName)
+                        espApi
+                            .validateUserPortConnection(activePort().activePortName)
                             .then((status) => {
                                 if (status) {
                                     batch(() => {

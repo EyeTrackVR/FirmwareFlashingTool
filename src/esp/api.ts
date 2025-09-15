@@ -1,6 +1,7 @@
-import { stringToHex } from '@src/utils'
+import { sleep, stringToHex } from '@src/utils'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
+import { apiTextParser } from './utils'
 
 export type UsbSerialPortInfo = {
     portName: string
@@ -155,16 +156,175 @@ export type SetMdnsCommand = {
     }
 }
 
-export type Command = SetWifiCommand | SetMdnsCommand
+export type switchMode = {
+    command: 'switch_mode'
+    data: {
+        mode: 'uvc' | 'wifi' | 'auto'
+    }
+}
 
-const sendCommands = async (portName: string, commands: Command[]): Promise<void> => {
-    await invoke<void>('plugin:esp|send_commands', {
+export type getMdnsName = {
+    command: 'get_mdns_name'
+}
+
+export type getDeviceMode = {
+    command: 'get_device_mode'
+}
+
+export type Command = SetWifiCommand | SetMdnsCommand | getMdnsName | getDeviceMode | switchMode
+
+const sendCommands = async (portName: string, commands: Command[]): Promise<any> => {
+    return await invoke('plugin:esp|send_commands', {
         portName,
         commands,
     })
 }
 
+export const validateUserPortConnection = async (
+    currentUserActivePort: string,
+): Promise<boolean> => {
+    await sleep(2000)
+    const CHECK_INTERVAL = 250 // ms
+    const TIMEOUT = 5000 // ms
+    const maxChecks = Math.ceil(TIMEOUT / CHECK_INTERVAL)
+    let checks = 0
+
+    return new Promise((resolve) => {
+        const interval = setInterval(async () => {
+            checks++
+
+            try {
+                const ports = await availablePorts()
+                const found = ports.some((port) => port.portName === currentUserActivePort)
+
+                if (found) {
+                    clearInterval(interval)
+                    resolve(true)
+                }
+            } catch (err) {
+                console.error('Error while validating port connection', err)
+            }
+
+            if (checks >= maxChecks) {
+                clearInterval(interval)
+                resolve(false)
+            }
+        }, CHECK_INTERVAL)
+    })
+}
+
+export const getDeviceName = async (port: string) => {
+    const response = await sendCommands(port, [{ command: 'get_mdns_name' }])
+    const parsedResponse: { results: Array<string> } = JSON.parse(response)
+
+    return parsedResponse.results.map((res) => apiTextParser<{ hostname: string }>(res))[0].hostname
+}
+
+export const getDeviceMode = async (port: string) => {
+    const response = await sendCommands(port, [{ command: 'get_device_mode' }])
+    const parsedResponse: { results: Array<string> } = JSON.parse(response)
+
+    return parsedResponse.results.map((res) => apiTextParser<{ mode: string }>(res))[0].mode
+}
+
+export const switchDeviceMode = async (port: string, mode: 'uvc' | 'wifi' | 'auto') => {
+    await sendCommands(port, [{ command: 'switch_mode', data: { mode } }])
+}
+
+export const setupWiredConnection = async (mdns: string, port: string) => {
+    let tries = 5
+
+    const promise = new Promise(async (resolve, reject) => {
+        while (tries > 0) {
+            try {
+                const currentHostname = await getDeviceName(port)
+
+                if (JSON.stringify(currentHostname) === JSON.stringify(mdns)) {
+                    resolve('')
+                    return
+                }
+
+                await sendCommands(port, [{ command: 'set_mdns', data: { hostname: mdns } }])
+                await sleep(200)
+
+                const updatedHostName = await getDeviceName(port)
+
+                if (JSON.stringify(updatedHostName) === JSON.stringify(mdns)) {
+                    resolve('')
+                    return
+                }
+            } catch (err) {
+                if (tries === 1) {
+                    if (err instanceof Error) {
+                        reject(`'Failed to switch device mode': ${err.message}`)
+                    }
+                    reject(`'Failed to switch device mode': ${err}`)
+                    return
+                }
+            }
+
+            tries--
+            await sleep(200)
+        }
+        reject('Failed to setup wired connection')
+    })
+
+    await promise
+
+    const wiredMode = 'uvc'
+    let switchModeTries = 5
+
+    const updateDeviceModePromise = new Promise(async (resolve, reject) => {
+        while (switchModeTries > 0) {
+            try {
+                const currentDeviceMode = await getDeviceMode(port)
+                const isValidBefore =
+                    JSON.stringify(currentDeviceMode.toLocaleLowerCase()) ===
+                    JSON.stringify(wiredMode)
+
+                if (isValidBefore) {
+                    resolve('')
+                    return
+                }
+
+                await switchDeviceMode(port, wiredMode)
+                await sleep(200)
+
+                const updatedDeviceMode = await getDeviceMode(port)
+
+                const isValidAfter =
+                    JSON.stringify(updatedDeviceMode.toLocaleLowerCase()) ===
+                    JSON.stringify(wiredMode)
+
+                if (isValidAfter) {
+                    resolve('')
+                    return
+                }
+            } catch (err) {
+                if (switchModeTries === 1) {
+                    if (err instanceof Error) {
+                        reject(`'Failed to switch device mode': ${err.message}`)
+                    }
+                    reject(`'Failed to switch device mode': ${err}`)
+                    return
+                }
+            }
+
+            switchModeTries--
+            await sleep(200)
+        }
+
+        reject('Failed to switch device mode')
+    })
+
+    await updateDeviceModePromise
+}
+
 export const espApi = {
+    validateUserPortConnection,
+    getDeviceMode,
+    getDeviceName,
+    setupWiredConnection,
     availablePorts,
     testConnection,
     flash,

@@ -11,9 +11,9 @@ export interface IAnimationState {
 }
 
 const defaultState: IAnimationState = {
-    step: FLASH_WIZARD_STEPS.WIFI_CONNECTING_SUCCESS,
-    activeStep: FLASH_WIZARD_STEPS.WIFI_CONNECTING_SUCCESS,
-    prevStep: FLASH_WIZARD_STEPS.WIFI_CONNECTING_SUCCESS,
+    step: FLASH_WIZARD_STEPS.INIT,
+    activeStep: FLASH_WIZARD_STEPS.INIT,
+    prevStep: FLASH_WIZARD_STEPS.INIT,
     action: ACTION.NEXT,
     showComponent: true,
 }

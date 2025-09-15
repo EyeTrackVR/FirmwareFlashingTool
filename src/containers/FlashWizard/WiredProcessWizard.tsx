@@ -2,6 +2,7 @@ import Card from '@components/Card'
 import Input from '@components/Inputs/Input'
 import Typography from '@components/Typography'
 import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'
+import { espApi } from '@src/esp/api'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
@@ -9,13 +10,12 @@ import { useAppAPIContext } from '@store/context/api'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { VsDeviceCameraVideo } from 'solid-icons/vs'
-import { batch, Match, Switch } from 'solid-js'
+import { batch, createSignal, Match, Switch } from 'solid-js'
 
 const WiredProcessWizard = () => {
-    const { trackerName, setTrackerName } = useAppAPIContext()
-
-    // Sending: {"commands": [{"command": "get_mdns_name"}]} zwraca nazwę aktualną nazwę
-    // {"commands": [{"command": "set_mdns", "data": {"hostname": "thisIsTheWay"}}]} // ustawia nazwę
+    const { trackerName, setTrackerName, activePort } = useAppAPIContext()
+    const [isPendingUpdate, setIsPendingUpdate] = createSignal(false)
+    const [error, setError] = createSignal('')
 
     return (
         <Switch>
@@ -35,9 +35,30 @@ const WiredProcessWizard = () => {
                     }}
                     onClickPrimary={() => {
                         batch(() => {
-                            setAction(ACTION.NEXT)
                             setStep(FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS)
+                            setIsPendingUpdate(true)
+                            setAction(ACTION.NEXT)
+                            setError('')
                         })
+
+                        espApi
+                            .setupWiredConnection(trackerName(), activePort().activePortName)
+                            .then(() => {
+                                batch(() => {
+                                    setStep(FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS_SUCCESS)
+                                    setAction(ACTION.NEXT)
+                                })
+                            })
+                            .catch((err) => {
+                                batch(() => {
+                                    setStep(FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS_FAILED)
+                                    setAction(ACTION.NEXT)
+                                    setError(err.message)
+                                })
+                            })
+                            .finally(() => {
+                                setIsPendingUpdate(false)
+                            })
                     }}>
                     <Typography color="blue" text="caption" class="leading-[18px]">
                         The tracker will be accessible under:
@@ -74,9 +95,10 @@ const WiredProcessWizard = () => {
                 <Card
                     label="Setup tracker name"
                     primaryButtonLabel="Continue"
-                    isLoader // we have to check if process is active
+                    isLoader
                     icon={BiRegularLoaderAlt}
                     onClickBack={() => {
+                        if (isPendingUpdate()) return
                         batch(() => {
                             setAction(ACTION.PREV)
                             setStep(FLASH_WIZARD_STEPS.SETUP_TRACKER_NAME)
@@ -128,7 +150,9 @@ const WiredProcessWizard = () => {
                         })
                     }}>
                     <Typography color="red">
-                        Something went wrong, please contact with us on discord
+                        {!error().length
+                            ? 'Something went wrong, please contact with us on discord'
+                            : error()}
                     </Typography>
                 </Card>
             </Match>
