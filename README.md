@@ -29,7 +29,7 @@ pnpm run setup
 ```
 ### Step 2 - setting up the backend binary
 
-To actually compile the project, you'll also need a binary of the ETVR backend from [here]().
+To actually compile the project, you'll also need a binary of the ETVR backend from [here](https://github.com/EyeTrackVR/ETVR-Backend/tree/master).
 
 Clone the project, follow its readme to set it up and build the binary. 
 Once done, copy the result into [backend_bin](/src-tauri/backend_bin) and rename it to `ETVR-<target-triple>`
