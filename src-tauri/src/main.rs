@@ -3,7 +3,6 @@
   windows_subsystem = "windows"
 )]
 
-use std::sync::Mutex;
 use std::time::Duration;
 
 use log::error;
@@ -70,7 +69,6 @@ async fn main() -> tauri::Result<()> {
     // save window position and size between sessions
     .plugin(tauri_plugin_window_state::Builder::default().build())
     .plugin(tauri_plugin_esp::init())
-    .plugin(tauri_plugin_etvr_backend::init())
     .setup(move |app| {
       // TODO: Implement the Updater
       //#[cfg(feature = "updater")]

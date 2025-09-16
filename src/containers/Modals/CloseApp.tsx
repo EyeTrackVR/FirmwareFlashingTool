@@ -4,7 +4,7 @@ import { CLOSE_APP_ID } from '@src/static'
 import { addNotification } from '@store/notifications/actions'
 import { activeModal, serverStatus } from '@store/ui/selectors'
 import { setActiveModal } from '@store/ui/ui'
-import { invoke } from '@tauri-apps/api/tauri'
+// import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, createMemo, on } from 'solid-js'
 
@@ -16,7 +16,7 @@ const CloseAppRoot = () => {
     createEffect(
         on(isCloseApp, async () => {
             try {
-                await invoke('plugin:etvr_backend|shutdown_etvr_backend')
+                // await invoke('plugin:etvr_backend|shutdown_etvr_backend')
                 await appWindow.close()
             } catch {
                 addNotification({
