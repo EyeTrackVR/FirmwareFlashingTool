@@ -11,9 +11,9 @@ export interface IAnimationState {
 }
 
 const defaultState: IAnimationState = {
-    step: FLASH_WIZARD_STEPS.INIT,
-    activeStep: FLASH_WIZARD_STEPS.INIT,
-    prevStep: FLASH_WIZARD_STEPS.INIT,
+    step: FLASH_WIZARD_STEPS.SELECT_NETWORK,
+    activeStep: FLASH_WIZARD_STEPS.SELECT_NETWORK,
+    prevStep: FLASH_WIZARD_STEPS.SELECT_NETWORK,
     action: ACTION.NEXT,
     showComponent: true,
 }

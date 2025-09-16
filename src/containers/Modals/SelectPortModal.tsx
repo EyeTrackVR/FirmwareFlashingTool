@@ -1,17 +1,15 @@
-import { ENotificationType, MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
+import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import SelectPortModal from '@pages/Modals/SelectPortModal'
 import { espApi, UsbSerialPortInfo } from '@src/esp/api'
 import { DEFAULT_PORT_NAME } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { createEffect, createMemo, on, onCleanup } from 'solid-js'
 
 const SelectPortModalContainer = () => {
     const { setActivePortName, activePort, ports, setPorts } = useAppAPIContext()
-    const { addNotification } = useAppNotificationsContext()
     const { modal, setOpenModal } = useAppUIContext()
 
     const loadPorts = (availablePorts: UsbSerialPortInfo[]) => {
@@ -48,13 +46,7 @@ const SelectPortModalContainer = () => {
                 espApi
                     .availablePorts()
                     .then(loadPorts)
-                    .catch(() => {
-                        addNotification({
-                            title: 'Failed to load ports',
-                            message: 'Failed to load ports',
-                            type: ENotificationType.ERROR,
-                        })
-                    })
+                    .catch(() => {})
             }, 250)
 
             if (!status) {

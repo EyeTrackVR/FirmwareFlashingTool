@@ -14,7 +14,7 @@ import WirelessProcessWizard from './WirelessProcessWizard'
 const FlashWizard = () => {
     return (
         <div class="flex w-full h-full items-center justify-center">
-            <div class="bg-black-900 flex border relative bottom-[20px] overflow-hidden border-solid border-black-800 rounded-12 flex-col items-center justify-between min-h-[480px] w-[420px]">
+            <div class="bg-black-900 flex border relative bottom-[20px] overflow-hidden border-solid border-black-800 rounded-12 flex-col items-center justify-between">
                 <SwipeAnimation>
                     <SetupProcessWizard />
                     <FlashProcessWizard />

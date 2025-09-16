@@ -1,51 +1,53 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import SelectBoardModal from '@pages/Modals/SelectBoardModal'
-import SelectBoard from '@pages/Modals/SelectBoardModal'
 import { BoardDescription, supportedBoards } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
-import { Accessor, createEffect, createMemo } from 'solid-js'
+import { Accessor, createMemo } from 'solid-js'
 import { trace } from 'tauri-plugin-log-api'
 const SelectBoardModalContainer = () => {
     const { confirmFirmwareSelection, getFirmwareAssets, activeBoard } = useAppAPIContext()
     const { modal, setOpenModal } = useAppUIContext()
 
     const boards: Accessor<IDropdownList[]> = createMemo(() => {
-        return [
-            {
-                label: 'xiaosenses3_USB',
-                description: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
-            },
-        ]
-        // return getFirmwareAssets()
-        //     .map((item) => {
-        //         trace(`${item.name}`)
-        //         return {
-        //             label: item.name,
-        //             description: BoardDescription[item.name.replace('_release', '')] ?? '--',
-        //         }
-        //     })
-        //     .sort((boardA, boardB) => {
-        //         const boardALabel = boardA.label.replace('_release', '')
-        //         const boardBLabel = boardB.label.replace('_release', '')
-        //         const isBoardARelease = boardA.label.includes('_release')
-        //         const isBoardBRelease = boardB.label.includes('_release')
+        if (!getFirmwareAssets().length) {
+            return [
+                {
+                    label: 'xiaosenses3_USB',
+                    description: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
+                },
+            ]
+        }
 
-        //         const boardAIsSupported = supportedBoards.includes(boardALabel)
-        //         const boardBIsSupported = supportedBoards.includes(boardBLabel)
+        return getFirmwareAssets()
+            .map((item) => {
+                trace(`${item.name}`)
+                return {
+                    label: item.name,
+                    description: BoardDescription[item.name.replace('_release', '')] ?? '--',
+                }
+            })
+            .sort((boardA, boardB) => {
+                const boardALabel = boardA.label.replace('_release', '')
+                const boardBLabel = boardB.label.replace('_release', '')
+                const isBoardARelease = boardA.label.includes('_release')
+                const isBoardBRelease = boardB.label.includes('_release')
 
-        //         if (boardAIsSupported && boardBIsSupported) {
-        //             if (isBoardARelease && !isBoardBRelease) return 1
-        //             if (!isBoardARelease && isBoardBRelease) return -1
-        //         }
+                const boardAIsSupported = supportedBoards.includes(boardALabel)
+                const boardBIsSupported = supportedBoards.includes(boardBLabel)
 
-        //         if (boardAIsSupported && !boardBIsSupported) return -1
-        //         if (!boardAIsSupported && boardBIsSupported) return 1
+                if (boardAIsSupported && boardBIsSupported) {
+                    if (isBoardARelease && !isBoardBRelease) return 1
+                    if (!isBoardARelease && isBoardBRelease) return -1
+                }
 
-        //         return 0
-        //     })
+                if (boardAIsSupported && !boardBIsSupported) return -1
+                if (!boardAIsSupported && boardBIsSupported) return 1
+
+                return 0
+            })
     })
 
     return (
