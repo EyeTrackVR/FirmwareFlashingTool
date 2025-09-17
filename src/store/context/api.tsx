@@ -24,7 +24,6 @@ import {
     IGHRelease,
     IGHResponse,
 } from '@interfaces/interfaces'
-import { DEFAULT_PORT_NAME } from '@src/static'
 import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
@@ -77,6 +76,7 @@ interface AppAPIContext {
     saveManifestPath: (url: string) => void
     confirmFirmwareSelection: (board: string) => void
     manifestPath: Accessor<string>
+    availableNetworks: Accessor<any> // add types later
     ports: Accessor<IDropdownList[]>
     setPorts: (ports: IDropdownList[]) => void
 }
@@ -128,6 +128,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
             autoSelect: true,
         },
         ports: [],
+        availableNetworks: [],
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -260,6 +261,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
 
+    const availableNetworks = createMemo(() => apiState().availableNetworks)
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
@@ -695,6 +697,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 trackerName,
                 ports,
                 setPorts,
+                availableNetworks,
             }}>
             {props.children}
         </AppAPIContext.Provider>

@@ -1,6 +1,5 @@
-import Button from '@components/Buttons/Button'
-import DefaultButton from '@components/Buttons/DefaultButton'
-import Card from '@components/Card'
+import Card from '@components/Cards/Card'
+import NetworkCard from '@components/Cards/NetworkCard'
 import NetworkInput from '@components/Inputs/NetworkInput'
 import PasswordInput from '@components/Inputs/PasswordInput'
 import Typography from '@components/Typography'
@@ -10,19 +9,12 @@ import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
-import { IoCheckmarkSharp, IoChevronBackSharp } from 'solid-icons/io'
+import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'
-import { batch, For, Match, Switch } from 'solid-js'
+import { batch, Match, Switch } from 'solid-js'
 
 const WirelessProcessWizard = () => {
-    const { ssid, password, setNetwork, mdns } = useAppAPIContext()
-
-    const exampleData = new Array(20).fill(0).map((el) => ({
-        ssid: 'Example SSID',
-        channel: 8,
-        signal: -50,
-        security: 'WPA2 PSK',
-    }))
+    const { ssid, password, setNetwork, mdns, availableNetworks } = useAppAPIContext()
 
     return (
         <Switch>
@@ -38,74 +30,17 @@ const WirelessProcessWizard = () => {
                 />
             </Match>
             <Match when={activeStep() === FLASH_WIZARD_STEPS.SELECT_NETWORK}>
-                <div class="bg-black-900 flex p-12 rounded-12 flex-col items-center justify-between h-[480px] w-[720px]">
-                    <div class="flex flex-row w-full justify-between">
-                        <DefaultButton
-                            class="opacity-1 hover:bg-black-800 rounded-full flex items-center justify-center p-6 duration-300 transition-colors"
-                            onClick={() => {}}>
-                            <IoChevronBackSharp class="w-[18px] h-[18px] text-lightBlue-300" />
-                        </DefaultButton>
-                    </div>
-                    <div class="w-full flex-1 flex flex-col items-center justify-center gap-24 overflow-hidden pb-12">
-                        <div class="flex flex-col items-center gap-24">
-                            <div class="flex items-center justify-center w-[100px] h-[100px] rounded-full bg-black-800"></div>
-                            <div class="flex flex-row gap-12">
-                                <Typography color="white" text="h1">
-                                    Select Network
-                                </Typography>
-                            </div>
-                        </div>
-                        <div class="flex-1 gap-4 flex flex-col w-full overflow-hidden">
-                            <div class="grid grid-cols-4 gap-4 w-full px-6">
-                                <Typography color="white" text="caption" class="text-left">
-                                    SSID
-                                </Typography>
-                                <Typography color="white" text="caption">
-                                    Channel
-                                </Typography>
-                                <Typography color="white" text="caption">
-                                    Signal
-                                </Typography>
-                                <Typography color="white" text="caption" class="text-right">
-                                    Security
-                                </Typography>
-                            </div>
-                            <div class="w-full flex-1 overflow-y-auto gap-4 flex flex-col px-6 scrollbar">
-                                <For each={exampleData}>
-                                    {(el) => (
-                                        <div class="grid grid-cols-4 px-12 py-12 gap-4 rounded-8 w-full mt-2 bg-black-800 duration-150 transition-colors hover:bg-purple-200 cursor-pointer">
-                                            <Typography
-                                                color="white"
-                                                text="caption"
-                                                class="text-left">
-                                                {el.ssid}
-                                            </Typography>
-                                            <Typography color="white" text="caption">
-                                                {el.channel}
-                                            </Typography>
-                                            <Typography color="white" text="caption">
-                                                {`(${el.signal} dBm) `}
-                                            </Typography>
-                                            <Typography
-                                                color="white"
-                                                text="caption"
-                                                class="text-right">
-                                                {el.security}
-                                            </Typography>
-                                        </div>
-                                    )}
-                                </For>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-row gap-12 w-full items-center justify-end">
-                        <div>
-                            <Button label="Manual setup" onClick={() => {}} />
-                        </div>
-                    </div>
-                </div>
+                <NetworkCard
+                    data={availableNetworks()}
+                    onClickBack={() => {
+                        batch(() => {
+                            setAction(ACTION.PREV)
+                            setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
+                        })
+                    }}
+                    onClickManualSetup={() => {}}
+                />
             </Match>
-
             <Match when={activeStep() === FLASH_WIZARD_STEPS.SETUP_CREDENTIALS}>
                 <Card
                     label="Setup credentials"

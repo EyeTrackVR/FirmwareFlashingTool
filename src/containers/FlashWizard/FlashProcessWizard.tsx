@@ -1,4 +1,4 @@
-import Card from '@components/Card'
+import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
 import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'
 import { IFirmwareState } from '@interfaces/interfaces'

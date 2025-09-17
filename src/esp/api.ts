@@ -171,7 +171,25 @@ export type getDeviceMode = {
     command: 'get_device_mode'
 }
 
-export type Command = SetWifiCommand | SetMdnsCommand | getMdnsName | getDeviceMode | switchMode
+export type ScanNetworks = {
+    command: 'scan_networks'
+}
+
+export type Pause = {
+    command: 'pause'
+    data: {
+        pause: boolean
+    }
+}
+
+export type Command =
+    | SetWifiCommand
+    | SetMdnsCommand
+    | getMdnsName
+    | getDeviceMode
+    | switchMode
+    | ScanNetworks
+    | Pause
 
 const sendCommands = async (portName: string, commands: Command[]): Promise<any> => {
     return await invoke('plugin:esp|send_commands', {
@@ -184,8 +202,8 @@ export const validateUserPortConnection = async (
     currentUserActivePort: string,
 ): Promise<boolean> => {
     await sleep(2000)
-    const CHECK_INTERVAL = 250 // ms
-    const TIMEOUT = 5000 // ms
+    const CHECK_INTERVAL = 250
+    const TIMEOUT = 5000
     const maxChecks = Math.ceil(TIMEOUT / CHECK_INTERVAL)
     let checks = 0
 
@@ -211,6 +229,21 @@ export const validateUserPortConnection = async (
             }
         }, CHECK_INTERVAL)
     })
+}
+
+export const getAvailableNetworks = async (port: string) => {
+    await sendCommands(port, [{ command: 'pause', data: { pause: true } }])
+
+    const response: string = await invoke('plugin:esp|get_possible_networks', {
+        portName: port,
+        commands: [{ command: 'scan_networks' }],
+    })
+
+    return response
+        .split('\n')
+        .filter((el) => el.match('networks'))
+        .map((el) => JSON.parse(el)?.networks ?? [])
+        .flat()
 }
 
 export const getDeviceName = async (port: string) => {
@@ -325,6 +358,7 @@ export const espApi = {
     getDeviceMode,
     getDeviceName,
     setupWiredConnection,
+    getAvailableNetworks,
     availablePorts,
     testConnection,
     flash,

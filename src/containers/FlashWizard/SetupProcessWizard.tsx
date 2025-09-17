@@ -1,5 +1,5 @@
 import SelectButton from '@components/Buttons/SelectButton'
-import Card from '@components/Card'
+import Card from '@components/Cards/Card'
 import { ACTION, FLASH_WIZARD_STEPS, MODAL_TYPE } from '@interfaces/enums'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep, prevStep } from '@store/animation/selectors'
@@ -13,15 +13,11 @@ import {
 } from '@store/terminal/terminal'
 import { BiRegularChip } from 'solid-icons/bi'
 import { BsDisplayport } from 'solid-icons/bs'
-import { batch, createMemo, Match, Switch } from 'solid-js'
+import { batch, Match, Switch } from 'solid-js'
 
 const SetupProcessWizard = () => {
     const { activeBoard, activePort, downloadAsset, getFirmwareType } = useAppAPIContext()
     const { setOpenModal, hideModal } = useAppUIContext()
-
-    const onClickSecondary = createMemo(() => {
-        return undefined
-    })
 
     return (
         <Switch>

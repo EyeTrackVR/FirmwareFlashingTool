@@ -1,4 +1,4 @@
-import Card from '@components/Card'
+import Card from '@components/Cards/Card'
 import Input from '@components/Inputs/Input'
 import Typography from '@components/Typography'
 import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'

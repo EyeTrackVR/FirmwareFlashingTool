@@ -164,6 +164,7 @@ export interface AppStoreAPI {
     activePort: IActivePort
     ports: IDropdownList[]
     isActivePortValid: boolean
+    availableNetworks: any[] // add types later
 }
 
 export interface IOpenModal {

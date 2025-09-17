@@ -6,9 +6,13 @@ import { createMemo, ParentComponent } from 'solid-js'
 const SwipeAnimation: ParentComponent = (props) => {
     const animationClass = createMemo(() => {
         if (step() !== activeStep()) {
-            return action() === ACTION.NEXT ? 'animate-slide-left-exit' : 'animate-slide-right-exit'
+            return action() === ACTION.NEXT
+                ? 'animate-slide-left-exit w-full'
+                : 'animate-slide-right-exit w-full'
         }
-        return action() === ACTION.NEXT ? 'animate-slide-right-enter' : 'animate-slide-left-enter'
+        return action() === ACTION.NEXT
+            ? 'animate-slide-right-enter w-full'
+            : 'animate-slide-left-enter w-full'
     })
 
     const handleAnimationEnd = () => {
