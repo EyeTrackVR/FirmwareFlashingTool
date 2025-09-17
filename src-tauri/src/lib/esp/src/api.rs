@@ -289,6 +289,8 @@ pub enum Command {
   SwitchMode { mode: String },
   GetMdnsName,
   GetDeviceMode,
+  ScanNetworks,
+  Pause { pause: bool },
 }
 
 #[derive(Debug, Serialize)]
@@ -297,9 +299,7 @@ struct CommandsOperation {
 }
 
 #[command]
-
 pub fn send_commands(port_name: String, commands: Vec<Command>) -> Result<String, String> {
-  // Otwieramy port szeregowy
   let serial_port = serialport::new(port_name, 115_200)
     .flow_control(FlowControl::None)
     .timeout(Duration::from_millis(100))
@@ -359,9 +359,58 @@ pub fn send_commands(port_name: String, commands: Vec<Command>) -> Result<String
     let _ = tx.send(Err("No response received after waiting".to_string()));
   });
 
-  // Odbieramy wynik z wątku z timeoutem
   match rx.recv_timeout(Duration::from_secs(10)) {
     Ok(result) => result,
     Err(_) => Err("Operation timed out".to_string()),
   }
+}
+
+#[command]
+pub async fn get_possible_networks(
+  port_name: String,
+  commands: Vec<Command>,
+) -> Result<String, String> {
+  let operation = CommandsOperation { commands };
+  let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
+
+  tauri::async_runtime::spawn_blocking(move || {
+    let mut serial_port = serialport::new(port_name, 115_200)
+      .flow_control(FlowControl::None)
+      .timeout(Duration::from_millis(100))
+      .open_native()
+      .map_err(|e| e.to_string())?;
+
+    serial_port
+      .write_all(payload.as_bytes())
+      .map_err(|e| e.to_string())?;
+    serial_port.flush().map_err(|e| e.to_string())?;
+
+    log::debug!("{:?}", serde_json::to_string(&operation));
+
+    let start_time = std::time::Instant::now();
+    let mut buffer = Vec::new();
+
+    while start_time.elapsed() < Duration::from_secs(30) {
+      match serial_port.bytes_to_read() {
+        Ok(bytes_available) if bytes_available > 0 => {
+          let mut chunk = vec![0u8; bytes_available as usize];
+          if serial_port.read_exact(&mut chunk).is_ok() {
+            buffer.extend_from_slice(&chunk);
+
+            let response = String::from_utf8_lossy(&buffer).trim().to_string();
+            if response.contains("Networks scanned") {
+              return Ok(response);
+            }
+          }
+        }
+        _ => {
+          std::thread::sleep(Duration::from_millis(250));
+        }
+      }
+    }
+
+    Err("Operation timed out".to_string())
+  })
+  .await
+  .map_err(|e| e.to_string())?
 }

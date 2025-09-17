@@ -68,9 +68,7 @@ branch = "v1"
 
 [dependencies.tokio]
 version = "1"
-features = [
-  "full",
-]
+features = ["full"]
 
 [workspace]
 members = [

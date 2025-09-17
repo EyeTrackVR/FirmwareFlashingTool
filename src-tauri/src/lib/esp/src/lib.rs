@@ -20,7 +20,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       flash,
       stream_logs,
       cancel_stream_logs,
-      send_commands
+      send_commands,
+      get_possible_networks
     ])
     .setup(move |app| {
       app.manage(Mutex::new(EspState {
