@@ -37,14 +37,9 @@ const SelectPortWizard = () => {
                 activePort().activePortName,
                 selectedMode() === FLASH_MODE.WIRED ? 'uvc' : 'wifi',
             )
-        } catch (err) {
-            console.log('waaa??', err)
-        }
 
-        try {
             const isTheSamePort = await api.checkPortConnection(activePort().activePortName)
 
-            console.log(isTheSamePort)
             if (isTheSamePort) {
                 if (selectedMode() === FLASH_MODE.WIRED) {
                     batch(() => {
