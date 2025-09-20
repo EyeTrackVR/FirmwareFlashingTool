@@ -1,7 +1,7 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { isValidChannel } from '@interfaces/utils'
 import DevtoolsModal from '@pages/Modals/DevtoolsModal'
-import { ChannelOptions } from '@src/static'
+import { CHANNEL_OPTIONS } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
@@ -13,7 +13,7 @@ const DevtoolsModalContainer = () => {
     return (
         <DevtoolsModal
             channelMode={channelMode()}
-            channelOptions={Object.values(ChannelOptions)}
+            channelOptions={Object.values(CHANNEL_OPTIONS)}
             version="1.7.0"
             checked={hideModal()}
             isActive={modal().type === MODAL_TYPE.DEVTOOLS}

@@ -21,7 +21,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       stream_logs,
       cancel_stream_logs,
       send_commands,
-      get_possible_networks
+      get_possible_networks,
+      get_wifi_connection_status
     ])
     .setup(move |app| {
       app.manage(Mutex::new(EspState {

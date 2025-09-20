@@ -284,13 +284,28 @@ pub fn cancel_stream_logs(state: State<'_, Mutex<EspState>>) -> EspResult<()> {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "command", content = "data", rename_all = "snake_case")]
 pub enum Command {
-  SetWifi { ssid: String, password: String },
-  SetMdns { hostname: String },
-  SwitchMode { mode: String },
+  SetWifi {
+    ssid: String,
+    password: String,
+    name: String,
+    channel: u8,
+    power: u8,
+  },
+  SetMdns {
+    hostname: String,
+  },
+  SwitchMode {
+    mode: String,
+  },
+  ConnectWifi,
   GetMdnsName,
   GetDeviceMode,
   ScanNetworks,
-  Pause { pause: bool },
+  GetWifiStatus,
+  RestartDevice,
+  Pause {
+    pause: bool,
+  },
 }
 
 #[derive(Debug, Serialize)]
@@ -398,7 +413,58 @@ pub async fn get_possible_networks(
             buffer.extend_from_slice(&chunk);
 
             let response = String::from_utf8_lossy(&buffer).trim().to_string();
+
             if response.contains("Networks scanned") {
+              return Ok(response);
+            }
+          }
+        }
+        _ => {
+          std::thread::sleep(Duration::from_millis(250));
+        }
+      }
+    }
+
+    Err("Operation timed out".to_string())
+  })
+  .await
+  .map_err(|e| e.to_string())?
+}
+
+#[command]
+pub async fn get_wifi_connection_status(
+  port_name: String,
+  commands: Vec<Command>,
+) -> Result<String, String> {
+  let operation = CommandsOperation { commands };
+  let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
+  println!("get connection status: ");
+  tauri::async_runtime::spawn_blocking(move || {
+    let mut serial_port = serialport::new(port_name, 115_200)
+      .flow_control(FlowControl::None)
+      .timeout(Duration::from_millis(100))
+      .open_native()
+      .map_err(|e| e.to_string())?;
+
+    serial_port
+      .write_all(payload.as_bytes())
+      .map_err(|e| e.to_string())?;
+    serial_port.flush().map_err(|e| e.to_string())?;
+
+    log::debug!("{:?}", serde_json::to_string(&operation));
+
+    let start_time = std::time::Instant::now();
+    let mut buffer = Vec::new();
+
+    while start_time.elapsed() < Duration::from_secs(30) {
+      match serial_port.bytes_to_read() {
+        Ok(bytes_available) if bytes_available > 0 => {
+          let mut chunk = vec![0u8; bytes_available as usize];
+          if serial_port.read_exact(&mut chunk).is_ok() {
+            buffer.extend_from_slice(&chunk);
+
+            let response = String::from_utf8_lossy(&buffer).trim().to_string();
+            if response.contains("connected to") || response.contains("not connected") {
               return Ok(response);
             }
           }

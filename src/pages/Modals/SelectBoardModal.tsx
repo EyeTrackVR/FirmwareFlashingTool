@@ -5,7 +5,7 @@ import ModalHeader from '@components/ModalHeader'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
-import { beforeSelectBoardModalID } from '@src/static'
+import { BEFORE_SELECT_BOARD_MODE } from '@src/static'
 import { BsSearch } from 'solid-icons/bs'
 import { Component, createMemo, createSignal, For, Show } from 'solid-js'
 
@@ -30,7 +30,7 @@ const SelectBoardModal: Component<IProps> = (props) => {
         <Modal
             width="w-[350px]"
             version={props.version}
-            id={beforeSelectBoardModalID}
+            id={BEFORE_SELECT_BOARD_MODE}
             isActive={props.isActive}
             onClickCloseModal={() => {
                 props.onClickClose()
@@ -69,7 +69,7 @@ const SelectBoardModal: Component<IProps> = (props) => {
                                     {...data}
                                     isActive={data.label === props.activeBoard}
                                     onClick={() => {
-                                        const el = document.getElementById(beforeSelectBoardModalID)
+                                        const el = document.getElementById(BEFORE_SELECT_BOARD_MODE)
                                         if (el instanceof HTMLDialogElement) {
                                             el.close()
                                         }

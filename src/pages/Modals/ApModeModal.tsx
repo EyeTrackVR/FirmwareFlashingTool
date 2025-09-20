@@ -3,7 +3,7 @@ import { Button } from '@components/Buttons/Button'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { apModalID } from '@src/static'
+import { AP_MODE_ID } from '@src/static'
 import Typography from '@components/Typography'
 
 export interface IProps {
@@ -19,7 +19,7 @@ const ApModeModal: Component<IProps> = (props) => {
 
     return (
         <Modal
-            id={apModalID}
+            id={AP_MODE_ID}
             version={props.version}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}

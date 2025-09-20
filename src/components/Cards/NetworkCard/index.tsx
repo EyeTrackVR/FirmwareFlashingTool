@@ -1,14 +1,16 @@
 import Button from '@components/Buttons/Button'
 import DefaultButton from '@components/Buttons/DefaultButton'
 import Typography from '@components/Typography'
+import { INetwork } from '@store/network/network'
 import { FaSolidWifi } from 'solid-icons/fa'
 import { IoChevronBackSharp } from 'solid-icons/io'
 import { Component, For, Show } from 'solid-js'
 
 export interface IProps {
     onClickManualSetup: () => void
+    onClickNetwork: (network: INetwork) => void
     onClickBack: () => void
-    data: any[]
+    data: INetwork[]
 }
 
 const NetworkCard: Component<IProps> = (props) => {
@@ -61,18 +63,27 @@ const NetworkCard: Component<IProps> = (props) => {
                             }>
                             <For each={props.data}>
                                 {(el) => (
-                                    <div class="grid grid-cols-4 px-12 py-12 gap-4 rounded-8 w-full mt-2 bg-black-800 duration-150 transition-colors hover:bg-purple-200 cursor-pointer">
-                                        <Typography color="white" text="caption" class="text-left">
-                                            {el.ssid}
+                                    <div
+                                        class="grid grid-cols-4 px-12 py-12 gap-4 rounded-8 w-full mt-2 bg-black-800 duration-150 transition-colors hover:bg-purple-200 cursor-pointer"
+                                        onClick={() => {
+                                            props.onClickNetwork(el)
+                                        }}>
+                                        <Typography
+                                            color="white"
+                                            text="caption"
+                                            class="text-left"
+                                            nowrap
+                                            ellipsis>
+                                            {!el.ssid ? 'Hidden' : el.ssid}
                                         </Typography>
                                         <Typography color="white" text="caption">
                                             {el.channel}
                                         </Typography>
                                         <Typography color="white" text="caption">
-                                            {`(${el.signal} dBm) `}
+                                            {`(${el.rssi} dBm) `}
                                         </Typography>
                                         <Typography color="white" text="caption" class="text-right">
-                                            {el.security}
+                                            {el.auth_mode}
                                         </Typography>
                                     </div>
                                 )}

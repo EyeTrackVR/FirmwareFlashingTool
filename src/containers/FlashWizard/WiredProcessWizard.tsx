@@ -1,8 +1,13 @@
 import Card from '@components/Cards/Card'
 import Input from '@components/Inputs/Input'
 import Typography from '@components/Typography'
-import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'
-import { espApi } from '@src/esp/api'
+import {
+    ACTION,
+    FLASH_WIZARD_STEPS,
+    INIT_WIZARD_STEPS,
+    WIRED_WIZARD_STEPS,
+} from '@interfaces/enums'
+import { getApi } from '@src/esp'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
@@ -19,7 +24,7 @@ const WiredProcessWizard = () => {
 
     return (
         <Switch>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.SETUP_TRACKER_NAME}>
+            <Match when={activeStep() === WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_NAME}>
                 <Card
                     secondaryButtonLabel="Wi-Fi mode"
                     onClickOptionLabel="Wired Mode"
@@ -35,23 +40,22 @@ const WiredProcessWizard = () => {
                     }}
                     onClickPrimary={() => {
                         batch(() => {
-                            setStep(FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS)
+                            setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS)
                             setIsPendingUpdate(true)
                             setAction(ACTION.NEXT)
                             setError('')
                         })
-
-                        espApi
+                        getApi()
                             .setupWiredConnection(trackerName(), activePort().activePortName)
                             .then(() => {
                                 batch(() => {
-                                    setStep(FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS_SUCCESS)
+                                    setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_SUCCESS)
                                     setAction(ACTION.NEXT)
                                 })
                             })
                             .catch((err) => {
                                 batch(() => {
-                                    setStep(FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS_FAILED)
+                                    setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_FAILED)
                                     setAction(ACTION.NEXT)
                                     setError(err.message)
                                 })
@@ -91,7 +95,7 @@ const WiredProcessWizard = () => {
                     </div>
                 </Card>
             </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS}>
+            <Match when={activeStep() === WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS}>
                 <Card
                     label="Setup tracker name"
                     primaryButtonLabel="Continue"
@@ -101,14 +105,17 @@ const WiredProcessWizard = () => {
                         if (isPendingUpdate()) return
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SETUP_TRACKER_NAME)
+                            setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_NAME)
                         })
                     }}
-                    onClickPrimary={() => {}}
-                    description="Switching to wired mode… The device will now appear as a UVC camera. with an additional COM port for communication"
-                />
+                    onClickPrimary={() => {}}>
+                    <Typography color="white" text="caption" class="leading-[18px]">
+                        Switching to wired mode… The device will now appear as a UVC camera. with an
+                        additional COM port for communication
+                    </Typography>
+                </Card>
             </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS_SUCCESS}>
+            <Match when={activeStep() === WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_SUCCESS}>
                 <Card
                     status="success"
                     secondaryButtonLabel="Return to the beginning"
@@ -117,20 +124,20 @@ const WiredProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SETUP_TRACKER_NAME)
+                            setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_NAME)
                         })
                     }}
                     onClickSecondary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.INIT)
+                            setStep(INIT_WIZARD_STEPS.PROCESS_INIT)
                         })
                     }}
                     label="Its done!"
                     description="Your device is set up and ready to go."
                 />
             </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.FLASH_WIRED_PROCESS_FAILED}>
+            <Match when={activeStep() === WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_FAILED}>
                 <Card
                     label="Failed to Switch to wired mode"
                     primaryButtonLabel="Try again"
@@ -140,17 +147,17 @@ const WiredProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SETUP_TRACKER_NAME)
+                            setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_NAME)
                         })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.SETUP_TRACKER_NAME)
+                            setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_NAME)
                         })
                     }}>
                     <Typography color="red">
-                        {!error().length
+                        {!error()?.length
                             ? 'Something went wrong, please contact with us on discord'
                             : error()}
                     </Typography>

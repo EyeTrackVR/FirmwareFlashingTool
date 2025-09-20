@@ -1,10 +1,10 @@
-import { Component } from 'solid-js'
 import { Footer } from '@components/Footer'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { beforeSelectBoardModalID } from '@src/static'
 import Typography from '@components/Typography'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { BEFORE_SELECT_BOARD_MODE } from '@src/static'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -18,7 +18,7 @@ const BeforeSelectBoardModal: Component<IProps> = (props) => {
     return (
         <Modal
             version={props.version}
-            id={beforeSelectBoardModalID}
+            id={BEFORE_SELECT_BOARD_MODE}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>

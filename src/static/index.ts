@@ -1,30 +1,19 @@
 import { type IChannelOptions } from '@interfaces/interfaces'
 import { BOARD_TYPE, CHANNEL_TYPE } from './types/enums'
 
-export const supportedBoards: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
-export const debugModes: string[] = ['off', 'error', 'warn', 'info', 'debug', 'trace']
-export const defaultMdnsLength = 24
-export const portBaudRate = 115200
-export const mdnsLength = 12
-export const radius = 24
-export const usb = 'USB'
-export const questionModalId = 'questionModal'
-export const apModalID = 'apMode'
-export const logsModalID = 'logs'
-export const wifiModalID = 'wifiMode'
-export const beforeFlashingModalID = 'beforeFlashingMode'
-export const beforeSelectBoardModalID = 'BeforeSelectBoardMode'
+export const RECOMMENDED_BOARDS: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
+export const DEFAULT_MDNS_LENGTH = 24
+export const MDNS_LENGTH = 12
+export const USB = 'USB'
+export const AP_MODE_ID = 'AP_MODE_ID'
+export const WIFI_MODE_ID = 'WIFI_MODE_ID'
+export const BEFORE_FLASHING_MODE = 'BEFORE_FLASHING_MODE'
+export const BEFORE_SELECT_BOARD_MODE = 'BEFORE_SELECT_BOARD_MODE'
 export const SELECT_PORT_MODAL_ID = 'SELECT_PORT_MODAL_ID'
 export const DEVTOOLS_MODAL_ID = 'DEVTOOLS_MODAL_ID'
-export const debugModalId = 'debugModal'
-export const staticMdns = 'openiristracker'
-export const DEVICE_LOST = 'The device has been lost.'
-export const STREAM_IS_UNDER = 'The stream is under'
-export const SSID_MISSING = 'ssid missing'
-export const AP_IP_ADDRESS = 'AP IP address:'
 export const DEFAULT_PORT_NAME = 'auto'
 
-export const BoardDescription: {
+export const BOARD_DESCRIPTION: {
     [key in BOARD_TYPE]: string
 } = {
     [BOARD_TYPE.BABBLE_WROOMS_S3]: 'Official Babble tracker board (wireless mode)',
@@ -45,7 +34,7 @@ export const BoardDescription: {
     [BOARD_TYPE.XIAOSENSES_3_USB]: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
 }
 
-export const BoardConnectionMethod: {
+export const BOARD_CONNECTION_METHOD: {
     [key in BOARD_TYPE]: string
 } = {
     [BOARD_TYPE.BABBLE_WROOMS_S3]: 'wireless mode',
@@ -65,7 +54,7 @@ export const BoardConnectionMethod: {
     [BOARD_TYPE.XIAOSENSES_3_USB]: 'wired mode',
 }
 
-export const ChannelOptions: Record<CHANNEL_TYPE, IChannelOptions> = {
+export const CHANNEL_OPTIONS: Record<CHANNEL_TYPE, IChannelOptions> = {
     [CHANNEL_TYPE.OFFICIAL]: {
         label: CHANNEL_TYPE.OFFICIAL,
         description: 'Official channel for official releases.',

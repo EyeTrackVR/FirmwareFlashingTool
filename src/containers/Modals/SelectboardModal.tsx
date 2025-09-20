@@ -1,7 +1,7 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import SelectBoardModal from '@pages/Modals/SelectBoardModal'
-import { BoardDescription, supportedBoards } from '@src/static'
+import { BOARD_DESCRIPTION, RECOMMENDED_BOARDS } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
@@ -26,7 +26,7 @@ const SelectBoardModalContainer = () => {
                 trace(`${item.name}`)
                 return {
                     label: item.name,
-                    description: BoardDescription[item.name.replace('_release', '')] ?? '--',
+                    description: BOARD_DESCRIPTION[item.name.replace('_release', '')] ?? '--',
                 }
             })
             .sort((boardA, boardB) => {
@@ -35,8 +35,8 @@ const SelectBoardModalContainer = () => {
                 const isBoardARelease = boardA.label.includes('_release')
                 const isBoardBRelease = boardB.label.includes('_release')
 
-                const boardAIsSupported = supportedBoards.includes(boardALabel)
-                const boardBIsSupported = supportedBoards.includes(boardBLabel)
+                const boardAIsSupported = RECOMMENDED_BOARDS.includes(boardALabel)
+                const boardBIsSupported = RECOMMENDED_BOARDS.includes(boardBLabel)
 
                 if (boardAIsSupported && boardBIsSupported) {
                     if (isBoardARelease && !isBoardBRelease) return 1

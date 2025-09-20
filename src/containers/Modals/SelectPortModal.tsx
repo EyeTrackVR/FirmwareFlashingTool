@@ -1,8 +1,8 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import SelectPortModal from '@pages/Modals/SelectPortModal'
-import { espApi, UsbSerialPortInfo } from '@src/esp/api'
-import { DEFAULT_PORT_NAME } from '@src/static'
+import { getApi } from '@src/esp'
+import { UsbSerialPortInfo } from '@src/esp/interfaces/types'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
@@ -13,10 +13,8 @@ const SelectPortModalContainer = () => {
     const { modal, setOpenModal } = useAppUIContext()
 
     const loadPorts = (availablePorts: UsbSerialPortInfo[]) => {
-        if (ports().length === availablePorts.length) return
-
         if (!availablePorts.length) {
-            setActivePortName('', false)
+            setActivePortName('')
             setPorts([])
             return
         }
@@ -29,10 +27,6 @@ const SelectPortModalContainer = () => {
                     : `${port.vid}:${port.pid}`,
         }))
 
-        if (activePort().autoSelect) {
-            setActivePortName(portList[0]?.label ?? DEFAULT_PORT_NAME, true)
-        }
-
         setPorts(portList)
     }
 
@@ -43,10 +37,12 @@ const SelectPortModalContainer = () => {
     createEffect(
         on(isModalActive, (status) => {
             const interval = setInterval(() => {
-                espApi
-                    .availablePorts()
+                getApi()
+                    .getAvailablePorts()
                     .then(loadPorts)
-                    .catch(() => {})
+                    .catch(() => {
+                        setPorts([])
+                    })
             }, 250)
 
             if (!status) {
@@ -82,7 +78,7 @@ const SelectPortModalContainer = () => {
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClickConfirmBoard={(port) => {
-                setActivePortName(port, false)
+                setActivePortName(port)
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
         />

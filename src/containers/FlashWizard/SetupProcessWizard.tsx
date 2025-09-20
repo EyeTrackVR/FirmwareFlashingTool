@@ -1,8 +1,8 @@
 import SelectButton from '@components/Buttons/SelectButton'
 import Card from '@components/Cards/Card'
-import { ACTION, FLASH_WIZARD_STEPS, MODAL_TYPE } from '@interfaces/enums'
+import { ACTION, FLASH_WIZARD_STEPS, INIT_WIZARD_STEPS, MODAL_TYPE } from '@interfaces/enums'
 import { setAction, setStep } from '@store/animation/animation'
-import { activeStep, prevStep } from '@store/animation/selectors'
+import { activeStep } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { installOpenIris } from '@store/terminal/actions'
@@ -16,12 +16,13 @@ import { BsDisplayport } from 'solid-icons/bs'
 import { batch, Match, Switch } from 'solid-js'
 
 const SetupProcessWizard = () => {
-    const { activeBoard, activePort, downloadAsset, getFirmwareType } = useAppAPIContext()
     const { setOpenModal, hideModal } = useAppUIContext()
+    const { activeBoard, activePort, downloadAsset, getFirmwareType, setActivePortName } =
+        useAppAPIContext()
 
     return (
         <Switch>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.INIT}>
+            <Match when={activeStep() === INIT_WIZARD_STEPS.PROCESS_INIT}>
                 <Card
                     primaryButtonLabel="Install Openiris"
                     secondaryButtonLabel="Show Logs"
@@ -33,33 +34,34 @@ const SetupProcessWizard = () => {
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_BOARD)
+                            setStep(INIT_WIZARD_STEPS.SELECT_BOARD)
                         })
                     }}
                     onClickSecondary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.BEFORE_PROCEEDING)
+                            setStep(INIT_WIZARD_STEPS.INIT_BEFORE_PROCEEDING)
                         })
                     }}
                     label="Flash Your Board"
                     description="Click the button below to start the flashing process and follow the on-screen prompts to complete the setup."
                 />
             </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.SELECT_BOARD}>
+            <Match when={activeStep() === INIT_WIZARD_STEPS.SELECT_BOARD}>
                 <Card
                     isActive={activeBoard() !== ''}
                     icon={BiRegularChip}
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.INIT)
+                            setStep(INIT_WIZARD_STEPS.PROCESS_INIT)
                         })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
+                            setActivePortName('')
+                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     primaryButtonLabel="Next"
@@ -75,7 +77,7 @@ const SetupProcessWizard = () => {
                     />
                 </Card>
             </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.SELECT_PORT}>
+            <Match when={activeStep() === INIT_WIZARD_STEPS.SELECT_PORT}>
                 <Card
                     primaryButtonLabel="Flash Board"
                     isActive={activePort().activePortName !== ''}
@@ -83,17 +85,10 @@ const SetupProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_BOARD)
+                            setStep(INIT_WIZARD_STEPS.SELECT_BOARD)
                         })
                     }}
                     onClickPrimary={() => {
-                        if (prevStep() === FLASH_WIZARD_STEPS.CHECK_PORT_CONNECTION) {
-                            batch(() => {
-                                setAction(ACTION.NEXT)
-                                setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
-                            })
-                            return
-                        }
                         if (!hideModal()) {
                             setOpenModal({
                                 open: true,
@@ -135,27 +130,6 @@ const SetupProcessWizard = () => {
                         }}
                     />
                 </Card>
-            </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.BEFORE_PROCEEDING}>
-                <Card
-                    secondaryButtonLabel="Show logs"
-                    isActive
-                    icon={BsDisplayport}
-                    onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.INIT)
-                        })
-                    }}
-                    onClickSecondary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.SHOW_TERMINAL)
-                        })
-                    }}
-                    label="Before proceeding"
-                    description="Unplug your board, then reconnect it to the PC without pressing any buttons and press Show logs."
-                />
             </Match>
         </Switch>
     )

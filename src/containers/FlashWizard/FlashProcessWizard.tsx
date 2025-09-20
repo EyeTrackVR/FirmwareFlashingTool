@@ -1,18 +1,16 @@
 import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
-import { ACTION, FLASH_WIZARD_STEPS } from '@interfaces/enums'
+import { ACTION, FLASH_WIZARD_STEPS, INIT_WIZARD_STEPS } from '@interfaces/enums'
 import { IFirmwareState } from '@interfaces/interfaces'
-import { espApi } from '@src/esp/api'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
-import { useAppAPIContext } from '@store/context/api'
 import { firmwareState, isActiveProcess, percentageProgress } from '@store/terminal/selectors'
-import { BiRegularChip, BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
+import { setAbortController } from '@store/terminal/terminal'
+import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { Accessor, batch, createMemo, Match, Switch } from 'solid-js'
 
 const FlashProcessWizard = () => {
-    const { activePort, isActivePortValid } = useAppAPIContext()
     const flashFirmwareState: Accessor<IFirmwareState | undefined> = createMemo(() => {
         const state = Object.keys(firmwareState()).map((key) => {
             return { step: key, ...firmwareState()[key] }
@@ -32,7 +30,7 @@ const FlashProcessWizard = () => {
                         if (isActiveProcess()) return
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
+                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     onClickPrimary={() => {}}
@@ -53,19 +51,16 @@ const FlashProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
+                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     onClickSecondary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.BEFORE_CONTINUE_CONFIG)
-                        })
+                        // connect terminal steps later
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.BEFORE_CONTINUE_CONFIG)
+                            setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
                         })
                     }}
                     label="Firmware flashed!">
@@ -90,73 +85,21 @@ const FlashProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
+                            setAbortController('openiris')
+                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
+                            setAbortController('openiris')
+                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     label="Failed to flash board">
                     <Typography color="red">
                         {flashFirmwareState()?.label ??
                             'Something went wrong, please contact with us on discord'}
-                    </Typography>
-                </Card>
-            </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.BEFORE_CONTINUE_CONFIG}>
-                <Card
-                    primaryButtonLabel="Verify connection"
-                    isActive
-                    icon={BiRegularChip}
-                    onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
-                        })
-                    }}
-                    onClickPrimary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.CHECK_PORT_CONNECTION)
-                        })
-                        espApi
-                            .validateUserPortConnection(activePort().activePortName)
-                            .then((status) => {
-                                if (status) {
-                                    batch(() => {
-                                        setAction(ACTION.NEXT)
-                                        setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
-                                    })
-                                    return
-                                }
-                                batch(() => {
-                                    setAction(ACTION.NEXT)
-                                    setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
-                                })
-                            })
-                            .catch(() => {
-                                batch(() => {
-                                    setAction(ACTION.NEXT)
-                                    setStep(FLASH_WIZARD_STEPS.SELECT_PORT)
-                                })
-                            })
-                    }}
-                    label="Before proceeding"
-                    description="Unplug your board, then reconnect it to the PC without pressing any buttons and press Show logs."
-                />
-            </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.CHECK_PORT_CONNECTION}>
-                <Card
-                    isActive={isActivePortValid()}
-                    isLoader
-                    icon={BiRegularLoaderAlt}
-                    label="Connecting">
-                    <Typography text="caption" color="white" class="leading-[18px]">
-                        Verifying port connection status.
-                        <br /> <code class="text-purple-100">process can take up to (5s)</code>
                     </Typography>
                 </Card>
             </Match>

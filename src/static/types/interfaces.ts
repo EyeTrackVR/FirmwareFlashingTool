@@ -145,7 +145,6 @@ export interface AppStoreNotifications {
 
 export type IActivePort = {
     activePortName: string
-    autoSelect: boolean
 }
 
 export interface AppStoreAPI {
@@ -154,17 +153,13 @@ export interface AppStoreAPI {
     ghAPI: IGHRest
     firmwareType: string
     activeBoard: string
-    ssid: string
-    password: string
     apModeStatus: boolean
-    mdns: string
     trackerName: string
     channelMode: CHANNEL_TYPE
     manifestPath: string
     activePort: IActivePort
     ports: IDropdownList[]
     isActivePortValid: boolean
-    availableNetworks: any[] // add types later
 }
 
 export interface IOpenModal {
@@ -184,32 +179,6 @@ export interface UiStore {
 export interface ISignal {
     requestToSend: boolean
     dataTerminalReady: boolean
-}
-
-export interface INavigatorPort extends Navigator {
-    readable: {
-        locked: boolean
-        pipeThrough: (
-            data: TextDecoderStream,
-            object?: unknown,
-        ) => {
-            pipeThrough: (
-                data: TransformStream,
-                object?: unknown,
-            ) => {
-                pipeTo: (data: WritableStream, object?: unknown) => Promise<void>
-            }
-        }
-    }
-    setSignals: ({ requestToSend, dataTerminalReady }: ISignal) => Promise<void>
-    open: ({ baudRate }: { baudRate: number }) => Promise<void>
-    close: () => Promise<void>
-}
-
-export interface INavigator extends Navigator {
-    serial: {
-        requestPort: () => Promise<INavigatorPort>
-    }
 }
 
 export interface IChannelOptions {

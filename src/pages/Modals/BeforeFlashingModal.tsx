@@ -1,11 +1,11 @@
-import { Component } from 'solid-js'
 import { Button } from '@components/Buttons/Button'
+import CheckboxButton from '@components/Buttons/Checkbox'
 import { Modal } from '@components/Modal'
 import ModalHeader from '@components/ModalHeader'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { beforeFlashingModalID } from '@src/static'
 import Typography from '@components/Typography'
-import CheckboxButton from '@components/Buttons/Checkbox'
+import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { BEFORE_FLASHING_MODE } from '@src/static'
+import { Component } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -21,7 +21,7 @@ const BeforeFlashingModal: Component<IProps> = (props) => {
     return (
         <Modal
             version={props.version}
-            id={beforeFlashingModalID}
+            id={BEFORE_FLASHING_MODE}
             isActive={props.isActive}
             onClickCloseModal={props.onClickClose}
             onClickHeader={props.onClickHeader}>
@@ -62,7 +62,7 @@ const BeforeFlashingModal: Component<IProps> = (props) => {
                             isActive={true}
                             label="Install Openiris"
                             onClick={() => {
-                                const el = document.getElementById(beforeFlashingModalID)
+                                const el = document.getElementById(BEFORE_FLASHING_MODE)
                                 if (el instanceof HTMLDialogElement) {
                                     el.close()
                                 }

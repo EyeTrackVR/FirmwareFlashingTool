@@ -5,8 +5,7 @@ import ModalHeader from '@components/ModalHeader'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
-import { beforeSelectBoardModalID, SELECT_PORT_MODAL_ID } from '@src/static'
-import { BsSearch } from 'solid-icons/bs'
+import { SELECT_PORT_MODAL_ID } from '@src/static'
 import { Component, createMemo, createSignal, For, Show } from 'solid-js'
 
 export interface IProps {

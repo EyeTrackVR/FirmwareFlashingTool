@@ -1,5 +1,4 @@
 import { ACTION, FLASH_STATUS, FLASH_STEP, FLASH_WIZARD_STEPS } from '@interfaces/enums'
-import { espApi } from '@src/esp/api'
 import { logs as logsDescription } from '@src/static/ui/logs'
 import { trimLogsByTextLength } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
@@ -14,6 +13,7 @@ import {
     setProcessStatus,
     updateFirmwareState,
 } from './terminal'
+import { getApi } from '@src/esp'
 
 export const openDocs = () => {
     const currentMainWindow = getCurrent()
@@ -62,6 +62,7 @@ const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<v
     try {
         await action()
     } catch (error) {
+        console.log(error)
         setAction(ACTION.NEXT)
         setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS_FAILED)
 
@@ -94,10 +95,9 @@ const runStep = async (step: FLASH_STEP, action: () => Promise<void>): Promise<v
 
 export const installOpenIris = async (portName: string, downloadManifest: () => Promise<void>) => {
     clearLogs()
-
     try {
         await runStep(FLASH_STEP.REQUEST_PORT, async () => {
-            await espApi.testConnection(portName)
+            await getApi().validateConnection(portName)
         })
 
         await runStep(FLASH_STEP.MANIFEST_PATH, async () => {
@@ -105,7 +105,7 @@ export const installOpenIris = async (portName: string, downloadManifest: () => 
         })
 
         await runStep(FLASH_STEP.FLASH_FIRMWARE, async () => {
-            await espApi.flash(portName, (progress) => {
+            await getApi().flash(portName, (progress) => {
                 setInstallationProgress(progress)
                 if (progress >= 100) {
                     setAction(ACTION.NEXT)
@@ -116,82 +116,73 @@ export const installOpenIris = async (portName: string, downloadManifest: () => 
     } catch {
         return
     }
-
     setProcessStatus(false)
 }
 
 export const getFirmwareLogs = async (portName: string, signal?: AbortController) => {
-    clearLogs()
-
-    const logs: string[] = []
-    const SLICE_SIZE = 100
-    let slicer = SLICE_SIZE
-    const chunkSize = 10000
-    let tries = 5
-
-    function processLogsInChunks(data: string, chunkSize: number) {
-        let index = 0
-        function processChunk() {
-            const end = Math.min(index + chunkSize, data.length)
-            const chunk = data.slice(index, end)
-            const trimmedChunk = trimLogsByTextLength(chunk, 106)
-            logs.push(...trimmedChunk)
-            index += chunkSize
-            if (index < data.length) {
-                requestAnimationFrame(processChunk)
-            }
-        }
-        processChunk()
-    }
-
-    const interval = setInterval(() => {
-        if (signal?.signal?.aborted) {
-            slicer = SLICE_SIZE
-            tries = 5
-            clearInterval(interval)
-            return
-        }
-
-        if (slicer >= detailedLogs().length) {
-            tries--
-        }
-
-        const data = logs.slice(slicer - SLICE_SIZE, slicer)
-        setLogs(FLASH_STEP.LOGS, data, true)
-
-        if (!tries && !signal?.signal?.aborted) {
-            if (!detailedLogs().length) {
-                updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED)
-            } else {
-                updateState(FLASH_STEP.LOGS, FLASH_STATUS.SUCCESS)
-            }
-            clearInterval(interval)
-        }
-
-        slicer += SLICE_SIZE
-    }, 1500)
-
-    try {
-        await runStep(FLASH_STEP.LOGS, async () => {
-            await espApi.streamLogs(
-                portName,
-                (data) => {
-                    setDetailedLogs(data)
-                    processLogsInChunks(data, chunkSize)
-                },
-                async (err, hasOpenirisInstallation) => {
-                    clearInterval(interval)
-                    if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
-                    if (!hasOpenirisInstallation) {
-                        updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
-                    } else {
-                        updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
-                    }
-                },
-                signal?.signal,
-            )
-        })
-    } catch {
-        return
-    }
+    // clearLogs()
+    // const logs: string[] = []
+    // const SLICE_SIZE = 100
+    // let slicer = SLICE_SIZE
+    // const chunkSize = 10000
+    // let tries = 5
+    // function processLogsInChunks(data: string, chunkSize: number) {
+    //     let index = 0
+    //     function processChunk() {
+    //         const end = Math.min(index + chunkSize, data.length)
+    //         const chunk = data.slice(index, end)
+    //         const trimmedChunk = trimLogsByTextLength(chunk, 106)
+    //         logs.push(...trimmedChunk)
+    //         index += chunkSize
+    //         if (index < data.length) {
+    //             requestAnimationFrame(processChunk)
+    //         }
+    //     }
+    //     processChunk()
+    // }
+    // const interval = setInterval(() => {
+    //     if (signal?.signal?.aborted) {
+    //         slicer = SLICE_SIZE
+    //         tries = 5
+    //         clearInterval(interval)
+    //         return
+    //     }
+    //     if (slicer >= detailedLogs().length) {
+    //         tries--
+    //     }
+    //     const data = logs.slice(slicer - SLICE_SIZE, slicer)
+    //     setLogs(FLASH_STEP.LOGS, data, true)
+    //     if (!tries && !signal?.signal?.aborted) {
+    //         if (!detailedLogs().length) {
+    //             updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED)
+    //         } else {
+    //             updateState(FLASH_STEP.LOGS, FLASH_STATUS.SUCCESS)
+    //         }
+    //         clearInterval(interval)
+    //     }
+    //     slicer += SLICE_SIZE
+    // }, 1500)
+    // try {
+    //     await runStep(FLASH_STEP.LOGS, async () => {
+    //         await espApi.streamLogs(
+    //             portName,
+    //             (data) => {
+    //                 setDetailedLogs(data)
+    //                 processLogsInChunks(data, chunkSize)
+    //             },
+    //             async (err, hasOpenirisInstallation) => {
+    //                 clearInterval(interval)
+    //                 if (firmwareState()[FLASH_STEP.LOGS]?.status === FLASH_STATUS.SUCCESS) return
+    //                 if (!hasOpenirisInstallation) {
+    //                     updateState(FLASH_STEP.LOGS, FLASH_STATUS.ABORTED)
+    //                 } else {
+    //                     updateState(FLASH_STEP.LOGS, FLASH_STATUS.FAILED, err)
+    //                 }
+    //             },
+    //             signal?.signal,
+    //         )
+    //     })
+    // } catch {
+    //     return
+    // }
 }

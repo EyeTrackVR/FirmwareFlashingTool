@@ -1,4 +1,4 @@
-import { defaultMdnsLength, mdnsLength } from '@src/static'
+import { DEFAULT_MDNS_LENGTH, MDNS_LENGTH } from '@src/static'
 
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
@@ -17,9 +17,9 @@ export const isEmpty = <T>(obj: object | Array<T>) => {
 }
 
 export const shortMdnsAddress = (text: string) => {
-    if (text.length < defaultMdnsLength) return text
-    const firstHalf = text.slice(0, mdnsLength)
-    const secondHalf = text.slice(text.length - mdnsLength, text.length)
+    if (text.length < DEFAULT_MDNS_LENGTH) return text
+    const firstHalf = text.slice(0, MDNS_LENGTH)
+    const secondHalf = text.slice(text.length - MDNS_LENGTH, text.length)
     return `${firstHalf}...${secondHalf}`
 }
 

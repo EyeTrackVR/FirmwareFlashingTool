@@ -2,8 +2,9 @@ import { ENotificationType, FLASH_STATUS, MODAL_TYPE } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
-import { espApi, UsbSerialPortInfo } from '@src/esp/api'
-import { BoardConnectionMethod, DEFAULT_PORT_NAME, usb } from '@src/static'
+import { getApi } from '@src/esp'
+import { UsbSerialPortInfo } from '@src/esp/interfaces/types'
+import { BOARD_CONNECTION_METHOD, DEFAULT_PORT_NAME, USB } from '@src/static'
 import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -51,7 +52,7 @@ export const ManageFlashFirmware = () => {
 
         if (!availablePorts.length) {
             if (!hasCleared) {
-                setActivePortName(DEFAULT_PORT_NAME, true)
+                setActivePortName(DEFAULT_PORT_NAME)
                 setPorts([])
                 hasCleared = true
             }
@@ -68,10 +69,6 @@ export const ManageFlashFirmware = () => {
                     : `${port.vid}:${port.pid}`,
         }))
 
-        if (activePort().autoSelect) {
-            setActivePortName(portList[0]?.label ?? DEFAULT_PORT_NAME, true)
-        }
-
         setPorts(portList)
     }
 
@@ -85,7 +82,7 @@ export const ManageFlashFirmware = () => {
 
     createEffect(() => {
         const interval = setInterval(() => {
-            espApi.availablePorts().then(loadPorts).catch(onLoadError)
+            getApi().getAvailablePorts().then(loadPorts).catch(onLoadError)
         }, 250)
 
         onCleanup(() => clearInterval(interval))
@@ -98,7 +95,7 @@ export const ManageFlashFirmware = () => {
     })
 
     const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb)
+        return activeBoard().includes(USB)
     })
 
     const notification = createMemo(() => {
@@ -110,7 +107,7 @@ export const ManageFlashFirmware = () => {
     })
 
     const board = createMemo(() => {
-        const connectionMethod = BoardConnectionMethod[activeBoard().replace('_release', '')]
+        const connectionMethod = BOARD_CONNECTION_METHOD[activeBoard().replace('_release', '')]
         return connectionMethod ? `${activeBoard()} (${connectionMethod})` : activeBoard()
     })
 
@@ -131,7 +128,7 @@ export const ManageFlashFirmware = () => {
             firmwareVersion={`Openiris-${getFirmwareVersion()}`}
             firmwareState={flashFirmwareState().filter((el) => el?.status !== FLASH_STATUS.NONE)}
             onClickPort={(port) => {
-                setActivePortName(port, false)
+                setActivePortName(port)
                 const elem: Element | null = document.activeElement
                 if (elem instanceof HTMLElement) {
                     elem?.blur()

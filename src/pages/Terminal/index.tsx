@@ -1,15 +1,11 @@
-import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { Button } from '@components/Buttons/Button'
 import { Footer } from '@components/Footer'
-import PortDropdown from '@components/Dropdown/PortDropdown'
 import Firmware from '@components/Terminal/Firmware'
 import Step from '@components/Terminal/Step'
 import TerminalHeader from '@components/Terminal/TerminalHeader'
 import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 import { IActivePort, IDropdownList, IFirmwareState } from '@interfaces/interfaces'
-import { VirtualList } from '@pages/VirtualList'
-import { DEFAULT_PORT_NAME } from '@src/static'
-import { shortName } from '@src/utils'
+import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 
 export interface IProps {
     onClickInstallOpenIris: () => void
@@ -46,24 +42,6 @@ const Terminal: Component<IProps> = (props) => {
         setOpen({})
         action()
     }
-
-    const renderPortDropdown = (additionalClass: string) => (
-        <PortDropdown
-            class={additionalClass}
-            onClick={(port) => props.onClickPort(port.label)}
-            data={props.ports}
-            isScrollbar={props.ports.length >= 4}
-            label={shortName(
-                props.activePort.autoSelect
-                    ? DEFAULT_PORT_NAME
-                    : props.activePort.activePortName.toLowerCase(),
-                3,
-            )}
-            activeElement={
-                props.activePort.autoSelect ? DEFAULT_PORT_NAME : props.activePort.activePortName
-            }
-        />
-    )
 
     return (
         <div class="flex flex-col justify-between h-full gap-12 pt-24 px-24">
@@ -122,11 +100,11 @@ const Terminal: Component<IProps> = (props) => {
                                                     </div>
                                                     <Show when={open()[element.step]}>
                                                         <div class="px-12">
-                                                            <VirtualList
+                                                            {/* <VirtualList
                                                                 items={
                                                                     props.logs[element.step] ?? []
                                                                 }
-                                                            />
+                                                            /> */}
                                                             <div class="w-full h-[1px] border-b-[1px] border-solid border-black-800" />
                                                         </div>
                                                     </Show>
@@ -140,22 +118,19 @@ const Terminal: Component<IProps> = (props) => {
                     </div>
                     <div class="flex gap-12 max-[1027px]:flex-col flex-row w-full">
                         <div class="flex gap-12">
-                            <Button
+                            {/* <Button
                                 type="button"
                                 isActive={true}
                                 label="Install Openiris"
                                 size="max-[1027px]:w-[92%]"
                                 onClick={handleClick(props.onClickInstallOpenIris)}
-                            />
+                            /> */}
                             <Button
                                 type="button"
                                 label="Show logs"
                                 size="max-[1027px]:hidden"
                                 onClick={handleClick(props.onClickGetLogs)}
                             />
-                            {renderPortDropdown(
-                                'max-[1027px]:visible !w-full !h-full min-[1028px]:hidden',
-                            )}
                         </div>
                         <div class="flex w-full justify-end gap-12">
                             <Button
@@ -164,12 +139,12 @@ const Terminal: Component<IProps> = (props) => {
                                 size="max-[1027px]:w-full"
                                 onClick={props.onClickDownloadLogs}
                             />
-                            <Button
+                            {/* <Button
                                 size="max-[1027px]:visible w-full min-[1028px]:hidden"
                                 type="button"
                                 label="Show logs"
                                 onClick={handleClick(props.onClickGetLogs)}
-                            />
+                            /> */}
                             <Show when={!props.isUSBBoard}>
                                 <Button
                                     type="button"
@@ -195,7 +170,6 @@ const Terminal: Component<IProps> = (props) => {
                                 />
                             </div>
                         </Show>
-                        {renderPortDropdown('max-[1027px]:hidden !w-auto min-[1028px]:visible')}
                     </div>
                 </div>
             </div>

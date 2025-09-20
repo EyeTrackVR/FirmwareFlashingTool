@@ -46,17 +46,14 @@ interface AppAPIContext {
     getRESTDevice: Accessor<string>
     getRESTResponse: Accessor<object>
     loader: Accessor<boolean>
-    ssid: Accessor<string>
     apModeStatus: Accessor<boolean>
-    password: Accessor<string>
-    mdns: Accessor<string>
     isActivePortValid: Accessor<boolean>
     channelMode: Accessor<CHANNEL_TYPE>
     setRESTStatus: (status: RESTStatus) => void
 
     setRESTDevice: (device: string) => void
     setRESTResponse: (response: object) => void
-    activePort: Accessor<{ activePortName: string; autoSelect: boolean }>
+    activePort: Accessor<{ activePortName: string }>
     //********************************* endpoints *************************************/
     getEndpoints: Accessor<Map<string, IEndpoint>>
     getEndpoint: (key: string) => IEndpoint
@@ -69,14 +66,12 @@ interface AppAPIContext {
     useOTA: (firmwareName: string, device: string) => Promise<void>
     setActiveBoard: (board: string) => void
     setIsActivePortValid: (status: boolean) => void
-    setActivePortName: (portName: string, autoSelect: boolean) => void
-    setNetwork: (ssid: string, password: string, mdns: string) => void
+    setActivePortName: (portName: string) => void
     setChannelMode: (channel: CHANNEL_TYPE) => void
     setAPModeStatus: (status: boolean) => void
     saveManifestPath: (url: string) => void
     confirmFirmwareSelection: (board: string) => void
     manifestPath: Accessor<string>
-    availableNetworks: Accessor<any> // add types later
     ports: Accessor<IDropdownList[]>
     setPorts: (ports: IDropdownList[]) => void
 }
@@ -115,20 +110,15 @@ export const AppAPIProvider: Component<Context> = (props) => {
             assets: [],
             version: '',
         },
-        ssid: '',
-        password: '',
         firmwareType: '',
         trackerName: '',
         loader: false,
         apModeStatus: false,
-        mdns: '',
         manifestPath: '',
         activePort: {
             activePortName: '',
-            autoSelect: true,
         },
         ports: [],
-        availableNetworks: [],
     }
 
     const [state, setState] = createStore<AppStoreAPI>(defaultState)
@@ -225,22 +215,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
             }),
         )
     }
-    const setActivePortName = (activePortName: string, autoSelect: boolean) => {
+    const setActivePortName = (activePortName: string) => {
         setState(
             produce((s) => {
                 s.activePort = {
                     activePortName,
-                    autoSelect,
                 }
-            }),
-        )
-    }
-    const setNetwork = (ssid: string, password: string, mdns: string) => {
-        setState(
-            produce((s) => {
-                s.ssid = ssid
-                s.password = password
-                s.mdns = mdns
             }),
         )
     }
@@ -261,14 +241,12 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
 
-    const availableNetworks = createMemo(() => apiState().availableNetworks)
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
     const getFirmwareType = createMemo(() => apiState().firmwareType)
     const trackerName = createMemo(() => apiState().trackerName)
     const loader = createMemo(() => apiState().loader)
-    const mdns = createMemo(() => apiState().mdns)
     const channelMode = createMemo(() => apiState().channelMode)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
     const manifestPath = createMemo(() => apiState().manifestPath)
@@ -302,8 +280,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const getRESTStatus = createMemo(() => apiState().restAPI.status)
     const getRESTDevice = createMemo(() => apiState().restAPI.device)
     const getRESTResponse = createMemo(() => apiState().restAPI.response)
-    const ssid = createMemo(() => apiState().ssid)
-    const password = createMemo(() => apiState().password)
     const ports = createMemo(() => apiState().ports)
     const getEndpoints = createMemo(() => endpointsMap)
     const getEndpoint = (key: string) =>
@@ -654,9 +630,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
     return (
         <AppAPIContext.Provider
             value={{
-                ssid,
-                password,
-                setNetwork,
                 setActiveBoard,
                 setIsActivePortValid,
                 isActivePortValid,
@@ -688,7 +661,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 apModeStatus,
                 setAPModeStatus,
                 channelMode,
-                mdns,
                 setChannelMode,
                 saveManifestPath,
                 manifestPath,
@@ -697,7 +669,6 @@ export const AppAPIProvider: Component<Context> = (props) => {
                 trackerName,
                 ports,
                 setPorts,
-                availableNetworks,
             }}>
             {props.children}
         </AppAPIContext.Provider>
