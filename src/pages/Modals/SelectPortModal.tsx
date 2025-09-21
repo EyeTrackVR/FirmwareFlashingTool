@@ -10,7 +10,7 @@ import { Component, createMemo, createSignal, For, Show } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
-    onClickConfirmBoard: (board: string) => void
+    onClickConfirmPort: (board: string) => void
     onClickClose: () => void
     isActive: boolean
     version: string
@@ -75,7 +75,7 @@ const SelectPortModal: Component<IProps> = (props) => {
                                         if (el instanceof HTMLDialogElement) {
                                             el.close()
                                         }
-                                        props.onClickConfirmBoard(data.label)
+                                        props.onClickConfirmPort(data.label)
                                     }}
                                 />
                             )}

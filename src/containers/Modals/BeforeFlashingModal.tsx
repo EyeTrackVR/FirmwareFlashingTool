@@ -6,6 +6,7 @@ import {
     TITLEBAR_ACTION,
 } from '@interfaces/enums'
 import BeforeFlashingModal from '@pages/Modals/BeforeFlashingModal'
+import { logger } from '@src/logger'
 import { setAction, setStep } from '@store/animation/animation'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
@@ -57,6 +58,11 @@ const BeforeFlashingModalContainer = () => {
             }}
             onClickInstallOpeniris={() => {
                 batch(() => {
+                    logger.infoStart('BeforeFlashingModalContainer')
+                    logger.add('button: onClickInstallOpeniris')
+                    logger.add(`firmware type : ${getFirmwareType()}`)
+                    logger.add(`active port : ${activePortName()}`)
+
                     setAction(ACTION.NEXT)
                     setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS)
                     setOpenModal({ open: false, type: MODAL_TYPE.NONE })
@@ -69,9 +75,13 @@ const BeforeFlashingModalContainer = () => {
                     })
                     return true
                 }
-                setAbortController('openiris')
-                setProcessStatus(true)
-                restartFirmwareState()
+                batch(() => {
+                    logger.infoEnd('BeforeFlashingModalContainer')
+                    setAbortController('openiris')
+                    setProcessStatus(true)
+                    restartFirmwareState()
+                })
+
                 installOpenIris(activePortName(), async () => {
                     await downloadAsset(getFirmwareType())
                 }).catch(() => ({}))

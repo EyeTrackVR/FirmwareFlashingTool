@@ -5,7 +5,6 @@ import {
     FLASH_MODE,
     FLASH_WIZARD_STEPS,
     PORT_WIZARD_STEPS,
-    WIRED_WIZARD_STEPS,
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import SwipeAnimation from '@src/Animation'

@@ -1,11 +1,12 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import SelectBoardModal from '@pages/Modals/SelectBoardModal'
+import { logger } from '@src/logger'
 import { BOARD_DESCRIPTION, RECOMMENDED_BOARDS } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
-import { Accessor, createMemo } from 'solid-js'
+import { Accessor, batch, createMemo } from 'solid-js'
 import { trace } from 'tauri-plugin-log-api'
 const SelectBoardModalContainer = () => {
     const { confirmFirmwareSelection, getFirmwareAssets, activeBoard } = useAppAPIContext()
@@ -75,8 +76,14 @@ const SelectBoardModalContainer = () => {
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClickConfirmBoard={(board) => {
-                confirmFirmwareSelection(board)
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                batch(() => {
+                    logger.infoStart('SelectBoardModalContainer')
+                    logger.add('button: onClickConfirmBoard')
+                    logger.add(`Selected board: ${board}`)
+                    confirmFirmwareSelection(board)
+                    setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                    logger.infoEnd('SelectBoardModalContainer')
+                })
             }}
         />
     )

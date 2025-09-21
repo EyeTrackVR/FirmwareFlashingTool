@@ -329,10 +329,8 @@ export class EspApiCore {
         password: string,
         channel: number,
     ) {
-        console.log(1)
         await this._switchDeviceMode(port, 'wifi')
 
-        console.log(2)
         const commands = [
             { command: COMMAND.SET_MDNS, data: { hostname: mdns } },
             {

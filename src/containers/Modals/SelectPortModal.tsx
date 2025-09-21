@@ -3,10 +3,11 @@ import { IDropdownList } from '@interfaces/interfaces'
 import SelectPortModal from '@pages/Modals/SelectPortModal'
 import { getApi } from '@src/esp'
 import { UsbSerialPortInfo } from '@src/esp/interfaces/types'
+import { logger } from '@src/logger'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
 import { appWindow } from '@tauri-apps/api/window'
-import { createEffect, createMemo, on, onCleanup } from 'solid-js'
+import { batch, createEffect, createMemo, on, onCleanup } from 'solid-js'
 
 const SelectPortModalContainer = () => {
     const { setActivePortName, activePort, ports, setPorts } = useAppAPIContext()
@@ -77,9 +78,15 @@ const SelectPortModalContainer = () => {
             onClickClose={() => {
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
-            onClickConfirmBoard={(port) => {
-                setActivePortName(port)
-                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+            onClickConfirmPort={(port) => {
+                batch(() => {
+                    logger.infoStart('SelectPortModalContainer')
+                    logger.add('onClickConfirmPort')
+                    logger.add(`Selected port: ${port}`)
+                    setActivePortName(port)
+                    setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                    logger.infoEnd('SelectPortModalContainer')
+                })
             }}
         />
     )

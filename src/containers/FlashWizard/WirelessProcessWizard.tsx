@@ -10,6 +10,7 @@ import {
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
+import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
@@ -121,7 +122,11 @@ const WirelessProcessWizard = () => {
                         batch(() => {
                             setAction(ACTION.NEXT)
                             setStep(WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS)
+                            logger.infoStart('Setup wireless connection')
+                            logger.add('active port: ' + activePort().activePortName)
+                            logger.add('mdns: ' + mdns())
                         })
+
                         getApi()
                             .setupWirelessConnection(
                                 activePort().activePortName,
@@ -139,13 +144,18 @@ const WirelessProcessWizard = () => {
                                 })
                             })
                             .catch((err) => {
-                                console.log('yep error', err)
                                 batch(() => {
+                                    logger.errorStart('Verify Port connection ERROR')
+                                    logger.add(err instanceof Error ? err.message : `${err}`)
+                                    logger.errorEnd('Verify Port connection ERROR')
                                     setAction(ACTION.NEXT)
                                     setStep(
                                         WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS_FAILED,
                                     )
                                 })
+                            })
+                            .finally(() => {
+                                logger.infoEnd('Setup wireless connection')
                             })
                     }}>
                     <div class="flex flex-col gap-6">

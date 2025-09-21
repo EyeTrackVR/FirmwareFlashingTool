@@ -1,6 +1,8 @@
 import SelectButton from '@components/Buttons/SelectButton'
 import Card from '@components/Cards/Card'
 import { ACTION, FLASH_WIZARD_STEPS, INIT_WIZARD_STEPS, MODAL_TYPE } from '@interfaces/enums'
+import { logger } from '@src/logger'
+import { download } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
@@ -96,14 +98,11 @@ const SetupProcessWizard = () => {
                             })
                             return
                         }
-                        if (!hideModal()) {
-                            setOpenModal({
-                                open: true,
-                                type: MODAL_TYPE.BEFORE_FLASHING,
-                            })
-                            return true
-                        }
+
                         batch(() => {
+                            logger.infoStart('INIT_WIZARD_STEPS.SELECT_PORT')
+                            logger.add(`firmware type : ${getFirmwareType()}`)
+                            logger.add(`active port : ${activePort().activePortName}`)
                             setAction(ACTION.NEXT)
                             setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS)
                             setAbortController('openiris')

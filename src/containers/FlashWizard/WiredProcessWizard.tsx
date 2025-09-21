@@ -8,6 +8,7 @@ import {
     WIRED_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
+import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
@@ -40,6 +41,9 @@ const WiredProcessWizard = () => {
                     }}
                     onClickPrimary={() => {
                         batch(() => {
+                            logger.infoStart('setupWiredConnection')
+                            logger.add('tracker name: ' + trackerName())
+                            logger.add('active port: ' + activePort().activePortName)
                             setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS)
                             setIsPendingUpdate(true)
                             setAction(ACTION.NEXT)
@@ -55,6 +59,9 @@ const WiredProcessWizard = () => {
                             })
                             .catch((err) => {
                                 batch(() => {
+                                    logger.errorStart('setupWiredConnection ERROR')
+                                    logger.add(err.message)
+                                    logger.errorEnd('setupWiredConnection ERROR')
                                     setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_FAILED)
                                     setAction(ACTION.NEXT)
                                     setError(err.message)
@@ -62,6 +69,7 @@ const WiredProcessWizard = () => {
                             })
                             .finally(() => {
                                 setIsPendingUpdate(false)
+                                logger.infoEnd('setupWiredConnection')
                             })
                     }}>
                     <Typography color="blue" text="caption" class="leading-[18px]">

@@ -1,6 +1,7 @@
 import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { isValidChannel } from '@interfaces/utils'
 import DevtoolsModal from '@pages/Modals/DevtoolsModal'
+import { logger } from '@src/logger'
 import { CHANNEL_OPTIONS } from '@src/static'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppUIContext } from '@store/context/ui'
@@ -36,6 +37,8 @@ const DevtoolsModalContainer = () => {
                 setOpenModal({ open: false, type: MODAL_TYPE.NONE })
             }}
             onClickSetChannelMode={(label) => {
+                logger.infoStart('DevtoolsModalContainer')
+                logger.add(`Selected release: ${label} onClickSetChannelMode`)
                 if (!isValidChannel(label)) {
                     return
                 }
@@ -44,6 +47,7 @@ const DevtoolsModalContainer = () => {
                 if (elem instanceof HTMLElement) {
                     elem?.blur()
                 }
+                logger.infoEnd('SelectPortModalContainer')
             }}
         />
     )

@@ -11,6 +11,7 @@ import {
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
+import { logger } from '@src/logger'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep, selectedMode } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
@@ -26,6 +27,11 @@ const SelectPortWizard = () => {
 
     const onClickVerifyPortConnection = async () => {
         batch(() => {
+            logger.infoStart('Verify Port connection')
+            logger.add('active port: ' + activePort().activePortName)
+            logger.add('selected mode: ' + selectedMode())
+            logger.add('is active port valid: ' + isActivePortValid())
+
             setAction(ACTION.NEXT)
             setStep(PORT_WIZARD_STEPS.PORT_CHECK_PORT_CONNECTION)
         })
@@ -56,15 +62,14 @@ const SelectPortWizard = () => {
                         const networks = await api.getAvailableNetworks(activePort().activePortName)
                         setAvailableNetworks(networks)
                     } catch (err) {
-                        console.log(err)
                         setAvailableNetworks([])
                     }
+
                     batch(() => {
                         setAction(ACTION.NEXT)
                         setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SELECT_NETWORK)
                     })
                 }
-                return
             } else {
                 batch(() => {
                     setAction(ACTION.NEXT)
@@ -73,13 +78,17 @@ const SelectPortWizard = () => {
                 })
             }
         } catch (err) {
-            console.log(err)
             batch(() => {
+                logger.errorStart('Verify Port connection ERROR')
+                logger.add(err instanceof Error ? err.message : `${err}`)
+                logger.errorEnd('Verify Port connection ERROR')
                 setAction(ACTION.NEXT)
                 setActivePortName('')
                 setStep(PORT_WIZARD_STEPS.PORT_SELECT_PORT)
             })
         }
+
+        logger.infoEnd('Verify Port connection')
     }
 
     return (
