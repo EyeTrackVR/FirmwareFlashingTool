@@ -69,11 +69,15 @@ export const theme = {
             200: '#50e897',
             100: '#92FA81',
         },
+        orange: {
+            100: '#D18F52',
+        },
         yellow: {
             100: '#E8FA81',
         },
         lightBlue: {
             300: '#79A0CF',
+            100: '#8DB2BF',
         },
         brown: {
             '900': '#1b1b1f',
@@ -81,6 +85,7 @@ export const theme = {
             '400': '#00101a',
             '300': '#2B2B2B',
         },
+
         blue: {
             900: '#1F3042',
             800: '#03233a',

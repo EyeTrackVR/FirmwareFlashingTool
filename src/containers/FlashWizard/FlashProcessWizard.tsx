@@ -1,6 +1,11 @@
 import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
-import { ACTION, FLASH_WIZARD_STEPS, INIT_WIZARD_STEPS } from '@interfaces/enums'
+import {
+    ACTION,
+    FLASH_WIZARD_STEPS,
+    INIT_WIZARD_STEPS,
+    TERMINAL_WIZARD_STEPS,
+} from '@interfaces/enums'
 import { IFirmwareState } from '@interfaces/interfaces'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
@@ -55,7 +60,10 @@ const FlashProcessWizard = () => {
                         })
                     }}
                     onClickSecondary={() => {
-                        // connect terminal steps later
+                        batch(() => {
+                            setAction(ACTION.NEXT)
+                            setStep(TERMINAL_WIZARD_STEPS.TERMINAL_BEFORE_PROCEEDING)
+                        })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
@@ -98,8 +106,10 @@ const FlashProcessWizard = () => {
                     }}
                     label="Failed to flash board">
                     <Typography color="red">
-                        {flashFirmwareState()?.label ??
-                            'Something went wrong, please contact with us on discord'}
+                        {!flashFirmwareState()?.label
+                            ? 'Something went wrong, please contact with us on discord'
+                            : (flashFirmwareState()?.label ??
+                              'Something went wrong, please try again')}
                     </Typography>
                 </Card>
             </Match>

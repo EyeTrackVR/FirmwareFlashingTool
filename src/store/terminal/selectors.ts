@@ -6,7 +6,6 @@ export const {
     percentageProgress,
     detailedLogs,
     isActiveProcess,
-    logs,
     isSoftwareDownloaded,
     simulationAbortController,
 } = createStoreSelectors(terminalState)

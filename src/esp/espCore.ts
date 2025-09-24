@@ -29,7 +29,7 @@ export class EspApiClientProvider extends EspApiCore {
     public async streamLogs(
         portName: string,
         callback: (logs: string) => void,
-        errorCallback: (error: Error, hasOpenirisInstallation?: boolean) => void,
+        errorCallback: (error: Error) => void,
         signal?: AbortSignal,
     ) {
         return this._streamLogs(portName, callback, errorCallback, signal)

@@ -31,7 +31,6 @@ const SelectPortWizard = () => {
             logger.add('active port: ' + activePort().activePortName)
             logger.add('selected mode: ' + selectedMode())
             logger.add('is active port valid: ' + isActivePortValid())
-
             setAction(ACTION.NEXT)
             setStep(PORT_WIZARD_STEPS.PORT_CHECK_PORT_CONNECTION)
         })

@@ -1,14 +1,12 @@
 import Typography from '@components/Typography'
 import { Component, Show } from 'solid-js'
-
 export interface IProps {
     onClick: () => void
     label: string
     description?: string
     isActive?: boolean
 }
-
-export const DefaultBoard: Component<IProps> = (props) => {
+const OptionButton: Component<IProps> = (props) => {
     return (
         <button
             classList={{
@@ -34,4 +32,4 @@ export const DefaultBoard: Component<IProps> = (props) => {
     )
 }
 
-export default DefaultBoard
+export default OptionButton

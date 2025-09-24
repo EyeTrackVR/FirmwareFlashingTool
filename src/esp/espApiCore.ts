@@ -95,8 +95,6 @@ export class EspApiCore {
             portName: port,
         })
 
-        console.log(response.split('\n').filter((el) => el.match('networks')))
-
         return response
             .split('\n')
             .filter((el) => el.match('networks'))
@@ -114,7 +112,6 @@ export class EspApiCore {
             portName,
         })
 
-        console.log(response)
         const parsedResponse: { results: Array<string> } = JSON.parse(response)
         return parsedResponse.results.map((res) => apiTextParser<{ mode: string }>(res))[0].mode
     }
@@ -153,7 +150,6 @@ export class EspApiCore {
                 try {
                     const currentDeviceMode = await this._getDeviceMode(port)
 
-                    console.log(currentDeviceMode)
                     const isValidBefore =
                         JSON.stringify(currentDeviceMode.toLocaleLowerCase()) ===
                         JSON.stringify(deviceMode)
@@ -289,7 +285,7 @@ export class EspApiCore {
     public async _streamLogs(
         portName: string,
         callback: (logs: string) => void,
-        errorCallback: (error: Error, hasOpenirisInstallation?: boolean) => void,
+        errorCallback: (error: Error) => void,
         signal?: AbortSignal,
     ): Promise<void> {
         let buffer = ''

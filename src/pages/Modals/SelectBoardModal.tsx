@@ -1,7 +1,7 @@
-import DefaultBoard from '@components/Board/DefaultBoard'
+import OptionButton from '@components/Buttons/OptionButton'
 import Input from '@components/Inputs/Input'
-import { Modal } from '@components/Modal'
-import ModalHeader from '@components/ModalHeader'
+import { Modal } from '@components/Modal/Modal'
+import ModalHeader from '@components/Modal/ModalHeader'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
@@ -65,7 +65,7 @@ const SelectBoardModal: Component<IProps> = (props) => {
                         }>
                         <For each={filteredData()}>
                             {(data) => (
-                                <DefaultBoard
+                                <OptionButton
                                     {...data}
                                     isActive={data.label === props.activeBoard}
                                     onClick={() => {

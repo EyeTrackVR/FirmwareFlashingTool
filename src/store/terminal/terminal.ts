@@ -9,7 +9,6 @@ export interface ITerminalStore {
     percentageProgress: number // %
     isActiveProcess: boolean
     detailedLogs: string[]
-    logs: Record<FLASH_STEP, string[]> | object
 }
 
 export interface IFirmwareState {
@@ -29,7 +28,6 @@ const defaultState: ITerminalStore = {
     percentageProgress: 0, // %
     firmwareState: {},
     detailedLogs: [],
-    logs: {},
 }
 
 const [state, setState] = createStore<ITerminalStore>(defaultState)
@@ -58,25 +56,6 @@ export const setProcessStatus = (status: boolean) => {
     )
 }
 
-export const setLogs = (step: FLASH_STEP, log: string[], limitLogs?: boolean) => {
-    setState(
-        produce((s) => {
-            if (!limitLogs) {
-                s.logs[step] = [...(s.logs[step] ?? []), ...log]
-            } else {
-                const existingLogs = s.logs[step] ?? []
-                const totalLogs = existingLogs.length + log.length
-                const maxLogs = 5000
-
-                s.logs[step] =
-                    totalLogs > maxLogs
-                        ? [...existingLogs.slice(totalLogs - maxLogs), ...log]
-                        : [...existingLogs, ...log]
-            }
-        }),
-    )
-}
-
 export const restartFirmwareState = () => {
     setState(
         produce((s) => {
@@ -99,7 +78,6 @@ export const clearLogs = () => {
     setState(
         produce((s) => {
             s.firmwareState = {}
-            s.logs = {}
         }),
     )
 }
@@ -116,6 +94,14 @@ export const setDetailedLogs = (log: string) => {
     setState(
         produce((s) => {
             s.detailedLogs = [...s.detailedLogs, log]
+        }),
+    )
+}
+
+export const clearDetailedLogs = () => {
+    setState(
+        produce((s) => {
+            s.detailedLogs = []
         }),
     )
 }

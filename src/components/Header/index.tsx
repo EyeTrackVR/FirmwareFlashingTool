@@ -2,7 +2,6 @@ import DefaultButton from '@components/Buttons/DefaultButton'
 import Typography from '@components/Typography'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { classNames } from '@src/utils'
-import { FaSolidDownload } from 'solid-icons/fa'
 import { TbDatabaseExport } from 'solid-icons/tb'
 import { Component, Show } from 'solid-js'
 
@@ -25,7 +24,11 @@ const Header: Component<IProps> = (props) => {
                         data-tauri-drag-region>
                         <div class="flex flex-row items-center gap-4">
                             <Show when={!props.docs}>
-                                <div class="flex items-center gap-4 cursor-pointer">
+                                <div
+                                    class="flex items-center gap-4 cursor-pointer"
+                                    onClick={() => {
+                                        props.onClickHome?.()
+                                    }}>
                                     <img
                                         src={'images/logo.png'}
                                         class="min-w-[34px] min-h-[34px] w-[34px] h-[34px]"
@@ -47,18 +50,20 @@ const Header: Component<IProps> = (props) => {
                             </Show>
                         </div>
                         <div class="flex flex-row items-center">
-                            <div
-                                class="px-8 py-4 rounded-4 ml-4 cursor-pointer group hover:bg-transparentGreen-200 duration-150 transition-colors"
-                                onClick={() => {
-                                    props.onClickDownloadLogs()
-                                }}>
-                                <Typography
-                                    color="white"
-                                    text="small"
-                                    class="tracking-[0.08em] group-hover:text-green-200 duration-150 transition-colors">
-                                    <TbDatabaseExport />
-                                </Typography>
-                            </div>
+                            <Show when={!props.docs}>
+                                <div
+                                    class="px-8 py-4 rounded-4 ml-4 cursor-pointer group hover:bg-transparentGreen-200 duration-150 transition-colors"
+                                    onClick={() => {
+                                        props.onClickDownloadLogs()
+                                    }}>
+                                    <Typography
+                                        color="white"
+                                        text="small"
+                                        class="tracking-[0.08em] group-hover:text-green-200 duration-150 transition-colors">
+                                        <TbDatabaseExport />
+                                    </Typography>
+                                </div>
+                            </Show>
                             <DefaultButton
                                 class={classNames(
                                     'w-30 h-30 flex items-center justify-center transition group',

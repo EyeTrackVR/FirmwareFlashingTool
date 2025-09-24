@@ -1,6 +1,6 @@
-import DefaultBoard from '@components/Board/DefaultBoard'
-import { Modal } from '@components/Modal'
-import ModalHeader from '@components/ModalHeader'
+import OptionButton from '@components/Buttons/OptionButton'
+import { Modal } from '@components/Modal/Modal'
+import ModalHeader from '@components/Modal/ModalHeader'
 import { CHANNEL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
 import { IDropdownList } from '@interfaces/interfaces'
 import { DEVTOOLS_MODAL_ID } from '@src/static'
@@ -31,7 +31,7 @@ const DevtoolsModal: Component<IProps> = (props) => {
                 <div class="flex flex-col gap-12 w-full">
                     <For each={props.channelOptions}>
                         {(data) => (
-                            <DefaultBoard
+                            <OptionButton
                                 {...data}
                                 isActive={data.label === props.channelMode}
                                 onClick={() => {

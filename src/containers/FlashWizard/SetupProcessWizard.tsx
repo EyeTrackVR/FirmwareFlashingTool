@@ -1,8 +1,13 @@
 import SelectButton from '@components/Buttons/SelectButton'
 import Card from '@components/Cards/Card'
-import { ACTION, FLASH_WIZARD_STEPS, INIT_WIZARD_STEPS, MODAL_TYPE } from '@interfaces/enums'
+import {
+    ACTION,
+    FLASH_WIZARD_STEPS,
+    INIT_WIZARD_STEPS,
+    MODAL_TYPE,
+    TERMINAL_WIZARD_STEPS,
+} from '@interfaces/enums'
 import { logger } from '@src/logger'
-import { download } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
@@ -42,7 +47,7 @@ const SetupProcessWizard = () => {
                     onClickSecondary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(INIT_WIZARD_STEPS.INIT_BEFORE_PROCEEDING)
+                            setStep(TERMINAL_WIZARD_STEPS.TERMINAL_BEFORE_PROCEEDING)
                         })
                     }}
                     label="Flash Your Board"

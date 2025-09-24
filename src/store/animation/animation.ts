@@ -29,9 +29,9 @@ export interface IAnimationState {
 }
 
 const defaultState: IAnimationState = {
-    step: INIT_WIZARD_STEPS.PROCESS_INIT,
-    activeStep: INIT_WIZARD_STEPS.PROCESS_INIT,
-    prevStep: INIT_WIZARD_STEPS.PROCESS_INIT,
+    step: FLASH_WIZARD_STEPS.FLASH_PROCESS_SUCCESS,
+    activeStep: FLASH_WIZARD_STEPS.FLASH_PROCESS_SUCCESS,
+    prevStep: FLASH_WIZARD_STEPS.FLASH_PROCESS_SUCCESS,
     selectedMode: FLASH_MODE.WIRED,
     action: ACTION.NEXT,
     showComponent: true,
@@ -39,10 +39,10 @@ const defaultState: IAnimationState = {
 
 const [state, setState] = createStore<IAnimationState>(defaultState)
 
-export const setStep = (step: steps) => {
+export const setStep = (step: steps, savePrev: boolean = true) => {
     setState(
         produce((s) => {
-            s.prevStep = s.step
+            if (savePrev) s.prevStep = s.step
             s.step = step
         }),
     )

@@ -39,43 +39,6 @@ export const download = (data: string, filename: string) => {
     document.body.removeChild(anchor)
 }
 
-export const trimLogsByTextLength = (logs: string, maxLength: number): string[] => {
-    if (!logs.trim().length) return []
-    if (logs.length <= maxLength) return [logs]
-
-    const validLogs: string[] = []
-    let buffer = ''
-    let start = 0
-
-    while (start < logs.length) {
-        const end = Math.min(start + maxLength, logs.length)
-
-        let lastSpaceIndex = logs.lastIndexOf(' ', end)
-        if (lastSpaceIndex === -1 || lastSpaceIndex < start) {
-            lastSpaceIndex = end
-        }
-
-        const substring = logs.slice(start, lastSpaceIndex)
-
-        buffer += substring.trim()
-
-        if (buffer.length >= maxLength) {
-            validLogs.push(buffer)
-            buffer = ''
-        } else {
-            buffer += ' '
-        }
-
-        start = lastSpaceIndex + 1
-    }
-
-    if (buffer.trim().length > 0) {
-        validLogs.push(buffer.trim())
-    }
-
-    return validLogs
-}
-
 export const shortName = (label: string, size: number = 12): string => {
     if (label.length <= size * 2) return label
     return `${label.slice(0, size)}...${label.slice(-size)}`
