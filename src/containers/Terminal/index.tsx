@@ -5,7 +5,7 @@ import { download } from '@src/utils'
 import { useAppAPIContext } from '@store/context/api'
 import { useAppNotificationsContext } from '@store/context/notifications'
 import { useAppUIContext } from '@store/context/ui'
-import { getFirmwareLogs, openDocs } from '@store/terminal/actions'
+import { getFirmwareLogs } from '@store/terminal/actions'
 import { detailedLogs, simulationAbortController } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 import { createMemo } from 'solid-js'
@@ -25,7 +25,6 @@ export const TerminalContainer = () => {
             activePortName={activePortName()}
             ports={ports()}
             logs={detailedLogs()}
-            onClickOpenDocs={openDocs}
             firmwareVersion={`Openiris-${getFirmwareVersion()}`}
             onClickSelectPort={() => {
                 setOpenModal({ open: true, type: MODAL_TYPE.SELECT_PORT })

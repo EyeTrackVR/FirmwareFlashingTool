@@ -1,13 +1,21 @@
 import { Button } from '@components/Buttons/Button'
-import TerminalHeader from '@components/TerminalHeader'
 import Typography from '@components/Typography'
 import { IDropdownList } from '@interfaces/interfaces'
-import { Component, createMemo, createSignal, For, onCleanup, onMount } from 'solid-js'
+import {
+    Component,
+    createEffect,
+    createMemo,
+    createSignal,
+    For,
+    on,
+    onCleanup,
+    onMount,
+    Show,
+} from 'solid-js'
 
 export interface IProps {
     onClickDownloadLogs: () => void
     onClickSelectPort: () => void
-    onClickOpenDocs: () => void
     onClickGetLogs: () => void
     onClickBack: () => void
     logs: string[]
@@ -18,6 +26,7 @@ export interface IProps {
 
 const Terminal: Component<IProps> = (props) => {
     const [containerHeight, setContainerHeight] = createSignal(400)
+    const [loading, setLoading] = createSignal(false)
     const [scrollTop, setScrollTop] = createSignal(0)
     let containerRef: HTMLDivElement | undefined
 
@@ -77,13 +86,20 @@ const Terminal: Component<IProps> = (props) => {
         })
     })
 
+    const length = createMemo(() => props.logs.length)
+    createEffect(
+        on(length, (size) => {
+            console.log(size)
+            if (size > 0) {
+                setLoading(false)
+            }
+        }),
+    )
+
     return (
         <div class="flex flex-col justify-between h-full gap-12 pt-24 px-24 pb-48">
             <div class="flex h-full justify-center items-center overflow-hidden">
-                <div class="max-w-[1800px] h-full w-full bg-black-900 p-12 pb-0 flex flex-col gap-12 rounded-12 border-solid border-1 border-black-800 ">
-                    <div class="flex flex-col gap-12">
-                        <TerminalHeader onClickOpenDocs={props.onClickOpenDocs} />
-                    </div>
+                <div class="max-w-[1800px] h-full w-full bg-black-900 p-12 pb-0 flex flex-col gap-12 rounded-12 border-solid border-1 border-black-800">
                     <div
                         ref={containerRef}
                         class="flex flex-col overflow-hidden w-full flex-1 bg-black-700 p-24 rounded-12">
@@ -101,34 +117,45 @@ const Terminal: Component<IProps> = (props) => {
                                         left: 0,
                                         right: 0,
                                     }}>
-                                    <For each={updatedVisibleItems()}>
-                                        {(item) => (
-                                            <div
-                                                class="w-full flex items-center "
-                                                style={{
-                                                    height: `${rowHeight}px`,
-                                                    display: 'flex',
-                                                    'padding-left': '8px',
-                                                }}>
-                                                <Typography
-                                                    nowrap
-                                                    select
-                                                    text="caption"
-                                                    color={
-                                                        item.includes('WIFI_MANAGER')
-                                                            ? 'orange'
-                                                            : item.startsWith('I ') &&
-                                                                !item.includes('LOGO')
-                                                              ? 'green'
-                                                              : item.startsWith('E ')
-                                                                ? 'red'
-                                                                : 'lightBlue'
-                                                    }>
-                                                    {item}
-                                                </Typography>
+                                    <Show
+                                        when={!loading()}
+                                        fallback={
+                                            <div class="flex justify-center items-center  gap-12">
+                                                <span class="loading loading-ring w-16 text-white-100" />
+                                                <span class="loading loading-ring w-16 text-white-100" />
+                                                <span class="loading loading-ring w-16 text-white-100" />
+                                                <span class="loading loading-ring w-16 text-white-100" />
                                             </div>
-                                        )}
-                                    </For>
+                                        }>
+                                        <For each={updatedVisibleItems()}>
+                                            {(item) => (
+                                                <div
+                                                    class="w-full flex items-center "
+                                                    style={{
+                                                        height: `${rowHeight}px`,
+                                                        display: 'flex',
+                                                        'padding-left': '8px',
+                                                    }}>
+                                                    <Typography
+                                                        nowrap
+                                                        select
+                                                        text="caption"
+                                                        color={
+                                                            item.includes('WIFI_MANAGER')
+                                                                ? 'orange'
+                                                                : item.startsWith('I ') &&
+                                                                    !item.includes('LOGO')
+                                                                  ? 'green'
+                                                                  : item.startsWith('E ')
+                                                                    ? 'red'
+                                                                    : 'lightBlue'
+                                                        }>
+                                                        {item}
+                                                    </Typography>
+                                                </div>
+                                            )}
+                                        </For>
+                                    </Show>
                                 </div>
                             </div>
                         </div>
@@ -151,7 +178,10 @@ const Terminal: Component<IProps> = (props) => {
                                 <Button
                                     type="button"
                                     label="Show logs"
-                                    onClick={props.onClickGetLogs}
+                                    onClick={() => {
+                                        props.onClickGetLogs()
+                                        setLoading(true)
+                                    }}
                                 />
                             </div>
                             <div class="flex">
