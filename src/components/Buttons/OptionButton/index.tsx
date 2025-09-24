@@ -16,8 +16,7 @@ const OptionButton: Component<IProps> = (props) => {
                     !props.isActive,
             }}
             class="rounded-6 pt-6 pb-6 pr-12 pl-12 text-left border border-solid cursor-pointer"
-            onClick={(e) => {
-                e.preventDefault()
+            onClick={() => {
                 props.onClick()
             }}>
             <Typography color="white" text="body" class="break-all">

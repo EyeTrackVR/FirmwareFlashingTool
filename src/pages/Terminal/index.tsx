@@ -180,6 +180,7 @@ const Terminal: Component<IProps> = (props) => {
                                     label="Show logs"
                                     onClick={() => {
                                         props.onClickGetLogs()
+                                        if (!props.activePortName) return
                                         setLoading(true)
                                     }}
                                 />

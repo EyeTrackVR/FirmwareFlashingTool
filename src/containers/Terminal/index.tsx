@@ -30,7 +30,13 @@ export const TerminalContainer = () => {
                 setOpenModal({ open: true, type: MODAL_TYPE.SELECT_PORT })
             }}
             onClickGetLogs={() => {
-                if (!activePortName()) return
+                if (!activePortName()) {
+                    addNotification({
+                        title: 'No port selected',
+                        message: 'No port selected',
+                        type: ENotificationType.INFO,
+                    })
+                }
                 setAbortController('logs')
                 getFirmwareLogs(activePortName(), simulationAbortController()).catch(() => {})
             }}
