@@ -59,3 +59,40 @@ export const formatDeviceName = (filename: string): string => {
         .split('-v')[0]
         .replace(/-/g, '_')
 }
+
+export const trimLogsByTextLength = (logs: string, maxLength: number): string[] => {
+    if (!logs.trim().length) return []
+    if (logs.length <= maxLength) return [logs]
+
+    const validLogs: string[] = []
+    let buffer = ''
+    let start = 0
+
+    while (start < logs.length) {
+        const end = Math.min(start + maxLength, logs.length)
+
+        let lastSpaceIndex = logs.lastIndexOf(' ', end)
+        if (lastSpaceIndex === -1 || lastSpaceIndex < start) {
+            lastSpaceIndex = end
+        }
+
+        const substring = logs.slice(start, lastSpaceIndex)
+
+        buffer += substring.trim()
+
+        if (buffer.length >= maxLength) {
+            validLogs.push(buffer)
+            buffer = ''
+        } else {
+            buffer += ' '
+        }
+
+        start = lastSpaceIndex + 1
+    }
+
+    if (buffer.trim().length > 0) {
+        validLogs.push(buffer.trim())
+    }
+
+    return validLogs
+}

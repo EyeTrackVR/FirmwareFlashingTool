@@ -8,7 +8,7 @@ import { useAppUIContext } from '@store/context/ui'
 import { getFirmwareLogs } from '@store/terminal/actions'
 import { detailedLogs, simulationAbortController } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
-import { createMemo } from 'solid-js'
+import { createMemo, onCleanup } from 'solid-js'
 
 export const TerminalContainer = () => {
     const { getFirmwareVersion, activePort, ports } = useAppAPIContext()
@@ -18,6 +18,10 @@ export const TerminalContainer = () => {
 
     const activePortName = createMemo(() => {
         return activePort().activePortName
+    })
+
+    onCleanup(() => {
+        setAbortController('logs')
     })
 
     return (
@@ -36,6 +40,7 @@ export const TerminalContainer = () => {
                         message: 'No port selected',
                         type: ENotificationType.INFO,
                     })
+                    return
                 }
                 setAbortController('logs')
                 getFirmwareLogs(activePortName(), simulationAbortController()).catch(() => {})
@@ -52,7 +57,6 @@ export const TerminalContainer = () => {
                 download(detailedLogs().toString(), 'esp-web-tools-logs.txt')
             }}
             onClickBack={() => {
-                setAbortController('logs')
                 navigate('/')
             }}
         />

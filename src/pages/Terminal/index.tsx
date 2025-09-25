@@ -87,9 +87,9 @@ const Terminal: Component<IProps> = (props) => {
     })
 
     const length = createMemo(() => props.logs.length)
+
     createEffect(
         on(length, (size) => {
-            console.log(size)
             if (size > 0) {
                 setLoading(false)
             }

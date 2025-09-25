@@ -108,7 +108,6 @@ const SelectPortWizard = () => {
                             setAction(ACTION.NEXT)
                             setStep(PORT_WIZARD_STEPS.PORT_CHECK_PORT_CONNECTION)
                         })
-
                         onClickVerifyPortConnection()
                     }}
                     label="Before proceeding"
@@ -143,7 +142,6 @@ const SelectPortWizard = () => {
                             setAction(ACTION.NEXT)
                             setStep(PORT_WIZARD_STEPS.PORT_CHECK_PORT_CONNECTION)
                         })
-
                         onClickVerifyPortConnection()
                     }}
                     label="Select Port"
