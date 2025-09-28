@@ -14,12 +14,6 @@ const SelectPortModalContainer = () => {
     const { modal, setOpenModal } = useAppUIContext()
 
     const loadPorts = (availablePorts: UsbSerialPortInfo[]) => {
-        if (!availablePorts.length) {
-            setActivePortName('')
-            setPorts([])
-            return
-        }
-
         const portList: IDropdownList[] = availablePorts.map((port) => ({
             label: port.portName,
             description:
@@ -27,6 +21,14 @@ const SelectPortModalContainer = () => {
                     ? `(${port.manufacturer}) ${port.product}`
                     : `${port.vid}:${port.pid}`,
         }))
+
+        if (JSON.stringify(portList) === JSON.stringify(ports())) return
+
+        if (!availablePorts.length) {
+            setActivePortName('')
+            setPorts([])
+            return
+        }
 
         setPorts(portList)
     }

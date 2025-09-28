@@ -40,3 +40,32 @@ export const apiTextParser = <T>(responseBuffer: string): T => {
 
     return cleanBuffer as unknown as T
 }
+
+export const stringTextParser = (response: string) => {
+    return response.split(/}(?={)/).map((p) => p + (p.endsWith('}') ? '' : '}'))
+}
+
+export const parseMultiJSON = (input: string): any[] => {
+    const results: any[] = []
+    let depth = 0
+    let start: number | null = null
+
+    for (let i = 0; i < input.length; i++) {
+        if (input[i] === '{') {
+            if (depth === 0) start = i
+            depth++
+        } else if (input[i] === '}') {
+            depth--
+            if (depth === 0 && start !== null) {
+                const chunk = input.slice(start, i + 1)
+                try {
+                    results.push(JSON.parse(chunk))
+                } catch (e) {
+                    console.error('Invalid JSON chunk:', chunk, e)
+                }
+                start = null
+            }
+        }
+    }
+    return results
+}

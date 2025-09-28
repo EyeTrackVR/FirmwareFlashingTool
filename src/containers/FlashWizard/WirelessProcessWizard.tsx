@@ -1,5 +1,6 @@
 import Card from '@components/Cards/Card'
 import NetworkCard from '@components/Cards/NetworkCard'
+import Input from '@components/Inputs/Input'
 import NetworkInput from '@components/Inputs/NetworkInput'
 import PasswordInput from '@components/Inputs/PasswordInput'
 import Typography from '@components/Typography'
@@ -13,7 +14,7 @@ import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
-import { activeStep } from '@store/animation/selectors'
+import { activeStep, prevStep } from '@store/animation/selectors'
 import { useAppAPIContext } from '@store/context/api'
 import { setMdns, setPassword, setSelectedNetwork, setSsid } from '@store/network/network'
 import { availableNetworks, mdns, password, selectedNetwork, ssid } from '@store/network/selectors'
@@ -69,8 +70,61 @@ const WirelessProcessWizard = () => {
                             setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS)
                         })
                     }}
-                    onClickManualSetup={() => {}}
+                    onClickManualSetup={() => {
+                        batch(() => {
+                            setAction(ACTION.NEXT)
+                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP)
+                        })
+                    }}
                 />
+            </Match>
+            <Match when={activeStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP}>
+                <Card
+                    label="Setup Wi-Fi"
+                    primaryButtonLabel="Continue"
+                    isActive={password().length > 0 && ssid().length > 0}
+                    icon={RiSystemLockPasswordLine}
+                    onClickBack={() => {
+                        batch(() => {
+                            setAction(ACTION.PREV)
+                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SELECT_NETWORK)
+                        })
+                    }}
+                    onClickPrimary={() => {
+                        batch(() => {
+                            setAction(ACTION.NEXT)
+                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
+                        })
+                    }}>
+                    <div class="w-full flex flex-col gap-24">
+                        <div class="flex flex-col gap-10 w-full">
+                            <Typography color="white" text="caption" class="text-left">
+                                SSID
+                            </Typography>
+                            <Input
+                                required={true}
+                                onChange={(ssid) => {
+                                    setSsid(ssid)
+                                }}
+                                value={ssid()}
+                                placeholder="Enter your wifi name"
+                            />
+                        </div>
+                        <div class="flex flex-col gap-10 w-full">
+                            <Typography color="white" text="caption" class="text-left">
+                                Password
+                            </Typography>
+                            <PasswordInput
+                                required={true}
+                                onChange={(password) => {
+                                    setPassword(password)
+                                }}
+                                value={password()}
+                                placeholder="Enter password"
+                            />
+                        </div>
+                    </div>
+                </Card>
             </Match>
             <Match when={activeStep() === WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS}>
                 <Card
@@ -113,15 +167,28 @@ const WirelessProcessWizard = () => {
                     isActive={mdns().length > 0}
                     icon={RiSystemLockPasswordLine}
                     onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS)
-                        })
+                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
+
+                        if (prevStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP) {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP)
+                            })
+                        } else {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS, savePrev)
+                            })
+                        }
                     }}
                     onClickPrimary={() => {
+                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS)
+                            setStep(
+                                WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS,
+                                savePrev,
+                            )
                             logger.infoStart('Setup wireless connection')
                             logger.add('active port: ' + activePort().activePortName)
                             logger.add('mdns: ' + mdns())
@@ -140,6 +207,7 @@ const WirelessProcessWizard = () => {
                                     setAction(ACTION.NEXT)
                                     setStep(
                                         WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS_SUCCESS,
+                                        savePrev,
                                     )
                                 })
                             })
@@ -151,6 +219,7 @@ const WirelessProcessWizard = () => {
                                     setAction(ACTION.NEXT)
                                     setStep(
                                         WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS_FAILED,
+                                        savePrev,
                                     )
                                 })
                             })
@@ -191,7 +260,6 @@ const WirelessProcessWizard = () => {
                     primaryButtonLabel="Continue"
                     isLoader
                     icon={BiRegularLoaderAlt}
-                    onClickBack={() => {}}
                     onClickPrimary={() => {}}
                     description="Attempting to connect to the specified network"
                 />
@@ -206,9 +274,10 @@ const WirelessProcessWizard = () => {
                     isActive
                     icon={IoCheckmarkSharp}
                     onClickBack={() => {
+                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
+                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS, savePrev)
                         })
                     }}
                     onClickSecondary={() => {
@@ -232,9 +301,10 @@ const WirelessProcessWizard = () => {
                     isActive
                     icon={BiRegularError}
                     onClickBack={() => {
+                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
+                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS, savePrev)
                         })
                     }}
                     onClickSecondary={() => {
@@ -244,9 +314,10 @@ const WirelessProcessWizard = () => {
                         })
                     }}
                     onClickPrimary={() => {
+                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
+                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS, savePrev)
                         })
                     }}
                     label="Connection failed">

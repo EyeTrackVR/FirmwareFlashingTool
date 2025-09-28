@@ -8,7 +8,7 @@ import { Component, Show } from 'solid-js'
 interface IProps {
     onClickHome?: () => void
     onClick: (action: TITLEBAR_ACTION) => void
-    onClickDownloadLogs: () => void
+    onClickDownloadLogs?: () => void
     appVersion?: string
     docs?: boolean
 }
@@ -50,11 +50,11 @@ const Header: Component<IProps> = (props) => {
                             </Show>
                         </div>
                         <div class="flex flex-row items-center">
-                            <Show when={!props.docs}>
+                            <Show when={!props.docs && props.onClickDownloadLogs}>
                                 <div
                                     class="px-8 py-4 rounded-4 ml-4 cursor-pointer group hover:bg-transparentGreen-200 duration-150 transition-colors"
                                     onClick={() => {
-                                        props.onClickDownloadLogs()
+                                        props.onClickDownloadLogs?.()
                                     }}>
                                     <Typography
                                         color="white"
@@ -91,7 +91,7 @@ const Header: Component<IProps> = (props) => {
                             <DefaultButton
                                 class={classNames(
                                     'w-30 h-30 flex items-center justify-center transition group',
-                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
+                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-red-100',
                                 )}
                                 onClick={() => {
                                     props.onClick(TITLEBAR_ACTION.CLOSE)

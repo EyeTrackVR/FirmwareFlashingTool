@@ -12,8 +12,8 @@ export interface INetwork {
 export interface INetworkStore {
     availableNetworks: INetwork[]
     selectedNetwork: INetwork | undefined
-    mdns: string
     password: string
+    mdns: string
     ssid: string
 }
 

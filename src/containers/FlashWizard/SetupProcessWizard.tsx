@@ -1,7 +1,9 @@
+import Button from '@components/Buttons/Button'
 import SelectButton from '@components/Buttons/SelectButton'
 import Card from '@components/Cards/Card'
 import {
     ACTION,
+    DEVICE_MODE_WIZARD,
     FLASH_WIZARD_STEPS,
     INIT_WIZARD_STEPS,
     MODAL_TYPE,
@@ -31,7 +33,7 @@ const SetupProcessWizard = () => {
         <Switch>
             <Match when={activeStep() === INIT_WIZARD_STEPS.PROCESS_INIT}>
                 <Card
-                    primaryButtonLabel="Install Openiris"
+                    primaryButtonLabel="Setup process"
                     secondaryButtonLabel="Show Logs"
                     isActive
                     icon={BiRegularChip}
@@ -41,7 +43,7 @@ const SetupProcessWizard = () => {
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(INIT_WIZARD_STEPS.SELECT_BOARD)
+                            setStep(INIT_WIZARD_STEPS.SELECT_PROCESS)
                         })
                     }}
                     onClickSecondary={() => {
@@ -54,6 +56,38 @@ const SetupProcessWizard = () => {
                     description="Click the button below to start the flashing process and follow the on-screen prompts to complete the setup."
                 />
             </Match>
+            <Match when={activeStep() === INIT_WIZARD_STEPS.SELECT_PROCESS}>
+                <Card
+                    icon={BiRegularChip}
+                    onClickBack={() => {
+                        batch(() => {
+                            setAction(ACTION.PREV)
+                            setStep(INIT_WIZARD_STEPS.PROCESS_INIT)
+                        })
+                    }}
+                    isActive
+                    primaryButtonLabel="Install openiris"
+                    onClickPrimary={() => {
+                        batch(() => {
+                            setAction(ACTION.NEXT)
+                            setStep(INIT_WIZARD_STEPS.SELECT_BOARD)
+                        })
+                    }}
+                    label="Select process">
+                    <div class="w-full flex-col flex gap-12 h-full ">
+                        <Button
+                            label="Change device mode"
+                            onClick={() => {
+                                batch(() => {
+                                    setAction(ACTION.NEXT)
+                                    setStep(DEVICE_MODE_WIZARD.DEVICE_BEFORE_PROCEEDING)
+                                })
+                            }}
+                        />
+                        <Button label="Update network" onClick={() => {}} disabled />
+                    </div>
+                </Card>
+            </Match>
             <Match when={activeStep() === INIT_WIZARD_STEPS.SELECT_BOARD}>
                 <Card
                     isActive={activeBoard() !== ''}
@@ -61,7 +95,7 @@ const SetupProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(INIT_WIZARD_STEPS.PROCESS_INIT)
+                            setStep(INIT_WIZARD_STEPS.SELECT_PROCESS)
                         })
                     }}
                     onClickPrimary={() => {

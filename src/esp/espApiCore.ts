@@ -3,7 +3,7 @@ import { INetwork } from '@store/network/network'
 import { invoke, InvokeArgs } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import * as Type from './interfaces/types'
-import { apiTextParser } from './utils'
+import { apiTextParser, parseMultiJSON, stringTextParser } from './utils'
 import { COMMAND, ESP_COMMAND } from './commands'
 
 export class EspApiCore {
@@ -112,8 +112,15 @@ export class EspApiCore {
             portName,
         })
 
-        const parsedResponse: { results: Array<string> } = JSON.parse(response)
-        return parsedResponse.results.map((res) => apiTextParser<{ mode: string }>(res))[0].mode
+        const mode = parseMultiJSON(response)
+            .find((obj) => obj.results)
+            ?.results?.map((el) => apiTextParser<{ mode: string }>(el))[0]?.mode
+
+        if (!mode) {
+            throw new Error('Failed to get device mode')
+        }
+
+        return mode
     }
 
     async _getDeviceName(portName: string) {

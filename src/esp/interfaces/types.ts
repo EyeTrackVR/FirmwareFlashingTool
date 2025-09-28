@@ -15,11 +15,12 @@ export type SetMdnsCommand = {
         hostname: string
     }
 }
+export type DeviceMode = 'uvc' | 'wifi' | 'auto'
 
 export type switchMode = {
     command: 'switch_mode'
     data: {
-        mode: 'uvc' | 'wifi' | 'auto'
+        mode: DeviceMode
     }
 }
 
@@ -60,8 +61,6 @@ export type Command =
     | Pause
     | ConnectWifi
     | GetWifiStatus
-
-export type DeviceMode = 'uvc' | 'wifi' | 'auto'
 
 export type EspflashStatus =
     | {

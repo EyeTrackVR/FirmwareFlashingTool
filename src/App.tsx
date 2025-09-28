@@ -7,10 +7,9 @@ const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
 
 const App = () => {
-    const { handleTitlebar, handleAppBoot } = useAppContextMain()
+    const { handleAppBoot } = useAppContextMain()
 
     onMount(() => {
-        handleTitlebar(true)
         handleAppBoot()
     })
 

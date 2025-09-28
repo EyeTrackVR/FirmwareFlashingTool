@@ -1,3 +1,4 @@
+import { DeviceMode } from '@src/esp/interfaces/types'
 import {
     type CHANNEL_TYPE,
     type RESTStatus,
@@ -157,6 +158,7 @@ export interface AppStoreAPI {
     trackerName: string
     channelMode: CHANNEL_TYPE
     manifestPath: string
+    deviceMode: DeviceMode
     activePort: IActivePort
     ports: IDropdownList[]
     isActivePortValid: boolean

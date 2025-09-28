@@ -1,3 +1,4 @@
+import { sleep } from '@src/utils'
 import { EspApiCore } from './espApiCore'
 import * as Type from './interfaces/types'
 
@@ -6,23 +7,28 @@ export class EspApiClientProvider extends EspApiCore {
         return this._getPossibleNetworks(port)
     }
 
+    public async pause(portName: string): Promise<void> {
+        await this._pause(portName)
+        await sleep(200)
+    }
+
     public async getDeviceMode(portName: string) {
         return this._getDeviceMode(portName)
     }
 
-    public async validateConnection(portName: string) {
+    public async validateConnection(portName: string): Promise<void> {
         return this._validateConnection(portName)
     }
 
-    public async switchDeviceMode(port: string, deviceMode: Type.DeviceMode) {
+    public async switchDeviceMode(port: string, deviceMode: Type.DeviceMode): Promise<void> {
         return this._switchDeviceMode(port, deviceMode)
     }
 
-    public async getDeviceName(port: string) {
+    public async getDeviceName(port: string): Promise<string> {
         return this._getDeviceName(port)
     }
 
-    public async flash(portName: string, progressCallback: Type.ProgressCallback) {
+    public async flash(portName: string, progressCallback: Type.ProgressCallback): Promise<void> {
         return this._flash(portName, progressCallback)
     }
 
@@ -31,7 +37,7 @@ export class EspApiClientProvider extends EspApiCore {
         callback: (logs: string) => void,
         errorCallback: (error: Error) => void,
         signal?: AbortSignal,
-    ) {
+    ): Promise<void> {
         return this._streamLogs(portName, callback, errorCallback, signal)
     }
 
@@ -41,7 +47,7 @@ export class EspApiClientProvider extends EspApiCore {
         ssid: string,
         password: string,
         channel: number,
-    ) {
+    ): Promise<void> {
         return this._setupWirelessConnection(port, mdns, ssid, password, channel)
     }
 

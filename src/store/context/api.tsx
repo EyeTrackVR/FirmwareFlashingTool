@@ -28,6 +28,7 @@ import { GHEndpoints } from '@src/static/endpoints'
 import { O } from '@static/types'
 import { makeRequest } from 'tauri-plugin-request-client'
 import { formatDeviceName } from '@src/utils'
+import { DeviceMode } from '@src/esp/interfaces/types'
 
 interface AppAPIContext {
     //********************************* gh rest *************************************/
@@ -64,6 +65,7 @@ interface AppAPIContext {
     doGHRequest: (channelType: CHANNEL_TYPE) => Promise<void>
     useRequestHook: (endpointName: string, deviceName?: string, args?: string) => Promise<boolean>
     useOTA: (firmwareName: string, device: string) => Promise<void>
+    setDeviceMode: (deviceMode: DeviceMode) => void
     setActiveBoard: (board: string) => void
     setIsActivePortValid: (status: boolean) => void
     setActivePortName: (portName: string) => void
@@ -74,6 +76,7 @@ interface AppAPIContext {
     manifestPath: Accessor<string>
     ports: Accessor<IDropdownList[]>
     setPorts: (ports: IDropdownList[]) => void
+    deviceMode: Accessor<DeviceMode>
 }
 
 const AppAPIContext = createContext<AppAPIContext>()
@@ -118,6 +121,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
         activePort: {
             activePortName: '',
         },
+        deviceMode: 'uvc',
         ports: [],
     }
 
@@ -241,6 +245,14 @@ export const AppAPIProvider: Component<Context> = (props) => {
         )
     }
 
+    const setDeviceMode = (deviceMode: DeviceMode) => {
+        setState(
+            produce((s) => {
+                s.deviceMode = deviceMode
+            }),
+        )
+    }
+
     const getGHRestStatus = createMemo(() => apiState().ghAPI.status)
     const getFirmwareAssets = createMemo(() => apiState().ghAPI.assets)
     const getFirmwareVersion = createMemo(() => apiState().ghAPI.version)
@@ -249,6 +261,7 @@ export const AppAPIProvider: Component<Context> = (props) => {
     const loader = createMemo(() => apiState().loader)
     const channelMode = createMemo(() => apiState().channelMode)
     const apModeStatus = createMemo(() => apiState().apModeStatus)
+    const deviceMode = createMemo(() => apiState().deviceMode)
     const manifestPath = createMemo(() => apiState().manifestPath)
     //#endregion
     //********************************* rest *************************************/
@@ -630,6 +643,8 @@ export const AppAPIProvider: Component<Context> = (props) => {
     return (
         <AppAPIContext.Provider
             value={{
+                deviceMode,
+                setDeviceMode,
                 setActiveBoard,
                 setIsActivePortValid,
                 isActivePortValid,

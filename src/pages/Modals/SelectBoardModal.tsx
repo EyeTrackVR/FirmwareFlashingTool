@@ -28,7 +28,7 @@ const SelectBoardModal: Component<IProps> = (props) => {
 
     return (
         <Modal
-            width="w-[350px]"
+            width="w-[350px] px-0"
             version={props.version}
             id={BEFORE_SELECT_BOARD_MODE}
             isActive={props.isActive}
@@ -37,15 +37,17 @@ const SelectBoardModal: Component<IProps> = (props) => {
                 setSearch('')
             }}
             onClickHeader={props.onClickHeader}>
-            <div class="flex flex-col gap-24">
-                <ModalHeader
-                    label="Select board"
-                    onClick={() => {
-                        props.onClickClose()
-                        setSearch('')
-                    }}
-                />
-                <div class="flex flex-col gap-12 items-start">
+            <div class="flex flex-col gap-24 ">
+                <div class="px-12">
+                    <ModalHeader
+                        label="Select board"
+                        onClick={() => {
+                            props.onClickClose()
+                            setSearch('')
+                        }}
+                    />
+                </div>
+                <div class="flex flex-col gap-12 items-start px-12">
                     <Typography text="caption" color="white">
                         Look for a board
                     </Typography>
@@ -55,7 +57,7 @@ const SelectBoardModal: Component<IProps> = (props) => {
                         onChange={(e) => setSearch(e)}
                     />
                 </div>
-                <div class="gap-12 overflow-y-scroll h-[500px] flex flex-col w-full scrollbar">
+                <div class="gap-12 overflow-y-scroll h-[500px] flex flex-col w-full scrollbar px-12">
                     <Show
                         when={filteredData().length > 0}
                         fallback={
