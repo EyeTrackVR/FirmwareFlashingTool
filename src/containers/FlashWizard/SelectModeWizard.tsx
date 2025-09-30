@@ -1,15 +1,23 @@
 import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
-import { ACTION, FLASH_MODE, FLASH_WIZARD_STEPS, PORT_WIZARD_STEPS } from '@interfaces/enums'
+import {
+    ACTION,
+    FLASH_MODE,
+    FLASH_WIZARD_STEPS,
+    SELECT_MODE_WIZARD,
+    SELECT_PORT_WIZARD,
+    STEP_ACTION,
+} from '@interfaces/enums'
 import { setAction, setSelectedMode, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
+import { setActiveAction } from '@store/ui/ui'
 import { BiRegularChip } from 'solid-icons/bi'
 import { batch, Match, Switch } from 'solid-js'
 
 const SelectModeWizard = () => {
     return (
         <Switch>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.SELECT_MODE}>
+            <Match when={activeStep() === SELECT_MODE_WIZARD.SELECT_MODE}>
                 <Card
                     secondaryButtonLabel="Wi-Fi mode"
                     onClickOptionLabel="Wired Mode"
@@ -23,15 +31,17 @@ const SelectModeWizard = () => {
                     onClickSecondary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(PORT_WIZARD_STEPS.PORT_BEFORE_PROCEEDING)
                             setSelectedMode(FLASH_MODE.WIRELESS)
+                            setActiveAction(STEP_ACTION.SELECT_MODE)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT_BEFORE_PROCEEDING)
                         })
                     }}
                     onClickOption={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(PORT_WIZARD_STEPS.PORT_BEFORE_PROCEEDING)
                             setSelectedMode(FLASH_MODE.WIRED)
+                            setActiveAction(STEP_ACTION.SELECT_MODE)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT_BEFORE_PROCEEDING)
                         })
                     }}
                     label="Select Mode">

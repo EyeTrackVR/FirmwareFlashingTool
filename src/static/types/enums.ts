@@ -1,18 +1,5 @@
 //********************************* UI *************************************/
 
-export enum POPOVER_ID {
-    GRIP = 'grip-popover',
-    LIST = 'list-popover',
-    TRACKER_MANAGER = 'tracker-manager-popover',
-    SETTINGS_POPOVER = 'settings-popover',
-}
-
-export enum ANIMATION_MODE {
-    GRIP = 'grip-popover',
-    LIST = 'list-popover',
-    NONE = 'NONE',
-}
-
 export enum TITLEBAR_ACTION {
     MINIMIZE = 'minimize',
     MAXIMIZE = 'maximize',
@@ -33,24 +20,7 @@ export enum ENotificationAction {
     NULL = 'null',
 }
 
-export enum RANGE_INPUT_FORMAT {
-    EYE_POSITION_SCALAR = 'Eye position scalar',
-    THRESHOLD = 'Threshold',
-    ROTATION = 'Rotation',
-}
-
-export enum RANGE_INPUT_FORMAT_APP_SETTINGS {
-    MIN_FREQUENCY_CUTOFF = 'Min frequency cutoff',
-    SPEED_COEFFICIENT = 'Speed coefficient',
-}
-
 //********************************* Network and App *************************************/
-
-export enum ExitCodes {
-    USER_EXIT = 0,
-    ERROR = 1,
-    ERROR_UNKNOWN = 2,
-}
 
 export enum RESTStatus {
     ACTIVE = 'ACTIVE',
@@ -59,29 +29,6 @@ export enum RESTStatus {
     FAILED = 'FAILED',
     NO_CAMERA = 'NO_CAMERA',
     NO_CONFIG = 'NO_CONFIG',
-}
-
-export enum RESTType {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    DELETE = 'DELETE',
-}
-
-export enum ESPEndpoints {
-    //? Default
-    PING = '/control/builtin/command/ping',
-    SAVE = '/control/builtin/command/save',
-    RESET_CONFIG = '/control/builtin/command/resetConfig',
-    REBOOT_DEVICE = '/control/builtin/command/rebootDevice',
-    RESTART_CAMERA = '/control/builtin/command/restartCamera',
-    GET_STORED_CONFIG = '/control/builtin/command/getStoredConfig',
-    SET_TX_POWER = '/control/builtin/command/setTxPower',
-    SET_DEVICE = '/control/builtin/command/setDevice',
-    //? Network
-    WIFI = '/control/builtin/command/wifi',
-    WIFI_STRENGTH = '/control/builtin/command/wifiStrength',
-    OTA = '/update',
 }
 
 export enum BOARD_TYPE {
@@ -110,16 +57,9 @@ export enum CHANNEL_TYPE {
 //********************************* flash firmware state *************************************/
 
 export const enum FLASH_STEP {
-    BOARD_CONNECTION = 'BOARD_CONNECTION',
-    OPEN_PORT = 'OPEN_PORT',
-    LOGS = 'LOGS',
-    MANIFEST_PATH = 'MANIFEST_PATH',
     REQUEST_PORT = 'REQUEST_PORT',
-    INITIALIZE = 'INITIALIZE',
-    CHIP_FAMILY = 'CHIP_FAMILY',
+    MANIFEST_PATH = 'MANIFEST_PATH',
     FLASH_FIRMWARE = 'FLASH_FIRMWARE',
-    BUILD = 'BUILD',
-    DOWNLOAD_FILES = 'FILES',
 }
 
 export const enum FLASH_STATUS {
@@ -146,18 +86,23 @@ export enum ACTION {
     PREV = 'PREV',
 }
 
+export enum STEP_ACTION {
+    CHANGE_DEVICE_MODE = 'CHANGE_DEVICE_MODE',
+    INSTALL_OPENIRIS = 'INSTALL_OPENIRIS',
+    UPDATE_NETWORK = 'UPDATE_NETWORK',
+    SELECT_MODE = 'SELECT_MODE',
+}
+
 export enum INIT_WIZARD_STEPS {
     PROCESS_INIT = 'PROCESS_INIT',
     SELECT_PROCESS = 'SELECT_PROCESS',
     SELECT_BOARD = 'SELECT_BOARD',
-    SELECT_PORT = 'SELECT_PORT',
 }
 
 export enum FLASH_WIZARD_STEPS {
     FLASH_PROCESS_SUCCESS = 'FLASH_PROCESS_SUCCESS',
     FLASH_PROCESS_FAILED = 'FLASH_PROCESS_FAILED',
     FLASH_PROCESS = 'FLASH_PROCESS',
-    SELECT_MODE = 'SELECT_MODE',
 }
 
 export enum FLASH_MODE {
@@ -179,13 +124,16 @@ export enum DEVICE_MODE_WIZARD {
     DEVICE_SELECT_DEVICE_MODE = 'DEVICE_SELECT_DEVICE_MODE',
     DEVICE_BEFORE_PROCEEDING = 'DEVICE_BEFORE_PROCEEDING',
     DETECT_DEVICE_MODE = 'DETECT_DEVICE_MODE',
-    DEVICE_SELECT_PORT = 'DEVICE_SELECT_PORT',
 }
 
-export enum PORT_WIZARD_STEPS {
-    PORT_BEFORE_PROCEEDING = 'PORT_BEFORE_PROCEEDING',
-    PORT_CHECK_PORT_CONNECTION = 'PORT_CHECK_PORT_CONNECTION',
-    PORT_SELECT_PORT = 'PORT_SELECT_PORT',
+export enum SELECT_PORT_WIZARD {
+    SELECT_CHECK_PORT_CONNECTION = 'SELECT_CHECK_PORT_CONNECTION',
+    SELECT_PORT_BEFORE_PROCEEDING = 'PORT_BEFORE_PROCEEDING',
+    SELECT_PORT = 'SELECT_PORT',
+}
+
+export enum SELECT_MODE_WIZARD {
+    SELECT_MODE = 'SELECT_MODE',
 }
 
 export enum WIRED_WIZARD_STEPS {
@@ -207,6 +155,5 @@ export enum WIRELESS_WIZARD_STEPS {
     WIRELESS_SETUP_CREDENTIALS = 'WIRELESS_SETUP_CREDENTIALS',
     WIRELESS_SELECT_NETWORK = 'WIRELESS_SELECT_NETWORK',
     WIRELESS_MANUAL_SETUP = 'WIRELESS_MANUAL_SETUP',
-    WIRELESS_SELECT_PORT = 'WIRELESS_SELECT_PORT',
     WIRELESS_SETUP_MDNS = 'WIRELESS_SETUP_MDNS',
 }

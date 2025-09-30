@@ -2,23 +2,17 @@ import { ENotificationType, MODAL_TYPE } from '@interfaces/enums'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
 import { download } from '@src/utils'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
-import { getFirmwareLogs } from '@store/terminal/actions'
+import { addNotification } from '@store/actions/notifications/addNotification'
+import { getFirmwareLogs } from '@store/actions/terminal/getFirmwareLogs'
+import { activePort, ports } from '@store/esp/selectors'
+import { ghAPI } from '@store/firmware/selectors'
 import { detailedLogs, simulationAbortController } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
-import { createMemo, onCleanup } from 'solid-js'
+import { setOpenModal } from '@store/ui/ui'
+import { onCleanup } from 'solid-js'
 
 export const TerminalContainer = () => {
-    const { getFirmwareVersion, activePort, ports } = useAppAPIContext()
-    const { addNotification } = useAppNotificationsContext()
-    const { setOpenModal } = useAppUIContext()
     const navigate = useNavigate()
-
-    const activePortName = createMemo(() => {
-        return activePort().activePortName
-    })
 
     onCleanup(() => {
         setAbortController('logs')
@@ -26,15 +20,15 @@ export const TerminalContainer = () => {
 
     return (
         <Terminal
-            activePortName={activePortName()}
+            activePortName={activePort()}
             ports={ports()}
             logs={detailedLogs()}
-            firmwareVersion={`Openiris-${getFirmwareVersion()}`}
+            firmwareVersion={`Openiris-${ghAPI().version}`}
             onClickSelectPort={() => {
                 setOpenModal({ open: true, type: MODAL_TYPE.SELECT_PORT })
             }}
             onClickGetLogs={() => {
-                if (!activePortName()) {
+                if (!activePort()) {
                     addNotification({
                         title: 'No port selected',
                         message: 'No port selected',
@@ -43,7 +37,7 @@ export const TerminalContainer = () => {
                     return
                 }
                 setAbortController('logs')
-                getFirmwareLogs(activePortName(), simulationAbortController()).catch(() => {})
+                getFirmwareLogs(activePort(), simulationAbortController()).catch(() => {})
             }}
             onClickDownloadLogs={() => {
                 if (!detailedLogs().toString()) {

@@ -1,71 +1,60 @@
+import { HeaderRoot } from '@containers/Header'
 import { Router } from '@solidjs/router'
-
+import { ENotificationAction } from '@src/static/types/enums'
+import type { PersistentSettings } from '@static/types'
+import { usePersistentStore } from '@src/persistenStore'
 import { isEqual } from 'lodash'
 import { createEffect, onMount, type Component } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
 import { debug } from 'tauri-plugin-log-api'
 import { routes } from '.'
-import type { PersistentSettings } from '@static/types'
-import { ENotificationAction } from '@src/static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppContext } from '@store/context/app'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { useAppUIContext } from '@store/context/ui'
-import { usePersistentStore } from '@store/tauriStore'
-import { HeaderRoot } from '@containers/Header'
+import {
+    setEnableNotifications,
+    setEnableNotificationsSounds,
+    setGlobalNotificationsType,
+} from '@store/notifications/notifications'
+import { checkPermission } from '@store/actions/notifications/checkPermission'
+import {
+    enableNotifications,
+    enableNotificationsSounds,
+    globalNotificationsType,
+} from '@store/notifications/selectors'
+import { doGHRequest } from '@store/actions/firmware/doGHRequest'
+import { channelMode } from '@store/firmware/selectors'
 
 const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
-    const { doGHRequest, channelMode } = useAppAPIContext()
-    const { setDebugMode, getDebugMode } = useAppContext()
-    const { setContextMenuAnchor } = useAppUIContext()
-    const {
-        setEnableNotifications,
-        setEnableNotificationsSounds,
-        setGlobalNotificationsType,
-        getEnableNotificationsSounds,
-        getEnableNotifications,
-        getGlobalNotificationsType,
-        checkPermission,
-    } = useAppNotificationsContext()
+
+    // TODO: do not make call here on every render
+    createEffect(() => {
+        doGHRequest(channelMode())
+    })
 
     onMount(() => {
-        setContextMenuAnchor('custom-context-menu')
-        //* load the app settings from the persistent store and assign to the global state
         get('settings').then((settings) => {
             if (settings) {
                 debug('loading settings')
-
                 setEnableNotifications(settings.enableNotifications)
                 setEnableNotificationsSounds(settings.enableNotificationsSounds)
                 setGlobalNotificationsType(
                     settings.globalNotificationsType ?? ENotificationAction.APP,
                 )
-
-                setDebugMode(settings.debugMode)
             }
         })
-        //* Check notification permissions
         checkPermission()
-        //* Grab the github release info for OpenIris
-    })
-
-    createEffect(() => {
-        doGHRequest(channelMode())
     })
 
     const createSettingsObject = () => {
         const settings: PersistentSettings = {
-            enableNotifications: getEnableNotifications(),
-            enableNotificationsSounds: getEnableNotificationsSounds(),
-            globalNotificationsType: getGlobalNotificationsType(),
-            debugMode: getDebugMode(),
+            enableNotifications: enableNotifications(),
+            enableNotificationsSounds: enableNotificationsSounds(),
+            globalNotificationsType: globalNotificationsType(),
+            debugMode: 'off',
         }
         return settings
     }
 
     const handleSaveSettings = async () => {
-        // check if the settings have changed and save to the store if they have
         get('settings').then((storedSettings) => {
             if (!isEqual(storedSettings, createSettingsObject())) {
                 debug(`[Routes]: Saving Settings - ${JSON.stringify(createSettingsObject())}`)

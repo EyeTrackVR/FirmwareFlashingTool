@@ -1,18 +1,18 @@
+import SwipeAnimation from '@components/SwipeAnimation'
 import { WIRELESS_WIZARD_STEPS } from '@interfaces/enums'
-import SwipeAnimation from '@src/Animation'
 import { classNames } from '@src/utils'
 import { activeStep } from '@store/animation/selectors'
 import { createMemo } from 'solid-js'
 import ChangeDeviceModeWizard from './ChangeDeviceModeWizard'
-import FlashProcessWizard from './FlashProcessWizard'
+import FlashWizard from './FlashWizard'
 import SelectModeWizard from './SelectModeWizard'
 import SelectPortWizard from './SelectPortWizard'
-import SetupProcessWizard from './SetupProcessWizard'
-import TerminalProcessWizard from './TerminalProcessWizard'
-import WiredProcessWizard from './WiredProcessWizard'
-import WirelessProcessWizard from './WirelessProcessWizard'
+import SetupWizard from './SetupWizard'
+import TerminalWizard from './TerminalWizard'
+import WiredWizard from './WiredWizard'
+import WirelessWizard from './WirelessWizard'
 
-const FlashWizard = () => {
+const FlashWizardRoot = () => {
     const maxSize = createMemo(() => {
         if (activeStep() === WIRELESS_WIZARD_STEPS.WIRELESS_SELECT_NETWORK) {
             return 'min-h-[480px] max-w-[720px] w-full mx-24'
@@ -28,18 +28,18 @@ const FlashWizard = () => {
                     maxSize(),
                 )}>
                 <SwipeAnimation>
-                    <SetupProcessWizard />
-                    <FlashProcessWizard />
-                    <TerminalProcessWizard />
+                    <SetupWizard />
+                    <FlashWizard />
+                    <TerminalWizard />
                     <SelectModeWizard />
-                    <ChangeDeviceModeWizard />
                     <SelectPortWizard />
-                    <WirelessProcessWizard />
-                    <WiredProcessWizard />
+                    <ChangeDeviceModeWizard />
+                    <WirelessWizard />
+                    <WiredWizard />
                 </SwipeAnimation>
             </div>
         </div>
     )
 }
 
-export default FlashWizard
+export default FlashWizardRoot

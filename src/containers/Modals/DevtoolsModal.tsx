@@ -3,21 +3,19 @@ import { isValidChannel } from '@interfaces/utils'
 import DevtoolsModal from '@pages/Modals/DevtoolsModal'
 import { logger } from '@src/logger'
 import { CHANNEL_OPTIONS } from '@src/static'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppUIContext } from '@store/context/ui'
+import { setChannelMode } from '@store/firmware/firmware'
+import { channelMode } from '@store/firmware/selectors'
+import { openModal } from '@store/ui/selectors'
+import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 
 const DevtoolsModalContainer = () => {
-    const { modal, setOpenModal, hideModal } = useAppUIContext()
-    const { channelMode, setChannelMode } = useAppAPIContext()
-
     return (
         <DevtoolsModal
             channelMode={channelMode()}
             channelOptions={Object.values(CHANNEL_OPTIONS)}
             version="1.7.0"
-            checked={hideModal()}
-            isActive={modal().type === MODAL_TYPE.DEVTOOLS}
+            isActive={openModal().type === MODAL_TYPE.DEVTOOLS}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

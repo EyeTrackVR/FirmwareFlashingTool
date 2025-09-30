@@ -41,10 +41,6 @@ export const apiTextParser = <T>(responseBuffer: string): T => {
     return cleanBuffer as unknown as T
 }
 
-export const stringTextParser = (response: string) => {
-    return response.split(/}(?={)/).map((p) => p + (p.endsWith('}') ? '' : '}'))
-}
-
 export const parseMultiJSON = (input: string): any[] => {
     const results: any[] = []
     let depth = 0

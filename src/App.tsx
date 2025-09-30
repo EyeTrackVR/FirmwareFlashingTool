@@ -1,25 +1,26 @@
-import { AppProvider } from '@store/context/app'
+import { invoke } from '@tauri-apps/api/tauri'
 import { lazy, onMount, Suspense } from 'solid-js'
-import { useAppContextMain } from './store/context/main'
+import { useEventListener } from 'solidjs-use'
 
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
 const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
 
 const App = () => {
-    const { handleAppBoot } = useAppContextMain()
-
     onMount(() => {
-        handleAppBoot()
+        useEventListener(document, 'DOMContentLoaded', () => {
+            // check if the window state is saved and restore it if it is
+            invoke('handle_save_window_state').then(() => {
+                console.log('[App Boot]: saved window state')
+            })
+        })
     })
 
     return (
         <Suspense>
-            <AppProvider>
-                <Modals />
-                <AppRoutes />
-                <ToastNotificationWindow />
-            </AppProvider>
+            <Modals />
+            <AppRoutes />
+            <ToastNotificationWindow />
         </Suspense>
     )
 }

@@ -11,7 +11,6 @@ export interface IProps {
     onClickClose: () => void
     onClickSetChannelMode: (option: string) => void
     isActive: boolean
-    checked: boolean
     version: string
     channelMode: CHANNEL_TYPE
     channelOptions: IDropdownList[]

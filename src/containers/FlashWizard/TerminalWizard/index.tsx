@@ -11,7 +11,7 @@ import { activeStep, prevStep } from '@store/animation/selectors'
 import { BiRegularChip } from 'solid-icons/bi'
 import { batch, Match, Switch } from 'solid-js'
 
-const TerminalProcessWizard = () => {
+const TerminalWizard = () => {
     const navigate = useNavigate()
 
     return (
@@ -46,4 +46,4 @@ const TerminalProcessWizard = () => {
     )
 }
 
-export default TerminalProcessWizard
+export default TerminalWizard

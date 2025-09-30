@@ -2,7 +2,6 @@
 import Header from '@components/Header'
 import { TITLEBAR_ACTION } from '@interfaces/enums'
 import { Router } from '@solidjs/router'
-import { AppContextMainProvider } from '@src/store/context/main'
 import '@styles/docs-imports.css'
 import { appWindow } from '@tauri-apps/api/window'
 import { Suspense } from 'solid-js'
@@ -49,17 +48,4 @@ const App = () => {
     )
 }
 
-render(
-    () => (
-        <Router
-            root={() => {
-                return (
-                    <AppContextMainProvider>
-                        <App />
-                    </AppContextMainProvider>
-                )
-            }}
-        />
-    ),
-    document.getElementById('root') as HTMLElement,
-)
+render(() => <Router root={() => <App />} />, document.getElementById('root') as HTMLElement)

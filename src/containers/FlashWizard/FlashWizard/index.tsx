@@ -3,20 +3,19 @@ import Typography from '@components/Typography'
 import {
     ACTION,
     FLASH_WIZARD_STEPS,
-    INIT_WIZARD_STEPS,
+    SELECT_MODE_WIZARD,
     TERMINAL_WIZARD_STEPS,
 } from '@interfaces/enums'
-import { IFirmwareState } from '@interfaces/interfaces'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { firmwareState, isActiveProcess, percentageProgress } from '@store/terminal/selectors'
-import { setAbortController } from '@store/terminal/terminal'
+import { IFlashState, setAbortController } from '@store/terminal/terminal'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { Accessor, batch, createMemo, Match, Switch } from 'solid-js'
 
-const FlashProcessWizard = () => {
-    const flashFirmwareState: Accessor<IFirmwareState | undefined> = createMemo(() => {
+const FlashWizard = () => {
+    const flashFirmwareState: Accessor<IFlashState | undefined> = createMemo(() => {
         const state = Object.keys(firmwareState()).map((key) => {
             return { step: key, ...firmwareState()[key] }
         })
@@ -35,7 +34,7 @@ const FlashProcessWizard = () => {
                         if (isActiveProcess()) return
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     onClickPrimary={() => {}}
@@ -43,6 +42,36 @@ const FlashProcessWizard = () => {
                     percentageProgress={percentageProgress()}>
                     <Typography color="white">
                         {flashFirmwareState()?.label ?? 'Processing....'}
+                    </Typography>
+                </Card>
+            </Match>
+            <Match when={activeStep() === FLASH_WIZARD_STEPS.FLASH_PROCESS_FAILED}>
+                <Card
+                    status="fail"
+                    primaryButtonLabel="Try again"
+                    secondaryButtonLabel="Select Port"
+                    isActive
+                    icon={BiRegularError}
+                    onClickBack={() => {
+                        batch(() => {
+                            setAction(ACTION.PREV)
+                            setAbortController('openiris')
+                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                        })
+                    }}
+                    onClickPrimary={() => {
+                        batch(() => {
+                            setAction(ACTION.PREV)
+                            setAbortController('openiris')
+                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                        })
+                    }}
+                    label="Failed to flash board">
+                    <Typography color="red">
+                        {!flashFirmwareState()?.label
+                            ? 'Something went wrong, please contact with us on discord'
+                            : (flashFirmwareState()?.label ??
+                              'Something went wrong, please try again')}
                     </Typography>
                 </Card>
             </Match>
@@ -56,7 +85,7 @@ const FlashProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
                         })
                     }}
                     onClickSecondary={() => {
@@ -68,7 +97,7 @@ const FlashProcessWizard = () => {
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
+                            setStep(SELECT_MODE_WIZARD.SELECT_MODE)
                         })
                     }}
                     label="Firmware flashed!">
@@ -83,38 +112,8 @@ const FlashProcessWizard = () => {
                     </div>
                 </Card>
             </Match>
-            <Match when={activeStep() === FLASH_WIZARD_STEPS.FLASH_PROCESS_FAILED}>
-                <Card
-                    status="fail"
-                    primaryButtonLabel="Try again"
-                    secondaryButtonLabel="Select Port"
-                    isActive
-                    icon={BiRegularError}
-                    onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setAbortController('openiris')
-                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
-                        })
-                    }}
-                    onClickPrimary={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setAbortController('openiris')
-                            setStep(INIT_WIZARD_STEPS.SELECT_PORT)
-                        })
-                    }}
-                    label="Failed to flash board">
-                    <Typography color="red">
-                        {!flashFirmwareState()?.label
-                            ? 'Something went wrong, please contact with us on discord'
-                            : (flashFirmwareState()?.label ??
-                              'Something went wrong, please try again')}
-                    </Typography>
-                </Card>
-            </Match>
         </Switch>
     )
 }
 
-export default FlashProcessWizard
+export default FlashWizard

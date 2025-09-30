@@ -2,9 +2,9 @@ import { sleep, stringToHex } from '@src/utils'
 import { INetwork } from '@store/network/network'
 import { invoke, InvokeArgs } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
-import * as Type from './interfaces/types'
-import { apiTextParser, parseMultiJSON, stringTextParser } from './utils'
 import { COMMAND, ESP_COMMAND } from './commands'
+import * as Type from './interfaces/types'
+import { apiTextParser, parseMultiJSON } from './utils'
 
 export class EspApiCore {
     AUTH_MODE: Record<number, string> = {
@@ -83,8 +83,6 @@ export class EspApiCore {
     }
 
     public async _getPossibleNetworks(port: string): Promise<INetwork[]> {
-        // await this._pause(port)
-
         await invoke(ESP_COMMAND.GET_WIFI_CONNECTION_STATUS, {
             commands: [{ command: COMMAND.GET_WIFI_STATUS }],
             portName: port,
@@ -94,6 +92,8 @@ export class EspApiCore {
             commands: [{ command: COMMAND.SCAN_NETWORKS }],
             portName: port,
         })
+
+        console.log(response)
 
         return response
             .split('\n')

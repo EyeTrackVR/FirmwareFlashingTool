@@ -60,7 +60,7 @@ const Header: Component<IProps> = (props) => {
                                         color="white"
                                         text="small"
                                         class="tracking-[0.08em] group-hover:text-green-200 duration-150 transition-colors">
-                                        <TbDatabaseExport />
+                                        <TbDatabaseExport class="w-16 h-16" />
                                     </Typography>
                                 </div>
                             </Show>

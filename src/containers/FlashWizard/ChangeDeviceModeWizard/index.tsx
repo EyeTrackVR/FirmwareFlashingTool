@@ -1,24 +1,24 @@
 import Button from '@components/Buttons/Button'
-import SelectButton from '@components/Buttons/SelectButton'
 import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
-import { ACTION, DEVICE_MODE_WIZARD, INIT_WIZARD_STEPS, MODAL_TYPE } from '@interfaces/enums'
+import {
+    ACTION,
+    DEVICE_MODE_WIZARD,
+    INIT_WIZARD_STEPS,
+    SELECT_PORT_WIZARD,
+} from '@interfaces/enums'
 import { getApi } from '@src/esp'
 import { DeviceMode } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'
+import { detectDeviceMode } from '@store/actions/animation/detectDeviceMode'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppUIContext } from '@store/context/ui'
+import { activePort, deviceMode } from '@store/esp/selectors'
 import { BiRegularChip, BiRegularError } from 'solid-icons/bi'
-import { BsDisplayport } from 'solid-icons/bs'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { batch, Match, Switch } from 'solid-js'
 
 const ChangeDeviceModeWizard = () => {
-    const { setOpenModal } = useAppUIContext()
-    const { activePort, deviceMode, setDeviceMode, setActivePortName } = useAppAPIContext()
-
     const onClickSetActiveDeviceMode = async (mode: DeviceMode) => {
         batch(() => {
             setAction(ACTION.NEXT)
@@ -29,7 +29,7 @@ const ChangeDeviceModeWizard = () => {
         logger.add('mode: ' + mode)
 
         try {
-            await getApi().switchDeviceMode(activePort().activePortName, mode)
+            await getApi().switchDeviceMode(activePort(), mode)
 
             batch(() => {
                 setAction(ACTION.NEXT)
@@ -48,92 +48,8 @@ const ChangeDeviceModeWizard = () => {
         logger.functionEnd('onClickSetActiveDeviceMode')
     }
 
-    const detectDeviceMode = async () => {
-        logger.functionStart('detectDeviceMode')
-        logger.add('active port: ' + activePort().activePortName)
-
-        try {
-            const api = getApi()
-            await api.pause(activePort().activePortName)
-
-            const deviceMode = await api.getDeviceMode(activePort().activePortName)
-            batch(() => {
-                setAction(ACTION.NEXT)
-                setDeviceMode(deviceMode.toLocaleLowerCase() as DeviceMode)
-                setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_DEVICE_MODE)
-            })
-        } catch (err) {
-            console.log(err)
-            logger.errorStart('detect device mode ERRROR ')
-            logger.add(err instanceof Error ? err.message : `${err}`)
-            logger.errorEnd('detect device mode ERRROR ')
-
-            batch(() => {
-                setAction(ACTION.NEXT)
-                setStep(DEVICE_MODE_WIZARD.DETECT_DEVICE_MODE_FAILED)
-            })
-        }
-        logger.functionEnd('detectDeviceMode')
-    }
-
     return (
         <Switch>
-            <Match when={activeStep() === DEVICE_MODE_WIZARD.DEVICE_BEFORE_PROCEEDING}>
-                <Card
-                    primaryButtonLabel="Select port"
-                    isActive
-                    icon={BiRegularChip}
-                    onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(INIT_WIZARD_STEPS.SELECT_PROCESS)
-                        })
-                    }}
-                    onClickPrimary={async () => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setActivePortName('')
-                            setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_PORT)
-                        })
-                    }}
-                    label="Before proceeding"
-                    description="Unplug your board, then reconnect it to the PC without pressing any buttons to ensure it starts fresh."
-                />
-            </Match>
-            <Match when={activeStep() === DEVICE_MODE_WIZARD.DEVICE_SELECT_PORT}>
-                <Card
-                    primaryButtonLabel="Detect device mode"
-                    isActive={activePort().activePortName !== ''}
-                    icon={BsDisplayport}
-                    onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(DEVICE_MODE_WIZARD.DEVICE_BEFORE_PROCEEDING)
-                        })
-                    }}
-                    onClickPrimary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(DEVICE_MODE_WIZARD.DETECT_DEVICE_MODE)
-                        })
-                        detectDeviceMode().catch(() => {})
-                    }}
-                    label="Select Port"
-                    description="Choose the port your device is connected to, then click the button below.">
-                    <SelectButton
-                        tabIndex={0}
-                        type="button"
-                        label={
-                            activePort().activePortName === ''
-                                ? 'Select Port'
-                                : activePort().activePortName
-                        }
-                        onClick={() => {
-                            setOpenModal({ open: true, type: MODAL_TYPE.SELECT_PORT })
-                        }}
-                    />
-                </Card>
-            </Match>
             <Match when={activeStep() === DEVICE_MODE_WIZARD.DETECT_DEVICE_MODE}>
                 <Card
                     isLoader
@@ -150,7 +66,7 @@ const ChangeDeviceModeWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     isActive
@@ -164,12 +80,12 @@ const ChangeDeviceModeWizard = () => {
                     onClickSecondary={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     secondaryButtonLabel="Back"
                     primaryButtonLabel="Try again"
-                    description="Failed to detect device mode, Unplug your board, then reconnect it to the PC without pressing any buttons. Then click the button below."
+                    description="Failed to detect device mode, Unplug your board, then reconnect it to the PC without pressing any buttons to ensure it starts fresh. Then click the button below."
                 />
             </Match>
             <Match when={activeStep() === DEVICE_MODE_WIZARD.DEVICE_SELECT_DEVICE_MODE}>
@@ -180,7 +96,7 @@ const ChangeDeviceModeWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     label="Select device mode">

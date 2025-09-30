@@ -3,17 +3,16 @@ import { IDropdownList } from '@interfaces/interfaces'
 import SelectBoardModal from '@pages/Modals/SelectBoardModal'
 import { logger } from '@src/logger'
 import { BOARD_DESCRIPTION, RECOMMENDED_BOARDS } from '@src/static'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppUIContext } from '@store/context/ui'
+import { confirmFirmwareSelection } from '@store/firmware/firmware'
+import { activeBoard, ghAPI } from '@store/firmware/selectors'
+import { openModal } from '@store/ui/selectors'
+import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { Accessor, batch, createMemo } from 'solid-js'
 import { trace } from 'tauri-plugin-log-api'
 const SelectBoardModalContainer = () => {
-    const { confirmFirmwareSelection, getFirmwareAssets, activeBoard } = useAppAPIContext()
-    const { modal, setOpenModal } = useAppUIContext()
-
     const boards: Accessor<IDropdownList[]> = createMemo(() => {
-        if (!getFirmwareAssets().length) {
+        if (!ghAPI().assets.length) {
             return [
                 {
                     label: 'xiaosenses3_USB',
@@ -22,8 +21,8 @@ const SelectBoardModalContainer = () => {
             ]
         }
 
-        return getFirmwareAssets()
-            .map((item) => {
+        return ghAPI()
+            .assets.map((item) => {
                 trace(`${item.name}`)
                 return {
                     label: item.name,
@@ -56,7 +55,7 @@ const SelectBoardModalContainer = () => {
             version="1.7.0"
             boards={boards()}
             activeBoard={activeBoard()}
-            isActive={modal().type === MODAL_TYPE.SELECT_BOARD}
+            isActive={openModal().type === MODAL_TYPE.SELECT_BOARD}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:

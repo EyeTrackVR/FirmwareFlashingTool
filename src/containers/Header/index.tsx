@@ -13,6 +13,7 @@ export const HeaderRoot = () => {
             appVersion={'1.7.0'}
             onClickHome={() => {
                 navigate('/')
+                setAbortController('logs')
             }}
             onClickDownloadLogs={() => {
                 download(logger.getLogs(), 'firmwareLogs.log')

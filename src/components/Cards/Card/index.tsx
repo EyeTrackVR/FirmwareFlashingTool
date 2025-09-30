@@ -42,8 +42,12 @@ const Card: ParentComponent<IProps> = (props) => {
                     <IoChevronBackSharp class="w-[18px] h-[18px] text-lightBlue-300" />
                 </DefaultButton>
                 <Show when={typeof props.onClickSettings !== 'undefined'}>
-                    <DefaultButton onClick={() => props.onClickSettings?.()}>
-                        <VsSettings class="w-16 h-16 " />
+                    <DefaultButton
+                        class="opacity-1 hover:bg-black-800 rounded-full flex items-center justify-center p-6 duration-300 transition-colors"
+                        onClick={() => {
+                            props.onClickSettings?.()
+                        }}>
+                        <VsSettings class="w-16 h-16 text-lightBlue-300" />
                     </DefaultButton>
                 </Show>
             </div>
@@ -62,7 +66,7 @@ const Card: ParentComponent<IProps> = (props) => {
                         fallback={
                             <props.icon
                                 class={classNames(
-                                    'w-[52px] h-[52px] ',
+                                    'w-[52px] h-[52px]',
                                     props.status === 'fail'
                                         ? 'text-red-200'
                                         : props.status === 'success'

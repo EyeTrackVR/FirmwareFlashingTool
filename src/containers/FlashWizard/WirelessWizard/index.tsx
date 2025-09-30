@@ -6,8 +6,8 @@ import PasswordInput from '@components/Inputs/PasswordInput'
 import Typography from '@components/Typography'
 import {
     ACTION,
-    FLASH_WIZARD_STEPS,
     INIT_WIZARD_STEPS,
+    SELECT_MODE_WIZARD,
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
@@ -15,7 +15,7 @@ import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep, prevStep } from '@store/animation/selectors'
-import { useAppAPIContext } from '@store/context/api'
+import { activePort } from '@store/esp/selectors'
 import { setMdns, setPassword, setSelectedNetwork, setSsid } from '@store/network/network'
 import { availableNetworks, mdns, password, selectedNetwork, ssid } from '@store/network/selectors'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
@@ -23,9 +23,7 @@ import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'
 import { batch, createMemo, Match, Switch } from 'solid-js'
 
-const WirelessProcessWizard = () => {
-    const { isActivePortValid, activePort } = useAppAPIContext()
-
+const WirelessWizard = () => {
     const sortedNetworks = createMemo(() => {
         return [...availableNetworks()].sort((a, b) => {
             return Math.abs(+a.rssi) - Math.abs(+b.rssi)
@@ -35,11 +33,7 @@ const WirelessProcessWizard = () => {
     return (
         <Switch>
             <Match when={activeStep() === WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_WIRELESS_MODE}>
-                <Card
-                    isActive={isActivePortValid()}
-                    icon={BiRegularLoaderAlt}
-                    label="Wireless Mode"
-                    isLoader>
+                <Card icon={BiRegularLoaderAlt} label="Wireless Mode" isLoader>
                     <Typography text="caption" color="white" class="leading-[18px]">
                         Switching to wireless mode. Please wait.
                     </Typography>
@@ -59,7 +53,7 @@ const WirelessProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
+                            setStep(SELECT_MODE_WIZARD.SELECT_MODE)
                         })
                     }}
                     onClickNetwork={(network) => {
@@ -190,13 +184,13 @@ const WirelessProcessWizard = () => {
                                 savePrev,
                             )
                             logger.infoStart('Setup wireless connection')
-                            logger.add('active port: ' + activePort().activePortName)
+                            logger.add('active port: ' + activePort())
                             logger.add('mdns: ' + mdns())
                         })
 
                         getApi()
                             .setupWirelessConnection(
-                                activePort().activePortName,
+                                activePort(),
                                 mdns(),
                                 ssid(),
                                 password(),
@@ -328,4 +322,4 @@ const WirelessProcessWizard = () => {
     )
 }
 
-export default WirelessProcessWizard
+export default WirelessWizard

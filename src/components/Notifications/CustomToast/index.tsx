@@ -1,7 +1,7 @@
 import Typography from '@components/Typography'
 import { ENotificationType } from '@src/static/types/enums'
-import type { Notifications } from '@src/static/types/interfaces'
-import { useAppNotificationsContext } from '@src/store/context/notifications'
+import { Notifications } from '@store/notifications/notifications'
+import { notifications } from '@store/notifications/selectors'
 import { Alert, Toast, Transition } from 'solid-headless'
 import { AiOutlineCheckCircle } from 'solid-icons/ai'
 import { FiAlertOctagon, FiAlertTriangle } from 'solid-icons/fi'
@@ -15,8 +15,6 @@ interface ToastProps {
 
 const CustomToast: Component<ToastProps> = (props) => {
     const [isOpen, setIsOpen] = createSignal(true)
-
-    const { getNotifications } = useAppNotificationsContext()
 
     const dismiss = () => {
         setIsOpen(false)
@@ -33,7 +31,7 @@ const CustomToast: Component<ToastProps> = (props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-50"
             afterLeave={() => {
-                getNotifications()?.remove(props.id)
+                notifications()?.remove(props.id)
             }}>
             <Toast class="flex justify-between items-center">
                 <Alert class="bg-black-900 flex flex-row items-center gap-6 p-12 rounded-6 max-w-[400px]">

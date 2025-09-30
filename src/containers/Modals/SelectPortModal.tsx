@@ -4,15 +4,14 @@ import SelectPortModal from '@pages/Modals/SelectPortModal'
 import { getApi } from '@src/esp'
 import { UsbSerialPortInfo } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppUIContext } from '@store/context/ui'
+import { setActivePort, setPorts } from '@store/esp/esp'
+import { activePort, ports } from '@store/esp/selectors'
+import { openModal } from '@store/ui/selectors'
+import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { batch, createEffect, createMemo, on, onCleanup } from 'solid-js'
 
 const SelectPortModalContainer = () => {
-    const { setActivePortName, activePort, ports, setPorts } = useAppAPIContext()
-    const { modal, setOpenModal } = useAppUIContext()
-
     const loadPorts = (availablePorts: UsbSerialPortInfo[]) => {
         const portList: IDropdownList[] = availablePorts.map((port) => ({
             label: port.portName,
@@ -25,7 +24,7 @@ const SelectPortModalContainer = () => {
         if (JSON.stringify(portList) === JSON.stringify(ports())) return
 
         if (!availablePorts.length) {
-            setActivePortName('')
+            setActivePort('')
             setPorts([])
             return
         }
@@ -34,7 +33,7 @@ const SelectPortModalContainer = () => {
     }
 
     const isModalActive = createMemo(() => {
-        return modal().type === MODAL_TYPE.SELECT_PORT
+        return openModal().type === MODAL_TYPE.SELECT_PORT
     })
 
     createEffect(
@@ -60,8 +59,8 @@ const SelectPortModalContainer = () => {
         <SelectPortModal
             version="1.7.0"
             ports={ports()}
-            activeBoard={activePort().activePortName}
-            isActive={modal().type === MODAL_TYPE.SELECT_PORT}
+            activeBoard={activePort()}
+            isActive={openModal().type === MODAL_TYPE.SELECT_PORT}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
@@ -85,7 +84,7 @@ const SelectPortModalContainer = () => {
                     logger.infoStart('SelectPortModalContainer')
                     logger.add('onClickConfirmPort')
                     logger.add(`Selected port: ${port}`)
-                    setActivePortName(port)
+                    setActivePort(port)
                     setOpenModal({ open: false, type: MODAL_TYPE.NONE })
                     logger.infoEnd('SelectPortModalContainer')
                 })

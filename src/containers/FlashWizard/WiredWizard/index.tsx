@@ -3,8 +3,8 @@ import Input from '@components/Inputs/Input'
 import Typography from '@components/Typography'
 import {
     ACTION,
-    FLASH_WIZARD_STEPS,
     INIT_WIZARD_STEPS,
+    SELECT_MODE_WIZARD,
     WIRED_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
@@ -12,14 +12,15 @@ import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
-import { useAppAPIContext } from '@store/context/api'
+import { activePort } from '@store/esp/selectors'
+import { setTrackerName } from '@store/firmware/firmware'
+import { trackerName } from '@store/firmware/selectors'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { VsDeviceCameraVideo } from 'solid-icons/vs'
 import { batch, createSignal, Match, Switch } from 'solid-js'
 
-const WiredProcessWizard = () => {
-    const { trackerName, setTrackerName, activePort } = useAppAPIContext()
+const WiredWizard = () => {
     const [isPendingUpdate, setIsPendingUpdate] = createSignal(false)
     const [error, setError] = createSignal('')
 
@@ -36,21 +37,21 @@ const WiredProcessWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(FLASH_WIZARD_STEPS.SELECT_MODE)
+                            setStep(SELECT_MODE_WIZARD.SELECT_MODE)
                         })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             logger.infoStart('setupWiredConnection')
                             logger.add('tracker name: ' + trackerName())
-                            logger.add('active port: ' + activePort().activePortName)
+                            logger.add('active port: ' + activePort())
                             setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS)
                             setIsPendingUpdate(true)
                             setAction(ACTION.NEXT)
                             setError('')
                         })
                         getApi()
-                            .setupWiredConnection(trackerName(), activePort().activePortName)
+                            .setupWiredConnection(trackerName(), activePort())
                             .then(() => {
                                 batch(() => {
                                     setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_SUCCESS)
@@ -175,4 +176,4 @@ const WiredProcessWizard = () => {
     )
 }
 
-export default WiredProcessWizard
+export default WiredWizard
