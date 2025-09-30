@@ -124,9 +124,13 @@ const SelectPortWizard = () => {
                             case STEP_ACTION.CHANGE_DEVICE_MODE:
                             case STEP_ACTION.INSTALL_OPENIRIS:
                             case STEP_ACTION.UPDATE_NETWORK: {
-                                setActivePort('')
+                                batch(() => {
+                                    setActivePort('')
+                                    setAction(ACTION.NEXT)
+                                    setStep(SELECT_PORT_WIZARD.SELECT_PORT, false)
+                                })
+                                break
                             }
-
                             case STEP_ACTION.SELECT_MODE: {
                                 batch(() => {
                                     setAction(ACTION.NEXT)
@@ -135,12 +139,8 @@ const SelectPortWizard = () => {
                                 })
                                 break
                             }
-                            default: {
-                                batch(() => {
-                                    setStep(SELECT_PORT_WIZARD.SELECT_PORT, false)
-                                    setAction(ACTION.NEXT)
-                                })
-                            }
+                            default:
+                                break
                         }
                     }}
                     label="Before proceeding"

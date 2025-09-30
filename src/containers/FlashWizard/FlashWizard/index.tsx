@@ -4,6 +4,7 @@ import {
     ACTION,
     FLASH_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
+    SELECT_PORT_WIZARD,
     TERMINAL_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { setAction, setStep } from '@store/animation/animation'
@@ -34,7 +35,7 @@ const FlashWizard = () => {
                         if (isActiveProcess()) return
                         batch(() => {
                             setAction(ACTION.PREV)
-                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     onClickPrimary={() => {}}
@@ -56,14 +57,14 @@ const FlashWizard = () => {
                         batch(() => {
                             setAction(ACTION.PREV)
                             setAbortController('openiris')
-                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
                             setAbortController('openiris')
-                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     label="Failed to flash board">
@@ -85,7 +86,7 @@ const FlashWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            // setStep(INIT_WIZARD_STEPS.SELECT_PORT)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     onClickSecondary={() => {
