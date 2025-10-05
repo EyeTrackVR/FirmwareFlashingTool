@@ -19,16 +19,9 @@ import {
     enableNotificationsSounds,
     globalNotificationsType,
 } from '@store/notifications/selectors'
-import { doGHRequest } from '@store/actions/firmware/doGHRequest'
-import { channelMode } from '@store/firmware/selectors'
 
 const AppRoutes: Component = () => {
     const { get, set } = usePersistentStore()
-
-    // TODO: do not make call here on every render
-    createEffect(() => {
-        doGHRequest(channelMode())
-    })
 
     onMount(() => {
         get('settings').then((settings) => {
