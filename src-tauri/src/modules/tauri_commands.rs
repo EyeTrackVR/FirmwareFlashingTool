@@ -55,9 +55,7 @@ pub async fn handle_load_window_state<R: tauri::Runtime>(
   Ok(())
 }
 
-pub fn handle_debug<R: tauri::Runtime>(
-  app: tauri::AppHandle<R>,
-) -> Result<log::LevelFilter, String> {
+pub fn handle_debug<R: tauri::Runtime>(_: tauri::AppHandle<R>) -> Result<log::LevelFilter, String> {
   // read the Store file
   // let stores = app.state::<tauri_plugin_store::StoreCollection<R>>();
   // let path = std::path::PathBuf::from(".app-settings.bin");
