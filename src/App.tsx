@@ -1,6 +1,13 @@
-import { invoke } from '@tauri-apps/api/tauri'
+import { ENotificationAction } from '@src/static/types/enums'
+import { checkPermission } from '@store/actions/notifications/checkPermission'
+import {
+    setEnableNotifications,
+    setEnableNotificationsSounds,
+    setGlobalNotificationsType,
+} from '@store/notifications/notifications'
 import { lazy, onMount, Suspense } from 'solid-js'
-import { useEventListener } from 'solidjs-use'
+import { debug } from 'tauri-plugin-log-api'
+import { usePersistentStore } from './persistenStore'
 import { runWatchers } from './watchers'
 
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
@@ -8,14 +15,22 @@ const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
 
 const App = () => {
+    const { get } = usePersistentStore()
+
     onMount(() => {
-        runWatchers()
-        useEventListener(document, 'DOMContentLoaded', () => {
-            // check if the window state is saved and restore it if it is
-            invoke('handle_save_window_state').then(() => {
-                console.log('[App Boot]: saved window state')
-            })
+        get('settings').then((settings) => {
+            if (settings) {
+                debug('loading settings')
+                setEnableNotifications(settings.enableNotifications)
+                setEnableNotificationsSounds(settings.enableNotificationsSounds)
+                setGlobalNotificationsType(
+                    settings.globalNotificationsType ?? ENotificationAction.APP,
+                )
+            }
         })
+
+        checkPermission()
+        runWatchers()
     })
 
     return (
