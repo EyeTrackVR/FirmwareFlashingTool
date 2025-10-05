@@ -8,8 +8,10 @@ import { activePort } from '@store/esp/selectors'
 import { batch } from 'solid-js'
 
 export const detectDeviceMode = async () => {
-    logger.functionStart('detectDeviceMode')
-    logger.add('active port: ' + activePort())
+    batch(() => {
+        logger.functionStart('detectDeviceMode')
+        logger.add('active port: ' + activePort())
+    })
 
     try {
         const api = getApi()
@@ -22,14 +24,12 @@ export const detectDeviceMode = async () => {
             setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_DEVICE_MODE)
         })
     } catch (err) {
-        console.log(err)
-        logger.errorStart('detect device mode ERRROR ')
-        logger.add(err instanceof Error ? err.message : `${err}`)
-        logger.errorEnd('detect device mode ERRROR ')
-
         batch(() => {
             setAction(ACTION.NEXT)
             setStep(DEVICE_MODE_WIZARD.DETECT_DEVICE_MODE_FAILED)
+            logger.errorStart('detect device mode ERRROR ')
+            logger.add(err instanceof Error ? err.message : `${err}`)
+            logger.errorEnd('detect device mode ERRROR ')
         })
     }
     logger.functionEnd('detectDeviceMode')

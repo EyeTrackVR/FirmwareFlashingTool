@@ -1,9 +1,3 @@
-// we have to somehow combine
-// select mode
-// update network
-// change device mode
-// setup wizard
-
 import SelectButton from '@components/Buttons/SelectButton'
 import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
@@ -16,9 +10,11 @@ import {
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
     STEP_ACTION,
+    UPDATE_NETWORK_WIZARD,
 } from '@interfaces/enums'
 import { logger } from '@src/logger'
 import { detectDeviceMode } from '@store/actions/animation/detectDeviceMode'
+import { verifyBoardMode } from '@store/actions/animation/verifyBoardMode'
 import { verifyPortConnection } from '@store/actions/animation/verifyPortConnection'
 import { downloadAsset } from '@store/actions/firmware/downloadAsset'
 import { installOpenIris } from '@store/actions/terminal/installOpenIris'
@@ -60,6 +56,12 @@ const SelectPortWizard = () => {
             case STEP_ACTION.INSTALL_OPENIRIS: {
                 return 'Install openiris'
             }
+            case STEP_ACTION.UPDATE_NETWORK: {
+                return 'Check mode'
+            }
+            case STEP_ACTION.SELECT_NETWORK: {
+                return 'Continue'
+            }
             default:
                 break
         }
@@ -67,10 +69,12 @@ const SelectPortWizard = () => {
 
     const selectPortDescription = createMemo(() => {
         switch (activeStepAction()) {
-            case STEP_ACTION.INSTALL_OPENIRIS:
+            case STEP_ACTION.INSTALL_OPENIRIS: {
                 return 'Choose the port your device is connected to, then click the button below to begin flashing and follow the on-screen instructions.'
-            default:
+            }
+            default: {
                 return 'Choose the port your device is connected to, then click the button below.'
+            }
         }
     })
 
@@ -78,9 +82,13 @@ const SelectPortWizard = () => {
         switch (activeStepAction()) {
             case STEP_ACTION.CHANGE_DEVICE_MODE:
             case STEP_ACTION.SELECT_MODE:
+            case STEP_ACTION.SELECT_NETWORK:
+            case STEP_ACTION.UPDATE_NETWORK: {
                 return 'Unplug your board, then reconnect it to the PC without pressing any buttons to ensure it starts fresh.'
-            default:
+            }
+            default: {
                 return undefined
+            }
         }
     })
 
@@ -94,7 +102,8 @@ const SelectPortWizard = () => {
                     onClickBack={() => {
                         switch (activeStepAction()) {
                             case STEP_ACTION.CHANGE_DEVICE_MODE:
-                            case STEP_ACTION.UPDATE_NETWORK: {
+                            case STEP_ACTION.UPDATE_NETWORK:
+                            case STEP_ACTION.SELECT_NETWORK: {
                                 batch(() => {
                                     setStep(INIT_WIZARD_STEPS.SELECT_PROCESS, false)
                                     setAction(ACTION.PREV)
@@ -123,7 +132,8 @@ const SelectPortWizard = () => {
                         switch (activeStepAction()) {
                             case STEP_ACTION.CHANGE_DEVICE_MODE:
                             case STEP_ACTION.INSTALL_OPENIRIS:
-                            case STEP_ACTION.UPDATE_NETWORK: {
+                            case STEP_ACTION.UPDATE_NETWORK:
+                            case STEP_ACTION.SELECT_NETWORK: {
                                 batch(() => {
                                     setActivePort('')
                                     setAction(ACTION.NEXT)
@@ -134,7 +144,7 @@ const SelectPortWizard = () => {
                             case STEP_ACTION.SELECT_MODE: {
                                 batch(() => {
                                     setAction(ACTION.NEXT)
-                                    setStep(SELECT_PORT_WIZARD.SELECT_CHECK_PORT_CONNECTION)
+                                    setStep(SELECT_PORT_WIZARD.SELECT_CHECK_PORT_CONNECTION, false)
                                     verifyPortConnection().catch(() => {})
                                 })
                                 break
@@ -175,7 +185,7 @@ const SelectPortWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(SELECT_PORT_WIZARD.SELECT_PORT_BEFORE_PROCEEDING)
+                            setStep(SELECT_PORT_WIZARD.SELECT_PORT_BEFORE_PROCEEDING, false)
                         })
                     }}
                     onClickPrimary={() => {
@@ -192,17 +202,35 @@ const SelectPortWizard = () => {
                                 batch(() => {
                                     setAction(ACTION.NEXT)
                                     verifyPortConnection().catch(() => {})
-                                    setStep(SELECT_PORT_WIZARD.SELECT_CHECK_PORT_CONNECTION)
+                                    setStep(SELECT_PORT_WIZARD.SELECT_CHECK_PORT_CONNECTION, false)
                                 })
                                 break
                             }
+
+                            case STEP_ACTION.UPDATE_NETWORK: {
+                                batch(() => {
+                                    setAction(ACTION.NEXT)
+                                    verifyBoardMode(['wifi', 'auto']).catch(() => {})
+                                    setStep(UPDATE_NETWORK_WIZARD.UPDATE_NETWORK_CHECK_MODE, false)
+                                })
+                                break
+                            }
+
+                            case STEP_ACTION.SELECT_NETWORK: {
+                                batch(() => {
+                                    setAction(ACTION.NEXT)
+                                    verifyPortConnection(true).catch(() => {})
+                                    setStep(SELECT_PORT_WIZARD.SELECT_CHECK_PORT_CONNECTION, false)
+                                })
+                                break
+                            }
+
                             case STEP_ACTION.INSTALL_OPENIRIS: {
                                 batch(() => {
                                     logger.infoStart('INIT_WIZARD_STEPS.SELECT_PORT')
                                     logger.add(`firmware type : ${firmwareType()}`)
                                     logger.add(`active port : ${activePort()}`)
-                                    setAction(ACTION.NEXT)
-                                    setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS)
+                                    setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS, false)
                                     setAbortController('openiris')
                                     setProcessStatus(true)
                                     restartFirmwareState()
@@ -212,7 +240,6 @@ const SelectPortWizard = () => {
                                 })
                                 break
                             }
-
                             default:
                                 break
                         }

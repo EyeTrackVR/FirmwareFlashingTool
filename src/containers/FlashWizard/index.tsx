@@ -11,6 +11,7 @@ import SetupWizard from './SetupWizard'
 import TerminalWizard from './TerminalWizard'
 import WiredWizard from './WiredWizard'
 import WirelessWizard from './WirelessWizard'
+import UpdateNetworkWizard from './UpdateNetworkWizard'
 
 const FlashWizardRoot = () => {
     const maxSize = createMemo(() => {
@@ -33,6 +34,7 @@ const FlashWizardRoot = () => {
                     <TerminalWizard />
                     <SelectModeWizard />
                     <SelectPortWizard />
+                    <UpdateNetworkWizard />
                     <ChangeDeviceModeWizard />
                     <WirelessWizard />
                     <WiredWizard />

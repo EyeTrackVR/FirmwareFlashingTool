@@ -8,6 +8,8 @@ import {
     ACTION,
     INIT_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
+    SELECT_PORT_WIZARD,
+    STEP_ACTION,
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
@@ -18,6 +20,7 @@ import { activeStep, prevStep } from '@store/animation/selectors'
 import { activePort } from '@store/esp/selectors'
 import { setMdns, setPassword, setSelectedNetwork, setSsid } from '@store/network/network'
 import { availableNetworks, mdns, password, selectedNetwork, ssid } from '@store/network/selectors'
+import { activeStepAction } from '@store/ui/selectors'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'
@@ -51,10 +54,20 @@ const WirelessWizard = () => {
                 <NetworkCard
                     data={sortedNetworks()}
                     onClickBack={() => {
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(SELECT_MODE_WIZARD.SELECT_MODE)
-                        })
+                        if (
+                            activeStepAction() === STEP_ACTION.SELECT_NETWORK ||
+                            activeStepAction() === STEP_ACTION.UPDATE_NETWORK
+                        ) {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(SELECT_PORT_WIZARD.SELECT_PORT)
+                            })
+                        } else {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(SELECT_MODE_WIZARD.SELECT_MODE)
+                            })
+                        }
                     }}
                     onClickNetwork={(network) => {
                         batch(() => {
@@ -162,7 +175,6 @@ const WirelessWizard = () => {
                     icon={RiSystemLockPasswordLine}
                     onClickBack={() => {
                         const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
-
                         if (prevStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP) {
                             batch(() => {
                                 setAction(ACTION.PREV)

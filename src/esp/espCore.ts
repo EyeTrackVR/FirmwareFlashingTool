@@ -12,7 +12,7 @@ export class EspApiClientProvider extends EspApiCore {
         await sleep(200)
     }
 
-    public async getDeviceMode(portName: string) {
+    public async getDeviceMode(portName: string): Promise<string> {
         return this._getDeviceMode(portName)
     }
 

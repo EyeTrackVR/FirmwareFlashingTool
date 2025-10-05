@@ -9,6 +9,7 @@ import {
     DEVICE_MODE_WIZARD,
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
+    UPDATE_NETWORK_WIZARD,
 } from '@interfaces/enums'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
@@ -22,6 +23,7 @@ export type steps =
     | DEVICE_MODE_WIZARD
     | SELECT_MODE_WIZARD
     | SELECT_PORT_WIZARD
+    | UPDATE_NETWORK_WIZARD
 
 export interface IAnimationState {
     action: ACTION

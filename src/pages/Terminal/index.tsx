@@ -103,7 +103,7 @@ const Terminal: Component<IProps> = (props) => {
                     <div
                         ref={containerRef}
                         class="flex flex-col overflow-hidden w-full flex-1 bg-black-700 p-24 rounded-12">
-                        <div class="overflow-auto w-full h-full" onScroll={handleScroll}>
+                        <div class="overflow-auto w-full h-full scrollbar" onScroll={handleScroll}>
                             <div
                                 style={{
                                     position: 'relative',

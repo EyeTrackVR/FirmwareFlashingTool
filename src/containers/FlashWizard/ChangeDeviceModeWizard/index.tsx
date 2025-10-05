@@ -6,6 +6,8 @@ import {
     DEVICE_MODE_WIZARD,
     INIT_WIZARD_STEPS,
     SELECT_PORT_WIZARD,
+    STEP_ACTION,
+    WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
 import { DeviceMode } from '@src/esp/interfaces/types'
@@ -13,38 +15,86 @@ import { logger } from '@src/logger'
 import { detectDeviceMode } from '@store/actions/animation/detectDeviceMode'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
+import { setActivePort } from '@store/esp/esp'
 import { activePort, deviceMode } from '@store/esp/selectors'
+import { setAvailableNetworks } from '@store/network/network'
+import { setActiveAction } from '@store/ui/ui'
 import { BiRegularChip, BiRegularError } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { batch, Match, Switch } from 'solid-js'
 
 const ChangeDeviceModeWizard = () => {
     const onClickSetActiveDeviceMode = async (mode: DeviceMode) => {
+        setActiveAction(STEP_ACTION.CHANGE_DEVICE_MODE)
+
         batch(() => {
             setAction(ACTION.NEXT)
             setStep(DEVICE_MODE_WIZARD.DEVICE_SWITCHING_DEVICE_MODE_PROCESS)
+            logger.functionStart('onClickSetActiveDeviceMode')
+            logger.add('mode: ' + mode)
         })
 
-        logger.functionStart('onClickSetActiveDeviceMode')
-        logger.add('mode: ' + mode)
+        const api = getApi()
 
         try {
-            await getApi().switchDeviceMode(activePort(), mode)
+            const deviceMode = await api.getDeviceMode(activePort())
 
+            if (deviceMode.toLocaleLowerCase() !== mode.toLocaleLowerCase()) {
+                await api.switchDeviceMode(activePort(), mode)
+            }
+        } catch (err) {
+            batch(() => {
+                setAction(ACTION.NEXT)
+                setStep(DEVICE_MODE_WIZARD.DEVICE_SWITCHING_DEVICE_MODE_FAILED)
+                logger.errorStart(' ERRROR ')
+                logger.add(err instanceof Error ? err.message : `${err}`)
+                logger.errorEnd(' ERRROR ')
+            })
+            return
+        }
+
+        if (mode === 'uvc') {
             batch(() => {
                 setAction(ACTION.NEXT)
                 setStep(DEVICE_MODE_WIZARD.DEVICE_SWITCHING_DEVICE_MODE_SUCCESS)
             })
-        } catch (err) {
-            logger.errorStart(' ERRROR ')
-            logger.add(err instanceof Error ? err.message : `${err}`)
-            logger.errorEnd(' ERRROR ')
+        } else {
+            setActiveAction(STEP_ACTION.SELECT_NETWORK)
+            try {
+                const isTheSamePort = await api.checkPortConnection(activePort())
 
-            batch(() => {
-                setAction(ACTION.NEXT)
-                setStep(DEVICE_MODE_WIZARD.DEVICE_SWITCHING_DEVICE_MODE_FAILED)
-            })
+                if (isTheSamePort) {
+                    batch(() => {
+                        setAction(ACTION.NEXT)
+                        setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SCAN_FOR_NETWORKS)
+                    })
+                    try {
+                        const networks = await getApi().getAvailableNetworks(activePort())
+                        setAvailableNetworks(networks)
+                    } catch (err) {
+                        console.log(err)
+                        setAvailableNetworks([])
+                    }
+                    batch(() => {
+                        setAction(ACTION.NEXT)
+                        setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SELECT_NETWORK)
+                    })
+                } else {
+                    batch(() => {
+                        setAction(ACTION.NEXT)
+                        setActivePort('')
+                        setStep(SELECT_PORT_WIZARD.SELECT_PORT)
+                    })
+                }
+            } catch {
+                batch(() => {
+                    setAction(ACTION.NEXT)
+                    setActivePort('')
+                    setStep(SELECT_PORT_WIZARD.SELECT_PORT)
+                })
+            }
         }
+
         logger.functionEnd('onClickSetActiveDeviceMode')
     }
 

@@ -6,6 +6,7 @@ import {
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/enums'
 import { getApi } from '@src/esp'
+import { DeviceMode } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'
 import { setAction, setStep } from '@store/animation/animation'
 import { selectedMode } from '@store/animation/selectors'
@@ -14,27 +15,27 @@ import { activePort } from '@store/esp/selectors'
 import { setAvailableNetworks } from '@store/network/network'
 import { batch } from 'solid-js'
 
-export const verifyPortConnection = async () => {
+export const verifyPortConnection = async (isLocked: boolean = false, mode?: DeviceMode) => {
     batch(() => {
         logger.infoStart('Verify Port connection')
         logger.add('active port: ' + activePort())
         logger.add('selected mode: ' + selectedMode())
-        setAction(ACTION.NEXT)
-        setStep(SELECT_PORT_WIZARD.SELECT_CHECK_PORT_CONNECTION)
     })
 
     const api = getApi()
 
     try {
-        await api.switchDeviceMode(
-            activePort(),
-            selectedMode() === FLASH_MODE.WIRED ? 'uvc' : 'wifi',
-        )
+        if (!isLocked) {
+            await api.switchDeviceMode(
+                activePort(),
+                mode ?? (selectedMode() === FLASH_MODE.WIRED ? 'uvc' : 'wifi'),
+            )
+        }
 
         const isTheSamePort = await api.checkPortConnection(activePort())
 
         if (isTheSamePort) {
-            if (selectedMode() === FLASH_MODE.WIRED) {
+            if (selectedMode() === FLASH_MODE.WIRED && !isLocked) {
                 batch(() => {
                     setAction(ACTION.NEXT)
                     setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_NAME)
@@ -42,7 +43,11 @@ export const verifyPortConnection = async () => {
             } else {
                 batch(() => {
                     setAction(ACTION.NEXT)
-                    setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_WIRELESS_MODE)
+                    setStep(
+                        isLocked
+                            ? WIRELESS_WIZARD_STEPS.WIRELESS_SCAN_FOR_NETWORKS
+                            : WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_WIRELESS_MODE,
+                    )
                 })
 
                 try {

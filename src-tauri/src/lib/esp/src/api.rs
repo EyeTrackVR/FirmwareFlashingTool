@@ -438,7 +438,6 @@ pub async fn get_wifi_connection_status(
 ) -> Result<String, String> {
   let operation = CommandsOperation { commands };
   let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
-  println!("get connection status: ");
   tauri::async_runtime::spawn_blocking(move || {
     let mut serial_port = serialport::new(port_name, 115_200)
       .flow_control(FlowControl::None)
