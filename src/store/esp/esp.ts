@@ -1,7 +1,7 @@
-import { IDropdownList } from '@interfaces/interfaces'
-import { createStore, produce } from 'solid-js/store'
+import { type IDropdownList } from '@interfaces/firmware/interfaces'
 import { type DeviceMode } from '@src/esp/interfaces/types'
 import { createMemo } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
 
 export interface IEspStore {
     ports: IDropdownList[]

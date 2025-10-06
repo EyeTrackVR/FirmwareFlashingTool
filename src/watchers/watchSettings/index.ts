@@ -1,5 +1,5 @@
+import { PersistentSettings } from '@interfaces/settings/interfaces'
 import { usePersistentStore } from '@src/persistenStore'
-import type { PersistentSettings } from '@static/types'
 import {
     enableNotifications,
     enableNotificationsSounds,
