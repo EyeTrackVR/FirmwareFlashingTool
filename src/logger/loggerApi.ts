@@ -5,6 +5,10 @@ export class LoggerApi {
         this.data.push(message)
     }
 
+    public _clear() {
+        this.data = []
+    }
+
     private sectionStart(type: string, action: string): void {
         const label = action ? `${type} (${action}) START` : `${type} START`
         this._add('')

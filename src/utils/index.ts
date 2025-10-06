@@ -27,6 +27,7 @@ export const shortMdnsAddress = (text: string) => {
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
 export const download = (data: string, filename: string) => {
     const blob = new Blob([data], { type: 'text/plain' })
     const anchor = document.createElement('a')
@@ -66,33 +67,22 @@ export const trimLogsByTextLength = (logs: string, maxLength: number): string[] 
     if (logs.length <= maxLength) return [logs]
 
     const validLogs: string[] = []
-    let buffer = ''
     let start = 0
 
     while (start < logs.length) {
-        const end = Math.min(start + maxLength, logs.length)
+        let end = start + maxLength
+        if (end > logs.length) end = logs.length
 
         let lastSpaceIndex = logs.lastIndexOf(' ', end)
-        if (lastSpaceIndex === -1 || lastSpaceIndex < start) {
+        if (lastSpaceIndex <= start) {
             lastSpaceIndex = end
         }
 
-        const substring = logs.slice(start, lastSpaceIndex)
+        const chunk = logs.slice(start, lastSpaceIndex).trim()
+        if (chunk) validLogs.push(chunk)
 
-        buffer += substring.trim()
-
-        if (buffer.length >= maxLength) {
-            validLogs.push(buffer)
-            buffer = ''
-        } else {
-            buffer += ' '
-        }
-
-        start = lastSpaceIndex + 1
-    }
-
-    if (buffer.trim().length > 0) {
-        validLogs.push(buffer.trim())
+        start = lastSpaceIndex
+        if (logs[start] === ' ') start++
     }
 
     return validLogs

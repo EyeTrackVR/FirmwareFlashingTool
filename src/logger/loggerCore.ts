@@ -5,6 +5,10 @@ export class LoggerCore extends LoggerApi {
         return this._getLogs()
     }
 
+    public clear() {
+        this._clear()
+    }
+
     public add(message: string) {
         this._add(message)
     }
