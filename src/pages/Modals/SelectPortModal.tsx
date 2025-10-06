@@ -3,9 +3,9 @@ import Input from '@components/Inputs/Input'
 import { Modal } from '@components/Modal/Modal'
 import ModalHeader from '@components/Modal/ModalHeader'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
-import { IDropdownList } from '@interfaces/interfaces'
-import { SELECT_PORT_MODAL_ID } from '@src/static'
+import { type IDropdownList } from '@interfaces/firmware/interfaces'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import { SELECT_PORT_MODAL_ID } from '@static/index'
 import { Component, createMemo, createSignal, For, Show } from 'solid-js'
 
 export interface IProps {

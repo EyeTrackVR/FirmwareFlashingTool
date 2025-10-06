@@ -1,4 +1,4 @@
-import { ACTION, DEVICE_MODE_WIZARD } from '@interfaces/enums'
+import { ACTION, DEVICE_MODE_WIZARD } from '@interfaces/animation/enums'
 import { getApi } from '@src/esp'
 import { DeviceMode } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'

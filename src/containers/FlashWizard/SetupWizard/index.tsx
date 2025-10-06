@@ -8,7 +8,7 @@ import {
     SELECT_PORT_WIZARD,
     STEP_ACTION,
     TERMINAL_WIZARD_STEPS,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { activeBoard } from '@store/firmware/selectors'

@@ -4,7 +4,7 @@ import {
     FLASH_WIZARD_STEPS,
     INIT_WIZARD_STEPS,
     TERMINAL_WIZARD_STEPS,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { useNavigate } from '@solidjs/router'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep, prevStep } from '@store/animation/selectors'

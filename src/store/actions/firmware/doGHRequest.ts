@@ -1,6 +1,6 @@
-import { CHANNEL_TYPE, RESTStatus } from '@interfaces/enums'
-import { GHEndpoints } from '@src/static/endpoints'
+import { CHANNEL_TYPE, REST_STATUS } from '@interfaces/firmware/enums'
 import { formatDeviceName } from '@src/utils'
+import { GHEndpoints } from '@static/index'
 import {
     clearGHApiState,
     IGHRelease,
@@ -73,8 +73,8 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
         const client = await getClient()
         const endpoint = GHEndpoints[channelType]
 
-        setGHRestStatus(RESTStatus.ACTIVE)
-        setGHRestStatus(RESTStatus.LOADING)
+        setGHRestStatus(REST_STATUS.ACTIVE)
+        setGHRestStatus(REST_STATUS.LOADING)
 
         debug(`[Github Release]: Github Endpoint ${endpoint}`)
 
@@ -117,7 +117,7 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                 if ((!response.ok || !(response instanceof Object)) && config === '') {
                     warn('[Config Exists]: Most likely rate limited')
                     setGHData(config_json, false)
-                    setGHRestStatus(RESTStatus.COMPLETE)
+                    setGHRestStatus(REST_STATUS.COMPLETE)
                     return
                 }
                 if (response.data['name'] === config_json.version) {
@@ -129,24 +129,24 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                 // update config
                 setGHData(response.data, true)
                 debug('[Config Exists]: Config Exists and is out of date - Updating')
-                setGHRestStatus(RESTStatus.COMPLETE)
+                setGHRestStatus(REST_STATUS.COMPLETE)
                 return
             } catch (err) {
-                setGHRestStatus(RESTStatus.NO_CONFIG)
+                setGHRestStatus(REST_STATUS.NO_CONFIG)
                 if (response.ok) {
                     error(`[Config Read Error]: ${err} Creating config.json`)
                     setGHData(response.data, true)
-                    setGHRestStatus(RESTStatus.COMPLETE)
+                    setGHRestStatus(REST_STATUS.COMPLETE)
                 }
             }
         } catch (err) {
-            setGHRestStatus(RESTStatus.FAILED)
+            setGHRestStatus(REST_STATUS.FAILED)
             error(`[Github Release Error]: ${err}`)
             const config = await readTextFile('config.json', {
                 dir: BaseDirectory.AppConfig,
             })
             if (!config) {
-                setGHRestStatus(RESTStatus.NO_CONFIG)
+                setGHRestStatus(REST_STATUS.NO_CONFIG)
                 error(`[Config Read Error]: Config does not exist ${err}`)
             }
             const config_json = JSON.parse(config)
@@ -157,10 +157,10 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                 setGHData(config_json, false)
                 return
             }
-            setGHRestStatus(RESTStatus.NO_CONFIG)
+            setGHRestStatus(REST_STATUS.NO_CONFIG)
         }
     } catch (err) {
-        setGHRestStatus(RESTStatus.FAILED)
+        setGHRestStatus(REST_STATUS.FAILED)
         error(`[Tauri Runtime Error - http client]: ${err}`)
         return
     }

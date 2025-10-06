@@ -1,4 +1,5 @@
-import { DEFAULT_MDNS_LENGTH, MDNS_LENGTH } from '@src/static'
+import { DEFAULT_MDNS_LENGTH, MDNS_LENGTH } from '@static/index'
+import { CHANNEL_TYPE } from '@interfaces/firmware/enums'
 
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
@@ -95,4 +96,8 @@ export const trimLogsByTextLength = (logs: string, maxLength: number): string[] 
     }
 
     return validLogs
+}
+
+export const isValidChannel = (value: string): value is CHANNEL_TYPE => {
+    return Object.values(CHANNEL_TYPE).includes(value as CHANNEL_TYPE)
 }

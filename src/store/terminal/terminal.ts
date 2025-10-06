@@ -1,6 +1,6 @@
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/animation/enums'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
-import { FLASH_STATUS, FLASH_STEP } from '@interfaces/enums'
 
 export interface IFlashState {
     status: FLASH_STATUS

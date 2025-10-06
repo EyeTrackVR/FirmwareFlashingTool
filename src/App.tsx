@@ -1,4 +1,3 @@
-import { ENotificationAction } from '@src/static/types/enums'
 import { checkPermission } from '@store/actions/notifications/checkPermission'
 import {
     setEnableNotifications,
@@ -24,7 +23,7 @@ const App = () => {
                 setEnableNotifications(settings.enableNotifications)
                 setEnableNotificationsSounds(settings.enableNotificationsSounds)
                 setGlobalNotificationsType(
-                    settings.globalNotificationsType ?? ENotificationAction.APP,
+                    settings.globalNotificationsType ?? NOTIFICATION_ACTION.APP,
                 )
             }
         })

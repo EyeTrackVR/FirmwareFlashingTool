@@ -1,4 +1,5 @@
-import { ENotificationType, MODAL_TYPE } from '@interfaces/enums'
+import { MODAL_TYPE } from '@interfaces/animation/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
 import { download } from '@src/utils'
@@ -32,7 +33,7 @@ export const TerminalContainer = () => {
                     addNotification({
                         title: 'No port selected',
                         message: 'No port selected',
-                        type: ENotificationType.INFO,
+                        type: NOTIFICATION_TYPE.INFO,
                     })
                     return
                 }
@@ -44,7 +45,7 @@ export const TerminalContainer = () => {
                     addNotification({
                         title: 'No logs found',
                         message: 'No logs found.',
-                        type: ENotificationType.INFO,
+                        type: NOTIFICATION_TYPE.INFO,
                     })
                     return
                 }

@@ -1,7 +1,7 @@
 import Header from '@components/Header'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { useNavigate } from '@solidjs/router'
 import { logger } from '@src/logger'
-import { TITLEBAR_ACTION } from '@src/static/types/enums'
 import { download } from '@src/utils'
 import { setAbortController } from '@store/terminal/terminal'
 import { appWindow } from '@tauri-apps/api/window'

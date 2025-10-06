@@ -11,7 +11,7 @@ import {
     SELECT_PORT_WIZARD,
     STEP_ACTION,
     WIRELESS_WIZARD_STEPS,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'

@@ -1,5 +1,4 @@
 import SwipeAnimation from '@components/SwipeAnimation'
-import { WIRELESS_WIZARD_STEPS } from '@interfaces/enums'
 import { classNames } from '@src/utils'
 import { activeStep } from '@store/animation/selectors'
 import { createMemo } from 'solid-js'
@@ -12,6 +11,7 @@ import TerminalWizard from './TerminalWizard'
 import WiredWizard from './WiredWizard'
 import WirelessWizard from './WirelessWizard'
 import UpdateNetworkWizard from './UpdateNetworkWizard'
+import { WIRELESS_WIZARD_STEPS } from '@interfaces/animation/enums'
 
 const FlashWizardRoot = () => {
     const maxSize = createMemo(() => {

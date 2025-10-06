@@ -1,4 +1,4 @@
-import { ACTION, UPDATE_NETWORK_WIZARD, WIRELESS_WIZARD_STEPS } from '@interfaces/enums'
+import { ACTION, UPDATE_NETWORK_WIZARD, WIRELESS_WIZARD_STEPS } from '@interfaces/animation/enums'
 import { getApi } from '@src/esp'
 import { DeviceMode } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'

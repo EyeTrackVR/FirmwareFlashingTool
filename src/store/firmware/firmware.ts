@@ -1,10 +1,10 @@
-import { CHANNEL_TYPE, RESTStatus } from '@interfaces/enums'
 import { createStore, produce } from 'solid-js/store'
 import { debug } from 'tauri-plugin-log-api'
 import { createMemo } from 'solid-js'
+import { CHANNEL_TYPE, REST_STATUS } from '@interfaces/firmware/enums'
 
 export interface IRest {
-    status: RESTStatus
+    status: REST_STATUS
     device: string
     response: object
 }
@@ -34,7 +34,7 @@ export interface IGHAsset {
 }
 
 export interface IGHRest {
-    status: RESTStatus
+    status: REST_STATUS
     assets: IGHAsset[]
     version: string
 }
@@ -54,12 +54,12 @@ const defaultState: IFirmwareStore = {
     activeBoard: '',
     channelMode: CHANNEL_TYPE.OFFICIAL,
     restAPI: {
-        status: RESTStatus.COMPLETE,
+        status: REST_STATUS.COMPLETE,
         device: '',
         response: {},
     },
     ghAPI: {
-        status: RESTStatus.COMPLETE,
+        status: REST_STATUS.COMPLETE,
         assets: [],
         version: '',
     },
@@ -80,7 +80,7 @@ export const setTrackerName = (trackerName: string) => {
     )
 }
 
-export const setGHRestStatus = (status: RESTStatus) => {
+export const setGHRestStatus = (status: REST_STATUS) => {
     setState(
         produce((s) => {
             s.ghAPI.status = status
@@ -145,7 +145,7 @@ export const saveManifestPath = (url: string) => {
     )
 }
 
-export const setRESTStatus = (status: RESTStatus) => {
+export const setRESTStatus = (status: REST_STATUS) => {
     setState(
         produce((s) => {
             s.restAPI.status = status

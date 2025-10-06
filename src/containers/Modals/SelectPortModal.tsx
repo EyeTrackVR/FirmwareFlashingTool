@@ -1,5 +1,6 @@
-import { MODAL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
-import { IDropdownList } from '@interfaces/interfaces'
+import { MODAL_TYPE } from '@interfaces/animation/enums'
+import { type IDropdownList } from '@interfaces/firmware/interfaces'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import SelectPortModal from '@pages/Modals/SelectPortModal'
 import { getApi } from '@src/esp'
 import { UsbSerialPortInfo } from '@src/esp/interfaces/types'

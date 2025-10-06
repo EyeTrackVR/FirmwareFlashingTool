@@ -27,7 +27,7 @@
         "resolveJsonModule": true,
         "paths": {
             "@interfaces/*": [
-                "src/static/types/*"
+                "src/types/*"
             ],
             "@components/*": [
                 "src/components/*"

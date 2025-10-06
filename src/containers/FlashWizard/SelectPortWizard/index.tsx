@@ -11,7 +11,7 @@ import {
     SELECT_PORT_WIZARD,
     STEP_ACTION,
     UPDATE_NETWORK_WIZARD,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { logger } from '@src/logger'
 import { detectDeviceMode } from '@store/actions/animation/detectDeviceMode'
 import { verifyBoardMode } from '@store/actions/animation/verifyBoardMode'

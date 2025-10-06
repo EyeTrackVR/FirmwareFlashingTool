@@ -1,9 +1,10 @@
 import OptionButton from '@components/Buttons/OptionButton'
 import { Modal } from '@components/Modal/Modal'
 import ModalHeader from '@components/Modal/ModalHeader'
-import { CHANNEL_TYPE, TITLEBAR_ACTION } from '@interfaces/enums'
-import { IDropdownList } from '@interfaces/interfaces'
-import { DEVTOOLS_MODAL_ID } from '@src/static'
+import { type CHANNEL_TYPE } from '@interfaces/firmware/enums'
+import { type IDropdownList } from '@interfaces/firmware/interfaces'
+import { type TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import { DEVTOOLS_MODAL_ID } from '@static/index'
 import { Component, For } from 'solid-js'
 
 export interface IProps {

@@ -1,6 +1,6 @@
 /* @refresh reload */
 import Header from '@components/Header'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { Router } from '@solidjs/router'
 import '@styles/docs-imports.css'
 import { appWindow } from '@tauri-apps/api/window'

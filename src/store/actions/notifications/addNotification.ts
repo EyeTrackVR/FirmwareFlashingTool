@@ -1,4 +1,4 @@
-import { ENotificationAction } from '@interfaces/enums'
+import { NOTIFICATION_ACTION } from '@interfaces/notifications/enums'
 import { NotificationAction, Notifications } from '@store/notifications/notifications'
 import {
     enableNotifications,
@@ -10,14 +10,14 @@ import { checkPermission } from './checkPermission'
 import { handleSound } from './handleSound'
 
 const mapNotificationCallback = (
-    type: ENotificationAction,
+    type: NOTIFICATION_ACTION,
     { callbackOS, callbackApp }: NotificationAction,
 ) => {
     /* eslint-disable */
     switch (type) {
-        case ENotificationAction.OS:
+        case NOTIFICATION_ACTION.OS:
             return callbackOS()
-        case ENotificationAction.APP:
+        case NOTIFICATION_ACTION.APP:
             return callbackApp()
     }
     /* eslint-enable */

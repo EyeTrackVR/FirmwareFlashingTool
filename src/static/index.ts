@@ -1,5 +1,7 @@
-import { type IChannelOptions } from '@interfaces/interfaces'
-import { BOARD_TYPE, CHANNEL_TYPE } from './types/enums'
+import { FLASH_STATUS, FLASH_STEP } from '@interfaces/animation/enums'
+import { BOARD_TYPE, CHANNEL_TYPE } from '@interfaces/firmware/enums'
+import { type IChannelOptions } from '@interfaces/firmware/interfaces'
+import { IFlashState } from '@store/terminal/terminal'
 
 export const RECOMMENDED_BOARDS: string[] = [BOARD_TYPE.XIAOSENSES_3, BOARD_TYPE.XIAOSENSES_3_USB]
 export const DEFAULT_MDNS_LENGTH = 24
@@ -10,6 +12,68 @@ export const BEFORE_SELECT_BOARD_MODE = 'BEFORE_SELECT_BOARD_MODE'
 export const SELECT_PORT_MODAL_ID = 'SELECT_PORT_MODAL_ID'
 export const DEVTOOLS_MODAL_ID = 'DEVTOOLS_MODAL_ID'
 export const DEFAULT_PORT_NAME = 'auto'
+
+export const GHEndpoints: Record<CHANNEL_TYPE, string> = {
+    [CHANNEL_TYPE.OFFICIAL]: 'https://api.github.com/repos/EyeTrackVR/OpenIris/releases/latest',
+    [CHANNEL_TYPE.BETA]: 'https://api.github.com/repos/EyeTrackVR/OpenIris/releases',
+}
+
+export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFlashState>> = {
+    [FLASH_STEP.REQUEST_PORT]: {
+        [FLASH_STATUS.UNKNOWN]: {
+            status: FLASH_STATUS.UNKNOWN,
+            label: 'Attempting to connect to the requested port... Please wait.',
+        },
+        [FLASH_STATUS.SUCCESS]: {
+            status: FLASH_STATUS.SUCCESS,
+            label: 'Successfully connected to the port!',
+        },
+        [FLASH_STATUS.FAILED]: {
+            status: FLASH_STATUS.FAILED,
+            label: 'Error: Failed to connect to the port.',
+        },
+        [FLASH_STATUS.ABORTED]: {
+            status: FLASH_STATUS.ABORTED,
+            label: 'process aborted.',
+        },
+    },
+    [FLASH_STEP.MANIFEST_PATH]: {
+        [FLASH_STATUS.UNKNOWN]: {
+            status: FLASH_STATUS.UNKNOWN,
+            label: 'Fetching manifest path... Please wait.',
+        },
+        [FLASH_STATUS.SUCCESS]: {
+            status: FLASH_STATUS.SUCCESS,
+            label: 'Manifest path retrieved successfully!',
+        },
+        [FLASH_STATUS.FAILED]: {
+            status: FLASH_STATUS.FAILED,
+            label: 'Error: Failed to fetch the manifest path.',
+        },
+        [FLASH_STATUS.ABORTED]: {
+            status: FLASH_STATUS.ABORTED,
+            label: 'process aborted.',
+        },
+    },
+    [FLASH_STEP.FLASH_FIRMWARE]: {
+        [FLASH_STATUS.UNKNOWN]: {
+            status: FLASH_STATUS.UNKNOWN,
+            label: 'Flashing firmware... Please wait.',
+        },
+        [FLASH_STATUS.SUCCESS]: {
+            status: FLASH_STATUS.SUCCESS,
+            label: 'Firmware flashed successfully!',
+        },
+        [FLASH_STATUS.FAILED]: {
+            status: FLASH_STATUS.FAILED,
+            label: 'Error: Failed to flash firmware.',
+        },
+        [FLASH_STATUS.ABORTED]: {
+            status: FLASH_STATUS.ABORTED,
+            label: 'process aborted.',
+        },
+    },
+}
 
 export const BOARD_DESCRIPTION: {
     [key in BOARD_TYPE]: string

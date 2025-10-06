@@ -7,7 +7,7 @@ import {
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
     STEP_ACTION,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { setAction, setSelectedMode, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { setActiveAction } from '@store/ui/ui'

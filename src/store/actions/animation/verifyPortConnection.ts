@@ -4,7 +4,7 @@ import {
     SELECT_PORT_WIZARD,
     WIRED_WIZARD_STEPS,
     WIRELESS_WIZARD_STEPS,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { getApi } from '@src/esp'
 import { DeviceMode } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'

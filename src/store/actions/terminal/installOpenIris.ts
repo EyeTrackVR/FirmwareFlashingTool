@@ -1,7 +1,7 @@
-import { ACTION, FLASH_STATUS, FLASH_STEP, FLASH_WIZARD_STEPS } from '@interfaces/enums'
+import { ACTION, FLASH_STATUS, FLASH_STEP, FLASH_WIZARD_STEPS } from '@interfaces/animation/enums'
 import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
-import { logs as logsDescription } from '@src/static/ui/logs'
+import { logs as logsDescription } from '@static/index'
 import { setAction, setStep } from '@store/animation/animation'
 import {
     clearLogs,

@@ -1,6 +1,6 @@
 import { Button } from '@components/Buttons/Button'
 import Typography from '@components/Typography'
-import { IDropdownList } from '@interfaces/interfaces'
+import { type IDropdownList } from '@interfaces/firmware/interfaces'
 import {
     Component,
     createEffect,

@@ -1,5 +1,5 @@
 import Header from '@components/Header'
-import { type TITLEBAR_ACTION } from '@src/static/types/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { classNames } from '@src/utils'
 import { Component, createEffect, createMemo, JSX } from 'solid-js'
 

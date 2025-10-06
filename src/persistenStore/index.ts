@@ -1,8 +1,8 @@
 // https://github.com/tauri-apps/plugins-workspace/tree/dev/plugins/store
 
 //* Global app settings stores
+import { PersistentSettings } from '@interfaces/settings/interfaces'
 import { Store } from 'tauri-plugin-store-api'
-import type { PersistentSettings } from '@src/static/types'
 
 const persistentStore = new Store('.app-settings.bin')
 

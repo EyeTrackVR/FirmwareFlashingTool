@@ -1,6 +1,6 @@
 import DefaultButton from '@components/Buttons/DefaultButton'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { classNames } from '@src/utils'
 import { TbDatabaseExport } from 'solid-icons/tb'
 import { Component, Show } from 'solid-js'

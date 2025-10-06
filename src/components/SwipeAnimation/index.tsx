@@ -1,4 +1,4 @@
-import { ACTION } from '@interfaces/enums'
+import { ACTION } from '@interfaces/animation/enums'
 import { setActiveStep, setShowComponent } from '@store/animation/animation'
 import { action, activeStep, showComponent, step } from '@store/animation/selectors'
 import { createMemo, ParentComponent } from 'solid-js'

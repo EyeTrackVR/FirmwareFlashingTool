@@ -10,7 +10,7 @@ import {
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
     UPDATE_NETWORK_WIZARD,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 

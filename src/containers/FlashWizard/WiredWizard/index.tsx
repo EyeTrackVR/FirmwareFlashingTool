@@ -6,7 +6,7 @@ import {
     INIT_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
     WIRED_WIZARD_STEPS,
-} from '@interfaces/enums'
+} from '@interfaces/animation/enums'
 import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
