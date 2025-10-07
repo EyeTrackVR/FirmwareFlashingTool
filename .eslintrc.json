@@ -9,7 +9,8 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:solid/typescript",
     "plugin:import/typescript",
-    "plugin:import/recommended"
+    "plugin:import/recommended",
+    "plugin:storybook/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -19,14 +20,30 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "solid", "import"],
+  "plugins": [
+    "@typescript-eslint",
+    "solid",
+    "import"
+  ],
   "rules": {
     "solid/reactivity": "warn",
     "solid/no-destructure": "warn",
     "solid/jsx-no-undef": "error",
-    "indent": ["error", 4 , { "SwitchCase": 1 }],
-    "quotes": ["error", "single"],
-    "semi": ["error", "never"],
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "never"
+    ],
     "arrow-body-style": "off",
     "import/no-unresolved": "error",
     "import/extensions": [

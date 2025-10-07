@@ -8,7 +8,7 @@ import { FiAlertOctagon, FiAlertTriangle } from 'solid-icons/fi'
 import { IoAlertCircleSharp, IoCloseSharp } from 'solid-icons/io'
 import { Component, createSignal, Show } from 'solid-js'
 
-interface ToastProps {
+export interface ToastProps {
     id: string
     notif: Notifications
 }
