@@ -77,6 +77,7 @@
     "@solidjs/router": "^0.15.3",
     "@stitches/core": "^1.2.8",
     "@tailwindcss/typography": "^0.5.16",
+    "@testing-library/jest-dom": "^6.9.1",
     "babel-preset-solid": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "esptool-js": "^0.5.4",

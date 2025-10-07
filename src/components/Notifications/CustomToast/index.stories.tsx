@@ -3,7 +3,7 @@ import CustomToast, { ToastProps } from './index'
 import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { Toaster } from 'solid-headless'
 const meta: Meta = {
-    title: 'Components/CustomToast',
+    title: 'Components/Components/CustomToast',
     component: CustomToast,
 }
 
