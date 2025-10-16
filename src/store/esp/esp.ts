@@ -33,7 +33,6 @@ export const setPorts = (ports: IDropdownList[]) => {
     )
 }
 
-// setActivePortName
 export const setActivePort = (port: string) => {
     setState(
         produce((s) => {

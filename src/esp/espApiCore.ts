@@ -93,8 +93,6 @@ export class EspApiCore {
             portName: port,
         })
 
-        console.log(response)
-
         return response
             .split('\n')
             .filter((el) => el.match('networks'))
