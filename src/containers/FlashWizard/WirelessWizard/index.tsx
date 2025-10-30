@@ -24,13 +24,18 @@ import { activeStepAction } from '@store/ui/selectors'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'
-import { batch, createMemo, Match, Switch } from 'solid-js'
+import { batch, createMemo, createSignal, Match, onCleanup, Show, Switch } from 'solid-js'
 
 const WirelessWizard = () => {
+    const [ipAddress, setIpAddress] = createSignal<string | undefined>('192.168.0.109')
     const sortedNetworks = createMemo(() => {
         return [...availableNetworks()].sort((a, b) => {
             return Math.abs(+a.rssi) - Math.abs(+b.rssi)
         })
+    })
+
+    onCleanup(() => {
+        setIpAddress(undefined)
     })
 
     return (
@@ -190,6 +195,7 @@ const WirelessWizard = () => {
                     onClickPrimary={() => {
                         const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
                         batch(() => {
+                            setIpAddress(undefined)
                             setAction(ACTION.NEXT)
                             setStep(
                                 WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS,
@@ -208,8 +214,9 @@ const WirelessWizard = () => {
                                 password(),
                                 selectedNetwork()?.channel ?? 0,
                             )
-                            .then(() => {
+                            .then((ipAddress) => {
                                 batch(() => {
+                                    setIpAddress(ipAddress)
                                     setAction(ACTION.NEXT)
                                     setStep(
                                         WIRELESS_WIZARD_STEPS.WIRELESS_WIFI_CONNECTING_PROCESS_SUCCESS,
@@ -244,7 +251,7 @@ const WirelessWizard = () => {
                     </div>
                     <div class="flex flex-col gap-10 w-full">
                         <Typography color="white" text="caption" class="text-left">
-                            Password
+                            Setup tracker name
                         </Typography>
                         <NetworkInput
                             id="mdns"
@@ -293,8 +300,18 @@ const WirelessWizard = () => {
                         })
                     }}
                     label="Its done!"
-                    description="Your device is set up and ready to go."
-                />
+                    description="Your device is set up and ready to go.">
+                    <Show when={ipAddress()}>
+                        <div class="flex flex-col items-center gap-12 ">
+                            <Typography color="purple" text="body">
+                                Stream is available under:
+                            </Typography>
+                            <Typography color="white" text="body" select>
+                                {ipAddress()}
+                            </Typography>
+                        </div>
+                    </Show>
+                </Card>
             </Match>
             <Match
                 when={

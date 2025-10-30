@@ -10,17 +10,23 @@ import { ghAPI } from '@store/firmware/selectors'
 import { detailedLogs, simulationAbortController } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 import { setOpenModal } from '@store/ui/ui'
-import { onCleanup } from 'solid-js'
+import { createSignal, onCleanup, onMount } from 'solid-js'
 
 export const TerminalContainer = () => {
+    const [loader, setLoader] = createSignal(false)
     const navigate = useNavigate()
 
     onCleanup(() => {
         setAbortController('logs')
     })
 
+    onMount(() => {
+        setAbortController('logs')
+    })
+
     return (
         <Terminal
+            loader={loader()}
             activePortName={activePort()}
             ports={ports()}
             logs={detailedLogs()}
@@ -38,7 +44,9 @@ export const TerminalContainer = () => {
                     return
                 }
                 setAbortController('logs')
-                getFirmwareLogs(activePort(), simulationAbortController()).catch(() => {})
+                getFirmwareLogs(activePort(), simulationAbortController(), setLoader).catch(
+                    () => {},
+                )
             }}
             onClickDownloadLogs={() => {
                 if (!detailedLogs().toString()) {

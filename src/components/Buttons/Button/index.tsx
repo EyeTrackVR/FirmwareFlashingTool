@@ -15,6 +15,7 @@ export interface IProps {
 export const Button: Component<IProps> = (props) => {
     return (
         <button
+            disabled={props.disabled}
             classList={{
                 'cursor-not-allowed duration-300 transition-colors': props.disabled,
                 [props.size!]: typeof props.size !== 'undefined',
@@ -38,7 +39,7 @@ export const Button: Component<IProps> = (props) => {
                         {props.label}
                     </Typography>
                 }>
-                <div class="flex justify-center items-center w-[118px]">
+                <div class="flex justify-center items-center">
                     <span class="loading loading-ring w-16" />
                 </div>
             </Show>

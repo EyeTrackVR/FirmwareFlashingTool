@@ -14,12 +14,7 @@ import { trace } from 'tauri-plugin-log-api'
 const SelectBoardModalContainer = () => {
     const boards: Accessor<IDropdownList[]> = createMemo(() => {
         if (!ghAPI().assets.length) {
-            return [
-                {
-                    label: 'xiaosenses3_USB',
-                    description: "SeedStudio's XIAO ESP32-S3 Sense (wired mode)",
-                },
-            ]
+            return []
         }
 
         return ghAPI()

@@ -1,9 +1,10 @@
 import { sleep } from '@src/utils'
+import { INetwork } from '@store/network/network'
 import { EspApiCore } from './espApiCore'
 import * as Type from './interfaces/types'
 
 export class EspApiClientProvider extends EspApiCore {
-    public async getAvailableNetworks(port: string) {
+    public async getAvailableNetworks(port: string): Promise<INetwork[]> {
         return this._getPossibleNetworks(port)
     }
 
@@ -32,11 +33,15 @@ export class EspApiClientProvider extends EspApiCore {
         return this._flash(portName, progressCallback)
     }
 
+    public async cancelStreamLogs(): Promise<void> {
+        return this._cancelStreamLogs()
+    }
+
     public async streamLogs(
         portName: string,
         callback: (logs: string) => void,
         errorCallback: (error: Error) => void,
-        signal?: AbortSignal,
+        signal: AbortSignal,
     ): Promise<void> {
         return this._streamLogs(portName, callback, errorCallback, signal)
     }
@@ -47,19 +52,19 @@ export class EspApiClientProvider extends EspApiCore {
         ssid: string,
         password: string,
         channel: number,
-    ): Promise<void> {
+    ): Promise<string> {
         return this._setupWirelessConnection(port, mdns, ssid, password, channel)
     }
 
-    public async setupWiredConnection(mdns: string, port: string) {
+    public async setupWiredConnection(mdns: string, port: string): Promise<void> {
         return this._setupWiredConnection(mdns, port)
     }
 
-    public async checkPortConnection(currentUserActivePort: string) {
+    public async checkPortConnection(currentUserActivePort: string): Promise<boolean> {
         return this._checkPortConnection(currentUserActivePort)
     }
 
-    public async getAvailablePorts() {
+    public async getAvailablePorts(): Promise<Type.UsbSerialPortInfo[]> {
         return this._getAvailablePorts()
     }
 }

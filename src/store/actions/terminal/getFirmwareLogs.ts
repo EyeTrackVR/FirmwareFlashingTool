@@ -1,12 +1,32 @@
 import { getApi } from '@src/esp'
-import { trimLogsByTextLength } from '@src/utils'
+import { sleep, trimLogsByTextLength } from '@src/utils'
 import { clearDetailedLogs, setDetailedLogs } from '@store/terminal/terminal'
+import { batch } from 'solid-js'
 
-export const getFirmwareLogs = async (portName: string, signal?: AbortController) => {
-    clearDetailedLogs()
+export const getFirmwareLogs = async (
+    portName: string,
+    signal: AbortController,
+    callback: (status: boolean) => void,
+) => {
+    if (signal.signal.aborted) {
+        callback(false)
+        return
+    }
+
+    batch(() => {
+        callback(true)
+        clearDetailedLogs()
+    })
+
+    const api = getApi()
 
     try {
-        const api = getApi()
+        await api.cancelStreamLogs()
+    } catch {
+        console.log('failed to cancel logs')
+    }
+
+    try {
         const deviceMode = await api.getDeviceMode(portName)
         if (deviceMode === 'uvc') {
             setDetailedLogs('UVC Mode, no logs available')
@@ -34,8 +54,13 @@ export const getFirmwareLogs = async (portName: string, signal?: AbortController
         processChunk()
     }
 
+    if (signal.signal.aborted) {
+        callback(false)
+        return
+    }
+
     try {
-        await getApi().streamLogs(
+        await api.streamLogs(
             portName,
             (data) => {
                 if (data.length > 1000) {
@@ -47,7 +72,7 @@ export const getFirmwareLogs = async (portName: string, signal?: AbortController
             async (err) => {
                 setDetailedLogs(err.message)
             },
-            signal?.signal,
+            signal.signal,
         )
     } catch (err) {
         if (typeof err === 'string') {
@@ -55,6 +80,7 @@ export const getFirmwareLogs = async (portName: string, signal?: AbortController
         } else if (err instanceof Error) {
             setDetailedLogs(err.message)
         }
-        return
     }
+    await sleep(200)
+    callback(false)
 }

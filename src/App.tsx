@@ -1,3 +1,4 @@
+import { NOTIFICATION_ACTION } from '@interfaces/notifications/enums'
 import { checkPermission } from '@store/actions/notifications/checkPermission'
 import {
     setEnableNotifications,
@@ -8,8 +9,6 @@ import { lazy, onMount, Suspense } from 'solid-js'
 import { debug } from 'tauri-plugin-log-api'
 import { usePersistentStore } from './persistenStore'
 import { runWatchers } from './watchers'
-import { NOTIFICATION_ACTION } from '@interfaces/notifications/enums'
-
 const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
 const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))

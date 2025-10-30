@@ -1,10 +1,11 @@
+import { ApiResponse } from '@interfaces/esp/types'
 import { sleep, stringToHex } from '@src/utils'
 import { INetwork } from '@store/network/network'
 import { invoke, InvokeArgs } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { COMMAND, ESP_COMMAND } from './commands'
 import * as Type from './interfaces/types'
-import { apiTextParser, parseMultiJSON } from './utils'
+import { parseMultiJSON } from './utils'
 
 export class EspApiCore {
     AUTH_MODE: Record<number, string> = {
@@ -57,7 +58,7 @@ export class EspApiCore {
         const maxChecks = Math.ceil(TIMEOUT / CHECK_INTERVAL)
         let checks = 0
 
-        return new Promise((resolve) => {
+        return new Promise<boolean>((resolve) => {
             const interval = setInterval(async () => {
                 checks++
 
@@ -83,25 +84,48 @@ export class EspApiCore {
     }
 
     public async _getPossibleNetworks(port: string): Promise<INetwork[]> {
-        await invoke(ESP_COMMAND.GET_WIFI_CONNECTION_STATUS, {
-            commands: [{ command: COMMAND.GET_WIFI_STATUS }],
-            portName: port,
-        })
+        try {
+            await invoke(ESP_COMMAND.GET_WIFI_CONNECTION_STATUS, {
+                commands: [{ command: COMMAND.GET_WIFI_STATUS }],
+                portName: port,
+            })
+        } catch (err) {
+            console.log('failed to get wifi connection status', err)
+        }
 
-        const response: string = await invoke(ESP_COMMAND.GET_POSSIBLE_NETWORKS, {
-            commands: [{ command: COMMAND.SCAN_NETWORKS }],
-            portName: port,
-        })
+        try {
+            const response: string = await invoke(ESP_COMMAND.GET_POSSIBLE_NETWORKS, {
+                commands: [{ command: COMMAND.SCAN_NETWORKS }],
+                portName: port,
+            })
 
-        return response
-            .split('\n')
-            .filter((el) => el.match('networks'))
-            .map((el) => JSON.parse(el)?.networks ?? [])
-            .flat()
-            .map((network) => ({
+            const parsedResponse = response
+                .split('\n')
+                .flatMap((el) => parseMultiJSON(el))
+                .flatMap((el) => el?.results ?? [])
+
+            const data: Record<string, ApiResponse | undefined> = {}
+
+            parsedResponse.forEach((el) => {
+                if (el?.command) {
+                    data[el.command] = el.result
+                }
+            })
+
+            const networks = data[COMMAND.SCAN_NETWORKS]
+
+            if (!networks || networks.status !== 'success') {
+                return []
+            }
+
+            return networks.data.networks.map((network) => ({
                 ...network,
                 auth_mode: this.AUTH_MODE[network.auth_mode] ?? network.auth_mode,
             }))
+        } catch (err) {
+            console.log('err', err)
+            return []
+        }
     }
 
     public async _getDeviceMode(portName: string) {
@@ -110,15 +134,23 @@ export class EspApiCore {
             portName,
         })
 
-        const mode = parseMultiJSON(response)
-            .find((obj) => obj.results)
-            ?.results?.map((el) => apiTextParser<{ mode: string }>(el))[0]?.mode
+        const mode = parseMultiJSON(response).flatMap((el) => el?.results ?? [])
 
-        if (!mode) {
+        const data: Record<string, ApiResponse | undefined> = {}
+
+        mode.forEach((el) => {
+            if (el?.command) {
+                data[el.command] = el.result
+            }
+        })
+
+        const deviceMode = data[COMMAND.GET_DEVICE_MODE]
+
+        if (!deviceMode || deviceMode.status !== 'success') {
             throw new Error('Failed to get device mode')
         }
 
-        return mode
+        return deviceMode.data.mode
     }
 
     async _getDeviceName(portName: string) {
@@ -126,10 +158,23 @@ export class EspApiCore {
             commands: [{ command: COMMAND.GET_MDNS_NAME }],
             portName,
         })
+        const data: Record<string, ApiResponse | undefined> = {}
 
-        const parsedResponse: { results: Array<string> } = JSON.parse(response)
-        return parsedResponse.results.map((res) => apiTextParser<{ hostname: string }>(res))[0]
-            .hostname
+        const parsed = parseMultiJSON(response).flatMap((res) => res?.results ?? [])
+
+        parsed.forEach((el) => {
+            if (el?.command) {
+                data[el.command] = el.result
+            }
+        })
+
+        const deviceMode = data[COMMAND.GET_MDNS_NAME]
+
+        if (!deviceMode || deviceMode.status !== 'success') {
+            throw new Error('failed to get device name')
+        }
+
+        return deviceMode.data.hostName
     }
 
     async _getAvailablePorts() {
@@ -287,11 +332,15 @@ export class EspApiCore {
         }
     }
 
+    public async _cancelStreamLogs() {
+        await invoke<void>(ESP_COMMAND.CANCEL_STREAM_LOGS)
+    }
+
     public async _streamLogs(
         portName: string,
         callback: (logs: string) => void,
         errorCallback: (error: Error) => void,
-        signal?: AbortSignal,
+        signal: AbortSignal,
     ): Promise<void> {
         let buffer = ''
 
@@ -312,24 +361,25 @@ export class EspApiCore {
             },
         )
 
-        signal?.addEventListener('abort', () => {
+        signal?.addEventListener('abort', async () => {
             unlisten()
-            void invoke<void>(ESP_COMMAND.CANCEL_STREAM_LOGS, {
+
+            await invoke<void>(ESP_COMMAND.CANCEL_STREAM_LOGS, {
                 portName,
             })
+            return
         })
 
         await invoke<void>(ESP_COMMAND.STREAM_LOGS, { portName })
     }
 
-    // TODO temporary solution
     public async _setupWirelessConnection(
         port: string,
         mdns: string,
         ssid: string,
         password: string,
         channel: number,
-    ) {
+    ): Promise<string> {
         await this._switchDeviceMode(port, 'wifi')
 
         const commands = [
@@ -348,28 +398,26 @@ export class EspApiCore {
             portName: port,
         })
 
-        const data = response
-            .split('\n')
-            .filter((el) => el.match('results'))
-            .map((el) => el)
+        const data: Record<string, ApiResponse | undefined> = {}
+        const parsed = parseMultiJSON(response).flatMap((res) => res?.results ?? [])
 
-        const connectionStatus = data
-            .filter((el) => el.match('results'))
-            .map((el) => {
-                const response = el.split('\n')[0].split(':')
+        parsed.forEach((el) => {
+            if (el?.command) {
+                data[el.command] = el.result
+            }
+        })
 
-                const isConnected = response.includes('connected')
-                const isError = response.includes('disconnected')
+        const connectionStatus = data[COMMAND.GET_WIFI_STATUS]
 
-                if (isConnected) return true
-                if (isError) return false
+        if (!connectionStatus || connectionStatus.status !== 'success') {
+            throw new Error('Failed to setup wireless connection')
+        }
 
-                return undefined
-            })
-            .filter((el) => !!el)
-            .every((el) => el)
+        if (connectionStatus.data.status !== 'connected') {
+            throw new Error('Failed to setup wireless connection')
+        }
 
-        if (!connectionStatus) throw new Error('Failed to setup wireless connection')
+        return connectionStatus.data.ip_address
     }
 
     public async _setupWiredConnection(mdns: string, port: string) {

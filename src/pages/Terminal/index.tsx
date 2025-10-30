@@ -22,6 +22,7 @@ export interface IProps {
     firmwareVersion: string
     activePortName: string
     ports: IDropdownList[]
+    loader: boolean
 }
 
 const Terminal: Component<IProps> = (props) => {
@@ -178,6 +179,8 @@ const Terminal: Component<IProps> = (props) => {
                                 <Button
                                     type="button"
                                     label="Show logs"
+                                    isLoader={props.loader}
+                                    disabled={props.loader}
                                     onClick={() => {
                                         props.onClickGetLogs()
                                         if (!props.activePortName) return

@@ -15,8 +15,8 @@ export interface IProps {
 
 const NetworkCard: Component<IProps> = (props) => {
     return (
-        <div class="bg-black-900 flex p-12 rounded-12 flex-col items-center justify-between h-[480px] max-w-[720px] w-full">
-            <div class="flex flex-row w-full justify-between">
+        <div class="bg-black-900 flex py-12 px-0 rounded-12 flex-col items-center justify-between h-[480px] max-w-[720px] w-full">
+            <div class="flex flex-row w-full justify-between px-12">
                 <DefaultButton
                     class="opacity-1 hover:bg-black-800 rounded-full flex items-center justify-center p-6 duration-300 transition-colors"
                     onClick={() => {
@@ -36,8 +36,8 @@ const NetworkCard: Component<IProps> = (props) => {
                         </Typography>
                     </div>
                 </div>
-                <div class="flex-1 gap-4 flex flex-col w-full overflow-hidden">
-                    <div class="grid grid-cols-4 gap-4 w-full px-6">
+                <div class="flex-1 gap-8 flex flex-col w-full overflow-hidden">
+                    <div class="grid grid-cols-4 gap-4 w-full px-[24px]">
                         <Typography color="white" text="caption" class="text-left">
                             SSID
                         </Typography>
@@ -51,7 +51,7 @@ const NetworkCard: Component<IProps> = (props) => {
                             Security
                         </Typography>
                     </div>
-                    <div class="w-full flex-1 overflow-y-auto gap-4 flex flex-col px-6 scrollbar">
+                    <div class="w-full flex-1 overflow-y-auto gap-4 flex flex-col scrollbar px-12">
                         <Show
                             when={props.data.length > 0}
                             fallback={
@@ -92,7 +92,7 @@ const NetworkCard: Component<IProps> = (props) => {
                     </div>
                 </div>
             </div>
-            <div class="flex flex-row gap-12 w-full items-center justify-end">
+            <div class="flex flex-row gap-12 w-full items-center justify-end px-12">
                 <div>
                     <Button
                         label="Manual setup"

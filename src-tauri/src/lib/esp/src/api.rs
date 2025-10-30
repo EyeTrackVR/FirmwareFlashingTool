@@ -278,6 +278,8 @@ pub fn cancel_stream_logs(state: State<'_, Mutex<EspState>>) -> EspResult<()> {
     state.log_stream_cancel = None;
   }
 
+  sleep(Duration::from_millis(250));
+
   Ok(())
 }
 
@@ -413,8 +415,7 @@ pub async fn get_possible_networks(
             buffer.extend_from_slice(&chunk);
 
             let response = String::from_utf8_lossy(&buffer).trim().to_string();
-
-            if response.contains("Networks scanned") {
+            if response.contains("results") || response.contains("Networks scanned") {
               return Ok(response);
             }
           }
@@ -463,7 +464,8 @@ pub async fn get_wifi_connection_status(
             buffer.extend_from_slice(&chunk);
 
             let response = String::from_utf8_lossy(&buffer).trim().to_string();
-            if response.contains("connected to") || response.contains("not connected") {
+            println!("{}", response);
+            if response.contains("results") {
               return Ok(response);
             }
           }

@@ -15,6 +15,7 @@ export const Default: Story = {
         <div style={{ height: '100vh' }}>
             <Terminal
                 logs={[]}
+                loader={false}
                 activePortName="COM3"
                 firmwareVersion="1.7.0"
                 onClickBack={() => {}}
