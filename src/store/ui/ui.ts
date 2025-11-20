@@ -1,5 +1,4 @@
 import { MODAL_TYPE, STEP_ACTION } from '@interfaces/animation/enums'
-import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface IOpenModal {
@@ -49,4 +48,4 @@ export const setHideModal = () => {
     )
 }
 
-export const uiState = createMemo(() => state)
+export const uiState = () => state

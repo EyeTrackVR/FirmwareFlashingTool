@@ -1,17 +1,16 @@
 import {
     ACTION,
-    INIT_WIZARD_STEPS,
-    FLASH_WIZARD_STEPS,
-    TERMINAL_WIZARD_STEPS,
-    WIRED_WIZARD_STEPS,
-    WIRELESS_WIZARD_STEPS,
-    FLASH_MODE,
     DEVICE_MODE_WIZARD,
+    FLASH_MODE,
+    FLASH_WIZARD_STEPS,
+    INIT_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
+    TERMINAL_WIZARD_STEPS,
     UPDATE_NETWORK_WIZARD,
+    WIRED_WIZARD_STEPS,
+    WIRELESS_WIZARD_STEPS,
 } from '@interfaces/animation/enums'
-import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export type steps =
@@ -86,4 +85,4 @@ export const setSelectedMode = (mode: FLASH_MODE) => {
     )
 }
 
-export const animationState = createMemo(() => state)
+export const animationState = () => state

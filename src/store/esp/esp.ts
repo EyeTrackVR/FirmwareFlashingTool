@@ -1,6 +1,5 @@
 import { type IDropdownList } from '@interfaces/firmware/interfaces'
 import { type DeviceMode } from '@src/esp/interfaces/types'
-import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface IEspStore {
@@ -41,4 +40,4 @@ export const setActivePort = (port: string) => {
     )
 }
 
-export const espState = createMemo(() => state)
+export const espState = () => state

@@ -1,7 +1,6 @@
 import Card from '@components/Cards/Card'
 import Typography from '@components/Typography'
 import { ACTION, SELECT_PORT_WIZARD, UPDATE_NETWORK_WIZARD } from '@interfaces/animation/enums'
-import { getApi } from '@src/esp'
 import { verifyBoardMode } from '@store/actions/animation/verifyBoardMode'
 import { verifyPortConnection } from '@store/actions/animation/verifyPortConnection'
 import { setAction, setStep } from '@store/animation/animation'

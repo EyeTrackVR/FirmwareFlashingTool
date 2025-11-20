@@ -1,4 +1,3 @@
-import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface INetwork {
@@ -67,4 +66,4 @@ export const setSsid = (ssid: string) => {
     )
 }
 
-export const networkState = createMemo(() => state)
+export const networkState = () => state

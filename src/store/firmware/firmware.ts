@@ -1,7 +1,6 @@
+import { CHANNEL_TYPE, REST_STATUS } from '@interfaces/firmware/enums'
 import { createStore, produce } from 'solid-js/store'
 import { debug } from 'tauri-plugin-log-api'
-import { createMemo } from 'solid-js'
-import { CHANNEL_TYPE, REST_STATUS } from '@interfaces/firmware/enums'
 
 export interface IRest {
     status: REST_STATUS
@@ -161,4 +160,4 @@ export const confirmFirmwareSelection = (board: string) => {
     setFirmwareType(msg)
 }
 
-export const firmwareState = createMemo(() => state)
+export const firmwareState = () => state

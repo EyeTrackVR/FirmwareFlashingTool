@@ -1,6 +1,5 @@
 import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { ToasterStore } from 'solid-headless'
-import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 
 export interface NotificationAction {
@@ -54,4 +53,4 @@ export const setGlobalNotificationsType = (type: NOTIFICATION_ACTION) => {
     )
 }
 
-export const notificationsState = createMemo(() => state)
+export const notificationsState = () => state
