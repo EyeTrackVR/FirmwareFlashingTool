@@ -9,7 +9,6 @@ use api::*;
 use crate::state::EspState;
 
 mod api;
-mod manifest;
 mod state;
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {

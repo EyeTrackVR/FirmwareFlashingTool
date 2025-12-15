@@ -1,3 +1,11 @@
+use std::borrow::Cow;
+use std::io::{Read, Write};
+use std::sync::mpsc::TryRecvError;
+use std::sync::{mpsc, Arc, Mutex};
+use std::thread::sleep;
+use std::time::Duration;
+use std::{fs, thread};
+
 use espflash::connection::reset::{ResetAfterOperation, ResetBeforeOperation};
 use espflash::elf::RomSegment;
 use espflash::flasher::{Flasher, ProgressCallbacks};
@@ -5,18 +13,9 @@ use espflash::targets::Chip;
 use log::error;
 use serde::{Deserialize, Serialize, Serializer};
 use serialport::{FlowControl, SerialPort, SerialPortInfo, SerialPortType};
-use std::borrow::Cow;
-use std::io::Read;
-use std::io::Write;
-use std::sync::mpsc::TryRecvError;
-use std::sync::{mpsc, Arc, Mutex};
-use std::thread::sleep;
-use std::time::Duration;
-use std::{fs, thread};
 use tauri::{command, AppHandle, Runtime, State, Window};
 use thiserror::Error;
 
-use crate::manifest::{load_manifest, ManifestError};
 use crate::state::EspState;
 
 #[derive(Error, Debug)]
@@ -40,11 +39,6 @@ pub enum EspError {
   SerdeJsonError {
     #[from]
     source: serde_json::Error,
-  },
-  #[error(transparent)]
-  ManifestError {
-    #[from]
-    source: ManifestError,
   },
   #[error("Unknown port: {port_name}")]
   UnknownPort { port_name: String },
@@ -160,41 +154,11 @@ pub fn flash<R: Runtime>(app: AppHandle<R>, window: Window<R>, port_name: String
 
   // It's safe to unwrap here, as it was already successfully used at this point
   let data_dir = app.path_resolver().app_data_dir().unwrap();
-  let manifest = load_manifest(&data_dir.join("manifest.json"))?;
-  let chip = flasher.chip();
-  let chip_family = match chip {
-    Chip::Esp32 => "ESP32",
-    Chip::Esp32c2 => "ESP32-C2",
-    Chip::Esp32c3 => "ESP32-C3",
-    Chip::Esp32c6 => "ESP32-C6",
-    Chip::Esp32h2 => "ESP32-H2",
-    Chip::Esp32p4 => "ESP32-P4",
-    Chip::Esp32s2 => "ESP32-S2",
-    Chip::Esp32s3 => "ESP32-S3",
-    _ => return Err(EspError::UnknownChip { chip }),
-  };
-
-  let build = match manifest
-    .builds
-    .into_iter()
-    .find(|build| build.chip_family == chip_family)
-  {
-    Some(build) => build,
-    None => {
-      return Err(EspError::UnsupportedChipFamily {
-        chip_family: chip_family.to_string(),
-      })
-    }
-  };
-
-  let mut rom_segments = Vec::with_capacity(build.parts.len());
-
-  for part in build.parts {
-    rom_segments.push(RomSegment {
-      addr: part.offset,
-      data: Cow::from(fs::read(data_dir.join(part.path))?),
-    })
-  }
+  let bin_data = fs::read(data_dir.join("build/merged-binary.bin"))?;
+  let firmware_rom_data = vec![RomSegment {
+    addr: 0,
+    data: Cow::from(bin_data),
+  }];
 
   let hexed_port_name: String = port_name
     .as_bytes()
@@ -203,7 +167,7 @@ pub fn flash<R: Runtime>(app: AppHandle<R>, window: Window<R>, port_name: String
     .collect();
 
   flasher.write_bins_to_flash(
-    &rom_segments,
+    &firmware_rom_data,
     Some(&mut EspflashProgress {
       event_name: format!("plugin-esp-flash-{}", hexed_port_name),
       window,
