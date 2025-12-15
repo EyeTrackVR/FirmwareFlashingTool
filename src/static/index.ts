@@ -76,19 +76,22 @@ export const logs: Record<FLASH_STEP, Record<Exclude<FLASH_STATUS, 'NONE'>, IFla
 }
 
 export const BOARD_DESCRIPTION: Record<string, string> = {
-    [BOARD_TYPE.SEED_STUDIO_XIAO_ESP32S3]: "SeedStudio's XIAO ESP32-S3 Sense",
-    [BOARD_TYPE.FACE_FOCUS_VR_EYE_L]: 'Default forFaceFocusVR.',
-    [BOARD_TYPE.FACE_FOCUS_VR_EYE_R]: 'Default for FaceFocusVR.',
-    [BOARD_TYPE.FACE_FOCUS_VR_FACE]: 'Default for FaceFocusVR.',
-    [BOARD_TYPE.PROJECT_BABBLE]: 'Default for Project Babble.',
-    [BOARD_TYPE.WROVER]: 'Default for WROVER.',
-    [BOARD_TYPE.ESP_32_AI_THINKER]: 'Default for ESP32-AI-THINKER and ESP CAM boards.',
+    [BOARD_TYPE.SEED_STUDIO_XIAO_ESP32S3]:
+        "SeedStudio's XIAO ESP32-S3 Sense, (wireless/wired mode)",
+    [BOARD_TYPE.FACE_FOCUS_VR_EYE_L]: 'Default forFaceFocusVR, (wired mode).',
+    [BOARD_TYPE.FACE_FOCUS_VR_EYE_R]: 'Default for FaceFocusVR (wired mode).',
+    [BOARD_TYPE.FACE_FOCUS_VR_FACE]: 'Default for FaceFocusVR (wired mode).',
+    [BOARD_TYPE.PROJECT_BABBLE]: 'Default for Project Babble (wireless/wired mode).',
+    [BOARD_TYPE.ESP_32_AI_THINKER]:
+        'Default for ESP32-AI-THINKER and ESP CAM boards (wireless mode).',
     [BOARD_TYPE.ESP_32]:
-        'Special ESP32-CAM, it is unlikely that you will need to use this environment.',
-    [BOARD_TYPE.ESP_32_M_5_STACK]: 'ESP32M5Stack.',
-    [BOARD_TYPE.ESP_EYE]: 'TESP-EYE (not the S3 variant)',
-    [BOARD_TYPE.WROOMS_3]: 'FREENOVE-ESP32-S3 (wireless mode)',
-    [BOARD_TYPE.WROOMS_3_QIO]: 'FREENOVE-ESP32-S3 (wireless mode, for boards with octal flash)',
+        'Special ESP32-CAM, it is unlikely that you will need to use this environment (wireless mode).',
+    [BOARD_TYPE.WROVER]: 'Default for WROVER (wireless/wired mode).',
+    [BOARD_TYPE.ESP_32_M_5_STACK]: 'ESP32M5Stack (wireless mode).',
+    [BOARD_TYPE.ESP_EYE]: 'TESP-EYE (not the S3 variant) (wireless/wired mode).',
+    [BOARD_TYPE.WROOMS_3]: 'FREENOVE-ESP32-S3 (wireless/wired mode).',
+    [BOARD_TYPE.WROOMS_3_QIO]:
+        'FREENOVE-ESP32-S3 (wireless mode, for boards with octal flash) (wireless/wired mode).',
 }
 
 export const CHANNEL_OPTIONS: Record<CHANNEL_TYPE, IChannelOptions> = {

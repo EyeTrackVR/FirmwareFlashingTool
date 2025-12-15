@@ -49,7 +49,7 @@ const UpdateNetworkWizard = () => {
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            verifyBoardMode(['wifi', 'auto']).catch(() => {})
+                            verifyBoardMode(['wifi', 'setup']).catch(() => {})
                             setStep(UPDATE_NETWORK_WIZARD.UPDATE_NETWORK_CHECK_MODE, false)
                         })
                     }}

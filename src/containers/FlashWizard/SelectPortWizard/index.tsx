@@ -210,7 +210,7 @@ const SelectPortWizard = () => {
                             case STEP_ACTION.UPDATE_NETWORK: {
                                 batch(() => {
                                     setAction(ACTION.NEXT)
-                                    verifyBoardMode(['wifi', 'auto']).catch(() => {})
+                                    verifyBoardMode(['wifi', 'setup']).catch(() => {})
                                     setStep(UPDATE_NETWORK_WIZARD.UPDATE_NETWORK_CHECK_MODE, false)
                                 })
                                 break

@@ -1,4 +1,5 @@
 import { getApi } from '@src/esp'
+import { logger } from '@src/logger'
 import { sleep, trimLogsByTextLength } from '@src/utils'
 import { clearDetailedLogs, setDetailedLogs } from '@store/terminal/terminal'
 import { batch } from 'solid-js'
@@ -22,8 +23,10 @@ export const getFirmwareLogs = async (
 
     try {
         await api.cancelStreamLogs()
-    } catch {
-        console.log('failed to cancel logs')
+    } catch (err) {
+        logger.errorStart('cancelStreamLogs ERROR')
+        logger.add(err instanceof Error ? err.message : `${err}`)
+        logger.errorEnd('cancelStreamLogs ERROR')
     }
 
     try {
@@ -33,7 +36,6 @@ export const getFirmwareLogs = async (
             return
         }
     } catch (err) {
-        console.log(err)
         setDetailedLogs('Failed to determine device mode')
     }
 

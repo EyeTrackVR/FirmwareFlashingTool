@@ -72,7 +72,9 @@ const ChangeDeviceModeWizard = () => {
                         const networks = await getApi().getAvailableNetworks(activePort())
                         setAvailableNetworks(networks)
                     } catch (err) {
-                        console.log(err)
+                        logger.errorStart(' ChangeDeviceModeWizard, line 75 ERROR  ')
+                        logger.add(err instanceof Error ? err.message : `${err}`)
+                        logger.errorEnd(' ChangeDeviceModeWizard, line 75 ERROR  ')
                         setAvailableNetworks([])
                     }
                     batch(() => {
@@ -169,11 +171,11 @@ const ChangeDeviceModeWizard = () => {
                     <div class="w-full flex flex-col gap-12">
                         <Button
                             label="Auto mode"
-                            disabled={deviceMode() === 'auto'}
-                            isActive={deviceMode() === 'auto'}
+                            disabled={deviceMode() === 'setup'}
+                            isActive={deviceMode() === 'setup'}
                             onClick={() => {
-                                if (deviceMode() === 'auto') return
-                                onClickSetActiveDeviceMode('auto').catch(() => {})
+                                if (deviceMode() === 'setup') return
+                                onClickSetActiveDeviceMode('setup').catch(() => {})
                             }}
                         />
                         <Button

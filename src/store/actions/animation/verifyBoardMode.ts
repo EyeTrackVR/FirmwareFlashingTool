@@ -49,7 +49,6 @@ export const verifyBoardMode = async (modes: DeviceMode[]) => {
             })
         }
     } catch (err) {
-        console.log(err)
         batch(() => {
             setAction(ACTION.NEXT)
             setStep(UPDATE_NETWORK_WIZARD.UPDATE_NETWORK_VERYFICATION_FAILED)

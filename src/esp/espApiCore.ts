@@ -6,6 +6,7 @@ import { appWindow } from '@tauri-apps/api/window'
 import { COMMAND, ESP_COMMAND } from './commands'
 import * as Type from './interfaces/types'
 import { parseMultiJSON } from './utils'
+import { logger } from '@src/logger'
 
 export class EspApiCore {
     AUTH_MODE: Record<number, string> = {
@@ -90,7 +91,9 @@ export class EspApiCore {
                 portName: port,
             })
         } catch (err) {
-            console.log('failed to get wifi connection status', err)
+            logger.errorStart(' GET POSSIBLE NETWORKS ERROR ')
+            logger.add(err instanceof Error ? err.message : `${err}`)
+            logger.errorEnd(' GET POSSIBLE NETWORKS ERROR ')
         }
 
         try {
@@ -123,7 +126,9 @@ export class EspApiCore {
                 auth_mode: this.AUTH_MODE[network.auth_mode] ?? network.auth_mode,
             }))
         } catch (err) {
-            console.log('err', err)
+            logger.errorStart(' GET POSSIBLE NETWORKS ERROR ')
+            logger.add(err instanceof Error ? err.message : `${err}`)
+            logger.errorEnd(' GET POSSIBLE NETWORKS ERROR ')
             return []
         }
     }

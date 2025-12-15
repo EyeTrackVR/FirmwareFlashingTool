@@ -15,7 +15,7 @@ export type SetMdnsCommand = {
         hostname: string
     }
 }
-export type DeviceMode = 'uvc' | 'wifi' | 'auto'
+export type DeviceMode = 'uvc' | 'wifi' | 'setup'
 
 export type switchMode = {
     command: 'switch_mode'
