@@ -16,7 +16,7 @@ export const DevtoolsModalContainerStory: Story = {
     render: () => (
         <div style={{ height: '100vh' }}>
             <DevtoolsModalContainer
-                channelMode={CHANNEL_TYPE.BETA}
+                channelMode={CHANNEL_TYPE.OFFICIAL}
                 channelOptions={Object.values(CHANNEL_OPTIONS)}
                 version="1.7.0"
                 isActive={true}

@@ -25,13 +25,13 @@ export const usePersistentStore = () => {
         return value
     }
 
-    const set = async (key: string, value: PersistentSettings) => {
-        // check if the key exists
+    const set = async <K extends keyof PersistentSettings>(
+        key: K,
+        value: PersistentSettings[K],
+    ) => {
         if (await has(key)) {
-            // if it does, get the current value
             const currentValue = await get(key)
-            // if the current value is the same as the new value, don't save
-            if (currentValue === value[key]) return
+            if (currentValue === value) return
         }
 
         await persistentStore.set(key, value)

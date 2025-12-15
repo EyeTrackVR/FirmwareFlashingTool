@@ -10,7 +10,7 @@ import {
     updateFirmwareState,
 } from '@store/terminal/terminal'
 
-const updateState = (step: FLASH_STEP, status: FLASH_STATUS, error?: Error) => {
+const updateState = (step: FLASH_STEP, status: Exclude<FLASH_STATUS, 'NONE'>, error?: Error) => {
     if (status === FLASH_STATUS.FAILED) {
         setProcessStatus(false)
     }

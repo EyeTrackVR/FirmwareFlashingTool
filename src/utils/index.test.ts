@@ -16,7 +16,7 @@ describe('utils', () => {
     })
 
     it('is empty', () => {
-        const arr = []
+        const arr: string[] = []
         expect(isEmpty(arr)).toBe(true)
 
         const nonEmpty = [1]

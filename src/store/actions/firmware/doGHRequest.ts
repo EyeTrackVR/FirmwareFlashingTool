@@ -3,7 +3,6 @@ import { formatDeviceName } from '@src/utils'
 import { GHEndpoints } from '@static/index'
 import {
     clearGHApiState,
-    IGHRelease,
     IGHResponse,
     setFirmwareAssets,
     setFirmwareVersion,
@@ -14,17 +13,16 @@ import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/api/fs'
 import { getClient, ResponseType } from '@tauri-apps/api/http'
 import { debug, error, trace, warn } from 'tauri-plugin-log-api'
 
-const setGHData = (data: IGHRelease, update: boolean) => {
-    if (data['name'] === undefined) {
-        setFirmwareVersion(data['version'])
+const setGHData = (data: IGHResponse, update: boolean) => {
+    if (data?.name === undefined) {
+        setFirmwareVersion('----')
     } else {
         setFirmwareVersion(data['name'])
     }
     trace(`[Github Response Data]: ${JSON.stringify(data)}`)
-    const assets: Array<{
-        browser_download_url: string
-        name: string
-    }> = data['assets']
+
+    const assets = data.assets
+
     const download_urls = assets.map(
         (asset: { browser_download_url: string }) => asset.browser_download_url,
     )
@@ -79,7 +77,7 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
         debug(`[Github Release]: Github Endpoint ${endpoint}`)
 
         try {
-            const githubResponse = await client.get<IGHResponse>(endpoint, {
+            const response = await client.get<IGHResponse>(endpoint, {
                 timeout: 30,
                 // the expected response type
                 headers: {
@@ -87,18 +85,15 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                 },
                 responseType: ResponseType.JSON,
             })
-
-            let response: IGHResponse
-
-            if (!Array.isArray(githubResponse.data)) {
-                response = githubResponse
-            } else {
-                const preReleases = githubResponse.data.filter(({ prerelease }) => prerelease)
-                response = {
-                    ...githubResponse,
-                    data: { ...preReleases[0] },
-                }
-            }
+            // if (!Array.isArray(githubResponse.data)) {
+            //     response = githubResponse
+            // } else {
+            //     // const preReleases = githubResponse.data.filter(({ prerelease }) => prerelease)
+            //     // response = {
+            //     //     ...githubResponse,
+            //     //     data: { ...preReleases[0] },
+            //     // }
+            // }
 
             trace(`[Github Response]: ${JSON.stringify(response)}`)
 
@@ -106,6 +101,7 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                 debug('[Github Release Error]: Cannot Access Github API Endpoint')
                 return
             }
+
             debug(`[OpenIris Version]: ${response.data['name']}`)
 
             try {
@@ -120,7 +116,7 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                     setGHRestStatus(REST_STATUS.COMPLETE)
                     return
                 }
-                if (response.data['name'] === config_json.version) {
+                if (response.data.name === config_json.version) {
                     debug('[Config Exists]: Config Exists and is up to date')
                     setGHData(response.data, false)
                     return

@@ -97,7 +97,7 @@ importers:
         version: https://codeload.github.com/deid84/tauri-plugin-serialport/tar.gz/0bf4d5899d3a8d648c0f2e9aa965076c752f88fc
       tauri-plugin-store-api:
         specifier: github:tauri-apps/tauri-plugin-store
-        version: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/56f690f2432e4fd85f53ec32e22de8c2d7a11651
+        version: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/15a2fa051c402785fcfc470242f48c5707f03fbd
       tauri-plugin-upload-api:
         specifier: github:tauri-apps/tauri-plugin-upload
         version: https://codeload.github.com/tauri-apps/tauri-plugin-upload/tar.gz/90989cbf3f78fa029e5f68bfbd81d29f857aed68
@@ -120,6 +120,9 @@ importers:
       '@tauri-apps/cli':
         specifier: 1.6.3
         version: 1.6.3
+      '@types/lodash':
+        specifier: ^4.17.21
+        version: 4.17.21
       '@types/node':
         specifier: ^22.10.7
         version: 22.17.1
@@ -1489,6 +1492,9 @@ packages:
 
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
+
+  '@types/lodash@4.17.21':
+    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
 
   '@types/markdown-it@14.1.2':
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
@@ -4121,8 +4127,8 @@ packages:
     resolution: {tarball: https://codeload.github.com/deid84/tauri-plugin-serialport/tar.gz/0bf4d5899d3a8d648c0f2e9aa965076c752f88fc}
     version: 0.1.0
 
-  tauri-plugin-store-api@https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/56f690f2432e4fd85f53ec32e22de8c2d7a11651:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/56f690f2432e4fd85f53ec32e22de8c2d7a11651}
+  tauri-plugin-store-api@https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/15a2fa051c402785fcfc470242f48c5707f03fbd:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/15a2fa051c402785fcfc470242f48c5707f03fbd}
     version: 0.0.0
 
   tauri-plugin-upload-api@https://codeload.github.com/tauri-apps/tauri-plugin-upload/tar.gz/90989cbf3f78fa029e5f68bfbd81d29f857aed68:
@@ -5959,6 +5965,8 @@ snapshots:
   '@types/json5@0.0.29': {}
 
   '@types/linkify-it@5.0.0': {}
+
+  '@types/lodash@4.17.21': {}
 
   '@types/markdown-it@14.1.2':
     dependencies:
@@ -8947,7 +8955,7 @@ snapshots:
       '@tauri-apps/api': 1.6.0
       tslib: 2.8.1
 
-  tauri-plugin-store-api@https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/56f690f2432e4fd85f53ec32e22de8c2d7a11651:
+  tauri-plugin-store-api@https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/15a2fa051c402785fcfc470242f48c5707f03fbd:
     dependencies:
       '@tauri-apps/api': 1.6.0
 

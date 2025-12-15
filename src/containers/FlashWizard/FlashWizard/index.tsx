@@ -16,12 +16,9 @@ import { IoCheckmarkSharp } from 'solid-icons/io'
 import { Accessor, batch, createMemo, Match, Switch } from 'solid-js'
 
 const FlashWizard = () => {
-    const flashFirmwareState: Accessor<IFlashState | undefined> = createMemo(() => {
-        const state = Object.keys(firmwareState()).map((key) => {
-            return { step: key, ...firmwareState()[key] }
-        })
-        return state[state.length - 1]
-    })
+    const flashFirmwareState: Accessor<IFlashState | undefined> = createMemo(() =>
+        Object.values(firmwareState()).at(-1),
+    )
 
     return (
         <Switch>

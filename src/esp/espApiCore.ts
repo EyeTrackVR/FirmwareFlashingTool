@@ -118,7 +118,7 @@ export class EspApiCore {
                 return []
             }
 
-            return networks.data.networks.map((network) => ({
+            return networks.data.networks.map((network: { auth_mode: number }) => ({
                 ...network,
                 auth_mode: this.AUTH_MODE[network.auth_mode] ?? network.auth_mode,
             }))

@@ -10,7 +10,7 @@ export interface IFlashState {
 export interface ITerminalStore {
     simulationAbortController: AbortController
     isSoftwareDownloaded: boolean
-    firmwareState: Record<FLASH_STEP, IFlashState> | object
+    firmwareState: Partial<Record<FLASH_STEP, IFlashState>>
     percentageProgress: number // %
     isActiveProcess: boolean
     detailedLogs: string[]
