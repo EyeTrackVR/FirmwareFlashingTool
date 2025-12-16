@@ -9,7 +9,6 @@ use std::{fs, thread};
 use espflash::connection::reset::{ResetAfterOperation, ResetBeforeOperation};
 use espflash::elf::RomSegment;
 use espflash::flasher::{Flasher, ProgressCallbacks};
-use espflash::targets::Chip;
 use log::error;
 use serde::{Deserialize, Serialize, Serializer};
 use serialport::{FlowControl, SerialPort, SerialPortInfo, SerialPortType};
@@ -42,10 +41,6 @@ pub enum EspError {
   },
   #[error("Unknown port: {port_name}")]
   UnknownPort { port_name: String },
-  #[error("Unknown chip: {chip}")]
-  UnknownChip { chip: Chip },
-  #[error("Unsupported chip family: {chip_family}")]
-  UnsupportedChipFamily { chip_family: String },
 }
 
 impl Serialize for EspError {
@@ -428,7 +423,6 @@ pub async fn get_wifi_connection_status(
             buffer.extend_from_slice(&chunk);
 
             let response = String::from_utf8_lossy(&buffer).trim().to_string();
-            println!("{}", response);
             if response.contains("results") {
               return Ok(response);
             }

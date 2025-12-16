@@ -1,12 +1,12 @@
 import { ApiResponse } from '@interfaces/esp/types'
 import { sleep, stringToHex } from '@src/utils'
-import { INetwork } from '@store/network/network'
 import { invoke, InvokeArgs } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { COMMAND, ESP_COMMAND } from './commands'
 import * as Type from './interfaces/types'
 import { parseMultiJSON } from './utils'
 import { logger } from '@src/logger'
+import { INetwork } from './interfaces/interfaces'
 
 export class EspApiCore {
     AUTH_MODE: Record<number, string> = {
@@ -121,10 +121,18 @@ export class EspApiCore {
                 return []
             }
 
-            return networks.data.networks.map((network: { auth_mode: number }) => ({
-                ...network,
-                auth_mode: this.AUTH_MODE[network.auth_mode] ?? network.auth_mode,
-            }))
+            return networks.data.networks.map(
+                (
+                    network: Omit<INetwork, 'auth_mode' | 'rssi'> & {
+                        auth_mode: number
+                        rssi: number
+                    },
+                ) => ({
+                    ...network,
+                    signalBar: Math.min(5, Math.max(0, Math.floor((network.rssi + 100) / 10))),
+                    auth_mode: this.AUTH_MODE[network.auth_mode] ?? network.auth_mode,
+                }),
+            )
         } catch (err) {
             logger.errorStart(' GET POSSIBLE NETWORKS ERROR ')
             logger.add(err instanceof Error ? err.message : `${err}`)

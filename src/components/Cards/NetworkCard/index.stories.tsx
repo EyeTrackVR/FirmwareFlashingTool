@@ -13,6 +13,7 @@ export const Default: Story = {
     args: {
         data: [
             {
+                signalBar: '5',
                 ssid: 'Home_Network',
                 channel: 6,
                 rssi: '-45 dBm',
@@ -23,6 +24,7 @@ export const Default: Story = {
                 ssid: 'Office_WiFi',
                 channel: 11,
                 rssi: '-60 dBm',
+                signalBar: '0',
                 mac_address: 'B8:D7:E4:2C:67:9A',
                 auth_mode: 'WPA3-Personal',
             },

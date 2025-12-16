@@ -1,12 +1,5 @@
+import { INetwork } from '@src/esp/interfaces/interfaces'
 import { createStore, produce } from 'solid-js/store'
-
-export interface INetwork {
-    ssid: string
-    channel: number
-    rssi: string
-    mac_address: string
-    auth_mode: string
-}
 
 export interface INetworkStore {
     availableNetworks: INetwork[]

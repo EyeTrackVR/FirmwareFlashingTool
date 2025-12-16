@@ -1,7 +1,8 @@
 import Button from '@components/Buttons/Button'
 import DefaultButton from '@components/Buttons/DefaultButton'
+import NetworkBars from '@components/NetworkBars'
 import Typography from '@components/Typography'
-import { INetwork } from '@store/network/network'
+import { INetwork } from '@src/esp/interfaces/interfaces'
 import { FaSolidWifi } from 'solid-icons/fa'
 import { IoChevronBackSharp } from 'solid-icons/io'
 import { Component, For, Show } from 'solid-js'
@@ -79,9 +80,9 @@ const NetworkCard: Component<IProps> = (props) => {
                                         <Typography color="white" text="caption">
                                             {el.channel}
                                         </Typography>
-                                        <Typography color="white" text="caption">
-                                            {`(${el.rssi} dBm) `}
-                                        </Typography>
+                                        <div class="flex items-center w-full justify-center">
+                                            <NetworkBars signalBar={el.signalBar} />
+                                        </div>
                                         <Typography color="white" text="caption" class="text-right">
                                             {el.auth_mode}
                                         </Typography>
