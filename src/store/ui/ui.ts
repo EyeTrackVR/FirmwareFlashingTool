@@ -8,12 +8,14 @@ export interface IOpenModal {
 }
 
 export interface UiStore {
+    appVersion: string
     activeStepAction: STEP_ACTION
     openModal: IOpenModal
     hideModal: boolean
 }
 
 const defaultState: UiStore = {
+    appVersion: '----',
     activeStepAction: STEP_ACTION.INSTALL_OPENIRIS,
     openModal: {
         open: false,
@@ -28,6 +30,14 @@ export const setOpenModal = (data: IOpenModal) => {
     setState(
         produce((s) => {
             s.openModal = data
+        }),
+    )
+}
+
+export const setAppVersion = (version: string) => {
+    setState(
+        produce((s) => {
+            s.appVersion = version
         }),
     )
 }

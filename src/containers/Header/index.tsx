@@ -4,13 +4,14 @@ import { useNavigate } from '@solidjs/router'
 import { logger } from '@src/logger'
 import { download } from '@src/utils'
 import { setAbortController } from '@store/terminal/terminal'
+import { appVersion } from '@store/ui/selectors'
 import { appWindow } from '@tauri-apps/api/window'
 
 export const HeaderRoot = () => {
     const navigate = useNavigate()
     return (
         <Header
-            appVersion={'1.7.0'}
+            appVersion={appVersion()}
             onClickHome={() => {
                 navigate('/')
                 setAbortController('logs')

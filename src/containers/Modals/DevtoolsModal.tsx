@@ -6,7 +6,7 @@ import { CHANNEL_OPTIONS } from '@static/index'
 import { isValidChannel } from '@utils/index'
 import { setChannelMode } from '@store/firmware/firmware'
 import { channelMode } from '@store/firmware/selectors'
-import { openModal } from '@store/ui/selectors'
+import { appVersion, openModal } from '@store/ui/selectors'
 import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 
@@ -15,7 +15,7 @@ const DevtoolsModalContainer = () => {
         <DevtoolsModal
             channelMode={channelMode()}
             channelOptions={Object.values(CHANNEL_OPTIONS)}
-            version="1.7.0"
+            version={appVersion()}
             isActive={openModal().type === MODAL_TYPE.DEVTOOLS}
             onClickHeader={(action: TITLEBAR_ACTION) => {
                 switch (action) {

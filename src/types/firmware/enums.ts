@@ -12,7 +12,7 @@ export enum BOARD_TYPE {
     ESP_32_AI_THINKER = 'esp32AIThinker',
     ESP_32 = 'esp32cam',
     ESP_EYE = 'esp_eye',
-    FACE_FOCUS_VR_EYE_L = 'facefocus_eye_L',
+    FACE_FOCUS_VR_EYE_L = 'facefocusvr_eye_L',
     FACE_FOCUS_VR_EYE_R = 'facefocusvr_eye_R',
     FACE_FOCUS_VR_FACE = 'facefocusvr_face',
     PROJECT_BABBLE = 'project_babble',

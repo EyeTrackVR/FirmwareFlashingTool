@@ -6,7 +6,7 @@ import { logger } from '@src/logger'
 import { BOARD_DESCRIPTION, RECOMMENDED_BOARDS } from '@static/index'
 import { confirmFirmwareSelection } from '@store/firmware/firmware'
 import { activeBoard, ghAPI } from '@store/firmware/selectors'
-import { openModal } from '@store/ui/selectors'
+import { appVersion, openModal } from '@store/ui/selectors'
 import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { Accessor, batch, createMemo } from 'solid-js'
@@ -48,7 +48,7 @@ const SelectBoardModalContainer = () => {
 
     return (
         <SelectBoardModal
-            version="1.7.0"
+            version={appVersion()}
             boards={boards()}
             activeBoard={activeBoard()}
             isActive={openModal().type === MODAL_TYPE.SELECT_BOARD}
