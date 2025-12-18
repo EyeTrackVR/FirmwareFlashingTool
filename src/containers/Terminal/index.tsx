@@ -5,12 +5,13 @@ import { useNavigate } from '@solidjs/router'
 import { download } from '@src/utils'
 import { addNotification } from '@store/actions/notifications/addNotification'
 import { getFirmwareLogs } from '@store/actions/terminal/getFirmwareLogs'
+import { setActivePort } from '@store/esp/esp'
 import { activePort, ports } from '@store/esp/selectors'
 import { ghAPI } from '@store/firmware/selectors'
 import { detailedLogs, simulationAbortController } from '@store/terminal/selectors'
 import { setAbortController } from '@store/terminal/terminal'
 import { setOpenModal } from '@store/ui/ui'
-import { createSignal, onCleanup, onMount } from 'solid-js'
+import { batch, createSignal, onCleanup, onMount } from 'solid-js'
 
 export const TerminalContainer = () => {
     const [loader, setLoader] = createSignal(false)
@@ -21,7 +22,10 @@ export const TerminalContainer = () => {
     })
 
     onMount(() => {
-        setAbortController('logs')
+        batch(() => {
+            setActivePort('')
+            setAbortController('logs')
+        })
     })
 
     return (
@@ -33,6 +37,9 @@ export const TerminalContainer = () => {
             firmwareVersion={`Openiris-${ghAPI().version}`}
             onClickSelectPort={() => {
                 setOpenModal({ open: true, type: MODAL_TYPE.SELECT_PORT })
+            }}
+            abortController={() => {
+                setAbortController('logs')
             }}
             onClickGetLogs={() => {
                 if (!activePort()) {

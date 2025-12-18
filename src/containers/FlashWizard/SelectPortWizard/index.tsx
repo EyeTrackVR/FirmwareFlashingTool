@@ -230,6 +230,7 @@ const SelectPortWizard = () => {
                                     logger.infoStart('INIT_WIZARD_STEPS.SELECT_PORT')
                                     logger.add(`firmware type : ${firmwareType()}`)
                                     logger.add(`active port : ${activePort()}`)
+                                    setAction(ACTION.NEXT)
                                     setStep(FLASH_WIZARD_STEPS.FLASH_PROCESS, false)
                                     setAbortController('openiris')
                                     setProcessStatus(true)

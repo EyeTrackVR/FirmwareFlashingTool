@@ -1,6 +1,7 @@
 import { Button } from '@components/Buttons/Button'
 import Typography from '@components/Typography'
 import { type IDropdownList } from '@interfaces/firmware/interfaces'
+import { debounce } from 'lodash'
 import {
     Component,
     createEffect,
@@ -14,6 +15,7 @@ import {
 } from 'solid-js'
 
 export interface IProps {
+    abortController: () => void
     onClickDownloadLogs: () => void
     onClickSelectPort: () => void
     onClickGetLogs: () => void
@@ -94,6 +96,17 @@ const Terminal: Component<IProps> = (props) => {
             if (size > 0) {
                 setLoading(false)
             }
+        }),
+    )
+
+    createEffect(
+        on([loading, length], () => {
+            debounce(() => {
+                if (!length()) {
+                    props.abortController()
+                    setLoading(false)
+                }
+            }, 5000)()
         }),
     )
 

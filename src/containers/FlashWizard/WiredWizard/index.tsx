@@ -61,11 +61,11 @@ const WiredWizard = () => {
                             .catch((err) => {
                                 batch(() => {
                                     logger.errorStart('setupWiredConnection ERROR')
-                                    logger.add(err.message)
+                                    logger.add(err instanceof Error ? err.message : `${err}`)
                                     logger.errorEnd('setupWiredConnection ERROR')
                                     setStep(WIRED_WIZARD_STEPS.WIRED_SETUP_TRACKER_PROCESS_FAILED)
                                     setAction(ACTION.NEXT)
-                                    setError(err.message)
+                                    setError(err instanceof Error ? err.message : `${err}`)
                                 })
                             })
                             .finally(() => {

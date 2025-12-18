@@ -187,7 +187,7 @@ export class EspApiCore {
             throw new Error('failed to get device name')
         }
 
-        return deviceMode.data.hostName
+        return deviceMode.data.hostname
     }
 
     async _getAvailablePorts() {
@@ -272,14 +272,13 @@ export class EspApiCore {
             while (tries > 0) {
                 try {
                     const currentHostname = await this._getDeviceName(port)
-
                     if (JSON.stringify(currentHostname) === JSON.stringify(mdns)) {
                         resolve('')
                         return
                     }
 
                     await this._setMdnsName(port, mdns)
-                    await sleep(200)
+                    await sleep(1000)
 
                     const updatedHostName = await this._getDeviceName(port)
 
@@ -289,10 +288,9 @@ export class EspApiCore {
                     }
                 } catch (err) {
                     if (tries === 1) {
-                        if (err instanceof Error) {
-                            reject(`'Failed to switch device mode': ${err.message}`)
-                        }
-                        reject(`'Failed to switch device mode': ${err}`)
+                        reject(
+                            `Failed to switch device mode: ${err instanceof Error ? err.message : `${err}`}`,
+                        )
                         return
                     }
                 }

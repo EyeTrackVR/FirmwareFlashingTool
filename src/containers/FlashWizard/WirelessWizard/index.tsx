@@ -1,3 +1,4 @@
+import DefaultButton from '@components/Buttons/DefaultButton'
 import Card from '@components/Cards/Card'
 import NetworkCard from '@components/Cards/NetworkCard'
 import Input from '@components/Inputs/Input'
@@ -12,15 +13,18 @@ import {
     STEP_ACTION,
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/animation/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
 import { shortMdnsAddress } from '@src/utils'
+import { addNotification } from '@store/actions/notifications/addNotification'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep, prevStep } from '@store/animation/selectors'
 import { activePort } from '@store/esp/selectors'
 import { setMdns, setPassword, setSelectedNetwork, setSsid } from '@store/network/network'
 import { availableNetworks, mdns, password, selectedNetwork, ssid } from '@store/network/selectors'
 import { activeStepAction } from '@store/ui/selectors'
+import { writeText } from '@tauri-apps/api/clipboard'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'
@@ -37,6 +41,23 @@ const WirelessWizard = () => {
     onCleanup(() => {
         setIpAddress(undefined)
     })
+
+    const copyToClipboard = async (value: string) => {
+        try {
+            await writeText(value)
+            addNotification({
+                title: 'Copied to clipboard',
+                message: 'Copied to clipboard',
+                type: NOTIFICATION_TYPE.INFO,
+            })
+        } catch (e) {
+            addNotification({
+                title: 'Failed to copy to clipboard',
+                message: 'Failed to copy to clipboard',
+                type: NOTIFICATION_TYPE.ERROR,
+            })
+        }
+    }
 
     return (
         <Switch>
@@ -302,13 +323,38 @@ const WirelessWizard = () => {
                     label="Its done!"
                     description="Your device is set up and ready to go.">
                     <Show when={ipAddress()}>
-                        <div class="flex flex-col items-center gap-12 ">
-                            <Typography color="purple" text="body">
-                                Stream is available under:
-                            </Typography>
-                            <Typography color="white" text="body" select>
-                                {ipAddress()}
-                            </Typography>
+                        <div class="flex flex-col gap-24 pb-32">
+                            <div class="flex flex-col items-center gap-6">
+                                <Typography color="purple" text="body">
+                                    Your device IP is:
+                                </Typography>
+                                <DefaultButton
+                                    onClick={() => {
+                                        copyToClipboard(ipAddress() ?? '----')
+                                    }}>
+                                    <Typography color="white" text="body" select>
+                                        {ipAddress()}
+                                    </Typography>
+                                </DefaultButton>
+                            </div>
+                            <div class="flex flex-col items-center gap-6">
+                                <div>
+                                    <Typography color="purple" text="body">
+                                        The stream is also accessible under:
+                                    </Typography>
+                                    <Typography color="purple" text="small">
+                                        (the IP may change)
+                                    </Typography>
+                                </div>
+                                <DefaultButton
+                                    onClick={() => {
+                                        copyToClipboard(`http://${mdns()}.local`)
+                                    }}>
+                                    <Typography color="white" text="body" select>
+                                        {`http://${shortMdnsAddress(mdns())}.local`}
+                                    </Typography>
+                                </DefaultButton>
+                            </div>
                         </div>
                     </Show>
                 </Card>
@@ -324,24 +370,48 @@ const WirelessWizard = () => {
                     isActive
                     icon={BiRegularError}
                     onClickBack={() => {
-                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
-                        batch(() => {
-                            setAction(ACTION.PREV)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS, savePrev)
-                        })
+                        if (prevStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP) {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP, false)
+                            })
+                        } else {
+                            const savePrev =
+                                prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS, savePrev)
+                            })
+                        }
                     }}
                     onClickSecondary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SELECT_NETWORK)
-                        })
+                        if (prevStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP) {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP, false)
+                            })
+                        } else {
+                            batch(() => {
+                                setAction(ACTION.NEXT)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SELECT_NETWORK)
+                            })
+                        }
                     }}
                     onClickPrimary={() => {
-                        const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS, savePrev)
-                        })
+                        if (prevStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP) {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP, false)
+                            })
+                        } else {
+                            const savePrev =
+                                prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
+
+                            batch(() => {
+                                setAction(ACTION.NEXT)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS, savePrev)
+                            })
+                        }
                     }}
                     label="Connection failed">
                     <Typography color="red">Failed to connect to the specified network </Typography>

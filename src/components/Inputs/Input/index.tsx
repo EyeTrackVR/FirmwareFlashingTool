@@ -16,7 +16,7 @@ const Input: Component<IProps> = (props) => {
         <input
             autocomplete={props.autoComplete}
             autofocus={props.autoFocus}
-            class="h-[39px] bg-black-800 w-full rounded-6 border-solid border-1 border-black-800 placeholder-white-100 text-[12px] text-white-100 focus:border-black-800 focus:ring-purple-200"
+            class="h-[39px] bg-black-800 w-full rounded-6 border-solid border-1 border-black-800 placeholder-grey-100 text-[12px] text-white-100 focus:border-black-800 focus:ring-purple-200"
             onInput={(e) => {
                 props.onChange(e.currentTarget.value)
                 e.currentTarget.value = props.value

@@ -14,9 +14,9 @@
     "allowlist": {
       "all": false,
       "clipboard": {
-        "all": false,
-        "readText": false,
-        "writeText": false
+        "all": true,
+        "writeText": true,
+        "readText": true
       },
       "dialog": {
         "all": true,

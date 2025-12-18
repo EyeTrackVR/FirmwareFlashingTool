@@ -68,7 +68,9 @@ branch = "v1"
 
 [dependencies.tokio]
 version = "1"
-features = ["full"]
+features = [
+  "full",
+]
 
 [workspace]
 members = [
@@ -114,6 +116,7 @@ version = "1.6.1"
 features = [
   "process-exit",
   "protocol-asset",
+  "clipboard-all",
   "fs-all",
   "dialog-all",
   "http-all",

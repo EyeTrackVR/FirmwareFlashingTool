@@ -5,12 +5,14 @@ import {
     FLASH_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
+    STEP_ACTION,
     TERMINAL_WIZARD_STEPS,
 } from '@interfaces/animation/enums'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep } from '@store/animation/selectors'
 import { firmwareState, isActiveProcess, percentageProgress } from '@store/terminal/selectors'
 import { IFlashState, setAbortController } from '@store/terminal/terminal'
+import { setActiveAction } from '@store/ui/ui'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { Accessor, batch, createMemo, Match, Switch } from 'solid-js'
@@ -33,6 +35,7 @@ const FlashWizard = () => {
                         batch(() => {
                             setAction(ACTION.PREV)
                             setStep(SELECT_PORT_WIZARD.SELECT_PORT)
+                            setActiveAction(STEP_ACTION.INSTALL_OPENIRIS)
                         })
                     }}
                     onClickPrimary={() => {}}
@@ -55,6 +58,7 @@ const FlashWizard = () => {
                             setAction(ACTION.PREV)
                             setAbortController('openiris')
                             setStep(SELECT_PORT_WIZARD.SELECT_PORT)
+                            setActiveAction(STEP_ACTION.INSTALL_OPENIRIS)
                         })
                     }}
                     onClickPrimary={() => {
@@ -62,6 +66,7 @@ const FlashWizard = () => {
                             setAction(ACTION.PREV)
                             setAbortController('openiris')
                             setStep(SELECT_PORT_WIZARD.SELECT_PORT)
+                            setActiveAction(STEP_ACTION.INSTALL_OPENIRIS)
                         })
                     }}
                     label="Failed to flash board">
@@ -83,18 +88,21 @@ const FlashWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
+                            setActiveAction(STEP_ACTION.INSTALL_OPENIRIS)
                             setStep(SELECT_PORT_WIZARD.SELECT_PORT)
                         })
                     }}
                     onClickSecondary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
+                            setActiveAction(STEP_ACTION.INSTALL_OPENIRIS)
                             setStep(TERMINAL_WIZARD_STEPS.TERMINAL_BEFORE_PROCEEDING)
                         })
                     }}
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
+                            setActiveAction(STEP_ACTION.INSTALL_OPENIRIS)
                             setStep(SELECT_MODE_WIZARD.SELECT_MODE)
                         })
                     }}
