@@ -39,7 +39,7 @@ const ChangeDeviceModeWizard = () => {
         try {
             const deviceMode = await api.getDeviceMode(activePort())
 
-            if (deviceMode.toLocaleLowerCase() !== mode.toLocaleLowerCase()) {
+            if (deviceMode !== mode) {
                 await api.switchDeviceMode(activePort(), mode)
             }
         } catch (err) {

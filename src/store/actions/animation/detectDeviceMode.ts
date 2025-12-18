@@ -20,7 +20,7 @@ export const detectDeviceMode = async () => {
         const deviceMode = await api.getDeviceMode(activePort())
         batch(() => {
             setAction(ACTION.NEXT)
-            setDeviceMode(deviceMode.toLocaleLowerCase() as DeviceMode)
+            setDeviceMode(deviceMode)
             setStep(DEVICE_MODE_WIZARD.DEVICE_SELECT_DEVICE_MODE)
         })
     } catch (err) {

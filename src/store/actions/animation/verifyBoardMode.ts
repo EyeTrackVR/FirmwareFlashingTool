@@ -20,7 +20,7 @@ export const verifyBoardMode = async (modes: DeviceMode[]) => {
 
         const deviceMode = await api.getDeviceMode(activePort())
 
-        if (modes.every((mode) => mode.toLocaleLowerCase() !== deviceMode.toLocaleLowerCase())) {
+        if (modes.every((mode) => mode !== deviceMode)) {
             batch(() => {
                 setAction(ACTION.NEXT)
                 setStep(UPDATE_NETWORK_WIZARD.UPDATE_NETWORK_INVALID_MODE)

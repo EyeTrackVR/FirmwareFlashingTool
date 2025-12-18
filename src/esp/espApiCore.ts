@@ -141,7 +141,7 @@ export class EspApiCore {
         }
     }
 
-    public async _getDeviceMode(portName: string) {
+    public async _getDeviceMode(portName: string): Promise<Type.DeviceMode> {
         const response = await this._sendCommands<string>({
             commands: [{ command: COMMAND.GET_DEVICE_MODE }],
             portName,
@@ -163,7 +163,7 @@ export class EspApiCore {
             throw new Error('Failed to get device mode')
         }
 
-        return deviceMode.data.mode
+        return deviceMode.data.mode.toLocaleLowerCase()
     }
 
     async _getDeviceName(portName: string) {
@@ -214,8 +214,7 @@ export class EspApiCore {
                     const currentDeviceMode = await this._getDeviceMode(port)
 
                     const isValidBefore =
-                        JSON.stringify(currentDeviceMode.toLocaleLowerCase()) ===
-                        JSON.stringify(deviceMode)
+                        JSON.stringify(currentDeviceMode) === JSON.stringify(deviceMode)
 
                     if (isValidBefore) {
                         resolve('')
@@ -232,8 +231,7 @@ export class EspApiCore {
                     const updatedDeviceMode = await this._getDeviceMode(port)
 
                     const isValidAfter =
-                        JSON.stringify(updatedDeviceMode.toLocaleLowerCase()) ===
-                        JSON.stringify(deviceMode)
+                        JSON.stringify(updatedDeviceMode) === JSON.stringify(deviceMode)
 
                     if (isValidAfter) {
                         resolve('')

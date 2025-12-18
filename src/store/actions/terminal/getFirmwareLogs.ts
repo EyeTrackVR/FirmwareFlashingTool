@@ -33,6 +33,8 @@ export const getFirmwareLogs = async (
         const deviceMode = await api.getDeviceMode(portName)
         if (deviceMode === 'uvc') {
             setDetailedLogs('UVC Mode, no logs available')
+            await sleep(200)
+            callback(false)
             return
         }
     } catch (err) {
