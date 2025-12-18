@@ -14,6 +14,7 @@ export const Default: Story = {
     render: () => (
         <div style={{ height: '100vh' }}>
             <Terminal
+                abortController={() => {}}
                 logs={[]}
                 loader={false}
                 activePortName="COM3"
