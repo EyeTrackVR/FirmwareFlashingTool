@@ -10,6 +10,7 @@ export const USB = 'USB'
 export const AP_MODE_ID = 'AP_MODE_ID'
 export const BEFORE_SELECT_BOARD_MODE = 'BEFORE_SELECT_BOARD_MODE'
 export const SELECT_PORT_MODAL_ID = 'SELECT_PORT_MODAL_ID'
+export const APP_UPDATER_MODAL_ID = 'APP_UPDATER_MODAL_ID'
 export const DEVTOOLS_MODAL_ID = 'DEVTOOLS_MODAL_ID'
 export const DEFAULT_PORT_NAME = 'auto'
 

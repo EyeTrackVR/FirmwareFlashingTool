@@ -17,7 +17,8 @@ const ModalHeader: Component<IProps> = (props) => {
             </Typography>
             <div
                 class="modal-action mt-0"
-                onClick={() => {
+                onClick={(e) => {
+                    e.preventDefault()
                     props.onClick?.()
                 }}>
                 <form method="dialog" class="flex">

@@ -167,7 +167,7 @@
     },
     "updater": {
       "active": false,
-      "dialog": true,
+      "dialog": false,
       "endpoints": [
         "https://youtu.be/ZXjlZBisYPQ"
       ],

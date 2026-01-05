@@ -7,7 +7,7 @@ import { UsbSerialPortInfo } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'
 import { setActivePort, setPorts } from '@store/esp/esp'
 import { activePort, ports } from '@store/esp/selectors'
-import { openModal } from '@store/ui/selectors'
+import { appVersion, openModal } from '@store/ui/selectors'
 import { setOpenModal } from '@store/ui/ui'
 import { appWindow } from '@tauri-apps/api/window'
 import { batch, createEffect, createMemo, on, onCleanup } from 'solid-js'
@@ -58,7 +58,7 @@ const SelectPortModalContainer = () => {
 
     return (
         <SelectPortModal
-            version="1.7.0"
+            version={appVersion()}
             ports={ports()}
             activeBoard={activePort()}
             isActive={openModal().type === MODAL_TYPE.SELECT_PORT}
