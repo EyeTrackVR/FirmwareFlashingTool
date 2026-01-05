@@ -166,11 +166,15 @@
       ]
     },
     "updater": {
-      "active": false,
+      "active": true,
       "dialog": false,
       "endpoints": [
-        "https://youtu.be/ZXjlZBisYPQ"
+        "https://github.com/EyeTrackVR/FirmwareFlashingTool/releases/latest/download/latest.json"
       ],
+      "windows": {
+        "installMode": "passive",
+        "installerArgs": []
+      },
       "pubkey": ""
     },
     "windows": [

@@ -125,6 +125,7 @@ features = [
   "os-all",
   "path-all",
   "process-relaunch",
+  "updater",
   "shell-open",
   # "shell-all",
   "system-tray",
