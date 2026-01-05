@@ -24,8 +24,6 @@ const UpdaterModalContainer = () => {
     const onClickUpdate = async () => {
         setUpdating(true)
         try {
-            setUpdating(true)
-
             await installUpdate()
             await relaunch()
         } catch {
