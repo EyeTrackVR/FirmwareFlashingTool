@@ -1,7 +1,7 @@
 import Header from '@components/Header'
 import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { classNames } from '@src/utils'
-import { Component, createEffect, createMemo, JSX } from 'solid-js'
+import { Component, createEffect, JSX } from 'solid-js'
 
 export interface IProps {
     onClickHeader: (action: TITLEBAR_ACTION) => void
@@ -24,10 +24,6 @@ export const Modal: Component<IProps> = (props) => {
         }
     })
 
-    const width = createMemo(() => {
-        return props.width ?? 'w-[500px]'
-    })
-
     return (
         <dialog closedby={'closerequest'} id={props.id} class="modal">
             <div class="fixed top-0 w-full">
@@ -36,7 +32,7 @@ export const Modal: Component<IProps> = (props) => {
             <div class="modal-box w-auto h-auto bg-transparent overflow-visible p-0">
                 <div
                     class={classNames(
-                        width(),
+                        props.width ?? 'w-[500px]',
                         'bg-black-900 p-12 rounded-12 border border-solid border-black-800 z-10',
                     )}>
                     {props.children}

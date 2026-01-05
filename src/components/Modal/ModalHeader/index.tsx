@@ -6,6 +6,7 @@ import { type Component } from 'solid-js'
 export interface IProps {
     onClick?: () => void
     disabled?: boolean
+    isSending?: boolean
     label: string
 }
 
@@ -18,7 +19,10 @@ const ModalHeader: Component<IProps> = (props) => {
             <div
                 class="modal-action mt-0"
                 onClick={(e) => {
-                    e.preventDefault()
+                    if (props.isSending) {
+                        e.preventDefault()
+                        return
+                    }
                     props.onClick?.()
                 }}>
                 <form method="dialog" class="flex">
