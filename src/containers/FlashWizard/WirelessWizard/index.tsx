@@ -1,4 +1,5 @@
 import DefaultButton from '@components/Buttons/DefaultButton'
+import SwitchButton from '@components/Buttons/Toggle'
 import Card from '@components/Cards/Card'
 import NetworkCard from '@components/Cards/NetworkCard'
 import Input from '@components/Inputs/Input'
@@ -10,19 +11,34 @@ import {
     INIT_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
+    SETUP_MAC_ADDRESS,
     STEP_ACTION,
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/animation/enums'
 import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
-import { shortMdnsAddress } from '@src/utils'
+import { formatMac, shortMdnsAddress } from '@src/utils'
 import { addNotification } from '@store/actions/notifications/addNotification'
 import { setAction, setStep } from '@store/animation/animation'
 import { activeStep, prevStep } from '@store/animation/selectors'
 import { activePort } from '@store/esp/selectors'
-import { setMdns, setPassword, setSelectedNetwork, setSsid } from '@store/network/network'
-import { availableNetworks, mdns, password, selectedNetwork, ssid } from '@store/network/selectors'
+import {
+    setMac,
+    setMdns,
+    setPassword,
+    setResetNetworkState,
+    setSelectedNetwork,
+    setSsid,
+} from '@store/network/network'
+import {
+    availableNetworks,
+    mac,
+    mdns,
+    password,
+    selectedNetwork,
+    ssid,
+} from '@store/network/selectors'
 import { activeStepAction } from '@store/ui/selectors'
 import { writeText } from '@tauri-apps/api/clipboard'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
@@ -31,7 +47,8 @@ import { RiSystemLockPasswordLine } from 'solid-icons/ri'
 import { batch, createMemo, createSignal, Match, onCleanup, Show, Switch } from 'solid-js'
 
 const WirelessWizard = () => {
-    const [ipAddress, setIpAddress] = createSignal<string | undefined>('192.168.0.109')
+    const [setupMacAddress, setSetupMacAddress] = createSignal(false)
+    const [ipAddress, setIpAddress] = createSignal<string | undefined>('')
     const sortedNetworks = createMemo(() => {
         return [...availableNetworks()].sort((a, b) => {
             return Math.abs(+a.rssi) - Math.abs(+b.rssi)
@@ -100,6 +117,9 @@ const WirelessWizard = () => {
                             setAction(ACTION.NEXT)
                             setSelectedNetwork(network)
                             setSsid(network.ssid)
+                            setMac(formatMac(network.mac_address))
+                            setResetNetworkState()
+                            setSetupMacAddress(false)
                             setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS)
                         })
                     }}
@@ -107,6 +127,11 @@ const WirelessWizard = () => {
                         batch(() => {
                             setAction(ACTION.NEXT)
                             setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP)
+                            setSelectedNetwork(undefined)
+                            setSetupMacAddress(false)
+                            setResetNetworkState()
+                            setSsid('')
+                            setMac('')
                         })
                     }}
                 />
@@ -124,36 +149,56 @@ const WirelessWizard = () => {
                         })
                     }}
                     onClickPrimary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
-                        })
+                        if (setupMacAddress()) {
+                            batch(() => {
+                                setAction(ACTION.NEXT)
+                                setStep(SETUP_MAC_ADDRESS.SETUP_MAC_ADDRESS, true)
+                            })
+                        } else {
+                            batch(() => {
+                                setAction(ACTION.NEXT)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
+                            })
+                        }
                     }}>
-                    <div class="w-full flex flex-col gap-24">
-                        <div class="flex flex-col gap-10 w-full">
-                            <Typography color="white" text="caption" class="text-left">
-                                SSID
-                            </Typography>
-                            <Input
-                                required={true}
-                                onChange={(ssid) => {
-                                    setSsid(ssid)
-                                }}
-                                value={ssid()}
-                                placeholder="Enter your wifi name"
-                            />
+                    <div class="w-full flex flex-col gap-12">
+                        <div class="flex flex-col gap-12">
+                            <div class="flex flex-col gap-4 w-full">
+                                <Typography color="white" text="caption" class="text-left">
+                                    SSID
+                                </Typography>
+                                <Input
+                                    required={true}
+                                    onChange={(ssid) => {
+                                        setSsid(ssid)
+                                    }}
+                                    value={ssid()}
+                                    placeholder="Enter your wifi name"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-4 w-full">
+                                <Typography color="white" text="caption" class="text-left">
+                                    Password
+                                </Typography>
+                                <PasswordInput
+                                    required={true}
+                                    onChange={(password) => {
+                                        setPassword(password)
+                                    }}
+                                    value={password()}
+                                    placeholder="Enter password"
+                                />
+                            </div>
                         </div>
-                        <div class="flex flex-col gap-10 w-full">
+                        <div class="flex flex-row justify-between">
                             <Typography color="white" text="caption" class="text-left">
-                                Password
+                                Setup mac address
                             </Typography>
-                            <PasswordInput
-                                required={true}
-                                onChange={(password) => {
-                                    setPassword(password)
+                            <SwitchButton
+                                active={setupMacAddress()}
+                                onClick={() => {
+                                    setSetupMacAddress((prev) => !prev)
                                 }}
-                                value={password()}
-                                placeholder="Enter password"
                             />
                         </div>
                     </div>
@@ -172,24 +217,44 @@ const WirelessWizard = () => {
                         })
                     }}
                     onClickPrimary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
-                        })
+                        if (setupMacAddress()) {
+                            batch(() => {
+                                setAction(ACTION.NEXT)
+                                setStep(SETUP_MAC_ADDRESS.SETUP_MAC_ADDRESS)
+                            })
+                        } else {
+                            batch(() => {
+                                setAction(ACTION.NEXT)
+                                setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_MDNS)
+                            })
+                        }
                     }}
                     description="Here you set your Wi-Fi password so the device can connect to your wireless network.">
-                    <div class="flex flex-col gap-10 w-full">
-                        <Typography color="white" text="caption" class="text-left">
-                            Password
-                        </Typography>
-                        <PasswordInput
-                            required={true}
-                            onChange={(password) => {
-                                setPassword(password)
-                            }}
-                            value={password()}
-                            placeholder="Enter password"
-                        />
+                    <div class="flex flex-col gap-12 w-full">
+                        <div class="flex flex-col gap-10 w-full">
+                            <Typography color="white" text="caption" class="text-left">
+                                Password
+                            </Typography>
+                            <PasswordInput
+                                required={true}
+                                onChange={(password) => {
+                                    setPassword(password)
+                                }}
+                                value={password()}
+                                placeholder="Enter password"
+                            />
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <Typography color="white" text="caption" class="text-left">
+                                Setup mac address
+                            </Typography>
+                            <SwitchButton
+                                active={setupMacAddress()}
+                                onClick={() => {
+                                    setSetupMacAddress((prev) => !prev)
+                                }}
+                            />
+                        </div>
                     </div>
                 </Card>
             </Match>
@@ -200,6 +265,19 @@ const WirelessWizard = () => {
                     isActive={mdns().length > 0}
                     icon={RiSystemLockPasswordLine}
                     onClickBack={() => {
+                        const manual = [
+                            WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP,
+                            WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS,
+                        ].some((step) => step === prevStep())
+
+                        if (manual && setupMacAddress()) {
+                            batch(() => {
+                                setAction(ACTION.PREV)
+                                setStep(SETUP_MAC_ADDRESS.SETUP_MAC_ADDRESS, false)
+                            })
+                            return
+                        }
+
                         const savePrev = prevStep() !== WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP
                         if (prevStep() === WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP) {
                             batch(() => {
@@ -234,6 +312,7 @@ const WirelessWizard = () => {
                                 ssid(),
                                 password(),
                                 selectedNetwork()?.channel ?? 0,
+                                mac(),
                             )
                             .then((ipAddress) => {
                                 batch(() => {

@@ -388,6 +388,7 @@ export class EspApiCore {
         ssid: string,
         password: string,
         channel: number,
+        bssid: string,
     ): Promise<string> {
         await this._switchDeviceMode(port, 'wifi')
 
@@ -395,7 +396,7 @@ export class EspApiCore {
             { command: COMMAND.SET_MDNS, data: { hostname: mdns } },
             {
                 command: COMMAND.SET_WIFI,
-                data: { name: 'main', ssid, password, channel, power: 0 },
+                data: { name: 'main', ssid, password, channel, power: 0, bssid },
             },
         ]
 

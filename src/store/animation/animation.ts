@@ -6,6 +6,7 @@ import {
     INIT_WIZARD_STEPS,
     SELECT_MODE_WIZARD,
     SELECT_PORT_WIZARD,
+    SETUP_MAC_ADDRESS,
     TERMINAL_WIZARD_STEPS,
     UPDATE_NETWORK_WIZARD,
     WIRED_WIZARD_STEPS,
@@ -23,6 +24,7 @@ export type steps =
     | SELECT_MODE_WIZARD
     | SELECT_PORT_WIZARD
     | UPDATE_NETWORK_WIZARD
+    | SETUP_MAC_ADDRESS
 
 export interface IAnimationState {
     action: ACTION

@@ -3,6 +3,7 @@ import DefaultButton from '@components/Buttons/DefaultButton'
 import NetworkBars from '@components/NetworkBars'
 import Typography from '@components/Typography'
 import { INetwork } from '@src/esp/interfaces/interfaces'
+import { shortMdnsAddress } from '@src/utils'
 import { FaSolidWifi } from 'solid-icons/fa'
 import { IoChevronBackSharp } from 'solid-icons/io'
 import { Component, For, Show } from 'solid-js'
@@ -38,7 +39,7 @@ const NetworkCard: Component<IProps> = (props) => {
                     </div>
                 </div>
                 <div class="flex-1 gap-8 flex flex-col w-full overflow-hidden">
-                    <div class="grid grid-cols-4 gap-4 w-full px-[24px]">
+                    <div class="grid  grid-cols-[1fr_50px_100px_1fr_140px] gap-4 w-full px-[24px]">
                         <Typography color="white" text="caption" class="text-left">
                             SSID
                         </Typography>
@@ -50,6 +51,9 @@ const NetworkCard: Component<IProps> = (props) => {
                         </Typography>
                         <Typography color="white" text="caption" class="text-right">
                             Security
+                        </Typography>
+                        <Typography color="white" text="caption" class="text-right">
+                            Mac address
                         </Typography>
                     </div>
                     <div class="w-full flex-1 overflow-y-auto gap-4 flex flex-col scrollbar px-12">
@@ -65,7 +69,7 @@ const NetworkCard: Component<IProps> = (props) => {
                             <For each={props.data}>
                                 {(el) => (
                                     <div
-                                        class="grid grid-cols-4 px-12 py-12 gap-4 rounded-8 w-full mt-2 bg-black-800 duration-150 transition-colors hover:bg-purple-200 cursor-pointer"
+                                        class="grid grid-cols-[1fr_50px_100px_1fr_140px]  px-12 py-12 gap-4 rounded-8 w-full mt-2 bg-black-800 duration-150 transition-colors hover:bg-purple-200 cursor-pointer"
                                         onClick={() => {
                                             props.onClickNetwork(el)
                                         }}>
@@ -77,14 +81,26 @@ const NetworkCard: Component<IProps> = (props) => {
                                             ellipsis>
                                             {!el.ssid ? 'Hidden' : el.ssid}
                                         </Typography>
-                                        <Typography color="white" text="caption">
+                                        <Typography color="white" text="caption" ellipsis>
                                             {el.channel}
                                         </Typography>
                                         <div class="flex items-center w-full justify-center">
                                             <NetworkBars signalBar={el.signalBar} />
                                         </div>
-                                        <Typography color="white" text="caption" class="text-right">
+                                        <Typography
+                                            color="white"
+                                            text="caption"
+                                            class="text-right"
+                                            ellipsis
+                                            nowrap>
                                             {el.auth_mode}
+                                        </Typography>
+                                        <Typography
+                                            color="white"
+                                            text="caption"
+                                            class="text-right"
+                                            nowrap>
+                                            {el.mac_address}
                                         </Typography>
                                     </div>
                                 )}

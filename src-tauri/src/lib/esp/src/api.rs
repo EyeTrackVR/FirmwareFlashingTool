@@ -251,6 +251,7 @@ pub enum Command {
     name: String,
     channel: u8,
     power: u8,
+    bssid: String,
   },
   SetMdns {
     hostname: String,

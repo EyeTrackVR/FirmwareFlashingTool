@@ -91,3 +91,17 @@ export const trimLogsByTextLength = (logs: string, maxLength: number): string[] 
 export const isValidChannel = (value: string): value is CHANNEL_TYPE => {
     return Object.values(CHANNEL_TYPE).includes(value as CHANNEL_TYPE)
 }
+
+export const isValidMac = (val: string) => {
+    const regex = /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/
+    return regex.test(val)
+}
+
+export const formatMac = (val: string) => {
+    const clean = val
+        .replace(/[^0-9A-Fa-f]/g, '')
+        .slice(0, 12)
+        .toUpperCase()
+    const matches = clean.match(/.{1,2}/g)
+    return matches ? matches.join(':') : clean
+}

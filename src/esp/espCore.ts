@@ -52,8 +52,9 @@ export class EspApiClientProvider extends EspApiCore {
         ssid: string,
         password: string,
         channel: number,
+        bssid: string,
     ): Promise<string> {
-        return this._setupWirelessConnection(port, mdns, ssid, password, channel)
+        return this._setupWirelessConnection(port, mdns, ssid, password, channel, bssid)
     }
 
     public async setupWiredConnection(mdns: string, port: string): Promise<void> {

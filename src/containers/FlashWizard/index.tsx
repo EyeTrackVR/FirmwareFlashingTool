@@ -12,6 +12,7 @@ import WiredWizard from './WiredWizard'
 import WirelessWizard from './WirelessWizard'
 import UpdateNetworkWizard from './UpdateNetworkWizard'
 import { WIRELESS_WIZARD_STEPS } from '@interfaces/animation/enums'
+import SetupMacAddressWizard from './SetupMacAddressWizard'
 
 const FlashWizardRoot = () => {
     const maxSize = createMemo(() => {
@@ -36,6 +37,7 @@ const FlashWizardRoot = () => {
                     <SelectPortWizard />
                     <UpdateNetworkWizard />
                     <ChangeDeviceModeWizard />
+                    <SetupMacAddressWizard />
                     <WirelessWizard />
                     <WiredWizard />
                 </SwipeAnimation>
