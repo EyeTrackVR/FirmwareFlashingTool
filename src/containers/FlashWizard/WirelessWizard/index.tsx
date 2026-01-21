@@ -1,3 +1,4 @@
+import Button from '@components/Buttons/Button'
 import DefaultButton from '@components/Buttons/DefaultButton'
 import SwitchButton from '@components/Buttons/Toggle'
 import Card from '@components/Cards/Card'
@@ -18,6 +19,7 @@ import {
 import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { getApi } from '@src/esp'
 import { logger } from '@src/logger'
+import { TRACKERS } from '@src/static'
 import { formatMac, shortMdnsAddress } from '@src/utils'
 import { addNotification } from '@store/actions/notifications/addNotification'
 import { setAction, setStep } from '@store/animation/animation'
@@ -39,15 +41,15 @@ import {
     selectedNetwork,
     ssid,
 } from '@store/network/selectors'
-import { activeStepAction } from '@store/ui/selectors'
+import { activeStepAction, setupCustomMdns, setupMacAddress } from '@store/ui/selectors'
+import { setSetupCustomMdns, setSetupMacAddress } from '@store/ui/ui'
 import { writeText } from '@tauri-apps/api/clipboard'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'
-import { batch, createMemo, createSignal, Match, onCleanup, Show, Switch } from 'solid-js'
+import { batch, createMemo, createSignal, For, Match, onCleanup, Show, Switch } from 'solid-js'
 
 const WirelessWizard = () => {
-    const [setupMacAddress, setSetupMacAddress] = createSignal(false)
     const [ipAddress, setIpAddress] = createSignal<string | undefined>('')
     const sortedNetworks = createMemo(() => {
         return [...availableNetworks()].sort((a, b) => {
@@ -120,6 +122,8 @@ const WirelessWizard = () => {
                             setMac(formatMac(network.mac_address))
                             setResetNetworkState()
                             setSetupMacAddress(false)
+                            setSetupCustomMdns(false)
+                            setMdns('')
                             setStep(WIRELESS_WIZARD_STEPS.WIRELESS_SETUP_CREDENTIALS)
                         })
                     }}
@@ -129,7 +133,9 @@ const WirelessWizard = () => {
                             setStep(WIRELESS_WIZARD_STEPS.WIRELESS_MANUAL_SETUP)
                             setSelectedNetwork(undefined)
                             setSetupMacAddress(false)
+                            setSetupCustomMdns(false)
                             setResetNetworkState()
+                            setMdns('')
                             setSsid('')
                             setMac('')
                         })
@@ -197,7 +203,7 @@ const WirelessWizard = () => {
                             <SwitchButton
                                 active={setupMacAddress()}
                                 onClick={() => {
-                                    setSetupMacAddress((prev) => !prev)
+                                    setSetupMacAddress(!setupMacAddress())
                                 }}
                             />
                         </div>
@@ -251,7 +257,7 @@ const WirelessWizard = () => {
                             <SwitchButton
                                 active={setupMacAddress()}
                                 onClick={() => {
-                                    setSetupMacAddress((prev) => !prev)
+                                    setSetupMacAddress(!setupMacAddress())
                                 }}
                             />
                         </div>
@@ -345,25 +351,65 @@ const WirelessWizard = () => {
                             The tracker will be accessible under
                         </Typography>
                         <Typography color="blue" text="caption">
-                            http://{!mdns().length ? 'openiristracker' : shortMdnsAddress(mdns())}
+                            http://
+                            {!mdns().length ? '- - - -' : shortMdnsAddress(mdns())}
                             .local
                         </Typography>
                     </div>
-                    <div class="flex flex-col gap-10 w-full">
-                        <Typography color="white" text="caption" class="text-left">
-                            Setup tracker name
-                        </Typography>
-                        <NetworkInput
-                            id="mdns"
-                            type="text"
-                            onChange={(mdns) => {
-                                setMdns(mdns)
-                            }}
-                            value={mdns()}
-                            placeholder={
-                                !mdns().length ? 'openiristracker' : shortMdnsAddress(mdns())
-                            }
-                        />
+                    <div class="w-full flex flex-col gap-24  items-end justify-end">
+                        <div class="flex flex-col gap-12 w-full">
+                            <Typography color="white" text="caption" class="text-left">
+                                Setup tracker name
+                            </Typography>
+                            <Show
+                                when={setupCustomMdns()}
+                                fallback={
+                                    <div class="flex w-full flex-row gap-12">
+                                        <For each={TRACKERS}>
+                                            {(tracker) => (
+                                                <Button
+                                                    size="h-[39px]"
+                                                    label={tracker.label}
+                                                    isActive={!!mdns().match(tracker.value)}
+                                                    onClick={() => {
+                                                        setMdns(
+                                                            mdns().match(tracker.value)
+                                                                ? ''
+                                                                : tracker.value,
+                                                        )
+                                                    }}
+                                                />
+                                            )}
+                                        </For>
+                                    </div>
+                                }>
+                                <NetworkInput
+                                    id="mdns"
+                                    type="text"
+                                    onChange={(mdns) => {
+                                        setMdns(mdns)
+                                    }}
+                                    value={mdns()}
+                                    placeholder={
+                                        !mdns().length
+                                            ? 'openiristracker'
+                                            : shortMdnsAddress(mdns())
+                                    }
+                                />
+                            </Show>
+                        </div>
+                        <div class="flex w-full flex-row justify-between">
+                            <Typography color="white" text="caption" class="text-left">
+                                Setup Custom Mdns
+                            </Typography>
+                            <SwitchButton
+                                active={setupCustomMdns()}
+                                onClick={() => {
+                                    setMdns('')
+                                    setSetupCustomMdns(!setupCustomMdns())
+                                }}
+                            />
+                        </div>
                     </div>
                 </Card>
             </Match>

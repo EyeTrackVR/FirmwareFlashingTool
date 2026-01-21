@@ -101,3 +101,8 @@ export const CHANNEL_OPTIONS: Record<CHANNEL_TYPE, IChannelOptions> = {
         description: 'Official channel for official releases.',
     },
 }
+
+export const TRACKERS: Array<{ label: string; value: string }> = [
+    { label: 'Right eye', value: 'ETVR-Right' },
+    { label: 'Left eye', value: 'ETVR-Left' },
+]
