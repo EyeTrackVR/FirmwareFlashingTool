@@ -2,6 +2,7 @@ import { MODAL_TYPE } from '@interfaces/animation/enums'
 import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import Terminal from '@pages/Terminal'
 import { useNavigate } from '@solidjs/router'
+import { logger } from '@src/logger'
 import { download } from '@src/utils'
 import { addNotification } from '@store/actions/notifications/addNotification'
 import { getFirmwareLogs } from '@store/actions/terminal/getFirmwareLogs'
@@ -64,7 +65,13 @@ export const TerminalContainer = () => {
                     })
                     return
                 }
-                download(detailedLogs().toString(), 'esp-web-tools-logs.txt')
+                download(
+                    `
+                    ${detailedLogs().toString()} 
+                    ------------------------------ LOGGER ------------------------
+                    ${logger.getLogs()}`,
+                    'esp-web-tools-logs.txt',
+                )
             }}
             onClickBack={() => {
                 navigate('/')

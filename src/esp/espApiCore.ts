@@ -392,6 +392,8 @@ export class EspApiCore {
     ): Promise<string> {
         await this._switchDeviceMode(port, 'wifi')
 
+        await sleep(1000)
+
         const commands = [
             { command: COMMAND.SET_MDNS, data: { hostname: mdns } },
             {
@@ -401,6 +403,7 @@ export class EspApiCore {
         ]
 
         await this._sendCommands({ portName: port, commands })
+        await sleep(1500)
         await this._sendCommands({ portName: port, commands: [{ command: COMMAND.CONNECT_WIFI }] })
 
         const response: string = await invoke(ESP_COMMAND.GET_WIFI_CONNECTION_STATUS, {
@@ -419,11 +422,11 @@ export class EspApiCore {
 
         const connectionStatus = data[COMMAND.GET_WIFI_STATUS]
 
-        if (!connectionStatus || connectionStatus.status !== 'success') {
+        if (!connectionStatus || connectionStatus?.status !== 'success') {
             throw new Error('Failed to setup wireless connection')
         }
 
-        if (connectionStatus.data.status !== 'connected') {
+        if (connectionStatus?.data?.status !== 'connected') {
             throw new Error('Failed to setup wireless connection')
         }
 
