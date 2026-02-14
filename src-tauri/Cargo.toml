@@ -4,6 +4,8 @@ version = "1.7.0"
 description = "A tool to flash the firmware of the EyeTrackVR device."
 authors = [
   "DaOfficialWizard",
+  "Luckmer",
+  "Lorow",
 ]
 license = "MIT"
 repository = "https://github.com/RedHawk989/EyeTrackVR"
