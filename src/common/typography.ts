@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority'
 
-export const typography = cva('not-italic select-none', {
+export const typography = cva('not-italic ', {
     variants: {
         text: {
             h1: 'text-h1 font-[400] leading-[30px] tracking-[0.02em]',
@@ -25,16 +25,22 @@ export const typography = cva('not-italic select-none', {
             red: 'text-red-100',
             purple: 'text-purple-100',
             lightGrey: 'text-grey-100',
+            lightBlue: 'text-lightBlue-100',
+            orange: 'text-orange-100',
             green: 'text-green-200',
         },
         nowrap: {
             true: 'whitespace-nowrap',
+        },
+        select: {
+            false: 'select-none',
         },
         ellipsis: {
             true: 'text-ellipsis overflow-hidden whitespace-nowrap',
         },
     },
     defaultVariants: {
+        select: false,
         text: 'body',
         color: 'grey',
     },

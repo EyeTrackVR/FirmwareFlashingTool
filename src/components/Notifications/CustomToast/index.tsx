@@ -1,22 +1,20 @@
 import Typography from '@components/Typography'
-import { ENotificationType } from '@src/static/types/enums'
-import type { Notifications } from '@src/static/types/interfaces'
-import { useAppNotificationsContext } from '@src/store/context/notifications'
+import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
+import { Notifications } from '@store/notifications/notifications'
+import { notifications } from '@store/notifications/selectors'
 import { Alert, Toast, Transition } from 'solid-headless'
 import { AiOutlineCheckCircle } from 'solid-icons/ai'
 import { FiAlertOctagon, FiAlertTriangle } from 'solid-icons/fi'
 import { IoAlertCircleSharp, IoCloseSharp } from 'solid-icons/io'
 import { Component, createSignal, Show } from 'solid-js'
 
-interface ToastProps {
+export interface ToastProps {
     id: string
     notif: Notifications
 }
 
 const CustomToast: Component<ToastProps> = (props) => {
     const [isOpen, setIsOpen] = createSignal(true)
-
-    const { getNotifications } = useAppNotificationsContext()
 
     const dismiss = () => {
         setIsOpen(false)
@@ -33,21 +31,21 @@ const CustomToast: Component<ToastProps> = (props) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-50"
             afterLeave={() => {
-                getNotifications()?.remove(props.id)
+                notifications()?.remove(props.id)
             }}>
             <Toast class="flex justify-between items-center">
                 <Alert class="bg-black-900 flex flex-row items-center gap-6 p-12 rounded-6 max-w-[400px]">
                     <div>
-                        <Show when={props.notif.type === ENotificationType.SUCCESS}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.SUCCESS}>
                             <AiOutlineCheckCircle size={25} color="#68D391" />
                         </Show>
-                        <Show when={props.notif.type === ENotificationType.ERROR}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.ERROR}>
                             <FiAlertOctagon size={25} color="#F56565" />
                         </Show>
-                        <Show when={props.notif.type === ENotificationType.WARNING}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.WARNING}>
                             <FiAlertTriangle size={25} color="#F6E05E" />
                         </Show>
-                        <Show when={props.notif.type === ENotificationType.INFO}>
+                        <Show when={props.notif.type === NOTIFICATION_TYPE.INFO}>
                             <IoAlertCircleSharp size={25} color="#90CDF4" />
                         </Show>
                     </div>

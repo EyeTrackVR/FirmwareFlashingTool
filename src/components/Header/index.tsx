@@ -1,16 +1,15 @@
-import HeaderButton from '@components/Buttons/HeaderButton'
-import { ProgressBar } from '@components/ProgressBar'
+import DefaultButton from '@components/Buttons/DefaultButton'
 import Typography from '@components/Typography'
-import { TITLEBAR_ACTION } from '@interfaces/enums'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { classNames } from '@src/utils'
+import { TbDatabaseExport } from 'solid-icons/tb'
 import { Component, Show } from 'solid-js'
 
 interface IProps {
     onClickHome?: () => void
     onClick: (action: TITLEBAR_ACTION) => void
-    step?: { step: string; description: string; dashoffset: string; index: string }
+    onClickDownloadLogs?: () => void
     appVersion?: string
-    currentStep?: string
     docs?: boolean
 }
 
@@ -27,7 +26,9 @@ const Header: Component<IProps> = (props) => {
                             <Show when={!props.docs}>
                                 <div
                                     class="flex items-center gap-4 cursor-pointer"
-                                    onClick={() => props.onClickHome?.()}>
+                                    onClick={() => {
+                                        props.onClickHome?.()
+                                    }}>
                                     <img
                                         src={'images/logo.png'}
                                         class="min-w-[34px] min-h-[34px] w-[34px] h-[34px]"
@@ -49,7 +50,21 @@ const Header: Component<IProps> = (props) => {
                             </Show>
                         </div>
                         <div class="flex flex-row items-center">
-                            <HeaderButton
+                            <Show when={!props.docs && props.onClickDownloadLogs}>
+                                <div
+                                    class="px-8 py-4 rounded-4 ml-4 cursor-pointer group hover:bg-transparentGreen-200 duration-150 transition-colors"
+                                    onClick={() => {
+                                        props.onClickDownloadLogs?.()
+                                    }}>
+                                    <Typography
+                                        color="white"
+                                        text="small"
+                                        class="tracking-[0.08em] group-hover:text-green-200 duration-150 transition-colors">
+                                        <TbDatabaseExport class="w-16 h-16" />
+                                    </Typography>
+                                </div>
+                            </Show>
+                            <DefaultButton
                                 class={classNames(
                                     'w-30 h-30 flex items-center justify-center transition group',
                                     props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
@@ -60,8 +75,8 @@ const Header: Component<IProps> = (props) => {
                                 <svg width="16px" height="16px" viewBox="0 0 24 24">
                                     <path fill="#ffffff" d="M20 14H4v-4h16" />
                                 </svg>
-                            </HeaderButton>
-                            <HeaderButton
+                            </DefaultButton>
+                            <DefaultButton
                                 class={classNames(
                                     'w-30 h-30 flex items-center justify-center transition group',
                                     props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
@@ -72,11 +87,11 @@ const Header: Component<IProps> = (props) => {
                                 <svg width="16px" height="16px" viewBox="0 0 24 24">
                                     <path fill="#ffffff" d="M4 4h16v16H4zm2 4v10h12V8z" />
                                 </svg>
-                            </HeaderButton>
-                            <HeaderButton
+                            </DefaultButton>
+                            <DefaultButton
                                 class={classNames(
                                     'w-30 h-30 flex items-center justify-center transition group',
-                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-blue-800',
+                                    props.docs ? 'hover:bg-brown-300' : 'hover:bg-red-100',
                                 )}
                                 onClick={() => {
                                     props.onClick(TITLEBAR_ACTION.CLOSE)
@@ -87,32 +102,12 @@ const Header: Component<IProps> = (props) => {
                                         d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
                                     />
                                 </svg>
-                            </HeaderButton>
+                            </DefaultButton>
                         </div>
                     </div>
                 </div>
                 <Show when={props.docs}>
                     <div class="h-3" />
-                </Show>
-                <Show
-                    when={
-                        typeof props.step !== 'undefined' &&
-                        typeof props.currentStep !== 'undefined'
-                    }>
-                    <div class="flex flex-row justify-center items-center gap-6 min-w-[240px] pr-24">
-                        <ProgressBar
-                            currentStep={props?.currentStep ?? '0'}
-                            dashoffset={props?.step?.dashoffset ?? '0'}
-                        />
-                        <div class="flex flex-col items-start justify-end w-full gap-4">
-                            <Typography color="white" text="captionBold">
-                                {props?.step?.step ?? '0'}
-                            </Typography>
-                            <Typography color="white" text="small">
-                                {props?.step?.description ?? '--'}
-                            </Typography>
-                        </div>
-                    </div>
                 </Show>
             </div>
         </header>

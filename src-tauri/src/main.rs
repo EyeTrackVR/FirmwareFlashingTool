@@ -24,11 +24,6 @@ struct SingleInstancePayload {
   cwd: String,
 }
 
-#[derive(Clone, Serialize)]
-struct SystemTrayPayload {
-  message: String,
-}
-
 #[derive(Debug, Deserialize, Serialize)]
 struct Config {
   names: Vec<String>,
@@ -115,8 +110,8 @@ async fn main() -> tauri::Result<()> {
         window.set_decorations(false).unwrap();
         window
           .set_min_size(Some(PhysicalSize {
-            width: 810,
-            height: 845,
+            width: 750,
+            height: 750,
           }))
           .unwrap();
       });

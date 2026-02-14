@@ -9,8 +9,6 @@ use api::*;
 use crate::state::EspState;
 
 mod api;
-mod command;
-mod manifest;
 mod state;
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
@@ -21,7 +19,9 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       flash,
       stream_logs,
       cancel_stream_logs,
-      send_commands
+      send_commands,
+      get_possible_networks,
+      get_wifi_connection_status
     ])
     .setup(move |app| {
       app.manage(Mutex::new(EspState {

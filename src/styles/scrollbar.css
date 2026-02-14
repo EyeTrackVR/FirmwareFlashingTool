@@ -18,24 +18,27 @@
     border-radius: 12px;
 }
 
-.scrollbarx {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
 .scrollbar::-webkit-scrollbar {
     width: 6px;
 }
 
-.scrollbarx::-webkit-scrollbar:horizontal {
-    height: 0px;
+.scrollbarX::-webkit-scrollbar {
+    width: 1px;
+    height: 4px;
 }
 
-.scrollbarx::-webkit-scrollbar-thumb:vertical {
+/* Track */
+.scrollbarX::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+/* Handle */
+.scrollbarX::-webkit-scrollbar-thumb {
     background: #9092ff;
     border-radius: 12px;
 }
 
-.scrollbarx::-webkit-scrollbar-track:vertical {
-    border-radius: 10px;
+.scrollbarX::-webkit-scrollbar {
+    width: 1px;
+    height: 4px;
 }

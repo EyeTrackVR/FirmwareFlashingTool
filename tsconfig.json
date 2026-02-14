@@ -1,33 +1,30 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-        "strict": true,
         "target": "ESNext",
         "module": "ESNext",
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
+        "moduleResolution": "bundler",
+        "strict": true,
+        "noEmit": true,
         "jsx": "preserve",
         "jsxImportSource": "solid-js",
-        "types": [
-            "vite/client"
-        ],
-        "useDefineForClassFields": true,
-        "noImplicitAny": false,
-        "isolatedModules": true,
-        "noEmit": true,
         "lib": [
             "DOM",
             "DOM.Iterable",
             "ESNext"
         ],
-        "allowJs": true,
-        "skipLibCheck": false,
+        "types": [
+            "vite/client"
+        ],
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "useDefineForClassFields": true,
+        "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true,
+        "baseUrl": ".",
         "paths": {
             "@interfaces/*": [
-                "src/static/types/*"
+                "src/types/*"
             ],
             "@components/*": [
                 "src/components/*"
@@ -71,17 +68,14 @@
         }
     },
     "include": [
-        "src",
-        "**/*.ts",
-        "**/*.tsx",
-        "index.js"
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
     ],
     "references": [
         {
             "path": "./tsconfig.node.json"
         }
-    ],
-    "exclude": [
-        "node_modules"
     ]
 }

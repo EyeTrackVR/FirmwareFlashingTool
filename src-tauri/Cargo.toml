@@ -4,6 +4,8 @@ version = "1.7.0"
 description = "A tool to flash the firmware of the EyeTrackVR device."
 authors = [
   "DaOfficialWizard",
+  "Luckmer",
+  "Lorow",
 ]
 license = "MIT"
 repository = "https://github.com/RedHawk989/EyeTrackVR"
@@ -116,6 +118,7 @@ version = "1.6.1"
 features = [
   "process-exit",
   "protocol-asset",
+  "clipboard-all",
   "fs-all",
   "dialog-all",
   "http-all",
@@ -124,6 +127,7 @@ features = [
   "os-all",
   "path-all",
   "process-relaunch",
+  "updater",
   "shell-open",
   # "shell-all",
   "system-tray",

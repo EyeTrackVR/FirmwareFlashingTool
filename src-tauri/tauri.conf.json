@@ -14,9 +14,9 @@
     "allowlist": {
       "all": false,
       "clipboard": {
-        "all": false,
-        "readText": false,
-        "writeText": false
+        "all": true,
+        "writeText": true,
+        "readText": true
       },
       "dialog": {
         "all": true,
@@ -52,7 +52,7 @@
         "scope": [
           "http://127.0.0.1:8000/*",
           "http://localhost:8000/*",
-          "https://api.github.com/repos/EyeTrackVR/OpenIris/*"
+          "https://api.github.com/repos/EyeTrackVR/OpenIris-ESPIDF/*"
         ]
       },
       "notification": {
@@ -166,18 +166,22 @@
       ]
     },
     "updater": {
-      "active": false,
-      "dialog": true,
+      "active": true,
+      "dialog": false,
       "endpoints": [
-        "https://youtu.be/ZXjlZBisYPQ"
+        "https://github.com/EyeTrackVR/FirmwareFlashingTool/releases/latest/download/latest.json"
       ],
-      "pubkey": ""
+      "windows": {
+        "installMode": "passive",
+        "installerArgs": []
+      },
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkwNjFFOUZDN0I1MEI1OTcKUldTWHRWQjcvT2xoa0RpTFpCKzBVdG1TWFpEamV2eVI5eGtpWmZOM1drRi81MzBHbFl1WFJKRWIK"
     },
     "windows": [
       {
         "fullscreen": false,
-        "height": 900,
-        "width": 900,
+        "height": 750,
+        "width": 750,
         "resizable": true,
         "center": true,
         "title": "EyeTrackVR Firmware Flashing Tool",
