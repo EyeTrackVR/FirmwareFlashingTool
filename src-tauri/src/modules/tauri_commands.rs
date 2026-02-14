@@ -1,7 +1,8 @@
 use log::debug;
-use log::{error, info};
-use tauri::{self, Manager};
-use tauri_plugin_store::with_store;
+// use log::{error, info};
+use serde_json::{self, Value};
+// use tauri::{self, Manager};
+// use tauri_plugin_store::with_store;
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 
 /// TODO: refactor to use tauri::fs and tauri::path
@@ -29,9 +30,8 @@ pub async fn unzip_archive(archive_path: String, target_dir: String) -> Result<S
 pub async fn handle_save_window_state<R: tauri::Runtime>(
   app: tauri::AppHandle<R>,
 ) -> Result<(), String> {
-  
   // disabled on macos, because it's causing infinite loading with a constant white screen
-  // todo fixme  
+  // todo fixme
   #[cfg(not(target_os = "macos"))]
   app
     .save_window_state(StateFlags::all())
@@ -45,9 +45,8 @@ pub async fn handle_save_window_state<R: tauri::Runtime>(
 pub async fn handle_load_window_state<R: tauri::Runtime>(
   window: tauri::Window<R>,
 ) -> Result<(), String> {
-
   // disabled on macos, because it's causing infinite loading with a constant white screen
-  // todo fixme 
+  // todo fixme
   #[cfg(not(target_os = "macos"))]
   window
     .restore_state(StateFlags::all())
@@ -56,37 +55,42 @@ pub async fn handle_load_window_state<R: tauri::Runtime>(
   Ok(())
 }
 
-pub fn handle_debug<R: tauri::Runtime>(
-  app: tauri::AppHandle<R>,
-) -> Result<log::LevelFilter, String> {
+pub fn handle_debug<R: tauri::Runtime>(_: tauri::AppHandle<R>) -> Result<log::LevelFilter, String> {
   // read the Store file
-  let stores = app.state::<tauri_plugin_store::StoreCollection<R>>();
-  let path = std::path::PathBuf::from(".app-settings.bin");
-  // match the store value to a LogFilter
-  let mut debug_state: String = String::new();
-  with_store(app.clone(), stores, path, |store| {
-    let settings = store.get("settings");
-    debug!("Settings: {:?}", settings);
-    if let Some(json) = settings {
-      let _serde_json = serde_json::from_value::<serde_json::Value>(json.clone());
-      debug!("Serde JSON: {:?}", _serde_json);
-      let serde_json_result = match _serde_json {
-        Ok(serde_json) => serde_json,
-        Err(err) => {
-          error!("Error configuring JSON config file: {}", err);
-          return Err(tauri_plugin_store::Error::Json(err));
-        }
-      };
-      let temp = &serde_json_result["debugMode"];
-      debug!("Debug: {:?}", temp);
-      debug_state = serde_json::from_value::<String>(temp.clone()).unwrap();
-    } else {
-      debug_state = serde_json::json!({}).to_string();
-    }
-    info!("Debug state: {}", debug_state);
-    Ok(())
-  })
-  .expect("Failed to get store");
+  // let stores = app.state::<tauri_plugin_store::StoreCollection<R>>();
+  // let path = std::path::PathBuf::from(".app-settings.bin");
+  // // match the store value to a LogFilter
+  // let mut debug_state: String = String::new();
+  // with_store(app.clone(), stores, path, |store| {
+  //   let settings = store.get("settings");
+  //   debug!("Settings: {:?}", settings);
+  //   if let Some(json) = settings {
+  //     let _serde_json = serde_json::from_value::<serde_json::Value>(json.clone());
+  //     debug!("Serde JSON: {:?}", _serde_json);
+  //     let serde_json_result = match _serde_json {
+  //       Ok(serde_json) => serde_json,
+  //       Err(err) => {
+  //         error!("Error configuring JSON config file: {}", err);
+  //         return Err(tauri_plugin_store::Error::Json(err));
+  //       }
+  //     };
+
+  //     let temp = "off";
+  //     debug!("Debug: {:?}", temp);
+
+  //     let debug_state: String = serde_json::from_value(Value::String(temp.to_string())).unwrap();
+  //   } else {
+  //     debug_state = serde_json::json!({}).to_string();
+  //   }
+  //   info!("Debug state: {}", debug_state);
+  //   Ok(())
+  // })
+  // .expect("Failed to get store");
+
+  let temp = "off";
+  debug!("Debug: {:?}", temp);
+
+  let debug_state: String = serde_json::from_value(Value::String(temp.to_string())).unwrap();
   // set the log level
   let log_level = match debug_state.as_str() {
     "off" => log::LevelFilter::Off,

@@ -3,7 +3,7 @@
   windows_subsystem = "windows"
 )]
 
-use std::sync::Mutex;
+// use std::sync::Mutex;
 use std::time::Duration;
 
 use log::error;
@@ -22,11 +22,6 @@ use modules::tauri_commands;
 struct SingleInstancePayload {
   args: Vec<String>,
   cwd: String,
-}
-
-#[derive(Clone, Serialize)]
-struct SystemTrayPayload {
-  message: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -70,11 +65,30 @@ async fn main() -> tauri::Result<()> {
     // save window position and size between sessions
     .plugin(tauri_plugin_window_state::Builder::default().build())
     .plugin(tauri_plugin_esp::init())
-    .plugin(tauri_plugin_etvr_backend::init())
     .setup(move |app| {
       // TODO: Implement the Updater
       //#[cfg(feature = "updater")]
       //tauri::updater::builder(app.handle()).should_install(|_current, _latest| true);
+
+      // shell config for sidecar
+      //    "shell": {
+      //   "all": true,
+      //   "execute": true,
+      //   "open": ".*",
+      //   "scope": [
+      //     {
+      //       "name": "backend_bin/ETVR",
+      //       "sidecar": true,
+      //       "args": true
+      //     }
+      //   ],
+      //   "sidecar": true
+      // },
+      //   "externalBin": [
+      //   "backend_bin/ETVR"
+      // ],
+
+      // .plugin(tauri_plugin_etvr_backend::init())
       app.trigger_global("set-backend-ready", None);
 
       let app_handle = app.handle();
@@ -96,8 +110,8 @@ async fn main() -> tauri::Result<()> {
         window.set_decorations(false).unwrap();
         window
           .set_min_size(Some(PhysicalSize {
-            width: 810,
-            height: 845,
+            width: 750,
+            height: 750,
           }))
           .unwrap();
       });
@@ -132,6 +146,7 @@ async fn main() -> tauri::Result<()> {
 
   app.run(move |_app, event| match event {
     RunEvent::Ready => {}
+    RunEvent::ExitRequested { .. } => {}
     _ => {}
   });
 

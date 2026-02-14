@@ -1,49 +1,39 @@
-import MainHeader from '@components/Header'
-import { useLocation, useNavigate } from '@solidjs/router'
-import { stepStatus, usb } from '@src/static'
-import { DIRECTION, ENotificationType } from '@src/static/types/enums'
-import { useAppAPIContext } from '@store/context/api'
-import { useAppNotificationsContext } from '@store/context/notifications'
-import { isActiveProcess } from '@store/terminal/selectors'
+import Header from '@components/Header'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import { useNavigate } from '@solidjs/router'
+import { logger } from '@src/logger'
+import { download } from '@src/utils'
 import { setAbortController } from '@store/terminal/terminal'
-import { createMemo } from 'solid-js'
+import { appVersion } from '@store/ui/selectors'
+import { appWindow } from '@tauri-apps/api/window'
 
-export const Header = () => {
-    const location = useLocation()
+export const HeaderRoot = () => {
     const navigate = useNavigate()
-
-    const { addNotification } = useAppNotificationsContext()
-    const { activeBoard } = useAppAPIContext()
-
-    const isUSBBoard = createMemo(() => {
-        return activeBoard().includes(usb) ? 1 : 0
-    })
-
-    const step = createMemo(() => {
-        const index = stepStatus[DIRECTION[location.pathname]].index - isUSBBoard()
-        return index <= 0 ? 1 : index
-    })
-
     return (
-        <MainHeader
-            name="Welcome!"
-            step={{
-                ...stepStatus[DIRECTION[location.pathname]],
-                step: `Step ${step()}`,
-            }}
-            onClick={() => {
-                if (isActiveProcess()) {
-                    addNotification({
-                        title: 'There is an active installation. Please wait.',
-                        message: 'There is an active installation. Please wait.',
-                        type: ENotificationType.INFO,
-                    })
-                    return true
-                }
-                setAbortController()
+        <Header
+            appVersion={appVersion()}
+            onClickHome={() => {
                 navigate('/')
+                setAbortController('logs')
             }}
-            currentStep={`${step()}/${Object.values(stepStatus).length - isUSBBoard()} `}
+            onClickDownloadLogs={() => {
+                download(logger.getLogs(), 'firmwareLogs.log')
+            }}
+            onClick={async (action: TITLEBAR_ACTION) => {
+                switch (action) {
+                    case TITLEBAR_ACTION.MINIMIZE:
+                        appWindow.minimize()
+                        break
+                    case TITLEBAR_ACTION.MAXIMIZE:
+                        appWindow.toggleMaximize()
+                        break
+                    case TITLEBAR_ACTION.CLOSE: {
+                        appWindow.close()
+                    }
+                    default:
+                        return
+                }
+            }}
         />
     )
 }

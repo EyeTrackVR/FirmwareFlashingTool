@@ -1,4 +1,5 @@
-import { defaultMdnsLength, mdnsLength } from '@src/static'
+import { DEFAULT_MDNS_LENGTH, MDNS_LENGTH } from '@static/index'
+import { CHANNEL_TYPE } from '@interfaces/firmware/enums'
 
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
@@ -17,15 +18,16 @@ export const isEmpty = <T>(obj: object | Array<T>) => {
 }
 
 export const shortMdnsAddress = (text: string) => {
-    if (text.length < defaultMdnsLength) return text
-    const firstHalf = text.slice(0, mdnsLength)
-    const secondHalf = text.slice(text.length - mdnsLength, text.length)
+    if (text.length < DEFAULT_MDNS_LENGTH) return text
+    const firstHalf = text.slice(0, MDNS_LENGTH)
+    const secondHalf = text.slice(text.length - MDNS_LENGTH, text.length)
     return `${firstHalf}...${secondHalf}`
 }
 
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
 export const download = (data: string, filename: string) => {
     const blob = new Blob([data], { type: 'text/plain' })
     const anchor = document.createElement('a')
@@ -37,43 +39,6 @@ export const download = (data: string, filename: string) => {
     document.body.appendChild(anchor)
     anchor.click()
     document.body.removeChild(anchor)
-}
-
-export const trimLogsByTextLength = (logs: string, maxLength: number): string[] => {
-    if (!logs.trim().length) return []
-    if (logs.length <= maxLength) return [logs]
-
-    const validLogs: string[] = []
-    let buffer = ''
-    let start = 0
-
-    while (start < logs.length) {
-        const end = Math.min(start + maxLength, logs.length)
-
-        let lastSpaceIndex = logs.lastIndexOf(' ', end)
-        if (lastSpaceIndex === -1 || lastSpaceIndex < start) {
-            lastSpaceIndex = end
-        }
-
-        const substring = logs.slice(start, lastSpaceIndex)
-
-        buffer += substring.trim()
-
-        if (buffer.length >= maxLength) {
-            validLogs.push(buffer)
-            buffer = ''
-        } else {
-            buffer += ' '
-        }
-
-        start = lastSpaceIndex + 1
-    }
-
-    if (buffer.trim().length > 0) {
-        validLogs.push(buffer.trim())
-    }
-
-    return validLogs
 }
 
 export const shortName = (label: string, size: number = 12): string => {
@@ -95,4 +60,48 @@ export const formatDeviceName = (filename: string): string => {
         .replace(/\.zip$/, '')
         .split('-v')[0]
         .replace(/-/g, '_')
+}
+
+export const trimLogsByTextLength = (logs: string, maxLength: number): string[] => {
+    if (!logs.trim().length) return []
+    if (logs.length <= maxLength) return [logs]
+
+    const validLogs: string[] = []
+    let start = 0
+
+    while (start < logs.length) {
+        let end = start + maxLength
+        if (end > logs.length) end = logs.length
+
+        let lastSpaceIndex = logs.lastIndexOf(' ', end)
+        if (lastSpaceIndex <= start) {
+            lastSpaceIndex = end
+        }
+
+        const chunk = logs.slice(start, lastSpaceIndex).trim()
+        if (chunk) validLogs.push(chunk)
+
+        start = lastSpaceIndex
+        if (logs[start] === ' ') start++
+    }
+
+    return validLogs
+}
+
+export const isValidChannel = (value: string): value is CHANNEL_TYPE => {
+    return Object.values(CHANNEL_TYPE).includes(value as CHANNEL_TYPE)
+}
+
+export const isValidMac = (val: string) => {
+    const regex = /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/
+    return regex.test(val)
+}
+
+export const formatMac = (val: string) => {
+    const clean = val
+        .replace(/[^0-9A-Fa-f]/g, '')
+        .slice(0, 12)
+        .toUpperCase()
+    const matches = clean.match(/.{1,2}/g)
+    return matches ? matches.join(':') : clean
 }
