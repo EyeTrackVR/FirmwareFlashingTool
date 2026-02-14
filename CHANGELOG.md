@@ -3,6 +3,12 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.7.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.7.0-beta.1...v1.7.0-beta.2) (2026-02-14)
+
+### 🍕 Features
+
+* Update build.yml to include tauri secrets in env ([e02963a](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e02963a2e0f13476c079ec38340598c79e41b71c))
+
 ## [1.7.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.6.0...v1.7.0-beta.1) (2025-03-21)
 
 ### 🍕 Features
