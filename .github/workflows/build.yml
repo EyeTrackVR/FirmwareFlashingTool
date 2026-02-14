@@ -88,6 +88,9 @@ jobs:
 
             - uses: JonasKruckenberg/tauri-build@v1.2.3
               id: tauri_build
+              env:
+                TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+                TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
               with:
                   target: ${{ matrix.platform.rust_target }}
 
