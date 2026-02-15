@@ -3,6 +3,12 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.7.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.7.0-beta.3...v1.7.0-beta.4) (2026-02-15)
+
+### 🍕 Features
+
+* test disable updater ([a770144](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/a7701441de8dcd2df24ebe41c9126e26caa7d556))
+
 ## [1.7.0-beta.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.7.0-beta.2...v1.7.0-beta.3) (2026-02-15)
 
 ### 🍕 Features
