@@ -1471,7 +1471,7 @@ checksum = "645cbb3a84e60b7531617d5ae4e57f7e27308f6445f5abf653209ea76dec8dff"
 
 [[package]]
 name = "firmware_flashing_tool"
-version = "1.7.1-beta.1" # bumpver:version
+version = "1.7.1-beta.2" # bumpver:version
 dependencies = [
  "command-group",
  "dialoguer",

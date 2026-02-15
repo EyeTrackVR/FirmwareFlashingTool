@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "EyeTrackVR Firmware Flashing Tool",
-    "version": "1.7.1-beta.1"
+    "version": "1.7.1-beta.2"
   },
   "tauri": {
     "allowlist": {
