@@ -92,3 +92,46 @@ Builds the app for production to the `src-tauri/target` folder.<br>
 This will correctly bundle Solid in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
+
+## Updating version for CI
+
+### Requirements
+
+Install UV:
+- https://docs.astral.sh/uv/
+
+Then, in the project root run: 
+```shell
+uv sync
+```
+
+### Beta version
+
+First, make sure your changes are merged into the `beta` branch and that you're currently checked out on it.
+Once done, run: 
+
+```shell
+uv run bumpver update --tag-num --tag beta --dry
+```
+
+Check if your changes look good, and if so: 
+
+```shell
+uv run bumpver update --tag-num --tag beta
+```
+
+Once bumpver has done its job:
+
+```shell
+git push --follow-tags
+```
+
+This will push the new bump commit with a special tag that will trigger a fresh beta build
+
+## Release version
+
+Follow the same steps as for `Beta` version but instead of tag beta use one of the following
+
+- `--patch` - for patch updates
+- `--minor` - for minor changes
+- `--major` - for breaking changes
