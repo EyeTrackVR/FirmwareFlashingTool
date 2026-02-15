@@ -166,7 +166,7 @@
       ]
     },
     "updater": {
-      "active": false,
+      "active": true,
       "dialog": false,
       "endpoints": [
         "https://github.com/EyeTrackVR/FirmwareFlashingTool/releases/latest/download/latest.json"
