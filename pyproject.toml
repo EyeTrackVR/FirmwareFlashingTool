@@ -15,8 +15,8 @@ dev = [
 current_version = "1.7.1-beta.1"
 version_pattern = "MAJOR.MINOR.PATCH[-TAG[.NUM]]"
 tag_message = "v{new_version}"
-commit = false
-tag = false
+commit = true
+tag = true
 push = false
 
 [bumpver.file_patterns]
