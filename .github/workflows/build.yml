@@ -27,16 +27,17 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-22.04, windows-latest]
+                # todo we might want to bump this
                 node-version: [18.x]
                 include:
-                    - platform: ubuntu-22.04
-                      rust_target: x86_64-unknown-linux-gnu
-                    - platform: windows-latest
-                      rust_target: x86_64-pc-windows-msvc
-                    # - platform: macos-latest
-                    #   rust_target: x86_64-apple-darwin
-                    # - platform: macos-latest
-                    #   rust_target: aarch64-apple-darwin
+#                  - platform: 'macos-latest'
+#                    args: '--target aarch64-apple-darwin'
+#                  - platform: 'macos-latest'
+#                    args: '--target x86_64-apple-darwin'
+                  - platform: 'ubuntu-22.04'
+                    args: ''
+                  - platform: 'windows-latest'
+                    args: ''
         runs-on: ${{ matrix.os }}
         steps:
             - name: Checkout repository
@@ -48,18 +49,11 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
-                  # node-version-file: '.nvmrc'
 
-            - name: 'Setup Rust'
-              uses: actions-rs/toolchain@v1
+            - name: install Rust stable
+              uses: dtolnay/rust-toolchain@stable
               with:
-                  default: true
-                  override: true
-                  profile: minimal
-                  toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
-                  target: ${{ matrix.rust_target }}
-
-            - uses: Swatinem/rust-cache@v2
+                targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
             - name: Install dependencies (ubuntu only)
               if: matrix.os == 'ubuntu-22.04'
@@ -80,24 +74,25 @@ jobs:
               run: |
                   brew install pnpm
 
-            - name: Install dependencies (PNPM)
+            - name: Install frontend dependencies (PNPM)
               run: pnpm install --no-frozen-lockfile
 
             - name: Generate Local Plugins  (PNPM)
               run: pnpm run specta:gen
 
-            - uses: JonasKruckenberg/tauri-build@v1.2.3
+            - uses: tauri-apps/tauri-action@v0.6.1
               id: tauri_build
               env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
                 TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
               with:
-                  target: ${{ matrix.platform.rust_target }}
+                  args: ${{ matrix.args }}
 
             - uses: actions/upload-artifact@v4
               with:
                   name: production-files-${{ matrix.os }}
-                  path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"
+                  path: "${{ join(fromJSON(steps.tauri_build.outputs.artifactPaths), '\n') }}"
 
     deploy:
         runs-on: ubuntu-latest
@@ -119,7 +114,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 20
-            # remember to update the conventionalcommits version when updating semantic relese
+            # remember to update the conventionalcommits version when updating semantic release
             - run: npm install -g conventional-changelog-conventionalcommits@8
             - run: npm install -g semantic-release@v24.1.2
             - run: npm install -g @semantic-release/exec
