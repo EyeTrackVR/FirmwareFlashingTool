@@ -120,12 +120,6 @@ Check if your changes look good, and if so:
 uv run bumpver update --tag-num --tag beta
 ```
 
-Once bumpver has done its job:
-
-```shell
-git push --follow-tags
-```
-
 This will push the new bump commit with a special tag that will trigger a fresh beta build
 
 ## Release version
@@ -135,3 +129,22 @@ Follow the same steps as for `Beta` version but instead of tag beta use one of t
 - `--patch` - for patch updates
 - `--minor` - for minor changes
 - `--major` - for breaking changes
+
+## Pushing the new version to Github
+
+Unfortunately, since bumpver doesn't support setting v in git tags, we have to do one more step
+
+```shell
+git tag v<new_tag> <bumpver_tag>
+```
+
+for example
+```shell
+git tag v1.7.1-beta.2 1.7.1-beta.2
+```
+
+Once done:
+
+```shell
+git push --follow-tags
+```
