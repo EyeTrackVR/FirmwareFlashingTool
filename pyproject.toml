@@ -12,11 +12,11 @@ dev = [
 ]
 
 [bumpver]
-current_version = "1.7.1-beta.2"
-version_pattern = "MAJOR.MINOR.PATCH[-TAG[.NUM]]"
+current_version = "1.7.1"
+version_pattern = "MAJOR.MINOR.PATCH"
 tag_message = "v{new_version}"
 commit = true
-tag = true
+tag = false
 push = false
 
 [bumpver.file_patterns]

@@ -40,7 +40,7 @@ wheels = [
 
 [[package]]
 name = "firmwareflashingtool"
-version = "1.7.1b4"
+version = "1.7.1b2"
 source = { virtual = "." }
 
 [package.dev-dependencies]
