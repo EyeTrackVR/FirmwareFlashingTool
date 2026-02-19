@@ -36,9 +36,10 @@ def get_git_branch():
 
 def get_latest_tag():
     result = subprocess.run(
-        ["git", "describe", "--tags", "--abbrev=0"], text=True, capture_output=True
+        ["git", "tag", "-l", "--sort=-version:refname"], text=True, capture_output=True
     )
-    return result.stdout.strip()
+    tags = result.stdout.strip().split("\n")
+    return tags[0] if tags and tags[0] else None
 
 
 def get_current_version():
@@ -146,7 +147,7 @@ def main():
     print("Welcome to a release maker helper!")
     print("First, let's check the branch:\n")
     current_branch = get_git_branch()
-    print(f"\nCurrent branch is: {current_branch} \n")
+    print(f"Current branch is: {current_branch} \n")
 
     if current_branch not in [BETA_BRANCH, MAIN_BRANCH]:
         print("You're not on one of the supported branches!")
