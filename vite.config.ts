@@ -1,5 +1,5 @@
-import { resolve } from 'path'
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin'
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
 

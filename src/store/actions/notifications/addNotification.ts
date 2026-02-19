@@ -1,11 +1,7 @@
-import { NOTIFICATION_ACTION } from '@interfaces/notifications/enums'
+import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { NotificationAction, Notifications } from '@store/notifications/notifications'
-import {
-    enableNotifications,
-    globalNotificationsType,
-    notifications,
-} from '@store/notifications/selectors'
-import { sendNotification } from '@tauri-apps/api/notification'
+import { enableNotifications, globalNotificationsType } from '@store/notifications/selectors'
+import { toast } from 'solid-sonner'
 import { checkPermission } from './checkPermission'
 import { handleSound } from './handleSound'
 
@@ -26,18 +22,42 @@ const mapNotificationCallback = (
 export const addNotification = (notification: Notifications) => {
     if (!enableNotifications()) return
     checkPermission()
-    const { title, message } = notification
+    const { message, type } = notification
+
+    const toastOptions = {
+        style: { background: '#0D1B26', color: '#fff', border: '1px solid #192736' },
+        actionButtonStyle: {
+            background: '#192736',
+            border: '1px solid #192736',
+            color: '#FFFFFF',
+        },
+        class: 'my-custom-toast',
+        action: {
+            label: 'X',
+            onClick: () => console.log('Undo'),
+        },
+    }
+
+    const toastMap: Record<NOTIFICATION_TYPE, (msg: string) => void> = {
+        [NOTIFICATION_TYPE.ERROR]: (msg) => toast.error(msg, toastOptions),
+        [NOTIFICATION_TYPE.SUCCESS]: (msg) => toast.success(msg, toastOptions),
+        [NOTIFICATION_TYPE.INFO]: (msg) => toast.info(msg, toastOptions),
+        [NOTIFICATION_TYPE.WARNING]: (msg) => toast.warning(msg, toastOptions),
+        [NOTIFICATION_TYPE.DEFAULT]: (msg) => toast(msg, toastOptions),
+    }
 
     mapNotificationCallback(globalNotificationsType(), {
         callbackOS: () => {
-            sendNotification({
-                title,
-                body: message,
+            toast(message, {
+                action: {
+                    label: 'Close',
+                    onClick: () => console.log('Undo'),
+                },
             })
         },
         callbackApp: () => {
             handleSound('EyeTrackApp_Audio_notif.mp3')
-            notifications?.()?.create(notification)
+            toastMap[type ?? NOTIFICATION_TYPE.DEFAULT](message)
         },
     })
 }

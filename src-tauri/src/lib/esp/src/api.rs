@@ -1,21 +1,21 @@
 use std::borrow::Cow;
 use std::io::{Read, Write};
 use std::sync::mpsc::TryRecvError;
-use std::sync::{mpsc, Arc, Mutex};
+use std::sync::{mpsc, Mutex};
 use std::thread::sleep;
 use std::time::Duration;
 use std::{fs, thread};
 
+use crate::state::EspState;
 use espflash::connection::reset::{ResetAfterOperation, ResetBeforeOperation};
 use espflash::elf::RomSegment;
 use espflash::flasher::{Flasher, ProgressCallbacks};
-use log::error;
 use serde::{Deserialize, Serialize, Serializer};
 use serialport::{FlowControl, SerialPort, SerialPortInfo, SerialPortType};
+use tauri::Emitter;
+use tauri::Manager;
 use tauri::{command, AppHandle, Runtime, State, Window};
 use thiserror::Error;
-
-use crate::state::EspState;
 
 #[derive(Error, Debug)]
 pub enum EspError {
@@ -54,9 +54,10 @@ impl Serialize for EspError {
 
 type EspResult<T> = Result<T, EspError>;
 
-#[command]
+#[tauri::command]
 pub fn available_ports() -> EspResult<Vec<SerialPortInfo>> {
   let ports = serialport::available_ports()?;
+
   let ports = ports
     .into_iter()
     .filter(|port_info| matches!(&port_info.port_type, SerialPortType::UsbPort(..)))
@@ -64,7 +65,7 @@ pub fn available_ports() -> EspResult<Vec<SerialPortInfo>> {
   Ok(ports)
 }
 
-fn connect(port_name: &str) -> EspResult<Flasher> {
+pub fn connect(port_name: &str) -> EspResult<Flasher> {
   let ports = available_ports()?;
   let port_info = ports
     .iter()
@@ -148,7 +149,7 @@ pub fn flash<R: Runtime>(app: AppHandle<R>, window: Window<R>, port_name: String
   let mut flasher = connect(&port_name)?;
 
   // It's safe to unwrap here, as it was already successfully used at this point
-  let data_dir = app.path_resolver().app_data_dir().unwrap();
+  let data_dir = app.path().app_data_dir().unwrap();
   let bin_data = fs::read(data_dir.join("build/merged-binary.bin"))?;
   let firmware_rom_data = vec![RomSegment {
     addr: 0,

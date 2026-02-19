@@ -72,6 +72,11 @@ export const TerminalContainer = () => {
                     ${logger.getLogs()}`,
                     'esp-web-tools-logs.txt',
                 )
+                addNotification({
+                    title: 'Logs downloaded',
+                    message: 'Logs downloaded',
+                    type: NOTIFICATION_TYPE.INFO,
+                })
             }}
             onClickBack={() => {
                 navigate('/')

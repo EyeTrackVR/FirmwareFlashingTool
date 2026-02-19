@@ -1,7 +1,7 @@
 import { sleep } from '@src/utils'
 import { EspApiCore } from './espApiCore'
-import * as Type from './interfaces/types'
 import { INetwork } from './interfaces/interfaces'
+import * as Type from './interfaces/types'
 
 export class EspApiClientProvider extends EspApiCore {
     public async getAvailableNetworks(port: string): Promise<INetwork[]> {

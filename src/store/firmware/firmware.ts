@@ -1,6 +1,6 @@
 import { CHANNEL_TYPE, REST_STATUS } from '@interfaces/firmware/enums'
+import { debug } from '@tauri-apps/plugin-log'
 import { createStore, produce } from 'solid-js/store'
-import { debug } from 'tauri-plugin-log-api'
 
 export interface IRest {
     status: REST_STATUS

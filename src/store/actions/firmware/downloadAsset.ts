@@ -1,9 +1,10 @@
 import { ghAPI } from '@store/firmware/selectors'
-import { removeFile } from '@tauri-apps/api/fs'
-import { appDataDir, join } from '@tauri-apps/api/path'
-import { invoke } from '@tauri-apps/api/tauri'
-import { debug, trace } from 'tauri-plugin-log-api'
-import { download } from 'tauri-plugin-upload-api'
+import { invoke } from '@tauri-apps/api/core'
+import { appDataDir, BaseDirectory, join } from '@tauri-apps/api/path'
+import { remove } from '@tauri-apps/plugin-fs'
+import { debug, trace } from '@tauri-apps/plugin-log'
+// import { download } from 'tauri-plugin-upload-api'
+import { download } from '@tauri-apps/plugin-upload'
 
 const getRelease = async (firmware: string) => {
     const appDataDirPath = await appDataDir()
@@ -36,7 +37,7 @@ const getRelease = async (firmware: string) => {
         const response = await download(
             firmwareAsset.browser_download_url,
             path,
-            (progress, total) => {
+            ({ progress, total }) => {
                 debug(`[Github Release]: Downloaded ${progress} of ${total} bytes`)
             },
         )
@@ -47,7 +48,7 @@ const getRelease = async (firmware: string) => {
             targetDir: appDataDirPath,
         })
 
-        await removeFile(path)
+        await remove(fileName, { baseDir: BaseDirectory.AppData })
 
         debug(`[Github Release]: Unzip Response: ${res}`)
     } else {

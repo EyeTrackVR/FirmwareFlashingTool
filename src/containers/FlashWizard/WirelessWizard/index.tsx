@@ -43,7 +43,7 @@ import {
 } from '@store/network/selectors'
 import { activeStepAction, setupCustomMdns, setupMacAddress } from '@store/ui/selectors'
 import { setSetupCustomMdns, setSetupMacAddress } from '@store/ui/ui'
-import { writeText } from '@tauri-apps/api/clipboard'
+import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import { BiRegularError, BiRegularLoaderAlt } from 'solid-icons/bi'
 import { IoCheckmarkSharp } from 'solid-icons/io'
 import { RiSystemLockPasswordLine } from 'solid-icons/ri'

@@ -3,7 +3,7 @@ import Header from '@components/Header'
 import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import { Router } from '@solidjs/router'
 import '@styles/docs-imports.css'
-import { appWindow } from '@tauri-apps/api/window'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { Suspense } from 'solid-js'
 import { render } from 'solid-js/web'
 
@@ -13,6 +13,7 @@ const App = () => {
             <Header
                 docs
                 onClick={async (action: TITLEBAR_ACTION) => {
+                    const appWindow = getCurrentWebviewWindow()
                     switch (action) {
                         case TITLEBAR_ACTION.MINIMIZE:
                             appWindow.minimize()
@@ -22,6 +23,7 @@ const App = () => {
                             break
                         case TITLEBAR_ACTION.CLOSE: {
                             await appWindow.close()
+                            break
                         }
                         default:
                             return

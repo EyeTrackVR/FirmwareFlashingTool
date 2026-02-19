@@ -1,5 +1,5 @@
-import { DEFAULT_MDNS_LENGTH, MDNS_LENGTH } from '@static/index'
 import { CHANNEL_TYPE } from '@interfaces/firmware/enums'
+import { DEFAULT_MDNS_LENGTH, MDNS_LENGTH } from '@static/index'
 
 export const CapitalizeFirstLetter = (letter: string) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1)
