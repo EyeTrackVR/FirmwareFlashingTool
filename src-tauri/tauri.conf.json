@@ -1,181 +1,16 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "EyeTrackVR Firmware Flashing Tool",
+  "mainBinaryName": "EyeTrackVR Firmware Flashing Tool",
+  "version": "1.7.0",
+  "identifier": "com.eyetrackvrfft.dev",
   "build": {
     "beforeBuildCommand": "pnpm build",
     "beforeDevCommand": "pnpm dev",
-    "devPath": "http://localhost:3000",
-    "distDir": "../dist"
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:3000"
   },
-  "package": {
-    "productName": "EyeTrackVR Firmware Flashing Tool",
-    "version": "1.7.1"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "clipboard": {
-        "all": true,
-        "writeText": true,
-        "readText": true
-      },
-      "dialog": {
-        "all": true,
-        "ask": true,
-        "confirm": true,
-        "message": true,
-        "open": true,
-        "save": true
-      },
-      "fs": {
-        "all": true,
-        "readFile": true,
-        "writeFile": true,
-        "readDir": true,
-        "copyFile": true,
-        "createDir": true,
-        "removeDir": true,
-        "removeFile": true,
-        "renameFile": true,
-        "exists": true,
-        "scope": [
-          "$APP/*",
-          "$APPDATA/*",
-          "$APPCONFIG/*"
-        ]
-      },
-      "globalShortcut": {
-        "all": false
-      },
-      "http": {
-        "all": true,
-        "request": true,
-        "scope": [
-          "http://127.0.0.1:8000/*",
-          "http://localhost:8000/*",
-          "https://api.github.com/repos/EyeTrackVR/OpenIris-ESPIDF/*"
-        ]
-      },
-      "notification": {
-        "all": true
-      },
-      "os": {
-        "all": true
-      },
-      "path": {
-        "all": true
-      },
-      "process": {
-        "all": false,
-        "exit": true,
-        "relaunch": true,
-        "relaunchDangerousAllowSymlinkMacos": false
-      },
-      "protocol": {
-        "all": false,
-        "asset": true,
-        "assetScope": [
-          "$APPCONFIG/*",
-          "$APPDATA/*",
-          "$RESOURCE/*"
-        ]
-      },
-      "shell": {
-        "all": false,
-        "execute": false,
-        "open": ".*",
-        "scope": [],
-        "sidecar": false
-      },
-      "window": {
-        "all": false,
-        "center": true,
-        "close": true,
-        "create": true,
-        "hide": true,
-        "maximize": true,
-        "minimize": true,
-        "print": false,
-        "requestUserAttention": true,
-        "setAlwaysOnTop": false,
-        "setCursorGrab": false,
-        "setCursorIcon": false,
-        "setCursorPosition": false,
-        "setCursorVisible": false,
-        "setDecorations": true,
-        "setFocus": true,
-        "setFullscreen": true,
-        "setIcon": false,
-        "setMaxSize": false,
-        "setMinSize": false,
-        "setPosition": true,
-        "setResizable": true,
-        "setSize": true,
-        "setSkipTaskbar": false,
-        "setTitle": true,
-        "show": true,
-        "startDragging": true,
-        "unmaximize": true,
-        "unminimize": true
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "Developer Tool",
-      "copyright": "EyeTrackVR Firmware Flashing Tool",
-      "deb": {
-        "depends": []
-      },
-      "icon": [
-        "../public/images/icons/icon-48x48.png",
-        "../public/images/icons/icon-128x128.png",
-        "../public/images/icons/icon-144x144.png",
-        "../public/images/icons/favicon.ico"
-      ],
-      "identifier": "com.eyetrackvrfft.dev",
-      "longDescription": "",
-      "resources": [],
-      "externalBin": [],
-      "shortDescription": "",
-      "targets": "all",
-      "macOS": {
-        "frameworks": [],
-        "minimumSystemVersion": "",
-        "exceptionDomain": "",
-        "signingIdentity": null,
-        "entitlements": null
-      },
-      "windows": {
-        "allowDowngrades": false,
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": "",
-        "webviewInstallMode": {
-          "type": "downloadBootstrapper"
-        },
-        "wix": {
-          "language": [
-            "en-US"
-          ]
-        }
-      }
-    },
-    "security": {
-      "csp": "script-src: 'self' https://unpkg.com/esp-web-tools@9.2.0/dist/web/install-button.js?module; default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self' asset: https://asset.localhost media-src stream: https://stream.localhost",
-      "dangerousDisableAssetCspModification": [
-        "script-src"
-      ]
-    },
-    "updater": {
-      "active": false,
-      "dialog": false,
-      "endpoints": [
-        "https://github.com/EyeTrackVR/FirmwareFlashingTool/releases/latest/download/latest.json"
-      ],
-      "windows": {
-        "installMode": "passive"
-      },
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkwNjFFOUZDN0I1MEI1OTcKUldTWHRWQjcvT2xoa0RpTFpCKzBVdG1TWFpEamV2eVI5eGtpWmZOM1drRi81MzBHbFl1WFJKRWIK"
-    },
+  "app": {
     "windows": [
       {
         "fullscreen": false,
@@ -189,9 +24,108 @@
         "transparent": true
       }
     ],
-    "systemTray": {
+    "trayIcon": {
       "iconPath": "../public/images/icons/icon-48x48.png",
       "iconAsTemplate": true
+    },
+    "security": {
+      "capabilities": [
+        {
+          "identifier": "draggable-window",
+          "windows": [
+            "*"
+          ],
+          "permissions": [
+            "core:window:allow-start-dragging",
+            "core:window:allow-toggle-maximize",
+            "core:window:allow-internal-toggle-maximize",
+            "core:window:allow-close",
+            "core:window:allow-minimize",
+            "core:app:allow-version",
+            "log:default",
+            "notification:allow-request-permission",
+            "notification:default",
+            "core:path:allow-resolve-directory",
+            "core:path:allow-join",
+            "core:path:default",
+            "core:event:allow-listen",
+            "store:default",
+            "core:event:default",
+            "upload:default",
+            {
+              "identifier": "http:default",
+              "allow": [
+                {
+                  "url": "https://api.github.com/repos/EyeTrackVR/OpenIris-ESPIDF/releases/latest"
+                }
+              ]
+            },
+            "fs:allow-remove",
+            {
+              "identifier": "fs:scope",
+              "allow": [
+                {
+                  "path": "$APPDATA/**"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "assetProtocol": {
+        "scope": [
+          "$APPCONFIG/*",
+          "$APPDATA/*",
+          "$RESOURCE/*"
+        ],
+        "enable": true
+      },
+      "dangerousDisableAssetCspModification": [
+        "script-src"
+      ],
+      "csp": "script-src: 'self' https://unpkg.com/esp-web-tools@9.2.0/dist/web/install-button.js?module; default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self' asset: https://asset.localhost media-src stream: https://stream.localhost; connect-src ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "category": "Developer Tool",
+    "copyright": "EyeTrackVR Firmware Flashing Tool",
+    "icon": [
+      "../public/images/icons/icon-48x48.png",
+      "../public/images/icons/icon-128x128.png",
+      "../public/images/icons/icon-144x144.png",
+      "../public/images/icons/favicon.ico"
+    ],
+    "longDescription": "",
+    "shortDescription": "",
+    "resources": [],
+    "externalBin": [],
+    "targets": "all",
+    "macOS": {
+      "frameworks": [],
+      "minimumSystemVersion": "",
+      "exceptionDomain": "",
+      "signingIdentity": null,
+      "entitlements": null
+    },
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    },
+    "windows": {
+      "allowDowngrades": false,
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      },
+      "wix": {
+        "language": [
+          "en-US"
+        ]
+      }
     }
   }
 }

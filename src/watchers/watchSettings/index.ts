@@ -5,10 +5,10 @@ import {
     enableNotificationsSounds,
     globalNotificationsType,
 } from '@store/notifications/selectors'
+import { debug } from '@tauri-apps/plugin-log'
 import { isEqual } from 'lodash'
 import { createEffect } from 'solid-js'
 import { useEventListener, useInterval } from 'solidjs-use'
-import { debug } from 'tauri-plugin-log-api'
 
 export const watchSettings = () => {
     const { get, set } = usePersistentStore()
@@ -37,10 +37,10 @@ export const watchSettings = () => {
             controls: true,
             callback: handleSaveSettings,
         })
-
         useEventListener(window, 'blur', () => {
             pause()
             debug(`[Routes]: Saving Settings - ${JSON.stringify(createSettingsObject())}`)
+
             set('settings', createSettingsObject())
             resume()
         })

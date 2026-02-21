@@ -8,9 +8,10 @@ import { confirmFirmwareSelection } from '@store/firmware/firmware'
 import { activeBoard, ghAPI } from '@store/firmware/selectors'
 import { appVersion, openModal } from '@store/ui/selectors'
 import { setOpenModal } from '@store/ui/ui'
-import { appWindow } from '@tauri-apps/api/window'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { trace } from '@tauri-apps/plugin-log'
 import { Accessor, batch, createMemo } from 'solid-js'
-import { trace } from 'tauri-plugin-log-api'
+
 const SelectBoardModalContainer = () => {
     const boards: Accessor<IDropdownList[]> = createMemo(() => {
         if (!ghAPI().assets.length) {
@@ -53,6 +54,7 @@ const SelectBoardModalContainer = () => {
             activeBoard={activeBoard()}
             isActive={openModal().type === MODAL_TYPE.SELECT_BOARD}
             onClickHeader={(action: TITLEBAR_ACTION) => {
+                const appWindow = getCurrentWebviewWindow()
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
                         appWindow.minimize()

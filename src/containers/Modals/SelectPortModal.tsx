@@ -9,7 +9,7 @@ import { setActivePort, setPorts } from '@store/esp/esp'
 import { activePort, ports } from '@store/esp/selectors'
 import { appVersion, openModal } from '@store/ui/selectors'
 import { setOpenModal } from '@store/ui/ui'
-import { appWindow } from '@tauri-apps/api/window'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { batch, createEffect, createMemo, on, onCleanup } from 'solid-js'
 
 const SelectPortModalContainer = () => {
@@ -63,6 +63,7 @@ const SelectPortModalContainer = () => {
             activeBoard={activePort()}
             isActive={openModal().type === MODAL_TYPE.SELECT_PORT}
             onClickHeader={(action: TITLEBAR_ACTION) => {
+                const appWindow = getCurrentWebviewWindow()
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
                         appWindow.minimize()

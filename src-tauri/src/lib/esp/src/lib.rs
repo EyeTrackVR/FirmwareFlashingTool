@@ -4,11 +4,11 @@ use tauri::{
   Manager, Runtime,
 };
 
-use api::*;
+pub use api::*;
 
 use crate::state::EspState;
 
-mod api;
+pub mod api;
 mod state;
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
@@ -23,7 +23,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       get_possible_networks,
       get_wifi_connection_status
     ])
-    .setup(move |app| {
+    .setup(move |app, _api| {
       app.manage(Mutex::new(EspState {
         log_stream_cancel: None,
       }));

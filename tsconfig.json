@@ -1,81 +1,81 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "strict": true,
-        "noEmit": true,
-        "jsx": "preserve",
-        "jsxImportSource": "solid-js",
-        "lib": [
-            "DOM",
-            "DOM.Iterable",
-            "ESNext"
-        ],
-        "types": [
-            "vite/client"
-        ],
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "isolatedModules": true,
-        "useDefineForClassFields": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".",
-        "paths": {
-            "@interfaces/*": [
-                "src/types/*"
-            ],
-            "@components/*": [
-                "src/components/*"
-            ],
-            "@containers/*": [
-                "src/containers/*"
-            ],
-            "@store/*": [
-                "src/store/*"
-            ],
-            "@pages/*": [
-                "src/pages/*"
-            ],
-            "@styles/*": [
-                "src/styles/*"
-            ],
-            "@config/*": [
-                "src/config/*"
-            ],
-            "@src/*": [
-                "src/*"
-            ],
-            "@assets/*": [
-                "src/assets/*"
-            ],
-            "@hooks/*": [
-                "src/utils/hooks/*"
-            ],
-            "@static/*": [
-                "src/static/*"
-            ],
-            "@utils/*": [
-                "src/utils/*"
-            ],
-            "@routes/*": [
-                "src/routes/*"
-            ],
-            "@common/*": [
-                "src/common/*"
-            ]
-        }
-    },
-    "include": [
-        "src"
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
     ],
-    "exclude": [
-        "node_modules"
+    "types": [
+      "vite/client"
     ],
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ]
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@interfaces/*": [
+        "src/types/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@containers/*": [
+        "src/containers/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@src/*": [
+        "src/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@hooks/*": [
+        "src/utils/hooks/*"
+      ],
+      "@static/*": [
+        "src/static/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@routes/*": [
+        "src/routes/*"
+      ],
+      "@common/*": [
+        "src/common/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

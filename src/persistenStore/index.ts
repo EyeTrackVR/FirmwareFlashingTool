@@ -1,71 +1,78 @@
-// https://github.com/tauri-apps/plugins-workspace/tree/dev/plugins/store
+import type { PersistentSettings } from '@interfaces/settings/interfaces'
+import { LazyStore } from '@tauri-apps/plugin-store'
 
-//* Global app settings stores
-import { PersistentSettings } from '@interfaces/settings/interfaces'
-import { Store } from 'tauri-plugin-store-api'
-
-const persistentStore = new Store('.app-settings.bin')
+const lazyStore = new LazyStore('etvr-settings.json')
 
 export const usePersistentStore = () => {
+    // Lazy load underlying Store
+    const ensureLoaded = async () => {
+        await lazyStore.init()
+    }
+
     const save = async () => {
-        await persistentStore.save()
+        await ensureLoaded()
+        await lazyStore.save()
     }
 
     const load = async () => {
-        await persistentStore.load()
+        await ensureLoaded()
     }
 
     const has = async (key: string) => {
-        return await persistentStore.has(key)
+        await ensureLoaded()
+        return lazyStore.has(key)
     }
 
-    const get = async (key: string) => {
-        const value = await persistentStore.get<PersistentSettings>(key)
-        if (!value) return null
-        return value
+    const get = async <T = any>(key: string): Promise<T | null> => {
+        await ensureLoaded()
+        const value = await lazyStore.get<T>(key)
+        return value ?? null
     }
 
     const set = async <K extends keyof PersistentSettings>(
         key: K,
         value: PersistentSettings[K],
     ) => {
-        if (await has(key)) {
-            const currentValue = await get(key)
-            if (currentValue === value) return
-        }
-
-        await persistentStore.set(key, value)
-    }
-
-    const reset = async () => {
-        await persistentStore.reset()
-    }
-
-    const clear = async () => {
-        await persistentStore.clear()
+        await ensureLoaded()
+        const current = await lazyStore.get(key)
+        if (current === value) return
+        await lazyStore.set(key, value)
     }
 
     const remove = async (key: string) => {
-        await persistentStore.delete(key)
+        await ensureLoaded()
+        await lazyStore.delete(key)
+    }
+
+    const clear = async () => {
+        await ensureLoaded()
+        await lazyStore.clear()
+    }
+
+    const reset = async () => {
+        await ensureLoaded()
+        await lazyStore.reset()
     }
 
     const keys = async () => {
-        return await persistentStore.keys()
+        await ensureLoaded()
+        return lazyStore.keys()
     }
 
-    const listen = async (callback: (key: string, value: PersistentSettings | null) => void) => {
-        return await persistentStore.onChange<PersistentSettings>(callback)
+    const listen = async (callback: (key: string, value: any) => void) => {
+        await ensureLoaded()
+        return lazyStore.onChange(callback)
     }
 
     return {
-        save,
         load,
+        save,
         get,
         set,
-        reset,
-        clear,
-        remove,
         has,
+        remove,
+        clear,
+        reset,
         keys,
         listen,
     }

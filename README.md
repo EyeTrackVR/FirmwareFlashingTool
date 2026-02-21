@@ -17,24 +17,26 @@ This repo includes:
 ## Usage
 
 > [!WARNING]\
-This project uses `pnpm` by default, and utilizes `pnpm workspaces`. If you do not have `pnpm` installed, you can install it with `npm install -g pnpm`.
+> This project uses `pnpm` by default, and utilizes `pnpm workspaces`. If you do not have `pnpm` installed, you can install it with `npm install -g pnpm`.
 
 You _can_ use `yarn` or `npm`, however, _you_ will need to modify the project to remove the `pnpm` specific commands and workspace.
 
 ## Setup
+
 ### Step 1 - setup node environment
 
 ```bash
 pnpm run setup
 ```
+
 ### Step 2 - setting up the backend binary
 
 To actually compile the project, you'll also need a binary of the ETVR backend from [here]().
 
-Clone the project, follow its readme to set it up and build the binary. 
+Clone the project, follow its readme to set it up and build the binary.
 Once done, copy the result into [backend_bin](/src-tauri/backend_bin) and rename it to `ETVR-<target-triple>`
 
-The target triple can be obtained by running 
+The target triple can be obtained by running
 
 ```bash
 rustc -Vv
@@ -77,7 +79,7 @@ Uses `Prettier` and the above `pnpm lint` command to lint and then format all in
 
 ## Development
 
-This project follows the architecture Tauri laid down - `Tauri Plugins` and commands, to communicate with the hardware. 
+This project follows the architecture Tauri laid down - `Tauri Plugins` and commands, to communicate with the hardware.
 These plugins are located in the [`src-tauri/src/lib`](/src-tauri/src/lib) folder.
 
 ## Deployment

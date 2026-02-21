@@ -5,11 +5,11 @@ import {
     setEnableNotificationsSounds,
     setGlobalNotificationsType,
 } from '@store/notifications/notifications'
+import { debug } from '@tauri-apps/plugin-log'
 import { lazy, onMount, Suspense } from 'solid-js'
-import { debug } from 'tauri-plugin-log-api'
+import { Toaster } from 'solid-sonner'
 import { usePersistentStore } from './persistenStore'
 import { runWatchers } from './watchers'
-const ToastNotificationWindow = lazy(() => import('@components/Notifications'))
 const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
 
@@ -18,6 +18,7 @@ const App = () => {
 
     onMount(() => {
         get('settings').then((settings) => {
+            console.log('got settings', settings)
             if (settings) {
                 debug('loading settings')
                 setEnableNotifications(settings.enableNotifications)
@@ -36,7 +37,7 @@ const App = () => {
         <Suspense>
             <Modals />
             <AppRoutes />
-            <ToastNotificationWindow />
+            <Toaster position="top-center" visibleToasts={4} duration={3000} />
         </Suspense>
     )
 }

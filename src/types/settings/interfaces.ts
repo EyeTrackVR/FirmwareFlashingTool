@@ -1,7 +1,5 @@
 import { NOTIFICATION_ACTION } from '../notifications/enums'
 
-export * as O from 'fp-ts/Option'
-
 export type PersistentSettings = {
     settings?: PersistentSettings
     user?: string

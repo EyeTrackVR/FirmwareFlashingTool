@@ -1,15 +1,15 @@
 import { COMMAND_ENUM, ESP_COMMAND_ENUM } from './interfaces/enums'
 
 export const ESP_COMMAND: Record<ESP_COMMAND_ENUM, string> = {
-    [ESP_COMMAND_ENUM.GET_WIFI_CONNECTION_STATUS]: 'plugin:esp|get_wifi_connection_status',
-    [ESP_COMMAND_ENUM.GET_POSSIBLE_NETWORKS]: 'plugin:esp|get_possible_networks',
-    [ESP_COMMAND_ENUM.GET_AVAILABLE_NETWORKS]: 'plugin:esp|available_ports',
-    [ESP_COMMAND_ENUM.CANCEL_STREAM_LOGS]: 'plugin:esp|cancel_stream_logs',
-    [ESP_COMMAND_ENUM.TEST_CONNECTION]: 'plugin:esp|test_connection',
-    [ESP_COMMAND_ENUM.SEND_COMMANDS]: 'plugin:esp|send_commands',
-    [ESP_COMMAND_ENUM.STREAM_LOGS]: 'plugin:esp|stream_logs',
+    [ESP_COMMAND_ENUM.GET_WIFI_CONNECTION_STATUS]: 'get_wifi_connection_status',
+    [ESP_COMMAND_ENUM.GET_POSSIBLE_NETWORKS]: 'get_possible_networks',
+    [ESP_COMMAND_ENUM.GET_AVAILABLE_NETWORKS]: 'available_ports',
+    [ESP_COMMAND_ENUM.CANCEL_STREAM_LOGS]: 'cancel_stream_logs',
+    [ESP_COMMAND_ENUM.TEST_CONNECTION]: 'test_connection',
+    [ESP_COMMAND_ENUM.SEND_COMMANDS]: 'send_commands',
+    [ESP_COMMAND_ENUM.STREAM_LOGS]: 'stream_logs',
     [ESP_COMMAND_ENUM.GET_LOGS]: 'plugin-esp-logs',
-    [ESP_COMMAND_ENUM.FLASH]: 'plugin:esp|flash',
+    [ESP_COMMAND_ENUM.FLASH]: 'flash',
 }
 
 export const COMMAND: Record<COMMAND_ENUM, string> = {

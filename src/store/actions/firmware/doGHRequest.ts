@@ -1,6 +1,6 @@
 import { CHANNEL_TYPE, REST_STATUS } from '@interfaces/firmware/enums'
+import { GHEndpoints } from '@src/static'
 import { formatDeviceName } from '@src/utils'
-import { GHEndpoints } from '@static/index'
 import {
     clearGHApiState,
     IGHResponse,
@@ -9,9 +9,9 @@ import {
     setGHRestStatus,
 } from '@store/firmware/firmware'
 import { ghAPI } from '@store/firmware/selectors'
-import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/api/fs'
-import { getClient, ResponseType } from '@tauri-apps/api/http'
-import { debug, error, trace, warn } from 'tauri-plugin-log-api'
+import { BaseDirectory, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
+import { fetch } from '@tauri-apps/plugin-http'
+import { debug, error, trace, warn } from '@tauri-apps/plugin-log'
 
 const setGHData = (data: IGHResponse, update: boolean) => {
     if (data?.name === undefined) {
@@ -36,7 +36,6 @@ const setGHData = (data: IGHResponse, update: boolean) => {
 
     // set the board name in the store
     for (let i = 0; i < boardName.length; i++) {
-        debug(`[Github Release]: Board Name: ', ${boardName[i]}`)
         debug(`[Github Release]: URLs:, ${download_urls[i]}`)
         setFirmwareAssets({ name: boardName[i], browser_download_url: download_urls[i] })
     }
@@ -49,7 +48,7 @@ const setGHData = (data: IGHResponse, update: boolean) => {
                 assets: ghAPI().assets,
             }),
             {
-                dir: BaseDirectory.AppConfig,
+                baseDir: BaseDirectory.AppConfig,
             },
         )
             .then(() => {
@@ -68,23 +67,19 @@ const setGHData = (data: IGHResponse, update: boolean) => {
 export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
     try {
         clearGHApiState()
-        const client = await getClient()
         const endpoint = GHEndpoints[channelType]
-
         setGHRestStatus(REST_STATUS.ACTIVE)
         setGHRestStatus(REST_STATUS.LOADING)
-
         debug(`[Github Release]: Github Endpoint ${endpoint}`)
-
         try {
-            const response = await client.get<IGHResponse>(endpoint, {
-                timeout: 30,
-                // the expected response type
+            const response = await fetch(endpoint, {
                 headers: {
                     'User-Agent': 'EyeTrackVR',
                 },
-                responseType: ResponseType.JSON,
             })
+
+            const data: IGHResponse = await response.json()
+
             // if (!Array.isArray(githubResponse.data)) {
             //     response = githubResponse
             // } else {
@@ -94,19 +89,16 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
             //     //     data: { ...preReleases[0] },
             //     // }
             // }
-
             trace(`[Github Response]: ${JSON.stringify(response)}`)
-
             if (!response.ok) {
                 debug('[Github Release Error]: Cannot Access Github API Endpoint')
                 return
             }
 
-            debug(`[OpenIris Version]: ${response.data['name']}`)
-
+            debug(`[OpenIris Version]: ${data.name}`)
             try {
                 const config = await readTextFile('config.json', {
-                    dir: BaseDirectory.AppConfig,
+                    baseDir: BaseDirectory.AppConfig,
                 })
                 const config_json = JSON.parse(config)
                 trace(`[Config]: ${JSON.stringify(config_json)}`)
@@ -116,14 +108,13 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                     setGHRestStatus(REST_STATUS.COMPLETE)
                     return
                 }
-                if (response.data.name === config_json.version) {
+                if (data.name === config_json.version) {
                     debug('[Config Exists]: Config Exists and is up to date')
-                    setGHData(response.data, false)
+                    setGHData(data, false)
                     return
                 }
-
                 // update config
-                setGHData(response.data, true)
+                setGHData(data, true)
                 debug('[Config Exists]: Config Exists and is out of date - Updating')
                 setGHRestStatus(REST_STATUS.COMPLETE)
                 return
@@ -131,15 +122,16 @@ export const doGHRequest = async (channelType: CHANNEL_TYPE) => {
                 setGHRestStatus(REST_STATUS.NO_CONFIG)
                 if (response.ok) {
                     error(`[Config Read Error]: ${err} Creating config.json`)
-                    setGHData(response.data, true)
+                    setGHData(data, true)
                     setGHRestStatus(REST_STATUS.COMPLETE)
                 }
             }
         } catch (err) {
+            console.log('got error', err)
             setGHRestStatus(REST_STATUS.FAILED)
             error(`[Github Release Error]: ${err}`)
             const config = await readTextFile('config.json', {
-                dir: BaseDirectory.AppConfig,
+                baseDir: BaseDirectory.AppConfig,
             })
             if (!config) {
                 setGHRestStatus(REST_STATUS.NO_CONFIG)

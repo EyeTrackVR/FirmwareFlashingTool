@@ -1,12 +1,12 @@
 import { ApiResponse } from '@interfaces/esp/types'
+import { logger } from '@src/logger'
 import { sleep, stringToHex } from '@src/utils'
-import { invoke, InvokeArgs } from '@tauri-apps/api/tauri'
-import { appWindow } from '@tauri-apps/api/window'
+import { invoke, InvokeArgs } from '@tauri-apps/api/core'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { COMMAND, ESP_COMMAND } from './commands'
+import { INetwork } from './interfaces/interfaces'
 import * as Type from './interfaces/types'
 import { parseMultiJSON } from './utils'
-import { logger } from '@src/logger'
-import { INetwork } from './interfaces/interfaces'
 
 export class EspApiCore {
     AUTH_MODE: Record<number, string> = {
@@ -303,6 +303,8 @@ export class EspApiCore {
     }
 
     public async _flash(portName: string, progressCallback: Type.ProgressCallback): Promise<void> {
+        const appWindow = getCurrentWebviewWindow()
+
         let total = 0
 
         const portEventNameHexed = stringToHex(portName)
@@ -351,6 +353,8 @@ export class EspApiCore {
         errorCallback: (error: Error) => void,
         signal: AbortSignal,
     ): Promise<void> {
+        const appWindow = getCurrentWebviewWindow()
+
         let buffer = ''
 
         const unlisten = await appWindow.listen<Type.LogEvent>(

@@ -1,5 +1,5 @@
 import { setEnableNotifications } from '@store/notifications/notifications'
-import { isPermissionGranted, requestPermission } from '@tauri-apps/api/notification'
+import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification'
 
 export const checkPermission = async () => {
     let permissionGranted = await isPermissionGranted()

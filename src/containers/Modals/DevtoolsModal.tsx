@@ -3,12 +3,12 @@ import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
 import DevtoolsModal from '@pages/Modals/DevtoolsModal'
 import { logger } from '@src/logger'
 import { CHANNEL_OPTIONS } from '@static/index'
-import { isValidChannel } from '@utils/index'
 import { setChannelMode } from '@store/firmware/firmware'
 import { channelMode } from '@store/firmware/selectors'
 import { appVersion, openModal } from '@store/ui/selectors'
 import { setOpenModal } from '@store/ui/ui'
-import { appWindow } from '@tauri-apps/api/window'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { isValidChannel } from '@utils/index'
 
 const DevtoolsModalContainer = () => {
     return (
@@ -18,6 +18,8 @@ const DevtoolsModalContainer = () => {
             version={appVersion()}
             isActive={openModal().type === MODAL_TYPE.DEVTOOLS}
             onClickHeader={(action: TITLEBAR_ACTION) => {
+                const appWindow = getCurrentWebviewWindow()
+
                 switch (action) {
                     case TITLEBAR_ACTION.MINIMIZE:
                         appWindow.minimize()
