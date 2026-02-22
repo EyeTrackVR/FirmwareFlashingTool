@@ -29,9 +29,6 @@ push = false
 "src-tauri/Cargo.toml" = [
     'version = "{version}" # bumpver:version',
 ]
-"src-tauri/Cargo.lock" = [
-    'version = "{version}" # bumpver:version',
-]
 "src-tauri/tauri.conf.json" = [
     '"version": "{version}"',
 ]
