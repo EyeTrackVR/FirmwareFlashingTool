@@ -29,8 +29,8 @@ const App = () => {
             }
         })
 
-        checkPermission()
         runWatchers()
+        checkPermission()
     })
 
     return (
