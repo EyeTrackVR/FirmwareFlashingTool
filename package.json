@@ -1,6 +1,6 @@
 {
   "name": "etvr-firmware-flasher-tool",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "private": true,
   "description": "A SolidJS project for EyeTrackVR",
   "author": "EyeTrackVR",
