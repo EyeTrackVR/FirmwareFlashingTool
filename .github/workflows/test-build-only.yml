@@ -6,6 +6,10 @@ on:
     types: [ opened, reopened, synchronize ]
 
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  RUST_TOOLCHAIN_VERSION: 1.93.0
+
 jobs:
   test-tauri:
     strategy:
