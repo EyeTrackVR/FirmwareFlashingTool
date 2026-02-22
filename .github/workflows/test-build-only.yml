@@ -10,6 +10,12 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   RUST_TOOLCHAIN_VERSION: 1.93.0
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+
 jobs:
   test-tauri:
     strategy:
@@ -39,7 +45,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}\
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
