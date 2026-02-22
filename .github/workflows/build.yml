@@ -99,9 +99,6 @@ jobs:
       - name: Install frontend dependencies (PNPM)
         run: pnpm install --no-frozen-lockfile
 
-      - name: Generate Local Plugins  (PNPM)
-        run: pnpm run specta:gen
-
       - uses: tauri-apps/tauri-action@v0.6.1
         id: tauri_build
         env:
