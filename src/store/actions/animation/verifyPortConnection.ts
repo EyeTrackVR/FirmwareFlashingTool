@@ -5,6 +5,7 @@ import {
     WIRED_WIZARD_STEPS,
     WIRELESS_WIZARD_STEPS,
 } from '@interfaces/animation/enums'
+import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { getApi } from '@src/esp'
 import { DeviceMode } from '@src/esp/interfaces/types'
 import { logger } from '@src/logger'
@@ -14,6 +15,7 @@ import { setActivePort } from '@store/esp/esp'
 import { activePort } from '@store/esp/selectors'
 import { setAvailableNetworks } from '@store/network/network'
 import { batch } from 'solid-js'
+import { addNotification } from '../notifications/addNotification'
 
 export const verifyPortConnection = async (isLocked: boolean = false, mode?: DeviceMode) => {
     batch(() => {
@@ -71,6 +73,11 @@ export const verifyPortConnection = async (isLocked: boolean = false, mode?: Dev
         }
     } catch (err) {
         batch(() => {
+            addNotification({
+                message: "Port verification failed. Make sure you've replugged the board",
+                title: 'Port verification failed',
+                type: NOTIFICATION_TYPE.ERROR,
+            })
             logger.errorStart('Verify Port connection ERROR')
             logger.add(err instanceof Error ? err.message : `${err}`)
             logger.errorEnd('Verify Port connection ERROR')

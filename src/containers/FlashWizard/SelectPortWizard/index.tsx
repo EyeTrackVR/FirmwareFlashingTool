@@ -105,7 +105,7 @@ const SelectPortWizard = () => {
                             case STEP_ACTION.UPDATE_NETWORK:
                             case STEP_ACTION.SELECT_NETWORK: {
                                 batch(() => {
-                                    setStep(INIT_WIZARD_STEPS.SELECT_PROCESS, false)
+                                    setStep(INIT_WIZARD_STEPS.ADVANCED_BOARD_OPTIONS, false)
                                     setAction(ACTION.PREV)
                                 })
                                 break

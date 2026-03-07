@@ -2,11 +2,11 @@ import Button from '@components/Buttons/Button'
 import DefaultButton from '@components/Buttons/DefaultButton'
 import PrimaryButton from '@components/Buttons/PrimaryButton'
 import Typography from '@components/Typography'
+import { classNames } from '@src/utils'
 import { IconTypes } from 'solid-icons'
 import { IoChevronBackSharp } from 'solid-icons/io'
-import { ParentComponent, Show } from 'solid-js'
 import { VsSettings } from 'solid-icons/vs'
-import { classNames } from '@src/utils'
+import { ParentComponent, Show } from 'solid-js'
 
 export interface IProps {
     onClickSettings?: () => void
@@ -14,6 +14,8 @@ export interface IProps {
     onClickSecondary?: () => void
     onClickPrimary?: () => void
     onClickOption?: () => void
+    onClickAdvanced?: () => void
+    advancedButtonLabel?: string
     onClickOptionLabel?: string
     label: string
     icon: IconTypes
@@ -96,25 +98,34 @@ const Card: ParentComponent<IProps> = (props) => {
                 </Show>
                 {props.children}
             </div>
-            <div class="flex flex-row gap-12 w-full">
-                <Show when={typeof props.onClickSecondary !== 'undefined'}>
+            <div class="flex flex-col gap-12  w-full">
+                <div class="flex flex-row gap-12 w-full">
+                    <Show when={typeof props.onClickSecondary !== 'undefined'}>
+                        <Button
+                            label={props.secondaryButtonLabel ?? '--'}
+                            onClick={props.onClickSecondary}
+                        />
+                    </Show>
+
+                    <Show when={typeof props.onClickOption !== 'undefined'}>
+                        <Button
+                            label={props.onClickOptionLabel ?? '--'}
+                            onClick={props.onClickOption}
+                        />
+                    </Show>
+                    <Show when={typeof props.onClickPrimary !== 'undefined'}>
+                        <PrimaryButton
+                            label={props.primaryButtonLabel ?? '--'}
+                            onClick={props.onClickPrimary}
+                            isActive={props.isActive}
+                            disabled={!props.isActive}
+                        />
+                    </Show>
+                </div>
+                <Show when={typeof props.onClickAdvanced !== 'undefined'}>
                     <Button
-                        label={props.secondaryButtonLabel ?? '--'}
-                        onClick={props.onClickSecondary}
-                    />
-                </Show>
-                <Show when={typeof props.onClickOption !== 'undefined'}>
-                    <Button
-                        label={props.onClickOptionLabel ?? '--'}
-                        onClick={props.onClickOption}
-                    />
-                </Show>
-                <Show when={typeof props.onClickPrimary !== 'undefined'}>
-                    <PrimaryButton
-                        label={props.primaryButtonLabel ?? '--'}
-                        onClick={props.onClickPrimary}
-                        isActive={props.isActive}
-                        disabled={!props.isActive}
+                        label={props.advancedButtonLabel ?? '--'}
+                        onClick={props.onClickAdvanced}
                     />
                 </Show>
             </div>
