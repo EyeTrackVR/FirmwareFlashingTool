@@ -21,7 +21,7 @@ const SetupWizard = () => {
         <Switch>
             <Match when={activeStep() === INIT_WIZARD_STEPS.PROCESS_INIT}>
                 <Card
-                    primaryButtonLabel="Setup process"
+                    primaryButtonLabel="Install openiris"
                     secondaryButtonLabel="Show Logs"
                     isActive
                     icon={BiRegularChip}
@@ -31,7 +31,7 @@ const SetupWizard = () => {
                     onClickPrimary={() => {
                         batch(() => {
                             setAction(ACTION.NEXT)
-                            setStep(INIT_WIZARD_STEPS.SELECT_PROCESS)
+                            setStep(INIT_WIZARD_STEPS.SELECT_BOARD)
                         })
                     }}
                     onClickSecondary={() => {
@@ -40,11 +40,19 @@ const SetupWizard = () => {
                             setStep(TERMINAL_WIZARD_STEPS.TERMINAL_BEFORE_PROCEEDING)
                         })
                     }}
+                    onClickAdvanced={() => {
+                        batch(() => {
+                            setAction(ACTION.NEXT)
+                            setStep(INIT_WIZARD_STEPS.ADVANCED_BOARD_OPTIONS)
+                            setActiveAction(STEP_ACTION.ADVANCED_BOARD_OPTIONS)
+                        })
+                    }}
+                    advancedButtonLabel="Advanced board options"
                     label="Flash Your Board"
                     description="Click the button below to start the flashing process and follow the on-screen prompts to complete the setup."
                 />
             </Match>
-            <Match when={activeStep() === INIT_WIZARD_STEPS.SELECT_PROCESS}>
+            <Match when={activeStep() === INIT_WIZARD_STEPS.ADVANCED_BOARD_OPTIONS}>
                 <Card
                     icon={BiRegularChip}
                     onClickBack={() => {
@@ -54,15 +62,9 @@ const SetupWizard = () => {
                         })
                     }}
                     isActive
-                    primaryButtonLabel="Install openiris"
-                    onClickPrimary={() => {
-                        batch(() => {
-                            setAction(ACTION.NEXT)
-                            setStep(INIT_WIZARD_STEPS.SELECT_BOARD)
-                        })
-                    }}
-                    label="Select process">
-                    <div class="w-full flex-col flex gap-12 h-full ">
+                    label="Advanced board options"
+                    description="Additional utilities for updating your boards config after flashing">
+                    <div class="w-full flex-col flex gap-12 h-full">
                         <Button
                             label="Change device mode"
                             onClick={() => {
@@ -93,7 +95,7 @@ const SetupWizard = () => {
                     onClickBack={() => {
                         batch(() => {
                             setAction(ACTION.PREV)
-                            setStep(INIT_WIZARD_STEPS.SELECT_PROCESS)
+                            setStep(INIT_WIZARD_STEPS.PROCESS_INIT)
                         })
                     }}
                     onClickPrimary={() => {

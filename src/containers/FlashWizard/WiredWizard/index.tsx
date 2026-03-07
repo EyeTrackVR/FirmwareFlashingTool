@@ -98,7 +98,7 @@ const WiredWizard = () => {
                                 let cleanedName = name.replace(/^\s+/, '').replace(/\s+/g, ' ')
                                 setTrackerName(cleanedName)
                             }}
-                            placeholder="Enter your wifi name"
+                            placeholder="Enter your tracker name"
                             value={trackerName()}
                         />
                     </div>

@@ -18,7 +18,6 @@ const App = () => {
 
     onMount(() => {
         get('settings').then((settings) => {
-            console.log('got settings', settings)
             if (settings) {
                 debug('loading settings')
                 setEnableNotifications(settings.enableNotifications)

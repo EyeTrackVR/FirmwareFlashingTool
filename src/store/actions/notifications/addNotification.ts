@@ -25,7 +25,12 @@ export const addNotification = (notification: Notifications) => {
     const { message, type } = notification
 
     const toastOptions = {
-        style: { background: '#0D1B26', color: '#fff', border: '1px solid #192736' },
+        style: {
+            background: '#0D1B26',
+            color: '#fff',
+            border: '1px solid #192736',
+            textAlign: 'left',
+        },
         actionButtonStyle: {
             background: '#192736',
             border: '1px solid #192736',

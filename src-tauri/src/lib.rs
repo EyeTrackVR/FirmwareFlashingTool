@@ -57,6 +57,7 @@ pub fn run() {
     }))
     // Persistent storage with file system
     .plugin(tauri_plugin_store::Builder::new().build())
+    .plugin(tauri_plugin_notification::init())
     .plugin(tauri_plugin_upload::init())
     // LocalHost REST Client (in v2, use http plugin instead of request_client)
     .plugin(tauri_plugin_http::init())
