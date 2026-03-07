@@ -20,6 +20,12 @@ const mapNotificationCallback = (
 }
 
 export const addNotification = (notification: Notifications) => {
+    // for some god forsaken reason webkit does not support it
+    // and will happily crash on you with null pointer :)
+    if (navigator.userAgent.toLowerCase().includes('linux')){
+        return
+    }
+
     if (!enableNotifications()) return
     checkPermission()
     const { message, type } = notification
