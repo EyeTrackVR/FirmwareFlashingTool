@@ -1,0 +1,71 @@
+import { sleep } from '@src/utils'
+import { EspApiCore } from './espApiCore'
+import { INetwork } from './interfaces/interfaces'
+import * as Type from './interfaces/types'
+
+export class EspApiClientProvider extends EspApiCore {
+    public async getAvailableNetworks(port: string): Promise<INetwork[]> {
+        return this._getPossibleNetworks(port)
+    }
+
+    public async pause(portName: string): Promise<void> {
+        await this._pause(portName)
+        await sleep(200)
+    }
+
+    public async getDeviceMode(portName: string): Promise<Type.DeviceMode> {
+        return this._getDeviceMode(portName)
+    }
+
+    public async validateConnection(portName: string): Promise<void> {
+        return this._validateConnection(portName)
+    }
+
+    public async switchDeviceMode(port: string, deviceMode: Type.DeviceMode): Promise<void> {
+        return this._switchDeviceMode(port, deviceMode)
+    }
+
+    public async getDeviceName(port: string): Promise<string> {
+        return this._getDeviceName(port)
+    }
+
+    public async flash(portName: string, progressCallback: Type.ProgressCallback): Promise<void> {
+        return this._flash(portName, progressCallback)
+    }
+
+    public async cancelStreamLogs(): Promise<void> {
+        return this._cancelStreamLogs()
+    }
+
+    public async streamLogs(
+        portName: string,
+        callback: (logs: string) => void,
+        errorCallback: (error: Error) => void,
+        signal: AbortSignal,
+    ): Promise<void> {
+        return this._streamLogs(portName, callback, errorCallback, signal)
+    }
+
+    public async setupWirelessConnection(
+        port: string,
+        mdns: string,
+        ssid: string,
+        password: string,
+        channel: number,
+        bssid: string,
+    ): Promise<string> {
+        return this._setupWirelessConnection(port, mdns, ssid, password, channel, bssid)
+    }
+
+    public async setupWiredConnection(mdns: string, port: string): Promise<void> {
+        return this._setupWiredConnection(mdns, port)
+    }
+
+    public async checkPortConnection(currentUserActivePort: string): Promise<boolean> {
+        return this._checkPortConnection(currentUserActivePort)
+    }
+
+    public async getAvailablePorts(): Promise<Type.UsbSerialPortInfo[]> {
+        return this._getAvailablePorts()
+    }
+}

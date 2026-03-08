@@ -1,23 +1,21 @@
 use std::borrow::Cow;
 use std::io::{Read, Write};
 use std::sync::mpsc::TryRecvError;
-use std::sync::{mpsc, Mutex, PoisonError};
+use std::sync::{mpsc, Mutex};
 use std::thread::sleep;
 use std::time::Duration;
 use std::{fs, thread};
 
+use crate::state::EspState;
 use espflash::connection::reset::{ResetAfterOperation, ResetBeforeOperation};
 use espflash::elf::RomSegment;
 use espflash::flasher::{Flasher, ProgressCallbacks};
-use espflash::targets::Chip;
-use log::error;
 use serde::{Deserialize, Serialize, Serializer};
 use serialport::{FlowControl, SerialPort, SerialPortInfo, SerialPortType};
+use tauri::Emitter;
+use tauri::Manager;
 use tauri::{command, AppHandle, Runtime, State, Window};
 use thiserror::Error;
-
-use crate::manifest::{load_manifest, ManifestError};
-use crate::state::EspState;
 
 #[derive(Error, Debug)]
 pub enum EspError {
@@ -41,17 +39,8 @@ pub enum EspError {
     #[from]
     source: serde_json::Error,
   },
-  #[error(transparent)]
-  ManifestError {
-    #[from]
-    source: ManifestError,
-  },
   #[error("Unknown port: {port_name}")]
   UnknownPort { port_name: String },
-  #[error("Unknown chip: {chip}")]
-  UnknownChip { chip: Chip },
-  #[error("Unsupported chip family: {chip_family}")]
-  UnsupportedChipFamily { chip_family: String },
 }
 
 impl Serialize for EspError {
@@ -65,9 +54,10 @@ impl Serialize for EspError {
 
 type EspResult<T> = Result<T, EspError>;
 
-#[command]
+#[tauri::command]
 pub fn available_ports() -> EspResult<Vec<SerialPortInfo>> {
   let ports = serialport::available_ports()?;
+
   let ports = ports
     .into_iter()
     .filter(|port_info| matches!(&port_info.port_type, SerialPortType::UsbPort(..)))
@@ -75,7 +65,7 @@ pub fn available_ports() -> EspResult<Vec<SerialPortInfo>> {
   Ok(ports)
 }
 
-fn connect(port_name: &str) -> EspResult<Flasher> {
+pub fn connect(port_name: &str) -> EspResult<Flasher> {
   let ports = available_ports()?;
   let port_info = ports
     .iter()
@@ -159,47 +149,21 @@ pub fn flash<R: Runtime>(app: AppHandle<R>, window: Window<R>, port_name: String
   let mut flasher = connect(&port_name)?;
 
   // It's safe to unwrap here, as it was already successfully used at this point
-  let data_dir = app.path_resolver().app_data_dir().unwrap();
-  let manifest = load_manifest(&data_dir.join("manifest.json"))?;
-  let chip = flasher.chip();
-  let chip_family = match chip {
-    Chip::Esp32 => "ESP32",
-    Chip::Esp32c2 => "ESP32-C2",
-    Chip::Esp32c3 => "ESP32-C3",
-    Chip::Esp32c6 => "ESP32-C6",
-    Chip::Esp32h2 => "ESP32-H2",
-    Chip::Esp32p4 => "ESP32-P4",
-    Chip::Esp32s2 => "ESP32-S2",
-    Chip::Esp32s3 => "ESP32-S3",
-    _ => return Err(EspError::UnknownChip { chip }),
-  };
+  let data_dir = app.path().app_data_dir().unwrap();
+  let bin_data = fs::read(data_dir.join("build/merged-binary.bin"))?;
+  let firmware_rom_data = vec![RomSegment {
+    addr: 0,
+    data: Cow::from(bin_data),
+  }];
 
-  let build = match manifest
-    .builds
-    .into_iter()
-    .find(|build| build.chip_family == chip_family)
-  {
-    Some(build) => build,
-    None => {
-      return Err(EspError::UnsupportedChipFamily {
-        chip_family: chip_family.to_string(),
-      })
-    }
-  };
-
-  let mut rom_segments = Vec::with_capacity(build.parts.len());
-
-  for part in build.parts {
-    rom_segments.push(RomSegment {
-      addr: part.offset,
-      data: Cow::from(fs::read(data_dir.join(part.path))?),
-    })
-  }
-
-  let hexed_port_name : String = port_name.as_bytes().iter().map(|byte| format!("{:02x}", byte)).collect();
+  let hexed_port_name: String = port_name
+    .as_bytes()
+    .iter()
+    .map(|byte| format!("{:02x}", byte))
+    .collect();
 
   flasher.write_bins_to_flash(
-    &rom_segments,
+    &firmware_rom_data,
     Some(&mut EspflashProgress {
       event_name: format!("plugin-esp-flash-{}", hexed_port_name),
       window,
@@ -274,14 +238,37 @@ pub fn cancel_stream_logs(state: State<'_, Mutex<EspState>>) -> EspResult<()> {
     state.log_stream_cancel = None;
   }
 
+  sleep(Duration::from_millis(250));
+
   Ok(())
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "command", content = "data", rename_all = "snake_case")]
 pub enum Command {
-  SetWifi { ssid: String, password: String },
-  SetMdns { hostname: String },
+  SetWifi {
+    ssid: String,
+    password: String,
+    name: String,
+    channel: u8,
+    power: u8,
+    bssid: String,
+  },
+  SetMdns {
+    hostname: String,
+  },
+  SwitchMode {
+    mode: String,
+  },
+  ConnectWifi,
+  GetMdnsName,
+  GetDeviceMode,
+  ScanNetworks,
+  GetWifiStatus,
+  RestartDevice,
+  Pause {
+    pause: bool,
+  },
 }
 
 #[derive(Debug, Serialize)]
@@ -289,15 +276,144 @@ struct CommandsOperation {
   pub commands: Vec<Command>,
 }
 
-#[command]
-pub fn send_commands(port_name: String, commands: Vec<Command>) -> EspResult<()> {
-  let mut serial_port = serialport::new(port_name, 115_200)
-    .flow_control(FlowControl::None)
-    .open_native()?;
+#[tauri::command]
+pub async fn send_commands(port_name: String, commands: Vec<Command>) -> Result<String, String> {
+  tokio::task::spawn_blocking(move || {
+    let mut serial_port = serialport::new(&port_name, 115_200)
+      .flow_control(FlowControl::None)
+      .timeout(Duration::from_millis(100))
+      .open_native()
+      .map_err(|e| e.to_string())?;
 
+    let operation = CommandsOperation { commands };
+    let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
+
+    serial_port
+      .write_all(payload.as_bytes())
+      .map_err(|e| e.to_string())?;
+    serial_port.flush().map_err(|e| e.to_string())?;
+    log::debug!("{:?}", serde_json::to_string(&operation));
+
+    thread::sleep(Duration::from_millis(500));
+
+    for _ in 0..10 {
+      match serial_port.bytes_to_read() {
+        Ok(bytes_available) if bytes_available > 0 => {
+          let mut buffer = vec![0u8; bytes_available as usize];
+          serial_port
+            .read_exact(&mut buffer)
+            .map_err(|e| e.to_string())?;
+          let response = String::from_utf8_lossy(&buffer).trim().to_string();
+          return Ok(response);
+        }
+        Ok(_) => {
+          thread::sleep(Duration::from_millis(100));
+        }
+        Err(e) => return Err(e.to_string()),
+      }
+    }
+
+    Err("No response received after waiting".to_string())
+  })
+  .await
+  .map_err(|e| e.to_string())?
+}
+
+#[tauri::command]
+pub async fn get_possible_networks(
+  port_name: String,
+  commands: Vec<Command>,
+) -> Result<String, String> {
   let operation = CommandsOperation { commands };
-  serial_port.write_all(serde_json::to_string(&operation)?.as_bytes())?;
-  log::debug!("{:?}", serde_json::to_string(&operation));
+  let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
 
-  Ok(())
+  tauri::async_runtime::spawn_blocking(move || {
+    let mut serial_port = serialport::new(port_name, 115_200)
+      .flow_control(FlowControl::None)
+      .timeout(Duration::from_millis(100))
+      .open_native()
+      .map_err(|e| e.to_string())?;
+
+    serial_port
+      .write_all(payload.as_bytes())
+      .map_err(|e| e.to_string())?;
+    serial_port.flush().map_err(|e| e.to_string())?;
+
+    log::debug!("{:?}", serde_json::to_string(&operation));
+
+    let start_time = std::time::Instant::now();
+    let mut buffer = Vec::new();
+
+    while start_time.elapsed() < Duration::from_secs(30) {
+      match serial_port.bytes_to_read() {
+        Ok(bytes_available) if bytes_available > 0 => {
+          let mut chunk = vec![0u8; bytes_available as usize];
+          if serial_port.read_exact(&mut chunk).is_ok() {
+            buffer.extend_from_slice(&chunk);
+
+            let response = String::from_utf8_lossy(&buffer).trim().to_string();
+            if response.contains("results") || response.contains("Networks scanned") {
+              return Ok(response);
+            }
+          }
+        }
+        _ => {
+          std::thread::sleep(Duration::from_millis(250));
+        }
+      }
+    }
+
+    Err("Operation timed out".to_string())
+  })
+  .await
+  .map_err(|e| e.to_string())?
+}
+
+#[command]
+pub async fn get_wifi_connection_status(
+  port_name: String,
+  commands: Vec<Command>,
+) -> Result<String, String> {
+  let operation = CommandsOperation { commands };
+  let payload = serde_json::to_string(&operation).map_err(|e| e.to_string())? + "\n";
+  tauri::async_runtime::spawn_blocking(move || {
+    let mut serial_port = serialport::new(port_name, 115_200)
+      .flow_control(FlowControl::None)
+      .timeout(Duration::from_millis(100))
+      .open_native()
+      .map_err(|e| e.to_string())?;
+
+    serial_port
+      .write_all(payload.as_bytes())
+      .map_err(|e| e.to_string())?;
+    serial_port.flush().map_err(|e| e.to_string())?;
+
+    log::debug!("{:?}", serde_json::to_string(&operation));
+
+    let start_time = std::time::Instant::now();
+    let mut buffer = Vec::new();
+
+    while start_time.elapsed() < Duration::from_secs(30) {
+      match serial_port.bytes_to_read() {
+        Ok(bytes_available) if bytes_available > 0 => {
+          let mut chunk = vec![0u8; bytes_available as usize];
+          if serial_port.read_exact(&mut chunk).is_ok() {
+            buffer.extend_from_slice(&chunk);
+
+            let response = String::from_utf8_lossy(&buffer).trim().to_string();
+            if response.contains("results") {
+              return Ok(response);
+            }
+          }
+        }
+        _ => {
+          std::thread::sleep(Duration::from_millis(250));
+        }
+      }
+    }
+
+    Err("Operation timed out".to_string())
+  })
+  .await
+  .map_err(|e| e.to_string())?
 }

@@ -1,10 +1,14 @@
 {
-    "compilerOptions": {
-        "composite": true,
-        "module": "esnext",
-        "moduleResolution": "node"
-    },
-    "include": [
-        "vite.config.ts"
-    ]
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [
+      "node"
+    ],
+    "skipLibCheck": true
+  },
+  "include": [
+    "vite.config.ts"
+  ]
 }

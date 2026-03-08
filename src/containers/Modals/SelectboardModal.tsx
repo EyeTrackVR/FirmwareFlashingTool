@@ -1,0 +1,89 @@
+import { MODAL_TYPE } from '@interfaces/animation/enums'
+import { type IDropdownList } from '@interfaces/firmware/interfaces'
+import { TITLEBAR_ACTION } from '@interfaces/ui/enums'
+import SelectBoardModal from '@pages/Modals/SelectBoardModal'
+import { logger } from '@src/logger'
+import { BOARD_DESCRIPTION, RECOMMENDED_BOARDS } from '@static/index'
+import { confirmFirmwareSelection } from '@store/firmware/firmware'
+import { activeBoard, ghAPI } from '@store/firmware/selectors'
+import { appVersion, openModal } from '@store/ui/selectors'
+import { setOpenModal } from '@store/ui/ui'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { trace } from '@tauri-apps/plugin-log'
+import { Accessor, batch, createMemo } from 'solid-js'
+
+const SelectBoardModalContainer = () => {
+    const boards: Accessor<IDropdownList[]> = createMemo(() => {
+        if (!ghAPI().assets.length) {
+            return []
+        }
+
+        return ghAPI()
+            .assets.map((item) => {
+                trace(`${item.name}`)
+                return {
+                    label: item.name,
+                    description: BOARD_DESCRIPTION[item.name.replace('_release', '')] ?? '--',
+                }
+            })
+            .sort((boardA, boardB) => {
+                const boardALabel = boardA.label.replace('_release', '')
+                const boardBLabel = boardB.label.replace('_release', '')
+                const isBoardARelease = boardA.label.includes('_release')
+                const isBoardBRelease = boardB.label.includes('_release')
+
+                const boardAIsSupported = RECOMMENDED_BOARDS.includes(boardALabel)
+                const boardBIsSupported = RECOMMENDED_BOARDS.includes(boardBLabel)
+
+                if (boardAIsSupported && boardBIsSupported) {
+                    if (isBoardARelease && !isBoardBRelease) return 1
+                    if (!isBoardARelease && isBoardBRelease) return -1
+                }
+
+                if (boardAIsSupported && !boardBIsSupported) return -1
+                if (!boardAIsSupported && boardBIsSupported) return 1
+
+                return 0
+            })
+    })
+
+    return (
+        <SelectBoardModal
+            version={appVersion()}
+            boards={boards()}
+            activeBoard={activeBoard()}
+            isActive={openModal().type === MODAL_TYPE.SELECT_BOARD}
+            onClickHeader={(action: TITLEBAR_ACTION) => {
+                const appWindow = getCurrentWebviewWindow()
+                switch (action) {
+                    case TITLEBAR_ACTION.MINIMIZE:
+                        appWindow.minimize()
+                        break
+                    case TITLEBAR_ACTION.MAXIMIZE:
+                        appWindow.toggleMaximize()
+                        break
+                    case TITLEBAR_ACTION.CLOSE:
+                        appWindow.close()
+                        break
+                    default:
+                        return
+                }
+            }}
+            onClickClose={() => {
+                setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+            }}
+            onClickConfirmBoard={(board) => {
+                batch(() => {
+                    logger.infoStart('SelectBoardModalContainer')
+                    logger.add('button: onClickConfirmBoard')
+                    logger.add(`Selected board: ${board}`)
+                    confirmFirmwareSelection(board)
+                    setOpenModal({ open: false, type: MODAL_TYPE.NONE })
+                    logger.infoEnd('SelectBoardModalContainer')
+                })
+            }}
+        />
+    )
+}
+
+export default SelectBoardModalContainer

@@ -1,5 +1,5 @@
-import { resolve } from 'path'
 import { optimizeLodashImports } from '@optimize-lodash/rollup-plugin'
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
 
@@ -8,7 +8,7 @@ export default defineConfig({
     envPrefix: ['VITE_', 'TAURI_'],
     resolve: {
         alias: {
-            '@interfaces': resolve(__dirname, './src/static/types'),
+            '@interfaces': resolve(__dirname, './src/types'),
             '@components': resolve(__dirname, './src/components'),
             '@containers': resolve(__dirname, './src/containers'),
             '@routes': resolve(__dirname, './src/routes'),

@@ -3,6 +3,34 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+## [1.7.0-beta.4](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.7.0-beta.3...v1.7.0-beta.4) (2026-02-15)
+
+### 🍕 Features
+
+* test disable updater ([a770144](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/a7701441de8dcd2df24ebe41c9126e26caa7d556))
+
+## [1.7.0-beta.3](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.7.0-beta.2...v1.7.0-beta.3) (2026-02-15)
+
+### 🍕 Features
+
+* Switch to official tauri-action ([14b1990](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/14b19905a30f24045d8dfdc811c53b96e05b23f6))
+
+## [1.7.0-beta.2](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.7.0-beta.1...v1.7.0-beta.2) (2026-02-14)
+
+### 🍕 Features
+
+* Update build.yml to include tauri secrets in env ([e02963a](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/e02963a2e0f13476c079ec38340598c79e41b71c))
+
+## [1.7.0-beta.1](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.6.0...v1.7.0-beta.1) (2025-03-21)
+
+### 🍕 Features
+
+* Update dependencies, add proper Project Babble support ([da5e79c](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/da5e79cb757838cd3f51c331efc586b457d71f86))
+
+### 📝 Documentation
+
+* Update FUNDING.yml ([70a1594](https://github.com/EyeTrackVR/FirmwareFlashingTool/commit/70a159434119a1aef9bdba96f91804cc6e3f28a0))
+
 ## [1.6.0](https://github.com/EyeTrackVR/FirmwareFlashingTool/compare/v1.5.0...v1.6.0) (2025-01-30)
 
 ### 🍕 Features

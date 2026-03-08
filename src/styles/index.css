@@ -6,13 +6,10 @@ input[type='password']::-ms-clear {
 #root {
     text-align: center;
     background-color: transparent;
-    padding: 40px 24px 24px;
     margin: 0px;
     box-sizing: border-box;
     height: 100vh;
-    /* overflow: hidden; */
     border-radius: 0.4rem;
-    /* Clothoid Gradient */
     background: #000f1a;
 }
 
@@ -79,4 +76,8 @@ body {
         color 0.25s,
         background-color 0.5s;
     color: #a8b1ff;
+}
+
+.my-custom-toast {
+    text-align: left;
 }
