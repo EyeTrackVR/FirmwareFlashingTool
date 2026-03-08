@@ -1,6 +1,6 @@
 [project]
 name = "firmwareflashingtool"
-version = "1.8.0"
+version = "2.0.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -12,7 +12,7 @@ dev = [
 ]
 
 [bumpver]
-current_version = "1.8.0"
+current_version = "2.0.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 tag_message = "v{new_version}"
 commit = true

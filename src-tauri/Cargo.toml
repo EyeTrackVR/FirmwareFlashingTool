@@ -1,6 +1,6 @@
 [package]
 name = "etvr-firmware-flasher-tool"
-version = "1.8.0" # bumpver:version
+version = "2.0.0" # bumpver:version
 description = "A Tauri App"
 authors = [
   "DaOfficialWizard",

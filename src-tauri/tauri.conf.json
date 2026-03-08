@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "productName": "EyeTrackVR Firmware Flashing Tool",
   "mainBinaryName": "EyeTrackVR Firmware Flashing Tool",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "identifier": "com.eyetrackvrfft.dev",
   "build": {
     "beforeBuildCommand": "pnpm build",
