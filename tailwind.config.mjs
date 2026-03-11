@@ -48,6 +48,15 @@ module.exports = {
             gridTemplateColumns: {
                 '1/5': '1fr 5fr',
             },
+            keyframes: {
+                shrink: {
+                    from: { transform: 'scaleX(1)' },
+                    to: { transform: 'scaleX(0)' },
+                },
+            },
+            animation: {
+                shrink: 'shrink 300ms ease-out forwards',
+            },
         },
         ...theme,
     },

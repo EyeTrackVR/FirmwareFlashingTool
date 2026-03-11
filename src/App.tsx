@@ -7,8 +7,8 @@ import {
 } from '@store/notifications/notifications'
 import { debug } from '@tauri-apps/plugin-log'
 import { lazy, onMount, Suspense } from 'solid-js'
-import { Toaster } from 'solid-sonner'
 import { usePersistentStore } from './persistenStore'
+import { Toaster } from './toaster'
 import { runWatchers } from './watchers'
 const Modals = lazy(() => import('@containers/Modals'))
 const AppRoutes = lazy(() => import('@routes/Routes'))
@@ -36,7 +36,7 @@ const App = () => {
         <Suspense>
             <Modals />
             <AppRoutes />
-            <Toaster position="top-center" visibleToasts={4} duration={3000} />
+            <Toaster />
         </Suspense>
     )
 }

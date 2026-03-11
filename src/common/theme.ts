@@ -57,7 +57,7 @@ export const theme = {
             100: '#9793FD',
         },
         transparentPurple: {
-            200: ' #817df7b3',
+            200: '#817df7b3',
             100: '#817df780',
         },
         grey: {
