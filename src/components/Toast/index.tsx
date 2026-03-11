@@ -109,7 +109,7 @@ const Toast: Component<IProps> = (props) => {
 
     return (
         <div
-            class="absolute top-0 left-0 w-[360px]"
+            class="absolute top-24 left-0 w-[400px]"
             style={{
                 transform: outerTransform(),
                 opacity: outerOpacity(),
@@ -117,7 +117,7 @@ const Toast: Component<IProps> = (props) => {
                 'z-index': String(props.total - props.index),
                 'will-change': 'transform, opacity',
             }}>
-            <div class="relative bg-black-900 border border-black-800 rounded-[13px] px-[14px] pt-[13px] pb-[16px] overflow-hidden backdrop-blur-md select-none">
+            <div class="relative bg-black-900 border border-black-800 rounded-14 px-14 pt-14 pb-16 overflow-hidden backdrop-blur-md select-none">
                 <div class="flex flex-row w-full justify-start gap-12">
                     <div class="flex items-center justify-center">{icon()[props.toast.type]}</div>
                     <div class="flex flex-row w-full justify-between">
