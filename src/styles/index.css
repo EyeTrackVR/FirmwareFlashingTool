@@ -77,29 +77,3 @@ body {
         background-color 0.5s;
     color: #a8b1ff;
 }
-
-.my-custom-toast {
-    text-align: left;
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateY(calc(-100% - 12px));
-        opacity: 0;
-    }
-    40% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(0px);
-        opacity: 1;
-    }
-}
-@keyframes shrink {
-    from {
-        transform: scaleX(1);
-    }
-    to {
-        transform: scaleX(0);
-    }
-}

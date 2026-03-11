@@ -34,7 +34,7 @@ export const Toaster = () => {
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             class={classNames(
-                'fixed top-6 left-1/2 -translate-x-1/2 w-[360px] z-[999] transition-[height] duration-[380ms] [cubic-bezier(0.34,1.1,0.64,1)]',
+                'fixed top-6 left-1/2 -translate-x-1/2 w-[400px] z-[999] transition-[height] duration-[380ms] [cubic-bezier(0.34,1.1,0.64,1)]',
                 notifications().length ? 'pointer-events-auto' : 'pointer-events-none',
             )}
             style={{

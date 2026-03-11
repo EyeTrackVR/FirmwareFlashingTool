@@ -7,13 +7,12 @@ interface IProps {
 }
 
 const ProgressBar: Component<IProps> = (props) => (
-    <div class="absolute bottom-0 left-0 right-0 h-2 overflow-hidden rounded-tr-12 rounded-tl-12">
+    <div class="absolute bottom-0 left-0 right-0 h-2 overflow-hidden rounded-tl-xl rounded-tr-xl">
         <div
-            class="h-full rounded-2"
+            class="h-full rounded-sm origin-left animate-shrink"
             style={{
+                'animation-duration': `${props.duration}ms`,
                 'animation-play-state': props.paused ? 'paused' : 'running',
-                animation: `shrink ${props.duration}ms linear forwards`,
-                'transform-origin': 'left',
                 background: props.color,
             }}
         />
