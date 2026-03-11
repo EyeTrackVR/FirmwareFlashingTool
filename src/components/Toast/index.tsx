@@ -1,19 +1,28 @@
 import DefaultButton from '@components/Buttons/DefaultButton'
 import ProgressBar from '@components/ProgressBar'
 import Typography from '@components/Typography'
+import { NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
 import { IToast } from '@interfaces/notifications/interfaces'
-import { AiOutlineCheckCircle, AiOutlineClose } from 'solid-icons/ai'
+import theme from '@src/common/theme'
 import {
+    AiOutlineCheckCircle,
+    AiOutlineClose,
+    AiOutlineInfoCircle,
+    AiTwotoneWarning,
+} from 'solid-icons/ai'
+import {
+    Accessor,
     Component,
     createEffect,
     createMemo,
     createSignal,
+    JSX,
     onCleanup,
     onMount,
     Show,
 } from 'solid-js'
 
-interface ToastComponentProps {
+interface IProps {
     toast: IToast
     index: number
     total: number
@@ -22,20 +31,9 @@ interface ToastComponentProps {
     dismiss: (id: number) => void
 }
 
-const Toast: Component<ToastComponentProps> = (props) => {
+const Toast: Component<IProps> = (props) => {
     const [removing, setRemoving] = createSignal(false)
     const [mounted, setMounted] = createSignal(false)
-
-    const theme = createMemo(() => {
-        return {
-            bg: '#0d5c3a',
-            border: '#1a8c59',
-            icon: '#5deca0',
-            text: '#e8fff4',
-            sub: '#9de8c0',
-            glow: 'rgba(29,174,100,0.35)',
-        }
-    })
 
     let timer: ReturnType<typeof setTimeout> | undefined
     let remaining = props.toast.duration
@@ -72,7 +70,7 @@ const Toast: Component<ToastComponentProps> = (props) => {
         return 55
     })
 
-    const outerTransform = (): string => {
+    const outerTransform = createMemo(() => {
         const scale = props.hovering ? 1 : 1 - props.index * 0.042
         const translateY = props.hovering ? props.index * multiplier() : props.index * 10
 
@@ -83,58 +81,48 @@ const Toast: Component<ToastComponentProps> = (props) => {
             return `translateY(calc(-100% - 12px)) scale(${scale}) translateX(0px)`
         }
         return `translateY(${translateY}px) scale(${scale}) translateX(${0}px)`
-    }
+    })
 
-    const outerOpacity = (): string => {
+    const outerOpacity = createMemo(() => {
         if (removing()) return '0'
         if (!mounted()) return '0'
         if (props.hovering && props.index <= 5) return '1'
         return String(props.index >= 4 ? 0 : 1 - props.index * 0.13)
-    }
+    })
 
-    const outerTransition = (): string => {
+    const outerTransition = createMemo(() => {
         if (removing()) {
             return 'transform 0.34s cubic-bezier(0.4, 0, 1, 1), opacity 0.26s ease'
         }
         return 'transform 0.42s cubic-bezier(0.25, 1.0, 0.5, 1), opacity 0.34s ease'
-    }
+    })
+
+    const icon: Accessor<Record<NOTIFICATION_TYPE, JSX.Element>> = createMemo(() => {
+        return {
+            [NOTIFICATION_TYPE.SUCCESS]: <AiOutlineCheckCircle color={'#fff'} />,
+            [NOTIFICATION_TYPE.DEFAULT]: <AiOutlineInfoCircle color={'#fff'} />,
+            [NOTIFICATION_TYPE.WARNING]: <AiTwotoneWarning color={'#fff'} />,
+            [NOTIFICATION_TYPE.INFO]: <AiOutlineInfoCircle color={'#fff'} />,
+            [NOTIFICATION_TYPE.ERROR]: <AiTwotoneWarning color={'#fff'} />,
+        }
+    })
 
     return (
         <div
+            class="absolute top-0 left-0 w-[360px]"
             style={{
-                position: 'absolute',
-                top: '0',
-                left: '0',
-                width: '360px',
                 transform: outerTransform(),
                 opacity: outerOpacity(),
                 transition: outerTransition(),
                 'z-index': String(props.total - props.index),
                 'will-change': 'transform, opacity',
             }}>
-            <div
-                style={{
-                    position: 'relative',
-                    background: theme().bg,
-                    border: `1px solid ${theme().border}`,
-                    'border-radius': '13px',
-                    padding: '13px 14px 16px',
-                    overflow: 'hidden',
-                    'backdrop-filter': 'blur(12px)',
-                    'user-select': 'none',
-                }}>
+            <div class="relative bg-black-900 border border-black-800 rounded-[13px] px-[14px] pt-[13px] pb-[16px] overflow-hidden backdrop-blur-md select-none">
                 <div class="flex flex-row w-full justify-start gap-12">
-                    <div
-                        style={{
-                            'margin-top': '1px',
-                            'flex-shrink': '0',
-                            filter: `drop-shadow(0 0 6px ${theme().icon}90)`,
-                        }}>
-                        <AiOutlineCheckCircle color={theme().icon} />
-                    </div>
+                    <div class="flex items-center justify-center">{icon()[props.toast.type]}</div>
                     <div class="flex flex-row w-full justify-between">
-                        <div class="flex flex-col items-start justify-center ">
-                            <Typography color="white" text="caption">
+                        <div class="flex flex-col items-start justify-center gap-12">
+                            <Typography color="white" text="caption" class="text-left">
                                 {props.toast.message}
                             </Typography>
                             <Show when={props.toast.description}>
@@ -143,6 +131,8 @@ const Toast: Component<ToastComponentProps> = (props) => {
                                 </Typography>
                             </Show>
                         </div>
+                    </div>
+                    <div class="flex items-center justify-center">
                         <DefaultButton onClick={removeToast}>
                             <AiOutlineClose />
                         </DefaultButton>
@@ -150,7 +140,7 @@ const Toast: Component<ToastComponentProps> = (props) => {
                 </div>
                 <ProgressBar
                     duration={props.toast.duration}
-                    color={theme().icon}
+                    color={theme.colors.transparentPurple[100]}
                     paused={props.hovering}
                 />
             </div>

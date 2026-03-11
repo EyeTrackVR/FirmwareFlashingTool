@@ -54,8 +54,10 @@ export const setGlobalNotificationsType = (type: NOTIFICATION_ACTION) => {
 }
 
 export const setNotification = (toast: IToast) => {
+    const limit = 30
     setState(
         produce((s) => {
+            if (s.notifications.length >= limit) s.notifications.pop()
             s.notifications = [toast, ...s.notifications]
         }),
     )

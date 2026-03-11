@@ -1,4 +1,5 @@
-import Toast from '@pages/Toast'
+import Toast from '@components/Toast'
+import { classNames } from '@src/utils'
 import { dismissNotification } from '@store/notifications/notifications'
 import { notifications } from '@store/notifications/selectors'
 import { createSignal, For } from 'solid-js'
@@ -32,16 +33,13 @@ export const Toaster = () => {
         <div
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
+            class={classNames(
+                'fixed top-6 left-1/2 -translate-x-1/2 w-[360px] z-[999] transition-[height] duration-[380ms] [cubic-bezier(0.34,1.1,0.64,1)]',
+                notifications().length ? 'pointer-events-auto' : 'pointer-events-none',
+            )}
             style={{
-                position: 'fixed',
-                top: '24px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '360px',
                 height: hovering() ? `${Math.min(notifications().length, 5) * 72 + 2}px` : '80px',
-                transition: 'height 0.38s cubic-bezier(0.34, 1.1, 0.64, 1)',
-                'z-index': '999',
-                'pointer-events': notifications().length ? 'all' : 'none',
+                'transition-timing-function': 'cubic-bezier(0.34, 1.1, 0.64, 1)',
             }}>
             <For each={notifications()}>
                 {(t) => (

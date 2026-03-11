@@ -23,6 +23,37 @@ struct SingleInstancePayload {
 }
 
 pub fn run() {
+  #[cfg(target_os = "linux")]
+  {
+    // Fix for webkit issues on Linux with nvidia and/or some wayland compositors
+    //
+    // Related issues and code adapted from:
+    // https://github.com/tauri-apps/tauri/issues/13493
+
+    log::trace!("Setting linux specific workaround envs for GDK webkit issues:");
+
+    let is_wayland_display = std::env::var_os("WAYLAND_DISPLAY");
+    let xdg_session_type = std::env::var("XDG_SESSION_TYPE")
+      .unwrap_or_default()
+      .to_lowercase();
+
+    let is_wayland = is_wayland_display.is_some() || xdg_session_type == "wayland";
+    let compositor = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
+    log::trace!(
+      "Display: wayland={is_wayland}, compositor={compositor}, session={xdg_session_type}"
+    );
+
+    if std::env::var_os("WEBKIT_DISABLE_COMPOSITING_MODE").is_none() {
+      log::trace!("setting: WEBKIT_DISABLE_COMPOSITING_MODE=1");
+      std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+    }
+
+    if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
+      log::trace!("setting: WEBKIT_DISABLE_DMABUF_RENDERER=1");
+      std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+    }
+  }
+
   let app = tauri::Builder::default();
 
   // Note: This is a workaround for a bug in tauri that causes the window to not resize properly inducing a noticeable lag
