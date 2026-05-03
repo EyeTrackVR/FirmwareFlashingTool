@@ -103,6 +103,6 @@ export const CHANNEL_OPTIONS: Record<CHANNEL_TYPE, IChannelOptions> = {
 }
 
 export const TRACKERS: Array<{ label: string; value: string }> = [
-    { label: 'Right eye', value: 'ETVR-Right' },
     { label: 'Left eye', value: 'ETVR-Left' },
+    { label: 'Right eye', value: 'ETVR-Right' },
 ]
