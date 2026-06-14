@@ -1,5 +1,5 @@
 import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
-import { ToasterStore } from 'solid-headless'
+import { IToast } from '@interfaces/notifications/interfaces'
 import { createStore, produce } from 'solid-js/store'
 
 export interface NotificationAction {
@@ -14,14 +14,14 @@ export interface Notifications {
 }
 
 export interface AppStoreNotifications {
-    notifications: ToasterStore<Notifications>
+    notifications: IToast[]
     enableNotificationsSounds: boolean
     enableNotifications: boolean
     globalNotificationsType: NOTIFICATION_ACTION
 }
 
 const defaultState: AppStoreNotifications = {
-    notifications: new ToasterStore<Notifications>(),
+    notifications: [],
     enableNotificationsSounds: true,
     enableNotifications: true,
     globalNotificationsType: NOTIFICATION_ACTION.APP,
@@ -49,6 +49,24 @@ export const setGlobalNotificationsType = (type: NOTIFICATION_ACTION) => {
     setState(
         produce((s) => {
             s.globalNotificationsType = type
+        }),
+    )
+}
+
+export const setNotification = (toast: IToast) => {
+    const limit = 30
+    setState(
+        produce((s) => {
+            if (s.notifications.length >= limit) s.notifications.pop()
+            s.notifications = [toast, ...s.notifications]
+        }),
+    )
+}
+
+export const dismissNotification = (id: number) => {
+    setState(
+        produce((s) => {
+            s.notifications = s.notifications.filter((t) => t.id !== id)
         }),
     )
 }

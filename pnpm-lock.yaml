@@ -80,18 +80,12 @@ importers:
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
-      solid-headless:
-        specifier: ^0.13.1
-        version: 0.13.1(solid-js@1.9.11)
       solid-icons:
         specifier: ^1.2.0
         version: 1.2.0(solid-js@1.9.11)
       solid-js:
         specifier: ^1.9.3
         version: 1.9.11
-      solid-sonner:
-        specifier: ^0.2.8
-        version: 0.2.8(solid-js@1.9.11)
       solidjs-use:
         specifier: ^2.3.0
         version: 2.3.0
@@ -104,6 +98,9 @@ importers:
       tailwindcss:
         specifier: 3.4.17
         version: 3.4.17
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
       vitest:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@25.2.3)(jiti@2.6.1)(jsdom@28.1.0)(lightningcss@1.30.2)(yaml@2.8.2)
@@ -1840,12 +1837,6 @@ packages:
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
-  solid-headless@0.13.1:
-    resolution: {integrity: sha512-FZJai49YmdBu6oEo8aJGPMQ1Qn8xiW0cnD6vNFDIQWMKJdXEUtDEwz0hTR9aZ7Epq3IkrZs+98E0vNiv1+pZpA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.2
-
   solid-icons@1.2.0:
     resolution: {integrity: sha512-yjQxWQMi9l19P5Af9vjsvalTMDFPDL4XD6etrUdNxNVhFp1bMYF0SFwUa5VYDfJ7u0SF3Qkz/F7BZxqcLUwklw==}
     peerDependencies:
@@ -1858,17 +1849,6 @@ packages:
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
     peerDependencies:
       solid-js: ^1.3
-
-  solid-sonner@0.2.8:
-    resolution: {integrity: sha512-EQ2EIznvHHpAmkYh2CTu0AdCgmPJRJWLGFRWygE8j+vMEfvIV2wotHU5qgWzqzVTG1SODGsay2Lwq6ENWx/rPA==}
-    peerDependencies:
-      solid-js: ^1.6.0
-
-  solid-use@0.6.2:
-    resolution: {integrity: sha512-0ShJ5s+4PIN0pJB/BtsQucsZB+xnUeeTGaxErQDu6USn5jygZWXicAtOEvFbI8gv40xE751uY1Tz7Aib9lxL/Q==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.5
 
   solidjs-use@2.3.0:
     resolution: {integrity: sha512-ZyH2jiUSQU+5S5vd8zyvqz9X2ikhMjJhDeh/TjRzjLDJlZ1RuZaMxdM+jGsrJxo3X/xBW9kDpYNONXs6wYrQCQ==}
@@ -2026,6 +2006,10 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
+    hasBin: true
 
   vite-plugin-solid@2.11.10:
     resolution: {integrity: sha512-Yr1dQybmtDtDAHkii6hXuc1oVH9CPcS/Zb2jN/P36qqcrkNnVPsMTzQ06jyzFPFjj3U1IYKMVt/9ZqcwGCEbjw==}
@@ -3755,11 +3739,6 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  solid-headless@0.13.1(solid-js@1.9.11):
-    dependencies:
-      solid-js: 1.9.11
-      solid-use: 0.6.2(solid-js@1.9.11)
-
   solid-icons@1.2.0(solid-js@1.9.11):
     dependencies:
       solid-js: 1.9.11
@@ -3778,14 +3757,6 @@ snapshots:
       solid-js: 1.9.11
     transitivePeerDependencies:
       - supports-color
-
-  solid-sonner@0.2.8(solid-js@1.9.11):
-    dependencies:
-      solid-js: 1.9.11
-
-  solid-use@0.6.2(solid-js@1.9.11):
-    dependencies:
-      solid-js: 1.9.11
 
   solidjs-use@2.3.0:
     dependencies:
@@ -3967,6 +3938,8 @@ snapshots:
       react: 19.2.4
 
   util-deprecate@1.0.2: {}
+
+  uuid@13.0.0: {}
 
   vite-plugin-solid@2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@6.4.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)):
     dependencies:

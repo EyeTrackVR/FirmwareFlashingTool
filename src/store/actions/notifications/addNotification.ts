@@ -1,7 +1,10 @@
 import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from '@interfaces/notifications/enums'
-import { NotificationAction, Notifications } from '@store/notifications/notifications'
+import {
+    NotificationAction,
+    Notifications,
+    setNotification,
+} from '@store/notifications/notifications'
 import { enableNotifications, globalNotificationsType } from '@store/notifications/selectors'
-import { toast } from 'solid-sonner'
 import { checkPermission } from './checkPermission'
 import { handleSound } from './handleSound'
 
@@ -20,50 +23,60 @@ const mapNotificationCallback = (
 }
 
 export const addNotification = (notification: Notifications) => {
-    // for some god forsaken reason webkit does not support it
-    // and will happily crash on you with null pointer :)
-    if (navigator.userAgent.toLowerCase().includes('linux')){
-        return
-    }
-
     if (!enableNotifications()) return
     checkPermission()
     const { message, type } = notification
 
-    const toastOptions = {
-        style: {
-            background: '#0D1B26',
-            color: '#fff',
-            border: '1px solid #192736',
-            textAlign: 'left',
-        },
-        actionButtonStyle: {
-            background: '#192736',
-            border: '1px solid #192736',
-            color: '#FFFFFF',
-        },
-        class: 'my-custom-toast',
-        action: {
-            label: 'X',
-            onClick: () => console.log('Undo'),
-        },
-    }
-
     const toastMap: Record<NOTIFICATION_TYPE, (msg: string) => void> = {
-        [NOTIFICATION_TYPE.ERROR]: (msg) => toast.error(msg, toastOptions),
-        [NOTIFICATION_TYPE.SUCCESS]: (msg) => toast.success(msg, toastOptions),
-        [NOTIFICATION_TYPE.INFO]: (msg) => toast.info(msg, toastOptions),
-        [NOTIFICATION_TYPE.WARNING]: (msg) => toast.warning(msg, toastOptions),
-        [NOTIFICATION_TYPE.DEFAULT]: (msg) => toast(msg, toastOptions),
+        [NOTIFICATION_TYPE.ERROR]: (msg) => {
+            setNotification({
+                type: NOTIFICATION_TYPE.ERROR,
+                message: msg,
+                duration: 5000,
+                id: Date.now(),
+            })
+        },
+        [NOTIFICATION_TYPE.SUCCESS]: (msg) => {
+            setNotification({
+                type: NOTIFICATION_TYPE.SUCCESS,
+                message: msg,
+                duration: 5000,
+                id: Date.now(),
+            })
+        },
+        [NOTIFICATION_TYPE.INFO]: (msg) => {
+            setNotification({
+                type: NOTIFICATION_TYPE.INFO,
+                message: msg,
+                duration: 5000,
+                id: Date.now(),
+            })
+        },
+        [NOTIFICATION_TYPE.WARNING]: (msg) => {
+            setNotification({
+                type: NOTIFICATION_TYPE.WARNING,
+                message: msg,
+                duration: 5000,
+                id: Date.now(),
+            })
+        },
+        [NOTIFICATION_TYPE.DEFAULT]: (msg) => {
+            setNotification({
+                type: NOTIFICATION_TYPE.DEFAULT,
+                message: msg,
+                duration: 5000,
+                id: Date.now(),
+            })
+        },
     }
 
     mapNotificationCallback(globalNotificationsType(), {
         callbackOS: () => {
-            toast(message, {
-                action: {
-                    label: 'Close',
-                    onClick: () => console.log('Undo'),
-                },
+            setNotification({
+                type: NOTIFICATION_TYPE.DEFAULT,
+                message: message,
+                duration: 5000,
+                id: Date.now(),
             })
         },
         callbackApp: () => {
