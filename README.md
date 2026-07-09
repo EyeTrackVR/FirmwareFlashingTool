@@ -2,7 +2,7 @@
 
 This is a streamlined `Tauri` app using `Vite` and `SolidJS`.
 
-A firmware flashing tool for the [Open Source EyeTrackVR hardware](https://docs.eyetrack.vr) project.
+A firmware flashing tool for the [Open Source EyeTrackVR hardware](https://docs.eyetrackvr.dev/) project.
 
 This repo includes:
 
